@@ -586,7 +586,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
 
               {/* Binomial */}
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800/80 shadow-sm animate-fade-in">
-                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">2. התפלגות בינומית <InlineMath math="(X \\sim Bin(n, p))" /></h4>
+                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">2. התפלגות בינומית <InlineMath math="(X \sim Bin(n, p))" /></h4>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
                   סופרת את מספר ההצלחות בתוך סידרה של <InlineMath math="n" /> ניסויי ברנולי בלתי תלויים עם סיכוי מוגדר <InlineMath math="p" /> להצלחה בכל שלב.
                 </p>
@@ -614,7 +614,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
             <div className="space-y-4">
               {/* Continuous Uniform */}
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800/80 shadow-sm animate-fade-in">
-                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">1. התפלגות אחידה רציפה <InlineMath math="(X \\sim U(a, b))" /></h4>
+                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">1. התפלגות אחידה רציפה <InlineMath math="(X \sim U(a, b))" /></h4>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
                   כאשר המשתנה מרוח בצפיפות קבועה ואחידה מעל קטע יחיד ומוגדר <InlineMath math="[a, b]" />.
                 </p>
@@ -640,7 +640,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
 
               {/* Normal Distribution */}
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-700/60 bg-white dark:bg-slate-800/80 shadow-sm animate-fade-in">
-                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">2. התפלגות נורמלית <InlineMath math="(X \\sim N(\\mu, \\sigma^2))" /></h4>
+                <h4 className="font-extrabold text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">2. התפלגות נורמלית <InlineMath math="(X \sim N(\mu, \sigma^2))" /></h4>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed mb-3">
                   ההתפלגות המרכזית במחקר. סימטרית לחלוטין סביב התוחלת (צורת פעמון גאוס).
                 </p>
@@ -667,7 +667,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
                   <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
                     <strong className="block text-slate-800 dark:text-slate-100 mb-1.5">קומבינציות לינאריות של משתנים עצמאיים:</strong>
                     <span className="text-slate-500 dark:text-slate-450 text-xs leading-relaxed block mb-2">
-                      אם <InlineMath math="X \\sim N(\\mu_X, \\sigma_X^2)" /> ו-<InlineMath math="Y \\sim N(\\mu_Y, \\sigma_Y^2)" /> הם בלתי תלויים, אז קומבינציה לינארית תניב גם כן משתנה נורמלי:
+                      אם <InlineMath math="X \sim N(\mu_X, \sigma_X^2)" /> ו-<InlineMath math="Y \sim N(\mu_Y, \sigma_Y^2)" /> הם בלתי תלויים, אז קומבינציה לינארית תניב גם כן משתנה נורמלי:
                     </span>
                     <div className="text-center font-mono py-1 rounded-md bg-white dark:bg-slate-800/90 border border-slate-200 dark:border-slate-700/50 overflow-x-auto">
                       <InlineMath math="aX + bY \sim N\left(a\mu_X + b\mu_Y, \; a^2\sigma_X^2 + b^2\sigma_Y^2\right)" />
@@ -688,7 +688,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/65 rounded-xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
-                  <h4 className="font-extrabold text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">עבור ממוצע המדגם <InlineMath math="(\\overline{X})" /></h4>
+                  <h4 className="font-extrabold text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">עבור ממוצע המדגם <InlineMath math="(\overline{X})" /></h4>
                   <p className="text-xs text-slate-500 dark:text-slate-350 leading-relaxed mb-3">
                     הצטמצמות תנודת שגיאת הממוצע:
                   </p>
@@ -701,7 +701,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
                 </div>
 
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/65 rounded-xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
-                  <h4 className="font-extrabold text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">עבור סכום המדגם <InlineMath math="(S_n = \\sum X_i)" /></h4>
+                  <h4 className="font-extrabold text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 mb-2 border-r-2 border-indigo-500 pr-2 text-right" dir="rtl">עבור סכום המדגם <InlineMath math="(S_n = \sum X_i)" /></h4>
                   <p className="text-xs text-slate-500 dark:text-slate-350 leading-relaxed mb-3">
                     התפשטות ואיסוף סך הסכום:
                   </p>
