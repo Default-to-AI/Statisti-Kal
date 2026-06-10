@@ -789,55 +789,55 @@ export default function HypothesisTestingCalculator() {
 
  {/* Parameters Input Card */}
  <div className="rounded-3xl p-5 md:p-6 border shadow-md transition-colors bg-slate-900 border-slate-800">
- <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800/80 pb-4 mb-5">
- <div className="flex items-center gap-2">
- <Sliders size={20} className="text-indigo-500" />
- <h3 className="text-lg sm:text-xl font-black text-slate-100">
- פרמטרים והשערות מחקר
- </h3>
- </div>
- 
- {/* Main Test Statistic Type (Single, Mean, Sum) Selector */}
- <div className="flex items-center gap-3">
- <span className="text-xs sm:text-sm font-black text-slate-400">סטטיסטי המבחן:</span>
- <div className="flex p-0.5 bg-slate-800 rounded-xl border border-slate-800">
- <button 
- type="button"
- onClick={() => setTestType('single')}
- className={`py-1.5 px-3 rounded-lg text-xs font-black transition-all ${
- testType ==='single'
- ?'bg-indigo-600 text-white shadow-sm'
- :'text-slate-300 hover:bg-slate-700'
- }`}
- >
- תצפית X
- </button>
- <button 
- type="button"
- onClick={() => setTestType('mean')}
- className={`py-1.5 px-3 rounded-lg text-xs font-black transition-all ${
- testType ==='mean'
- ?'bg-indigo-600 text-white shadow-sm'
- :'text-slate-300 hover:bg-slate-700'
- }`}
- >
- ממוצע X̄
- </button>
- <button 
- type="button"
- onClick={() => setTestType('sum')}
- className={`py-1.5 px-3 rounded-lg text-xs font-black transition-all ${
- testType ==='sum'
- ?'bg-indigo-600 text-white shadow-sm'
- :'text-slate-300 hover:bg-slate-700'
- }`}
- >
- סכום ΣX
- </button>
- </div>
- </div>
- </div>
+  <div className="flex items-center gap-2 border-b border-slate-800/80 pb-4 mb-5">
+  <Sliders size={20} className="text-indigo-500" />
+  <h3 className="text-lg sm:text-xl font-black text-slate-100">
+  פרמטרים והשערות מחקר
+  </h3>
+  </div>
 
+  <div className="flex flex-col md:flex-row gap-6">
+  {/* Main Test Statistic Type (Single, Mean, Sum) Selector */}
+  <div className="flex flex-col gap-3 shrink-0 md:w-32">
+  <span className="text-xs sm:text-sm font-black text-slate-400">סטטיסטי המבחן:</span>
+  <div className="flex flex-col p-1 bg-slate-800 rounded-xl border border-slate-800 gap-1">
+  <button 
+  type="button"
+  onClick={() => setTestType('single')}
+  className={`py-2 px-3 rounded-lg text-xs font-black transition-all text-center ${
+  testType ==='single'
+  ?'bg-indigo-600 text-white shadow-sm'
+  :'text-slate-300 hover:bg-slate-700'
+  }`}
+  >
+  תצפית X
+  </button>
+  <button 
+  type="button"
+  onClick={() => setTestType('mean')}
+  className={`py-2 px-3 rounded-lg text-xs font-black transition-all text-center ${
+  testType ==='mean'
+  ?'bg-indigo-600 text-white shadow-sm'
+  :'text-slate-300 hover:bg-slate-700'
+  }`}
+  >
+  ממוצע X̄
+  </button>
+  <button 
+  type="button"
+  onClick={() => setTestType('sum')}
+  className={`py-2 px-3 rounded-lg text-xs font-black transition-all text-center ${
+  testType ==='sum'
+  ?'bg-indigo-600 text-white shadow-sm'
+  :'text-slate-300 hover:bg-slate-700'
+  }`}
+  >
+  סכום ΣX
+  </button>
+  </div>
+  </div>
+
+  <div className="flex-1 min-w-0">
  {/* Custom Parameters Table Layout */}
  <div className="overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 shadow-sm transition-all mb-6" dir="rtl">
  {/* Table Header Row */}
@@ -979,6 +979,54 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
 
+ {/* Alpha Input & Presets Below Table */}
+  <div className="flex justify-start" dir="rtl">
+  {/* Alpha Input & Presets */}
+ <div className="space-y-1.5 text-right font-sans">
+ <div className="flex justify-between items-center px-0.5">
+ <InputTooltip content="רמת מובהקות (α) - ההסתברות המרבית לכל היותר לדחות בטעות את השערת האפס">
+ <label className="text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1">מובהקות (α):</label>
+ </InputTooltip>
+ </div>
+ <div className="flex gap-1" dir="ltr">
+ <input 
+ type="text" 
+ value={alphaInput}
+ onChange={(e) => handleAlphaChange(e.target.value)}
+ className={`w-14 px-1 py-2.5 bg-slate-900 text-center border rounded-xl outline-none transition-all font-mono font-bold text-xs text-white ${
+ errors.alpha 
+ ?'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+ :'border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-505'
+ }`}
+ style={{ textAlign:'center' }}
+ placeholder="0.05"
+ />
+ <div className="flex-1 grid grid-cols-3 gap-0.5">
+ {[0.10, 0.05, 0.01].map((pVal) => (
+ <button
+ key={pVal}
+ type="button"
+ onClick={() => applyAlphaPreset(pVal)}
+ className={`py-1 text-[15px] font-black rounded-lg transition-all border ${
+ alpha === pVal 
+ ?'bg-indigo-600 text-white border-indigo-700 shadow-sm'
+ :'bg-slate-800 text-slate-200 border-slate-800 hover:bg-slate-750'
+ }`}
+ >
+ {pVal * 100}%
+ </button>
+ ))}
+ </div>
+ </div>
+ {errors.alpha && <p className="text-[11px] text-red-600 text-red-400 font-bold leading-tight mt-1">{errors.alpha}</p>}
+ </div>
+ </div>
+
+  </div>
+  </div>
+
+  </div>
+
  {/* Dynamic Formal Hypotheses Display Banner with H1 Buttons */}
   <div className="mb-6 p-4 rounded-2xl border border-indigo-900/40 bg-indigo-950/10 flex flex-col xl:flex-row items-center justify-between gap-6 transition-all" dir="rtl">
     <div className="flex-1 min-w-0">
@@ -1026,52 +1074,6 @@ export default function HypothesisTestingCalculator() {
       </div>
     </div>
   </div>
-
-  {/* Alpha Input & Presets Below Table */}
-  <div className="flex justify-start" dir="rtl">
-  {/* Alpha Input & Presets */}
- <div className="space-y-1.5 text-right font-sans">
- <div className="flex justify-between items-center px-0.5">
- <InputTooltip content="רמת מובהקות (α) - ההסתברות המרבית לכל היותר לדחות בטעות את השערת האפס">
- <label className="text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1">מובהקות (α):</label>
- </InputTooltip>
- </div>
- <div className="flex gap-1" dir="ltr">
- <input 
- type="text" 
- value={alphaInput}
- onChange={(e) => handleAlphaChange(e.target.value)}
- className={`w-14 px-1 py-2.5 bg-slate-900 text-center border rounded-xl outline-none transition-all font-mono font-bold text-xs text-white ${
- errors.alpha 
- ?'border-red-500 text-red-500 ring-4 ring-red-500/10' 
- :'border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-505'
- }`}
- style={{ textAlign:'center' }}
- placeholder="0.05"
- />
- <div className="flex-1 grid grid-cols-3 gap-0.5">
- {[0.10, 0.05, 0.01].map((pVal) => (
- <button
- key={pVal}
- type="button"
- onClick={() => applyAlphaPreset(pVal)}
- className={`py-1 text-[15px] font-black rounded-lg transition-all border ${
- alpha === pVal 
- ?'bg-indigo-600 text-white border-indigo-700 shadow-sm'
- :'bg-slate-800 text-slate-200 border-slate-800 hover:bg-slate-750'
- }`}
- >
- {pVal * 100}%
- </button>
- ))}
- </div>
- </div>
- {errors.alpha && <p className="text-[11px] text-red-600 text-red-400 font-bold leading-tight mt-1">{errors.alpha}</p>}
- </div>
- </div>
-
- </div>
-
  {/* Main Grid Layout */}
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
