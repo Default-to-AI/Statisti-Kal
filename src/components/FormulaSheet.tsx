@@ -827,7 +827,7 @@ export default function FormulaSheet() {
  title:'מדדי מרכז (ממוצע, חציון, שכיח)',
  content: (
  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
- <div className="p-3 bg-slate-100/50 bg-slate-800/65 rounded-xl border border-slate-200/50 border-slate-700/60 shadow-sm">
+ <div className="p-3 bg-slate-800/65 rounded-xl border border-slate-700/60 shadow-sm">
  <h4 className="font-extrabold text-xs text-indigo-400 mb-1 border-r-2 border-indigo-500 pr-1.5 text-right font-sans" dir="rtl">ממוצע (Mean)</h4>
  <p className="text-[11px] text-slate-350 mb-2 leading-relaxed">
  המרכז המכני של הנתונים, רגיש ביותר לערכי קיצון.
@@ -837,7 +837,7 @@ export default function FormulaSheet() {
  </div>
  </div>
  
- <div className="p-3 bg-slate-100/50 bg-slate-800/65 rounded-xl border border-slate-200/50 border-slate-700/60 shadow-sm">
+ <div className="p-3 bg-slate-800/65 rounded-xl border border-slate-700/60 shadow-sm">
  <h4 className="font-extrabold text-xs text-indigo-400 mb-1 border-r-2 border-indigo-500 pr-1.5 text-right font-sans" dir="rtl">חציון (Median)</h4>
  <p className="text-[11px] text-slate-350 mb-2 leading-relaxed">
  הערך החוצה את הנתונים המסודרים לחצי וחצי. חסין לערכי קיצוניים.
@@ -847,7 +847,7 @@ export default function FormulaSheet() {
  </div>
  </div>
 
- <div className="p-3 bg-slate-100/50 bg-slate-800/65 rounded-xl border border-slate-200/50 border-slate-700/60 shadow-sm">
+ <div className="p-3 bg-slate-800/65 rounded-xl border border-slate-700/60 shadow-sm">
  <h4 className="font-extrabold text-xs text-indigo-400 mb-1 border-r-2 border-indigo-500 pr-1.5 text-right font-sans" dir="rtl">שכיח (Mode)</h4>
  <p className="text-[11px] text-slate-350 mb-2 leading-relaxed">
  הערך שמופיע הכי הרבה מבין דגימות המערך.
@@ -984,21 +984,21 @@ export default function FormulaSheet() {
  </p>
  
  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-center text-xs">
- <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-200/50 border-slate-800/50">
+ <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50">
  <span className="block text-slate-400 mb-1.5">עבור ממוצע <InlineMath math="(\sigma)" /> ידועה</span>
  <div className="bg-slate-950 p-2 rounded border border-slate-800 font-mono">
  <InlineMath math="SE = \sigma_{\overline{X}} = \frac{\sigma}{\sqrt{n}}" />
  </div>
  </div>
 
- <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-200/50 border-slate-800/50">
+ <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50">
  <span className="block text-slate-400 mb-1.5">עבור ממוצע <InlineMath math="(\sigma)" /> לא ידועה</span>
  <div className="bg-slate-950 p-2 rounded border border-slate-800 font-mono">
  <InlineMath math="SE = S_{\overline{X}} = \frac{S}{\sqrt{n}}" />
  </div>
  </div>
 
- <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-200/50 border-slate-800/50">
+ <div className="p-3 bg-slate-900/40 rounded-xl border border-slate-800/50">
  <span className="block text-slate-400 mb-1.5">עבור פרופורציה המדגם</span>
  <div className="bg-slate-950 p-2 rounded border border-slate-800 font-mono">
  <InlineMath math="SE = \sigma_{\hat{p}} = \sqrt{\frac{\hat{p}(1-\hat{p})}{n}}" />
@@ -1375,7 +1375,7 @@ export default function FormulaSheet() {
  >
  {/* Section Header */}
  <div className="flex items-center gap-3 border-b border-slate-800 pb-3 mb-4">
- <div className="p-2 bg-slate-100/60 bg-slate-800 rounded-lg">
+ <div className="p-2 bg-slate-800 rounded-lg">
  {section.icon}
  </div>
  <h2 className="text-base sm:text-lg font-black tracking-tight text-slate-50">

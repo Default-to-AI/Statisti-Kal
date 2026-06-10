@@ -85,7 +85,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab ='s
  </div>
 
  {/* Tabs Bar */}
- <div className="flex border-b border-slate-800 bg-slate-50/30 bg-slate-950/30 p-1.5 gap-1 overflow-x-auto whitespace-nowrap">
+ <div className="flex border-b border-slate-800 bg-slate-950/30 p-1.5 gap-1 overflow-x-auto whitespace-nowrap">
  <button
  onClick={() => setActiveTab('sigma-vs-s')}
  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-black transition-all ${
@@ -378,7 +378,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab ='s
  </div>
 
  {/* Graph Area */}
- <div className="p-4 rounded-xl border border-slate-800 bg-slate-50/50 bg-slate-950/50 space-y-3">
+ <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/50 space-y-3">
  <div className="flex flex-wrap items-center justify-between text-xs gap-2">
  <span className="font-extrabold text-slate-200">
  השוואה גרפית חיה של פונקציות צפיפות ההסתברות

@@ -1005,7 +1005,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  <table className="w-full text-xs border-collapse text-center">
  <thead>
  <tr className="bg-slate-800/80 font-extrabold text-slate-300">
- <th className="p-2 border border-slate-700 font-bold bg-slate-200/50 bg-slate-750 text-left w-28 rtl:text-right">
+ <th className="p-2 border border-slate-700 font-bold bg-slate-750 text-left w-28 rtl:text-right">
  ערך ה-Z
  </th>
  {[1.282, 1.645, 1.960, 2.326, 2.576, 3.090, 3.291, 3.891, 4.417].map((z, idx) => (
@@ -1991,7 +1991,7 @@ export default function NormalDistributionCalculator() {
  </div>
  </div>
  
- <div className="space-y-1.5 border-t pt-2 border-slate-200/50 border-slate-800">
+ <div className="space-y-1.5 border-t pt-2 border-slate-800">
  <h4 className="text-[11px] font-black text-emerald-500 leading-none">מאורע B (התנאי הנתון)</h4>
  <select 
  value={condType}

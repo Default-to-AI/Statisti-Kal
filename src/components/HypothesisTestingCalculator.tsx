@@ -234,7 +234,7 @@ function DecisionMatrix({ isValid, stats, alpha }: DecisionMatrixProps) {
  <tbody>
  {/* Row 1: Fail to reject H0 (Accept H0) */}
  <tr className="border-b border-slate-800 font-semibold text-slate-950 text-slate-50">
- <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-slate-100/30 bg-slate-900/40">
+ <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-slate-900/40">
  <span className="text-base font-black block">קבלת <InlineMath math="H_0" /></span>
  <span className="block text-[11px] font-bold text-slate-400 text-slate-400 mt-1">אי-דחיית השערת האפס</span>
  </td>
@@ -276,7 +276,7 @@ function DecisionMatrix({ isValid, stats, alpha }: DecisionMatrixProps) {
 
  {/* Row 2: Reject H0 */}
  <tr className="font-semibold text-slate-950 text-slate-50">
- <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-slate-100/30 bg-slate-900/40">
+ <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-slate-900/40">
  <span className="text-base font-black block">דחיית <InlineMath math="H_0" /></span>
  <span className="block text-[11px] font-bold text-slate-400 text-slate-400 mt-1">קבלת הטענה האלטרנטיבית</span>
  </td>
@@ -869,7 +869,7 @@ export default function HypothesisTestingCalculator() {
  <div className="grid grid-cols-2 border-b border-slate-800/80">
  {/* Left side: Sample - n */}
  <div className="flex flex-col sm:flex-row items-stretch border-l border-slate-350 border-slate-800/80">
- <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-50/20 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
+ <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
  <InputTooltip content="מספר התצפיות במדגם (n)">
  <label className={`text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1 ${testType ==='single' ?'opacity-30' :''}`}>
  גודל מדגם (n):
@@ -896,7 +896,7 @@ export default function HypothesisTestingCalculator() {
 
  {/* Right side: Population - mu0 */}
  <div className="flex flex-col sm:flex-row items-stretch">
- <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-50/20 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
+ <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
  <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)">
  <label className="text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1">
  תוחלת (μ₀):
@@ -926,7 +926,7 @@ export default function HypothesisTestingCalculator() {
  <div className="grid grid-cols-2">
  {/* Left side: Sample - mu1 (X̄ in visual) */}
  <div className="flex flex-col sm:flex-row items-stretch border-l border-slate-350 border-slate-800/80">
- <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-50/20 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
+ <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
  <InputTooltip content="ממוצע המדגם">
  <label className="text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1">
  ממוצע מדגם (X̄):
@@ -952,7 +952,7 @@ export default function HypothesisTestingCalculator() {
 
  {/* Right side: Population - sigma */}
  <div className="flex flex-col sm:flex-row items-stretch">
- <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-50/20 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
+ <div className="w-full sm:w-1/2 px-4 py-3 bg-slate-950/20 flex items-center justify-between sm:justify-start gap-1">
  <InputTooltip content={varianceKnown ? "סטיית תקן של האוכלוסייה (σ)" : "סטיית תקן מדגמית (S) המשמשת כאומד לסטיית התקן של האוכלוסייה"}>
  <label className="text-xs font-black text-slate-300 cursor-help border-b border-dotted border-slate-400 border-slate-500 ml-1">
  {varianceKnown ?'סטיית תקן של האוכלוסייה (σ):' :'סטיית תקן מדגמית (S):'}
@@ -990,7 +990,7 @@ export default function HypothesisTestingCalculator() {
  </span>
  </div>
 
- <div className="flex flex-col items-center justify-center p-3 bg-slate-950/90 border border-slate-200/80 border-slate-800 rounded-xl min-w-[210px] text-center shadow-sm">
+ <div className="flex flex-col items-center justify-center p-3 bg-slate-950/90 border border-slate-800 rounded-xl min-w-[210px] text-center shadow-sm">
  <span className="text-[10px] font-bold text-indigo-650 text-indigo-400 uppercase tracking-wider mb-1">השערות המבחן הפורמליות:</span>
  <div className="text-sm sm:text-base font-extrabold text-slate-100 font-mono tracking-wide" dir="ltr">
  <InlineMath math={getFormalHypothesisMath()} />
@@ -1311,7 +1311,7 @@ export default function HypothesisTestingCalculator() {
  <div className="rounded-3xl border shadow-md transition-all overflow-hidden bg-slate-900 border-slate-800">
  <button
  onClick={() => setShowSteps(!showSteps)}
- className="w-full px-8 py-5.5 flex items-center justify-between font-black text-slate-50 hover:bg-slate-800/40 transition-colors border-b border-slate-200/50 border-slate-800/50"
+ className="w-full px-8 py-5.5 flex items-center justify-between font-black text-slate-50 hover:bg-slate-800/40 transition-colors border-b border-slate-800/50"
  >
  <div className="flex items-center gap-3">
  <Calculator className="text-indigo-600" size={24} />
@@ -1726,7 +1726,7 @@ export default function HypothesisTestingCalculator() {
  </h3>
 
  <div className="space-y-4">
- <div className="p-4 rounded-xl bg-white/70 bg-slate-900/60 border border-slate-200/80 border-slate-800/80 leading-relaxed text-sm sm:text-base font-bold text-slate-200">
+ <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 leading-relaxed text-sm sm:text-base font-bold text-slate-200">
  <p className={`text-base sm:text-lg font-black ${decisionData.isReject ?'text-emerald-300' :'text-slate-300'}`}>
  מצב: המדגם נמצא באזור {decisionData.isReject ?'הדחייה C' :'הקבלה \\bar{C}'}
  </p>
