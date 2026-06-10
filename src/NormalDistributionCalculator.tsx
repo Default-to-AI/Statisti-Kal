@@ -734,11 +734,11 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean; theme: '
   }, [tDf, tAlpha, tSide]);
 
   const renderTableSection = (tableRows: number[]) => (
-    <div ref={containerRef} className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[480px]">
+    <div ref={containerRef} dir="ltr" className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[480px]">
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead>
           <tr className="bg-slate-100 dark:bg-slate-800">
-            <th className="sticky top-0 right-0 p-2.5 border border-slate-200 dark:border-slate-700 text-blue-700 dark:text-blue-400 font-extrabold text-center text-sm w-14 bg-slate-100 dark:bg-slate-800 z-30">Z</th>
+            <th className="sticky top-0 left-0 p-2.5 border border-slate-200 dark:border-slate-700 text-blue-700 dark:text-blue-400 font-extrabold text-center text-sm w-14 bg-slate-100 dark:bg-slate-800 z-30">Z</th>
             {cols.map(c => {
               const isColActive = lookupZ !== null && Math.abs(c - colVal!) < 0.001;
               return (
@@ -765,7 +765,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean; theme: '
                   ? theme === 'dark' ? 'bg-blue-950/20' : 'bg-blue-50/50' 
                   : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'
               }`}>
-                <td className={`sticky right-0 p-2.5 border border-slate-200 dark:border-slate-700 font-black text-center text-sm transition-colors duration-300 z-10 ${
+                <td className={`sticky left-0 p-2.5 border border-slate-200 dark:border-slate-700 font-black text-center text-sm transition-colors duration-300 z-10 ${
                   isRowActive 
                     ? 'bg-blue-600 text-white dark:bg-blue-500' 
                     : 'text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900'
@@ -1020,15 +1020,15 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean; theme: '
 
           {/* SECTION: POPULAR Z-VALUES FOR HYPOTHESIS TESTING */}
           <div className="space-y-3 pt-2">
-            <h4 className="text-xs sm:text-sm font-black text-slate-750 dark:text-slate-200 flex items-center gap-1.5">
+            <h4 className="text-xs sm:text-sm font-black text-slate-755 dark:text-slate-200 flex items-center gap-1.5">
               <span className="w-2 h-2 rounded bg-blue-500" />
               ערכי Z פופולריים בבחינת השערות (רמות אלפא ורמות סמך מקובלות)
             </h4>
-            <div className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 p-1">
+            <div dir="ltr" className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/40 p-1">
               <table className="w-full text-xs border-collapse text-center">
                 <thead>
                   <tr className="bg-slate-100 dark:bg-slate-800/80 font-extrabold text-slate-700 dark:text-slate-300">
-                    <th className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-200/50 dark:bg-slate-750 text-right w-28">
+                    <th className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-200/50 dark:bg-slate-750 text-left w-28 rtl:text-right">
                       ערך ה-Z
                     </th>
                     {[1.282, 1.645, 1.960, 2.326, 2.576, 3.090, 3.291, 3.891, 4.417].map((z, idx) => (
@@ -1040,7 +1040,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean; theme: '
                 </thead>
                 <tbody>
                   <tr className="text-slate-600 dark:text-slate-300 font-semibold bg-white dark:bg-slate-900">
-                    <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-100 dark:bg-slate-800/60 text-right">
+                    <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-100 dark:bg-slate-800/60 text-left rtl:text-right">
                       <InlineMath math="\Phi(z)" /> (הסתברות)
                     </td>
                     {['0.90', '0.95', '0.975', '0.99', '0.995', '0.999', '0.9995', '0.99995', '0.999995'].map((phi, idx) => (
@@ -1050,7 +1050,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean; theme: '
                     ))}
                   </tr>
                   <tr className="text-[10px] text-slate-500 dark:text-slate-400 font-medium bg-white dark:bg-slate-900">
-                    <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-100 dark:bg-slate-800/60 text-right leading-tight">
+                    <td className="p-2 border border-slate-200 dark:border-slate-700 font-bold bg-slate-100 dark:bg-slate-800/60 text-left leading-tight rtl:text-right">
                       רמת סמך / שימוש מקובל
                     </td>
                     {[
@@ -1180,11 +1180,11 @@ const TTable: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
   }, [tDf, tAlpha, tSide]);
 
   const renderTTableSection = () => (
-    <div className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[480px]">
+    <div dir="ltr" className="overflow-auto rounded-xl border border-slate-200 dark:border-slate-800 max-h-[480px]">
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead>
           <tr className="bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400">
-            <th rowSpan={2} className="sticky top-0 right-0 p-3 border border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400 font-black text-center text-xs sm:text-sm w-16 bg-slate-100 dark:bg-slate-800 z-30">
+            <th rowSpan={2} className="sticky top-0 left-0 p-3 border border-slate-200 dark:border-slate-700 text-indigo-700 dark:text-indigo-400 font-black text-center text-xs sm:text-sm w-16 bg-slate-100 dark:bg-slate-800 z-30">
               דרגות חופש <br/> (df)
             </th>
             <th colSpan={6} className="sticky top-0 p-1.5 border-b border-slate-200 dark:border-slate-705 font-extrabold text-center text-xs bg-slate-100 dark:bg-slate-800 z-20">
@@ -1219,7 +1219,7 @@ const TTable: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
                   ? theme === 'dark' ? 'bg-indigo-950/20' : 'bg-indigo-50/50' 
                   : 'hover:bg-slate-50/50 dark:hover:bg-slate-800/20'
               }`}>
-                <td className={`sticky right-0 p-2.5 border border-slate-200 dark:border-slate-700 font-black text-center text-xs sm:text-sm transition-colors duration-300 z-10 ${
+                <td className={`sticky left-0 p-2.5 border border-slate-200 dark:border-slate-700 font-black text-center text-xs sm:text-sm transition-colors duration-300 z-10 ${
                   isRowActive 
                     ? 'bg-indigo-600 text-white dark:bg-indigo-500' 
                     : 'text-slate-800 dark:text-slate-200 bg-slate-50 dark:bg-slate-900'
@@ -1896,151 +1896,158 @@ export default function NormalDistributionCalculator() {
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.25 }}
-                        className="p-6"
+                        className="p-6 font-sans"
                         style={{ overflow: isInputPanelOpen ? 'visible' : 'hidden' }}
                       >
-                        <div className="space-y-6 w-full">
-                          
-                          {/* Row 1: Mean and Standard Deviation side-by-side */}
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
-                            {/* Mean Input */}
-                            <div className="space-y-1">
-                              <Tooltip content="הערך המרכזי של פעמון ההתפלגות (התוחלת)" theme={theme}>
-                                <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-700">תוחלת (μ):</label>
-                              </Tooltip>
-                              <input 
-                                type="text" 
-                                value={meanInput} 
-                                onChange={(e) => handleMeanChange(e.target.value)}
-                                className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
-                                  meanError 
-                                    ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
-                                    : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
-                                }`}
-                                placeholder="הזן ממוצע, לדוגמה: 170"
-                              />
-                              {meanError && (
-                                <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
-                                  <AlertCircle size={10} className="stroke-[2.5]" />
-                                  <span>{meanError}</span>
-                                </p>
-                              )}
-                            </div>
-
-                            {/* Standard Deviation / Variance Inputs */}
-                             <div className="grid grid-cols-2 gap-4">
-                               {/* Standard Deviation Input */}
-                               <div className="space-y-1">
-                                 <Tooltip content="מדד הפיזור של הערכים סביב הממוצע (חייב להיות חיובי וגדול מ-0)" theme={theme}>
-                                   <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-700">סטיית תקן (σ):</label>
-                                 </Tooltip>
-                                 <input 
-                                   type="text" 
-                                   value={stdDevInput} 
-                                   onChange={(e) => handleStdDevChange(e.target.value)}
-                                   className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
-                                     stdDevError 
-                                       ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
-                                       : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
-                                   }`}
-                                   placeholder="חייב להיות גדול מ-0"
-                                 />
-                                 {stdDevError ? (
-                                   <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
-                                     <AlertCircle size={10} className="stroke-[2.5]" />
-                                     <span>{stdDevError}</span>
-                                   </p>
-                                 ) : (
-                                   <p className="text-[10px] text-slate-400">יש להקפיד על ערך חיובי בלבד.</p>
-                                 )}
-                               </div>
-
-                               {/* Variance Input */}
-                               <div className="space-y-1">
-                                 <Tooltip content="שונות ההתפלגות (σ²), מחושבת ישירות כריבוע סטיית התקן" theme={theme}>
-                                   <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-700">שונות (σ²):</label>
-                                 </Tooltip>
-                                 <input 
-                                   type="text" 
-                                   value={varianceInput} 
-                                   onChange={(e) => handleVarianceChange(e.target.value)}
-                                   className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
-                                     varianceError 
-                                       ? 'border-red-500 text-red-505 ring-4 ring-red-500/10' 
-                                       : 'border-slate-200 dark:border-slate-700 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
-                                   }`}
-                                   placeholder="לדוגמה: 25"
-                                 />
-                                 {varianceError ? (
-                                   <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
-                                     <AlertCircle size={10} className="stroke-[2.5]" />
-                                     <span>{varianceError}</span>
-                                   </p>
-                                 ) : (
-                                   <p className="text-[10px] text-slate-400">יש להקפיד על ערך חיובי בלבד.</p>
-                                 )}
-                               </div>
-                             </div>
-                          </div>
-
-                          {/* Row 2: Calculation options and X value side-by-side */}
-                          <div className="border-t pt-6 border-slate-100 dark:border-slate-800">
-                            <AnimatePresence mode="wait">
-                              {mode === 'forward' ? (
-                                <motion.div 
-                                  key="forward-container"
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  className="flex flex-col gap-5"
-                                >
-                                  <div className="space-y-3">
-                                    <h3 className="text-sm font-black mb-3 text-slate-400 flex items-center gap-1.5">
-                                      מאורע הסתברות
-                                      <HelpCircle size={13} />
-                                    </h3>
-                                    <div className="grid grid-cols-5 gap-1">
-                                      {[
-                                        { id: 'below', label: 'מתחת ל- X' },
-                                        { id: 'above', label: 'מעל ל- X' },
-                                        { id: 'between', label: 'בין X₁ ל- X₂' },
-                                        { id: 'outside', label: 'מחוץ לטווח' },
-                                        { id: 'conditional', label: 'מותנה מראש' }
-                                      ].map((item) => (
-                                        <button
-                                          key={item.id}
-                                          type="button"
-                                          onClick={() => setType(item.id as CalcType)}
-                                          className={`px-0.5 sm:px-2 py-1.5 text-[9px] min-[390px]:text-[10px] sm:text-xs font-black rounded-lg transition-all border text-center ${
-                                            type === item.id 
-                                              ? 'bg-blue-600 text-white border-blue-600 shadow-md shadow-blue-500/10' 
-                                              : 'bg-slate-50 dark:bg-slate-850 text-slate-600 dark:text-slate-350 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
-                                          }`}
-                                        >
-                                          {item.label}
-                                        </button>
-                                      ))}
-                                    </div>
+                        <div className="w-full">
+                          <AnimatePresence mode="wait">
+                            {mode === 'forward' ? (
+                              <motion.div
+                                key="forward-grid"
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -5 }}
+                                transition={{ duration: 0.2 }}
+                                className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start"
+                              >
+                                {/* Column 1: Params */}
+                                <div className="space-y-4">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    פרמטרי ההתפלגות
+                                  </h3>
+                                  
+                                  {/* Mean */}
+                                  <div className="space-y-1">
+                                    <Tooltip content="הערך המרכזי של פעמון ההתפלגות (התוחלת)" theme={theme}>
+                                      <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">תוחלת (μ):</label>
+                                    </Tooltip>
+                                    <input 
+                                      type="text" 
+                                      value={meanInput} 
+                                      onChange={(e) => handleMeanChange(e.target.value)}
+                                      className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                        meanError 
+                                          ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+                                          : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                      }`}
+                                      placeholder="הזן ממוצע, לדוגמה: 170"
+                                    />
+                                    {meanError && (
+                                      <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                        <AlertCircle size={10} className="stroke-[2.5]" />
+                                        <span>{meanError}</span>
+                                      </p>
+                                    )}
                                   </div>
 
+                                  {/* SD & Var */}
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-1">
+                                      <Tooltip content="מדד הפיזור של הערכים סביב הממוצע (חייב להיות חיובי וגדול מ-0)" theme={theme}>
+                                        <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">סטיית תקן (σ):</label>
+                                      </Tooltip>
+                                      <input 
+                                        type="text" 
+                                        value={stdDevInput} 
+                                        onChange={(e) => handleStdDevChange(e.target.value)}
+                                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                          stdDevError 
+                                            ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                        }`}
+                                        placeholder="סטיית תקן"
+                                      />
+                                      {stdDevError && (
+                                        <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                          <AlertCircle size={10} className="stroke-[2.5]" />
+                                          <span>{stdDevError}</span>
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <Tooltip content="שונות ההתפלגות (σ²), מחושבת ישירות כריבוע סטיית התקן" theme={theme}>
+                                        <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">שונות (σ²):</label>
+                                      </Tooltip>
+                                      <input 
+                                        type="text" 
+                                        value={varianceInput} 
+                                        onChange={(e) => handleVarianceChange(e.target.value)}
+                                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                          varianceError 
+                                            ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                        }`}
+                                        placeholder="שונות"
+                                      />
+                                      {varianceError && (
+                                        <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                          <AlertCircle size={10} className="stroke-[2.5]" />
+                                          <span>{varianceError}</span>
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Column 2: Event Choice */}
+                                <div className="space-y-4">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    מאורע / סוג החישוב
+                                  </h3>
+                                  <div className="flex flex-col gap-1.5 w-full">
+                                    {[
+                                      { id: 'below', label: 'מתחת ל- X' },
+                                      { id: 'above', label: 'מעל ל- X' },
+                                      { id: 'between', label: 'בין X₁ ל- X₂' },
+                                      { id: 'outside', label: 'מחוץ לטווח' },
+                                      { id: 'conditional', label: 'מותנה מראש' }
+                                    ].map((item) => (
+                                      <button
+                                        key={item.id}
+                                        type="button"
+                                        onClick={() => setType(item.id as CalcType)}
+                                        className={`w-full py-2 px-3 text-xs font-black rounded-lg transition-all border text-right flex items-center justify-between cursor-pointer ${
+                                          type === item.id 
+                                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
+                                            : 'bg-slate-50 dark:bg-slate-850 text-slate-600 dark:text-slate-350 border-slate-200 dark:border-slate-800 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                        }`}
+                                      >
+                                        <span>{item.label}</span>
+                                        {type === item.id && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
+                                      </button>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {/* Column 3: Bounds and Limits */}
+                                <div className="space-y-4 opacity-100">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    ערכי גבולות וקלט
+                                  </h3>
+                                  
                                   {type === 'conditional' ? (
-                                    <div className="p-4 bg-slate-50 dark:bg-slate-850/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-4">
-                                      <div className="space-y-2">
-                                        <h4 className="text-xs font-black text-blue-500">מאורע A (ההסתברות המבוקשת)</h4>
+                                    <div className="p-3 bg-slate-50 dark:bg-slate-850/60 rounded-xl border border-slate-100 dark:border-slate-800 space-y-3">
+                                      <div className="space-y-1.5">
+                                        <h4 className="text-[11px] font-black text-blue-500 leading-none">מאורע A (ההסתברות המבוקשת)</h4>
                                         <select 
                                           value={condTypeA}
                                           onChange={(e) => setCondTypeA(e.target.value as CondType)}
-                                          className="w-full p-2 text-xs bg-white dark:bg-slate-800 border rounded-lg outline-none font-bold text-slate-900 dark:text-slate-100"
+                                          className="w-full p-1.5 text-xs bg-white dark:bg-slate-800 border rounded-lg outline-none font-bold text-slate-900 dark:text-slate-100"
                                         >
                                           <option value="below">X &lt; x</option>
                                           <option value="above">X &gt; x</option>
                                           <option value="between">x1 &lt; X &lt; x2</option>
                                         </select>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-1.5">
                                           <input 
                                             type="number" 
                                             value={x1}
                                             onChange={(e) => setX1(Number(e.target.value))}
-                                            className="p-2 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                                            className="p-1.5 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                                             placeholder="x1"
                                           />
                                           {condTypeA === 'between' && (
@@ -2048,30 +2055,30 @@ export default function NormalDistributionCalculator() {
                                               type="number" 
                                               value={x2}
                                               onChange={(e) => setX2(Number(e.target.value))}
-                                              className="p-2 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                                              className="p-1.5 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                                               placeholder="x2"
                                             />
                                           )}
                                         </div>
                                       </div>
                                       
-                                      <div className="space-y-2 border-t pt-3 border-slate-200/50 dark:border-slate-800">
-                                        <h4 className="text-xs font-black text-emerald-500">מאורע B (התנאי הנתון)</h4>
+                                      <div className="space-y-1.5 border-t pt-2 border-slate-200/50 dark:border-slate-800">
+                                        <h4 className="text-[11px] font-black text-emerald-500 leading-none">מאורע B (התנאי הנתון)</h4>
                                         <select 
                                           value={condType}
                                           onChange={(e) => setCondType(e.target.value as CondType)}
-                                          className="w-full p-2 text-xs bg-white dark:bg-slate-800 border rounded-lg outline-none font-bold text-slate-900 dark:text-slate-100"
+                                          className="w-full p-1.5 text-xs bg-white dark:bg-slate-800 border rounded-lg outline-none font-bold text-slate-900 dark:text-slate-100"
                                         >
                                           <option value="below">X &lt; x</option>
                                           <option value="above">X &gt; x</option>
                                           <option value="between">x1 &lt; X &lt; x2</option>
                                         </select>
-                                        <div className="grid grid-cols-2 gap-2">
+                                        <div className="grid grid-cols-2 gap-1.5">
                                           <input 
                                             type="number" 
                                             value={condX1}
                                             onChange={(e) => setCondX1(Number(e.target.value))}
-                                            className="p-2 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                                            className="p-1.5 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                                             placeholder="x1"
                                           />
                                           {condType === 'between' && (
@@ -2079,7 +2086,7 @@ export default function NormalDistributionCalculator() {
                                               type="number" 
                                               value={condX2}
                                               onChange={(e) => setCondX2(Number(e.target.value))}
-                                              className="p-2 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
+                                              className="p-1.5 text-xs font-bold border rounded-lg outline-none bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100"
                                               placeholder="x2"
                                             />
                                           )}
@@ -2089,7 +2096,7 @@ export default function NormalDistributionCalculator() {
                                   ) : (
                                     <div className="space-y-3">
                                       <div className="space-y-1">
-                                        <label className="text-xs font-black text-slate-400">
+                                        <label className="text-xs font-black text-slate-400 block pb-1">
                                           {type === 'between' || type === 'outside' ? 'גבול תחתון X₁' : 'ערך משתנה X:'}
                                         </label>
                                         <input 
@@ -2101,7 +2108,7 @@ export default function NormalDistributionCalculator() {
                                       </div>
                                       { (type === 'between' || type === 'outside') && (
                                         <div className="space-y-1">
-                                          <label className="text-xs font-black text-slate-400">גבול עליון X₂:</label>
+                                          <label className="text-xs font-black text-slate-400 block pb-1">גבול עליון X₂:</label>
                                           <input 
                                             type="number" 
                                             value={x2}
@@ -2112,44 +2119,139 @@ export default function NormalDistributionCalculator() {
                                       )}
                                     </div>
                                   )}
-                                </motion.div>
-                              ) : (
-                                <motion.div 
-                                  key="inverse-container"
-                                  initial={{ opacity: 0 }}
-                                  animate={{ opacity: 1 }}
-                                  className="flex flex-col gap-5"
-                                >
-                                  <div className="space-y-2">
-                                    <label className="text-xs font-black text-slate-400">סוג האחוזון הנדרש:</label>
-                                    <div className="grid grid-cols-2 gap-2">
-                                      <button
-                                        type="button"
-                                        onClick={() => setInverseType('lower')}
-                                        className={`py-2 px-3 text-xs font-black rounded-lg transition-all border ${
-                                          inverseType === 'lower' 
-                                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
-                                            : 'bg-slate-50 dark:bg-slate-850 text-slate-500 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
-                                        }`}
-                                      >
-                                        אחוזון מצטבר משמאל
-                                      </button>
-                                      <button
-                                        type="button"
-                                        onClick={() => setInverseType('upper')}
-                                        className={`py-2 px-3 text-xs font-black rounded-lg transition-all border ${
-                                          inverseType === 'upper' 
-                                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
-                                            : 'bg-slate-50 dark:bg-slate-850 text-slate-500 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
-                                        }`}
-                                      >
-                                        אחוזון מצטבר מימין
-                                      </button>
-                                    </div>
+                                </div>
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                key="inverse-grid"
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -5 }}
+                                transition={{ duration: 0.2 }}
+                                className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start"
+                              >
+                                {/* Column 1: Params */}
+                                <div className="space-y-4">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    פרמטרי ההתפלגות
+                                  </h3>
+                                  
+                                  {/* Mean */}
+                                  <div className="space-y-1">
+                                    <Tooltip content="הערך המרכזי של פעמון ההתפלגות (התוחלת)" theme={theme}>
+                                      <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">תוחלת (μ):</label>
+                                    </Tooltip>
+                                    <input 
+                                      type="text" 
+                                      value={meanInput} 
+                                      onChange={(e) => handleMeanChange(e.target.value)}
+                                      className={`w-full px-4 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                        meanError 
+                                          ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+                                          : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                      }`}
+                                      placeholder="הזן ממוצע, לדוגמה: 170"
+                                    />
+                                    {meanError && (
+                                      <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                        <AlertCircle size={10} className="stroke-[2.5]" />
+                                        <span>{meanError}</span>
+                                      </p>
+                                    )}
                                   </div>
 
+                                  {/* SD & Var */}
+                                  <div className="grid grid-cols-2 gap-3">
+                                    <div className="space-y-1">
+                                      <Tooltip content="מדד הפיזור של הערכים סביב הממוצע (חייב להיות חיובי וגדול מ-0)" theme={theme}>
+                                        <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">סטיית תקן (σ):</label>
+                                      </Tooltip>
+                                      <input 
+                                        type="text" 
+                                        value={stdDevInput} 
+                                        onChange={(e) => handleStdDevChange(e.target.value)}
+                                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                          stdDevError 
+                                            ? 'border-red-500 text-red-500 ring-4 ring-red-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                        }`}
+                                        placeholder="סטיית תקן"
+                                      />
+                                      {stdDevError && (
+                                        <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                          <AlertCircle size={10} className="stroke-[2.5]" />
+                                          <span>{stdDevError}</span>
+                                        </p>
+                                      )}
+                                    </div>
+
+                                    <div className="space-y-1">
+                                      <Tooltip content="שונות ההתפלגות (σ²), מחושבת ישירות כריבוע סטיית התקן" theme={theme}>
+                                        <label className="text-xs font-black text-slate-400 ml-1 cursor-help border-b border-dotted border-slate-300 dark:border-slate-705">שונות (σ²):</label>
+                                      </Tooltip>
+                                      <input 
+                                        type="text" 
+                                        value={varianceInput} 
+                                        onChange={(e) => handleVarianceChange(e.target.value)}
+                                        className={`w-full px-3 py-2 bg-slate-50 dark:bg-slate-800 border rounded-xl outline-none transition-all font-mono font-bold text-slate-900 dark:text-slate-100 ${
+                                          varianceError 
+                                            ? 'border-red-500 text-red-505 ring-4 ring-red-500/10' 
+                                            : 'border-slate-200 dark:border-slate-700/80 focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500'
+                                        }`}
+                                        placeholder="שונות"
+                                      />
+                                      {varianceError && (
+                                        <p className="text-[10px] text-red-500 font-bold flex items-center gap-1 mt-1">
+                                          <AlertCircle size={10} className="stroke-[2.5]" />
+                                          <span>{varianceError}</span>
+                                        </p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+
+                                {/* Column 2: Percentile Type */}
+                                <div className="space-y-4">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    סוג האחוזון
+                                  </h3>
+                                  <div className="flex flex-col gap-2 w-full">
+                                    <button
+                                      type="button"
+                                      onClick={() => setInverseType('lower')}
+                                      className={`w-full py-2 px-3 text-xs font-black rounded-lg transition-all border text-right flex items-center justify-between cursor-pointer ${
+                                        inverseType === 'lower' 
+                                          ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
+                                          : 'bg-slate-50 dark:bg-slate-850 text-slate-505 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
+                                      }`}
+                                    >
+                                      <span>אחוזון מצטבר משמאל</span>
+                                      {inverseType === 'lower' && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
+                                    </button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setInverseType('upper')}
+                                      className={`w-full py-2 px-3 text-xs font-black rounded-lg transition-all border text-right flex items-center justify-between cursor-pointer ${
+                                        inverseType === 'upper' 
+                                          ? 'bg-blue-600 text-white border-blue-600 shadow-sm' 
+                                          : 'bg-slate-50 dark:bg-slate-850 text-slate-505 border-slate-200 dark:border-slate-800 hover:bg-slate-100'
+                                      }`}
+                                    >
+                                      <span>אחוזון מצטבר מימין</span>
+                                      {inverseType === 'upper' && <span className="w-1.5 h-1.5 rounded-full bg-white block" />}
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* Column 3: Percentile Value */}
+                                <div className="space-y-4">
+                                  <h3 className="text-xs sm:text-sm font-black text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+                                    <span className="w-1.5 h-1.5 rounded bg-blue-500" />
+                                    ערך האחוזון (P)
+                                  </h3>
                                   <div className="space-y-1">
-                                    <label className="text-xs font-black text-slate-400">ערך האחוזון (P) באחוזים:</label>
                                     <div className="relative">
                                       <input 
                                         type="number" 
@@ -2164,13 +2266,10 @@ export default function NormalDistributionCalculator() {
                                     </div>
                                     <p className="text-[10px] text-slate-400">הזן הסתברות בין 0.01% ל-99.99%.</p>
                                   </div>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </div>
-
-
-
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       </motion.div>
                     )}
