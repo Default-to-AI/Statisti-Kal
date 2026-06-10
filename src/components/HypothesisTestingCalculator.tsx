@@ -1013,12 +1013,12 @@ export default function HypothesisTestingCalculator() {
  <select 
  value={tailType}
  onChange={(e) => setTailType(e.target.value as TailType)}
- className="w-full px-3 py-2.5 text-xs bg-[#070d33] border border-slate-800 rounded-xl outline-none font-bold text-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
- style={{ backgroundColor:'#070d33' }}
+ className="w-full px-3 py-2.5 text-xs bg-slate-900 border border-slate-800 rounded-xl outline-none font-bold text-white focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500"
+ 
  >
- <option value="right" className="bg-[#070d33] text-white">חד-צדדי ימני (μ &gt; μ₀)</option>
- <option value="left" className="bg-[#070d33] text-white">חד-צדדי שמאלי (μ &lt; μ₀)</option>
- <option value="two-tailed" className="bg-[#070d33] text-white">דו-צדדי (μ ≠ μ₀)</option>
+ <option value="right" className="bg-slate-900 text-white">חד-צדדי ימני (μ &gt; μ₀)</option>
+ <option value="left" className="bg-slate-900 text-white">חד-צדדי שמאלי (μ &lt; μ₀)</option>
+ <option value="two-tailed" className="bg-slate-900 text-white">דו-צדדי (μ ≠ μ₀)</option>
  </select>
  </div>
 
@@ -1034,12 +1034,12 @@ export default function HypothesisTestingCalculator() {
  type="text" 
  value={alphaInput}
  onChange={(e) => handleAlphaChange(e.target.value)}
- className={`w-14 px-1 py-2.5 bg-[#070d33] text-center border rounded-xl outline-none transition-all font-mono font-bold text-xs text-white ${
+ className={`w-14 px-1 py-2.5 bg-slate-900 text-center border rounded-xl outline-none transition-all font-mono font-bold text-xs text-white ${
  errors.alpha 
  ?'border-red-500 text-red-500 ring-4 ring-red-500/10' 
  :'border-slate-800 focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-505'
  }`}
- style={{ backgroundColor:'#070d33', textAlign:'center' }}
+ style={{ textAlign:'center' }}
  placeholder="0.05"
  />
  <div className="flex-1 grid grid-cols-3 gap-0.5">
@@ -1157,22 +1157,22 @@ export default function HypothesisTestingCalculator() {
  <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 5 }}>
  <defs>
  <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor={'#3b82f6'} stopOpacity={0.1}/>
- <stop offset="95%" stopColor={'#3b82f6'} stopOpacity={0}/>
+ <stop offset="5%" stopColor={'var(--color-accent)'} stopOpacity={0.1}/>
+ <stop offset="95%" stopColor={'var(--color-accent)'} stopOpacity={0}/>
  </linearGradient>
  <linearGradient id="h1Color" x1="0" y1="0" x2="0" y2="1">
- <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.1}/>
- <stop offset="95%" stopColor="#f59e0b" stopOpacity={0}/>
+ <stop offset="5%" stopColor="var(--chart-4)" stopOpacity={0.1}/>
+ <stop offset="95%" stopColor="var(--chart-4)" stopOpacity={0}/>
  </linearGradient>
  </defs>
- <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'#1e293b'} />
+ <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--chart-grid)'} />
  
  <XAxis 
  dataKey="x" 
  type="number" 
  domain={['auto','auto']}
- tick={{ fill:'#94a3b8', fontSize: 10 }}
- axisLine={{ stroke:'#334155' }}
+ tick={{ fill:'var(--chart-axis-label)', fontSize: 10 }}
+ axisLine={{ stroke:'var(--chart-grid)' }}
  tickLine={false}
  />
  <YAxis hide={true} />
@@ -1182,7 +1182,7 @@ export default function HypothesisTestingCalculator() {
  <Area 
  type="monotone" 
  dataKey="pdfH0" 
- stroke={'#3b82f6'} 
+ stroke={'var(--color-accent)'} 
  strokeWidth={2} 
  fill="url(#h0Color)" 
  dot={false}
@@ -1193,7 +1193,7 @@ export default function HypothesisTestingCalculator() {
  <Area 
  type="monotone" 
  dataKey="pdfH1" 
- stroke="#f59e0b" 
+ stroke="var(--chart-4)" 
  strokeWidth={2} 
  fill="url(#h1Color)" 
  dot={false}
@@ -1205,7 +1205,7 @@ export default function HypothesisTestingCalculator() {
  type="monotone" 
  dataKey="alphaShade" 
  stroke="none" 
- fill={'rgba(239, 68, 68, 0.35)'} 
+ fill={'var(--chart-rejection)'} 
  dot={false}
  isAnimationActive={false}
  />
@@ -1215,7 +1215,7 @@ export default function HypothesisTestingCalculator() {
  type="monotone" 
  dataKey="powerShade" 
  stroke="none" 
- fill={'rgba(16, 185, 129, 0.35)'} 
+ fill={'var(--chart-acceptance)'} 
  dot={false}
  isAnimationActive={false}
  />
@@ -1241,7 +1241,7 @@ export default function HypothesisTestingCalculator() {
  {/* Vertical Reference Line at Mean of H0 */}
  <ReferenceLine 
  x={stats.effectH0Mean} 
- stroke="#3b82f6" 
+ stroke="var(--color-accent)" 
  strokeWidth={1.5} 
  strokeDasharray="4 4"
  />
@@ -1249,7 +1249,7 @@ export default function HypothesisTestingCalculator() {
  {/* Vertical Reference Line at Mean of H1 */}
  <ReferenceLine 
  x={stats.effectH1Mean} 
- stroke="#f59e0b" 
+ stroke="var(--chart-4)" 
  strokeWidth={1.5} 
  strokeDasharray="4 4"
  />
@@ -1259,24 +1259,24 @@ export default function HypothesisTestingCalculator() {
  <>
  <ReferenceLine 
  x={stats.c1} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={2.5} 
  label={{
  value: `C₁: ${stats.c1.toFixed(2)}`,
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 13,
  fontWeight:'bold'
  }}
  />
  <ReferenceLine 
  x={stats.c2} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={2.5} 
  label={{
  value: `C₂: ${stats.c2.toFixed(2)}`,
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 13,
  fontWeight:'bold'
  }}
@@ -1285,12 +1285,12 @@ export default function HypothesisTestingCalculator() {
  ) : (
  <ReferenceLine 
  x={stats.c2} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={3} 
  label={{
  value: `C (קריטי): ${stats.c2.toFixed(2)}`,
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 14,
  fontWeight:'bold'
  }}

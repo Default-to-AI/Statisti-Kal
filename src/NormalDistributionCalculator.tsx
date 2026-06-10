@@ -444,13 +444,13 @@ const NormalChart: React.FC<{
  {/* Reference Line for Mean */}
  <ReferenceLine 
  x={mean} 
- stroke={'#94a3b8'} 
+ stroke={'var(--color-text-secondary)'} 
  strokeWidth={1.5} 
  strokeDasharray="4 4"
  label={{
  value: `μ=${mean}`,
  position:'top',
- fill:'#cbd5e1',
+ fill:'var(--color-text-primary)',
  fontSize: 11,
  fontWeight:'bold'
  }}
@@ -462,13 +462,13 @@ const NormalChart: React.FC<{
  {condX1 !== undefined && (condType ==='below' || condType ==='above' || condType ==='between') && (
  <ReferenceLine 
  x={condX1} 
- stroke="#10b981" 
+ stroke="var(--color-success)" 
  strokeWidth={1.5} 
  strokeDasharray="3 3"
  label={{
  value: condType ==='between' ?'B: x1' :'B',
  position:'top',
- fill:'#10b981',
+ fill:'var(--color-success)',
  fontSize: 10,
  fontWeight:'bold'
  }}
@@ -477,13 +477,13 @@ const NormalChart: React.FC<{
  {condX2 !== undefined && condType ==='between' && (
  <ReferenceLine 
  x={condX2} 
- stroke="#10b981" 
+ stroke="var(--color-success)" 
  strokeWidth={1.5} 
  strokeDasharray="3 3"
  label={{
  value:'B: x2',
  position:'top',
- fill:'#10b981',
+ fill:'var(--color-success)',
  fontSize: 10,
  fontWeight:'bold'
  }}
@@ -492,12 +492,12 @@ const NormalChart: React.FC<{
  {(condTypeA ==='below' || condTypeA ==='above' || condTypeA ==='between') && (
  <ReferenceLine 
  x={x1} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={1.5} 
  label={{
  value: condTypeA ==='between' ?'A: x1' :'A',
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 10,
  fontWeight:'bold'
  }}
@@ -506,12 +506,12 @@ const NormalChart: React.FC<{
  {condTypeA ==='between' && (
  <ReferenceLine 
  x={x2} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={1.5} 
  label={{
  value:'A: x2',
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 10,
  fontWeight:'bold'
  }}
@@ -521,12 +521,12 @@ const NormalChart: React.FC<{
  ) : mode ==='inverse' ? (
  <ReferenceLine 
  x={x1} 
- stroke="#3b82f6" 
+ stroke="var(--color-accent)" 
  strokeWidth={1.5} 
  label={{
  value: `X = ${x1.toFixed(2)}`,
  position:'top',
- fill:'#3b82f6',
+ fill:'var(--color-accent)',
  fontSize: 11,
  fontWeight:'bold'
  }}
@@ -535,12 +535,12 @@ const NormalChart: React.FC<{
  <>
  <ReferenceLine 
  x={x1} 
- stroke="#ef4444" 
+ stroke="var(--color-error)" 
  strokeWidth={1.5} 
  label={{
  value: type ==='between' || type ==='outside' ?'X₁' :'X',
  position:'top',
- fill:'#ef4444',
+ fill:'var(--color-error)',
  fontSize: 11,
  fontWeight:'bold'
  }}
@@ -548,12 +548,12 @@ const NormalChart: React.FC<{
  {(type ==='between' || type ==='outside') && (
  <ReferenceLine 
  x={x2} 
- stroke="#10b981" 
+ stroke="var(--color-success)" 
  strokeWidth={1.5} 
  label={{
  value:'X₂',
  position:'top',
- fill:'#10b981',
+ fill:'var(--color-success)',
  fontSize: 11,
  fontWeight:'bold'
  }}
