@@ -1069,61 +1069,7 @@ export default function HypothesisTestingCalculator() {
  <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
  
  {/* RIGHT Column - Dashboard & Visual Analytics */}
- <div className="lg:col-span-9 space-y-8 order-1 lg:order-2">
-
- {/* Quick Stats Grid Widgets */}
- {isValid && stats && (
- <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
- 
- <div className="p-4 sm:p-5 rounded-2xl border text-right shadow-md transition-all bg-slate-900 border-slate-800">
- <span className="text-xs sm:text-sm text-slate-200 font-extrabold flex items-center gap-1.5 break-words">
- <span className="w-2.5 h-2.5 rounded-full bg-red-600 shrink-0" />
- טעות מסוג ראשון (<InlineMath math="\alpha" />)
- </span>
- <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-black mt-2 text-red-400 tracking-tight break-all">
- {(alpha * 100).toFixed(1)}%
- </div>
- <span className="text-[10px] sm:text-xs text-slate-300 font-bold block mt-2 leading-tight">רמת מובהקות המבחן המקורית</span>
- </div>
-
- <div className="p-4 sm:p-5 rounded-2xl border text-right shadow-md transition-all bg-slate-900 border-slate-800">
- <span className="text-xs sm:text-sm text-slate-200 font-extrabold flex items-center gap-1.5 break-words">
- <span className="w-2.5 h-2.5 rounded-full bg-amber-600 animate-pulse shrink-0" />
- טעות מסוג שני (<InlineMath math="\beta" />)
- </span>
- <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-black mt-2 text-amber-400 tracking-tight break-all">
- {(stats.beta * 100).toFixed(2)}%
- </div>
- <span className="text-[10px] sm:text-xs text-slate-300 font-bold block mt-2 leading-tight">הסיכוי לקבלת H₀ מוטעית</span>
- </div>
-
- <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-br from-indigo-700 to-emerald-800 text-white shadow-xl flex flex-col justify-between">
- <div>
- <span className="text-xs sm:text-sm font-black flex items-center gap-1.5 text-white break-words">
- <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping shrink-0" />
- עוצמת המבחן (<InlineMath math="1-\beta" />)
- </span>
- <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-black mt-2 tracking-tight break-all">
- {(stats.power * 100).toFixed(2)}%
- </div>
- </div>
- <span className="text-[10px] sm:text-xs text-indigo-100 font-bold block mt-2 leading-tight">הסיכוי לדחות נכון את H₀</span>
- </div>
-
- <div className="p-4 sm:p-5 rounded-2xl border text-right shadow-md transition-all bg-slate-900 border-slate-800">
- <span className="text-xs sm:text-sm text-slate-200 font-extrabold flex items-center gap-1.5 break-words">
- <span className="w-2.5 h-2.5 rounded-full bg-indigo-600 shrink-0" />
- שגיאת תקן (<InlineMath math="SE" />)
- </span>
- <div className="text-2xl sm:text-3xl lg:text-2xl xl:text-3xl font-black mt-2 text-indigo-400 tracking-tight break-all">
- {stats.se.toFixed(4)}
- </div>
- <span className="text-[10px] sm:text-xs text-slate-300 font-bold block mt-2 leading-tight">סטיית התקן של הסטטיסטי</span>
- </div>
-
- </div>
- )}
-
+ <div className="lg:col-span-7 xl:col-span-8 space-y-8 order-1 lg:order-2">
 
  {/* Overlapping Curves Chart */}
  <div className="rounded-3xl p-6 md:p-8 border shadow-md transition-all bg-slate-900 border-slate-800">
@@ -1752,9 +1698,19 @@ export default function HypothesisTestingCalculator() {
  </div>
 
  {/* LEFT Column - Info & Explanations Panel */}
- <div className="lg:col-span-3 space-y-6 order-2 lg:order-1">
+ <div className="lg:col-span-5 xl:col-span-4 space-y-6 order-2 lg:order-1">
 
- {/* Theoretical Help widget inside side panel */}
+ {/* Decision Matrix Hero (Moved to side panel) */}
+  <div className="rounded-3xl border p-5 md:p-6 text-right relative overflow-hidden shadow-lg transition-all bg-slate-900 border-slate-800 mb-6">
+    <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-red-600 via-indigo-700 to-emerald-600" />
+    <h3 className="text-base sm:text-lg font-black mb-4 flex items-center gap-2 border-b border-slate-800 pb-2 text-slate-100">
+      <Award size={18} className="text-emerald-500" />
+      מטריצת החלטה ורמות מובהקות
+    </h3>
+    <DecisionMatrix isValid={isValid} stats={stats} alpha={alpha} />
+  </div>
+
+  {/* Theoretical Help widget inside side panel */}
  <div className="p-5 rounded-2xl bg-gradient-to-br from-indigo-950 to-slate-900 border border-slate-800 text-white shadow-md relative overflow-hidden" dir="rtl">
  <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full -mr-8 -mt-8 blur-xl" />
  <h4 className="text-sm font-black flex items-center gap-2 text-indigo-300 mb-2">
@@ -1772,17 +1728,7 @@ export default function HypothesisTestingCalculator() {
 
  </div>
 
- {/* Decision Matrix Hero (Moved Down & Polished) */}
- <div className="mt-8 rounded-3xl border p-5 md:p-6 text-right relative overflow-hidden shadow-lg transition-all bg-slate-900 border-slate-800">
- <div className="absolute top-0 right-0 w-full h-1 bg-gradient-to-l from-red-600 via-indigo-700 to-emerald-600" />
  
- <h3 className="text-base sm:text-lg font-black mb-4 flex items-center gap-2 border-b border-slate-800 pb-2 text-slate-100">
- <Award size={18} className="text-emerald-500" />
- מטריצת החלטה ורמות מובהקות (ארבעת מצבי עולם הסקה סטטיסטית)
- </h3>
-
- <DecisionMatrix isValid={isValid} stats={stats} alpha={alpha} />
- </div>
 
  </div>
  </div>
