@@ -7,6 +7,56 @@
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
+/* ═══════════════════════════════════════════════════
+   DESIGN SYSTEM TOKENS — Dark-Only
+   Palette: Bloomberg terminal × modern SaaS
+   Accent: Electric Blue (formalized from existing blue usage)
+   ═══════════════════════════════════════════════════ */
+:root {
+  /* Background layers (deepest → surface) */
+  --color-bg-base:       #0d0f14;
+  --color-bg-surface:    #151820;
+  --color-bg-elevated:   #1c2030;
+  --color-bg-subtle:     #252a3a;
+
+  /* Text */
+  --color-text-primary:  #e8eaf0;
+  --color-text-secondary:#8b90a0;
+  --color-text-muted:    #555b6e;
+
+  /* Accent — Electric Blue */
+  --color-accent:        #4f8ef7;
+  --color-accent-hover:  #6ba0ff;
+  --color-accent-dim:    rgba(79, 142, 247, 0.20);
+
+  /* Semantic */
+  --color-success:       #3dd68c;
+  --color-warning:       #f5a623;
+  --color-error:         #f06060;
+  --color-info:          var(--color-accent);
+
+  /* Borders */
+  --color-border:        #252a3a;
+  --color-border-focus:  var(--color-accent);
+
+  /* Chart palette */
+  --chart-1:             var(--color-accent);
+  --chart-2:             #a78bfa;
+  --chart-3:             #3dd68c;
+  --chart-4:             #f5a623;
+  --chart-5:             #f06060;
+
+  /* Chart-specific */
+  --chart-grid:          rgba(37, 42, 58, 0.6);
+  --chart-axis-label:    var(--color-text-secondary);
+  --chart-curve:         #60a5fa;
+  --chart-shaded:        rgba(96, 165, 250, 0.4);
+  --chart-shaded-b:      rgba(16, 185, 129, 0.2);
+  --chart-intersect:     rgba(79, 142, 247, 0.65);
+  --chart-rejection:     rgba(239, 68, 68, 0.35);
+  --chart-acceptance:    rgba(16, 185, 129, 0.35);
+}
+
 /* Ensure KaTeX math renders from left to right (LTR) even in RTL pages without breaking layout */
 .katex {
   direction: ltr !important;
