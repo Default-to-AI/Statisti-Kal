@@ -677,10 +677,10 @@ export default function HypothesisTestingCalculator() {
  }
 
  if (isReject) {
- decisionHeading ='Reject H_0';
+ decisionHeading ='\\text{Reject } H_0';
  belongingExplanationText = `מכיוון שממוצע המדגם בפועל הוא X̄ = ${formattedXBar}, הוא שייך לקבוצה C.`;
  } else {
- decisionHeading ='Do Not Reject H_0';
+ decisionHeading ='\\text{Do Not Reject } H_0';
  belongingExplanationText = `מכיוון שממוצע המדגם בפועל הוא X̄ = ${formattedXBar}, הוא שייך לקבוצה \\bar{C}.`;
  }
 
@@ -1682,12 +1682,14 @@ export default function HypothesisTestingCalculator() {
 
  <div className="space-y-4">
  <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 leading-relaxed text-sm sm:text-base font-bold text-slate-200">
- <p className={`text-base sm:text-lg font-black ${decisionData.isReject ?'text-emerald-300' :'text-slate-300'}`}>
- מצב: המדגם נמצא באזור {decisionData.isReject ?'הדחייה C' :'הקבלה \\bar{C}'}
- </p>
- <p className="text-base sm:text-lg font-black mt-2">
- החלטה פורמלית: <span className="font-mono underline decoration-2"><InlineMath math={decisionData.decisionHeading} /></span>
- </p>
+ <div className={`text-base sm:text-lg font-black flex justify-center items-center gap-2 ${decisionData.isReject ?'text-emerald-300' :'text-slate-300'}`}>
+ <span>מצב: המדגם נמצא באזור {decisionData.isReject ? 'הדחייה' : 'הקבלה'}</span>
+ <span className="mt-1"><InlineMath math={decisionData.isReject ? 'C' : '\\bar{C}'} /></span>
+ </div>
+ <div className="text-base sm:text-lg font-black mt-2 flex justify-center items-center gap-2">
+ <span>החלטה פורמלית:</span>
+ <span className="font-mono underline decoration-2 mt-1" dir="ltr"><InlineMath math={decisionData.decisionHeading} /></span>
+ </div>
  </div>
  
  <p className="text-sm sm:text-base font-extrabold text-slate-200 leading-relaxed mt-4">
