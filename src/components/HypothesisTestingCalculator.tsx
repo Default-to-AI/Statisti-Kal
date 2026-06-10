@@ -1076,7 +1076,7 @@ export default function HypothesisTestingCalculator() {
  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
   {/* RIGHT Column - Dashboard & Visual Analytics */}
-  <div className="space-y-8 order-1 lg:order-2 w-full min-w-0">
+  <div className="space-y-8 w-full min-w-0">
 
  {/* Overlapping Curves Chart */}
  <div className="rounded-3xl p-6 md:p-8 border shadow-md transition-all bg-slate-900 border-slate-800">
@@ -1705,7 +1705,7 @@ export default function HypothesisTestingCalculator() {
  </div>
 
  {/* LEFT Column - Info & Explanations Panel */}
-  <div className="space-y-6 order-2 lg:order-1 w-full min-w-0">
+  <div className="space-y-6 w-full min-w-0">
 
  {/* Decision Matrix Hero (Moved to side panel) */}
   <div className="rounded-3xl border p-5 md:p-6 text-right relative overflow-hidden shadow-lg transition-all bg-slate-900 border-slate-800 mb-6">
