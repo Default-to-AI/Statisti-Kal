@@ -978,30 +978,55 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
 
- {/* Dynamic Formal Hypotheses Display Banner */}
- <div className="mb-6 p-4 rounded-2xl border border-indigo-150/80 border-indigo-900/40 bg-indigo-50/30 bg-indigo-950/10 flex flex-col sm:flex-row items-center justify-between gap-4 transition-all" dir="rtl">
- <div>
- <h4 className="text-sm font-black text-indigo-900 text-indigo-200 flex items-center gap-1.5">
- <Award size={16} className="text-indigo-500" />
- השערות המבחן בצורה הפורמלית (Formal Hypotheses):
- </h4>
- <span className="text-xs text-slate-400 block mt-1 leading-normal font-medium max-w-lg">
- קביעת השערת האפס (<InlineMath math="H_0" />) המבטאת חוסר שינוי, למול השערת המחקר אלטרנטיבית (<InlineMath math="H_1" />) המבטאת אפקט משמעותי.
- </span>
- </div>
+ {/* Dynamic Formal Hypotheses Display Banner with H1 Buttons */}
+  <div className="mb-6 p-4 rounded-2xl border border-indigo-900/40 bg-indigo-950/10 flex flex-col xl:flex-row items-center justify-between gap-6 transition-all" dir="rtl">
+    <div className="flex-1 min-w-0">
+      <h4 className="text-sm font-black text-indigo-200 flex items-center gap-1.5 mb-1">
+        <Award size={16} className="text-indigo-500 shrink-0" />
+        השערות המבחן בצורה הפורמלית:
+      </h4>
+      <span className="text-xs text-slate-400 block mt-1 leading-relaxed font-medium max-w-sm">
+        קביעת השערת האפס המבטאת חוסר שינוי, למול השערת המחקר. בחרו את כיוון השערת המחקר:
+      </span>
+    </div>
 
- <div className="flex flex-col items-center justify-center p-3 bg-slate-950/90 border border-slate-800 rounded-xl min-w-[210px] text-center shadow-sm">
- <span className="text-[10px] font-bold text-indigo-650 text-indigo-400 uppercase tracking-wider mb-1">השערות המבחן הפורמליות:</span>
- <div className="text-sm sm:text-base font-extrabold text-slate-100 font-mono tracking-wide" dir="ltr">
- <InlineMath math={getFormalHypothesisMath()} />
- </div>
- <div className="text-[10px] text-slate-400 text-slate-500 font-mono mt-1.5 border-t border-dotted border-slate-800 pt-1" dir="ltr">
- <InlineMath math={getGeneralFormalHypothesisMath()} />
- </div>
- </div>
- </div>
+    {/* Squared Buttons for H1 */}
+    <div className="flex gap-2 shrink-0">
+      <button 
+        onClick={() => setTailType('right')} 
+        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'right' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+      >
+        <span className="text-xs font-black">ימני</span>
+        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ &gt; μ₀</span>
+      </button>
+      <button 
+        onClick={() => setTailType('two-tailed')} 
+        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'two-tailed' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+      >
+        <span className="text-xs font-black">דו-צדדי</span>
+        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ ≠ μ₀</span>
+      </button>
+      <button 
+        onClick={() => setTailType('left')} 
+        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'left' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+      >
+        <span className="text-xs font-black">שמאלי</span>
+        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ &lt; μ₀</span>
+      </button>
+    </div>
 
- {/* Test Direction and Alpha Below Table */}
+    {/* Formal Hypotheses Display */}
+    <div className="flex flex-col items-center justify-center p-3 bg-slate-950/90 border border-slate-800 rounded-xl min-w-[180px] shrink-0 text-center shadow-sm">
+      <div className="text-sm sm:text-base font-extrabold text-slate-100 font-mono tracking-wide" dir="ltr">
+        <InlineMath math={getFormalHypothesisMath()} />
+      </div>
+      <div className="text-[10px] text-slate-500 font-mono mt-1.5 border-t border-dotted border-slate-800 pt-1" dir="ltr">
+        <InlineMath math={getGeneralFormalHypothesisMath()} />
+      </div>
+    </div>
+  </div>
+
+  {/* Test Direction and Alpha Below Table */}
  <div className="grid grid-cols-1 md:grid-cols-2 gap-6" dir="rtl">
  {/* Test Direction select */}
  <div className="space-y-1.5 text-right font-sans">
