@@ -1,25 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 
-export function useLocalStorageState<T>(key: string, initialValue: T | (() => T)): [T, React.Dispatch<React.SetStateAction<T>>] {
-  // Pass initial state function to useState so logic is only executed once
+export function useLocalStorageState<T>(key: string, initialValue: T): [T, (value: T | ((prev: T) => T)) => void] {
   const [state, setState] = useState<T>(() => {
     try {
       const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : (initialValue instanceof Function ? initialValue() : initialValue);
+      if (item !== null) {
+        return JSON.parse(item) as T;
+      }
     } catch (error) {
       console.warn(`Error reading localStorage key "${key}":`, error);
-      return initialValue instanceof Function ? initialValue() : initialValue;
     }
+    return initialValue;
   });
 
-  // Return a wrapped version of useState's setter function that persists the new value to localStorage.
-  useEffect(() => {
+  const setValue = useCallback((value: T | ((prev: T) => T)) => {
     try {
-      window.localStorage.setItem(key, JSON.stringify(state));
+      setState(prevState => {
+        const valueToStore = value instanceof Function ? value(prevState) : value;
+        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        return valueToStore;
+      });
     } catch (error) {
       console.warn(`Error setting localStorage key "${key}":`, error);
     }
-  }, [key, state]);
+  }, [key]);
 
-  return [state, setState];
+  return [state, setValue];
 }

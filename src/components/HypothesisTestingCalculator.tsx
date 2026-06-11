@@ -1074,8 +1074,71 @@ export default function HypothesisTestingCalculator() {
       </div>
     </div>
   </div>
- {/* Main Grid Layout */}
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+  {/* Popular Z & Phi Row for Hypothesis Testing */}
+  <div className="mb-6 bg-slate-900/60 border border-slate-800 rounded-2xl p-4 text-right space-y-3 shadow-sm">
+    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+      <div className="flex items-center gap-1.5 text-slate-300">
+        <Sliders size={14} className="text-indigo-400" />
+        <span className="text-xs font-black font-sans text-indigo-200">ערכים וציוני תקן פופולריים למבחני השערות:</span>
+      </div>
+      <span className="text-[10px] text-slate-450 text-slate-400">מודגש אוטומטית בהתאם לקלט פעיל. לחצו למילוי ועדכון מהיר של הפרמטרים:</span>
+    </div>
+    
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
+      {[
+        { confidence: "90%", alpha: 0.10, tail: "one", phi: 0.9000, z: 1.282, label: "חד-צדדי (α=0.10)" },
+        { confidence: "90%", alpha: 0.10, tail: "two", phi: 0.9500, z: 1.645, label: "דו-צדדי (α=0.10)" },
+        { confidence: "95%", alpha: 0.05, tail: "one", phi: 0.9500, z: 1.645, label: "חד-צדדי (α=0.05)" },
+        { confidence: "95%", alpha: 0.05, tail: "two", phi: 0.9750, z: 1.960, label: "דו-צדדי (α=0.05)" },
+        { confidence: "99%", alpha: 0.01, tail: "one", phi: 0.9900, z: 2.326, label: "חד-צדדי (α=0.01)" },
+        { confidence: "99%", alpha: 0.01, tail: "two", phi: 0.9950, z: 2.576, label: "דו-צדדי (α=0.01)" },
+      ].map((item, idx) => {
+        const isMatched = Math.abs(alpha - item.alpha) < 0.001 && (
+          (tailType === 'two-tailed' && item.tail === 'two') ||
+          (tailType !== 'two-tailed' && item.tail === 'one')
+        );
+
+        return (
+          <button
+            key={idx}
+            type="button"
+            onClick={() => {
+              applyAlphaPreset(item.alpha);
+              if (item.tail === 'two') {
+                setTailType('two-tailed');
+              } else {
+                if (tailType !== 'left' && tailType !== 'right') {
+                  setTailType('right');
+                }
+              }
+            }}
+            className={`p-2.5 rounded-xl border text-center transition-all duration-300 relative overflow-hidden select-none cursor-pointer flex flex-col justify-between h-24 ${
+              isMatched
+                ? 'bg-indigo-600/20 border-indigo-500 shadow-[0_0_15px_rgba(99,102,241,0.25)] ring-1 ring-indigo-500'
+                : 'bg-slate-950/40 border-slate-800/80 hover:bg-slate-900/60'
+            }`}
+          >
+            {isMatched && (
+              <div className="absolute top-0 right-0 left-0 h-0.5 bg-gradient-to-l from-indigo-500 to-blue-500" />
+            )}
+            <div>
+              <div className="text-[10px] font-black text-indigo-300/90 leading-tight">{item.label}</div>
+              <div className="text-[13px] font-black text-slate-100 mt-1">רמת ביטחון {item.confidence}</div>
+            </div>
+            <div className="flex items-baseline justify-between mt-1 pt-1 border-t border-slate-800">
+              <span className="text-[9px] text-slate-400 font-mono">Z_crit:</span>
+              <span className="text-xs font-black font-mono text-indigo-300">{item.z.toFixed(3)}</span>
+              <span className="text-[9px] text-slate-400 font-mono">Φ: {item.phi.toFixed(4)}</span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+
+  {/* Main Grid Layout */}
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
 
   {/* RIGHT Column - Dashboard & Visual Analytics */}
   <div className="contents">
