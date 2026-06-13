@@ -1718,7 +1718,6 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  </div>
- </div>
 
  {/* Step 2: Definition of variables and SE */}
  <div className="space-y-3 pt-6">
