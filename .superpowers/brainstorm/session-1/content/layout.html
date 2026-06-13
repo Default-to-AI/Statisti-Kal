@@ -1,0 +1,36 @@
+<h2>How should we integrate P-Value Calculation?</h2>
+<p class="subtitle">Inside the Hypothesis Testing tab</p>
+
+<div class="options">
+  <div class="option" data-choice="a" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>Mode Switch (Toggle)</h3>
+      <p>A dynamic toggle at the top of the tab. Changes the form fields based on what you want to calculate.</p>
+      <div class="mockup" style="margin-top: 10px; border: 1px solid #334155; padding: 10px; border-radius: 6px;">
+         <div style="display:flex; gap:10px; margin-bottom: 10px; background: #1e293b; padding: 4px; border-radius: 6px;">
+            <div style="background: #3b82f6; padding: 4px 12px; border-radius: 4px; color: white; font-weight: bold; flex: 1; text-align: center;">Run Test (Alpha/Beta)</div>
+            <div style="padding: 4px 12px; color: #94a3b8; flex: 1; text-align: center;">Calculate P-Value</div>
+         </div>
+         <div class="placeholder" style="height: 60px; background: #0f172a; border-radius: 4px; display:flex; align-items:center; justify-content:center; color: #64748b;">
+            Form fields for Hypothesis Test
+         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="option" data-choice="b" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>Unified Results (Calculate Both)</h3>
+      <p>No toggle needed. You enter your test statistic/data, and the results section automatically shows both the decision and the exact p-value.</p>
+      <div class="mockup" style="margin-top: 10px; border: 1px solid #334155; padding: 10px; border-radius: 6px;">
+         <div class="placeholder" style="height: 40px; background: #0f172a; border-radius: 4px; margin-bottom: 10px;"></div>
+         <div style="padding: 10px; background: rgba(16, 185, 129, 0.1); border-left: 3px solid #10b981; border-radius: 4px;">
+            <div style="color: #10b981; font-weight: bold;">Decision: Reject H0</div>
+            <div style="margin-top: 4px; font-size: 14px; color: #e2e8f0;">Exact P-Value: 0.0342</div>
+         </div>
+      </div>
+    </div>
+  </div>
+</div>

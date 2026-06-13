@@ -1219,10 +1219,10 @@ export default function HypothesisTestingCalculator() {
     <div className="flex-1 min-w-0">
       <h4 className="text-sm font-black text-indigo-200 flex items-center gap-1.5 mb-1">
         <Award size={16} className="text-indigo-500 shrink-0" />
-        השערות המבחן בצורה הפורמלית:
+        הגדרת השערות ובחירת כיווני המבחן:
       </h4>
       <span className="text-xs text-slate-400 block mt-1 leading-relaxed font-medium max-w-sm">
-        קביעת השערת האפס המבטאת חוסר שינוי, למול השערת המחקר. בחרו את כיוון השערת המחקר:
+        בחירת כיוון השערת המחקר, למול השערת האפס המבטאת חוסר שינוי:
       </span>
     </div>
 
@@ -1316,11 +1316,11 @@ export default function HypothesisTestingCalculator() {
             )}
             <div>
               <div className="text-[10px] font-black text-indigo-300/90 leading-tight">{item.label}</div>
-              <div className="text-[13px] font-black text-slate-100 mt-1">רמת ביטחון {item.confidence}</div>
+              <div className="text-[13px] font-black text-slate-100 mt-1">רמת ביטחון: {item.confidence}</div>
             </div>
             <div className="flex items-baseline justify-between mt-1 pt-1 border-t border-slate-800">
               <span className="text-[9px] text-slate-400 font-mono">Z_crit:</span>
-              <span className="text-xs font-black font-mono text-indigo-300">{item.z.toFixed(3)}</span>
+              <span className="text-L font-black font-mono text-indigo-300">{item.z.toFixed(3)}</span>
               <span className="text-[9px] text-slate-400 font-mono">Φ: {item.phi.toFixed(4)}</span>
             </div>
           </button>
