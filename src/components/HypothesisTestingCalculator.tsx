@@ -1627,14 +1627,14 @@ export default function HypothesisTestingCalculator() {
    {isValid && decisionData && (
     <div className="mr-0 sm:mr-3 flex items-center shrink-0">
      {decisionData.isReject ? (
-      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)] leading-none">
+      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-black bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-[0_0_12px_rgba(16,185,129,0.15)] leading-none">
        <CheckCircle size={18} className="text-emerald-400 shrink-0" />
        <span>החלטה: דוחים את </span>
        <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
       </div>
      ) : (
-      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black bg-red-500/15 text-red-400 border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.15)] leading-none">
-       <XCircle size={14} className="text-red-400 shrink-0" />
+      <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-md font-black bg-red-500/15 text-red-400 border border-red-500/30 shadow-[0_0_12px_rgba(239,68,68,0.15)] leading-none">
+       <XCircle size={18} className="text-red-400 shrink-0" />
        <span>החלטה: אין לדחות את </span>
        <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
       </div>
@@ -1665,36 +1665,37 @@ export default function HypothesisTestingCalculator() {
  <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">1</span>
  <span className="text-xl sm:text-2xl font-black">ניסוח השערות המחקר (השערת האפס והשערת המחקר)</span>
  </div>
- <p className="text-base sm:text-lg text-slate-200 leading-relaxed pr-9 font-semibold">
- הצעד הראשון והחשוב בכל מבחן השערה סטטיסטי הוא ניסוח מדויק של צמד ההשערות. ההשערות מנוסחות תמיד במונחי פרמטר האוכלוסייה התיאורטי (<InlineMath math="\mu" />):
- </p>
- 
- <div className="pr-9 py-3 space-y-4">
+
+ <div className="pr-5 py-1 space-y-2">
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
  {/* H0 Card */}
- <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 space-y-3 text-right">
- <div className="flex items-center gap-2 text-indigo-300 font-extrabold justify-start">
- <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/15 border border-indigo-500/30 font-mono">H0</span>
- <span>השערת האפס</span>
+ <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 flex flex-col h-full text-right">
+ <div className="flex items-center gap-2 text-blue-400 font-black justify-start mb-2">
+ <span className="text-sm font-black px-2 py-0.5 rounded bg-blue-500/15 border border-blue-500/30 font-mono">H0</span>
+ <span className="text-lg sm:text-xl font-black">השערת האפס</span>
  </div>
- <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 text-center" dir="ltr">
+ <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal mb-4">
+ מניחה שאין השפעה, קשר או שינוי חדש במערכת, וכי המצב הקיים נותר <span className="font-bold underline">ללא שינוי</span>.
+ הפרמטר הנבדק <span className="font-bold">שווה בדיוק</span> לערך הבסיס שהוגדר.
+ </p>
+ <div className="mt-auto bg-slate-950/80 py-4 px-2 rounded-xl border border-blue-500/40 text-center text-xl sm:text-2xl text-blue-100 shadow-inner" dir="ltr">
  <BlockMath math={`H_0: \\mu = ${mu0}`} />
  </div>
- <p className="text-xs sm:text-sm text-slate-100 leading-relaxed">
- מניחה שאין השפעה, קשר או שינוי חדש במערכת, וכי המצב הקיים נותר ללא שינוי. תוחלת האוכלוסייה שווה בדיוק לערך הבסיס שהוגדר.
- </p>
- <p className="text-xs sm:text-sm text-slate-400 font-bold">
- ✍️ ניסוח מילולי: תוחלת האוכלוסייה (<InlineMath math="\mu" />) שווה ל-{mu0}.
+ <p className="text-xs sm:text-sm text-slate-400 font-normal text-center mt-3">
+ ℹ️ במילים: ההנחה כרגע היא כי ממוצע האוכלוסיה (<InlineMath math="\\mu" />) שווה ל-{mu0}.
  </p>
  </div>
 
  {/* H1 Card */}
- <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 space-y-3 text-right">
- <div className="flex items-center gap-2 text-indigo-300 font-extrabold justify-start">
- <span className="px-2 py-0.5 rounded text-xs bg-indigo-500/15 border border-indigo-500/30 font-mono">H1</span>
- <span>השערת המחקר</span>
+ <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 flex flex-col h-full text-right">
+ <div className="flex items-center gap-2 text-amber-400 font-black justify-start mb-2">
+ <span className="text-sm font-black px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 font-mono">H1</span>
+ <span className="text-lg sm:text-xl font-black">השערת המחקר</span>
  </div>
- <div className="bg-slate-950/80 p-4 rounded-xl border border-slate-800/80 text-center" dir="ltr">
+ <p className="text-xs sm:text-sm text-slate-200 leading-relaxed font-normal mb-4">
+ מייצגת את שאלת המחקר והשינוי שהחוקר מנסה להוכיח. כיוון הניסוח נקבע בהתאם לכיוון המבחן שהוגדר.
+ </p>
+ <div className="mt-auto bg-slate-950/80 py-4 px-2 rounded-xl border border-amber-500/40 text-center text-xl sm:text-2xl text-amber-100 shadow-inner" dir="ltr">
  {tailType === 'right' ? (
  <BlockMath math={`H_1: \\mu > ${mu0}`} />
  ) : tailType === 'left' ? (
@@ -1703,19 +1704,17 @@ export default function HypothesisTestingCalculator() {
  <BlockMath math={`H_1: \\mu \\neq ${mu0}`} />
  )}
  </div>
- <p className="text-xs sm:text-sm text-slate-100 leading-relaxed">
- מייצגת את שאלת המחקר והשינוי שהחוקר מנסה להוכיח. כיוון הניסוח נקבע בהתאם לכיוון המבחן שהוגדר.
- </p>
- <p className="text-xs sm:text-sm text-slate-400 font-bold">
- ✍️ ניסוח מילולי: תוחלת האוכלוסייה (<InlineMath math="\mu" />) {' '}
+ <p className="text-xs sm:text-sm text-slate-400 font-normal text-center mt-3">
+ ✍️ ניסוח מילולי: תוחלת האוכלוסייה (<InlineMath math="\\mu" />) {' '}
  {tailType === 'right' ? (
- <span>גדולה מ-{mu0} (מבחן חד-צדדי ימני).</span>
+ <span className="font-bold">גדולה מ-{mu0} (מבחן חד-צדדי ימני).</span>
  ) : tailType === 'left' ? (
- <span>קטנה מ-{mu0} (מבחן חד-צדדי שמאלי).</span>
+ <span className="font-bold">קטנה מ-{mu0} (מבחן חד-צדדי שמאלי).</span>
  ) : (
- <span>שונה מ-{mu0} (מבחן דו-צדדי).</span>
+ <span className="font-bold">שונה מ-{mu0} (מבחן דו-צדדי).</span>
  )}
  </p>
+ </div>
  </div>
  </div>
  </div>
