@@ -2102,9 +2102,17 @@ export default function HypothesisTestingCalculator() {
 
  </div>
  
- <p className="text-sm sm:text-base font-extrabold text-slate-200 leading-relaxed mt-4">
- {decisionData.verbalConclusion}
- </p>
+  <div className="flex flex-col gap-3 mt-4">
+    <p className="text-sm sm:text-base font-extrabold text-slate-200 leading-relaxed">
+    {decisionData.verbalConclusion}
+    </p>
+    <div className="bg-slate-900/50 p-4 rounded-xl border border-slate-800 text-sm text-slate-300 flex items-center justify-between shadow-inner">
+      <span className="font-extrabold text-slate-200">Exact P-Value:</span>
+      <span className={`font-mono text-xl tracking-wider font-black ${decisionData.pValue < alpha ? 'text-emerald-400' : 'text-red-400'}`}>
+        {decisionData.pValue < 0.0001 ? '< 0.0001' : decisionData.pValue.toFixed(4)}
+      </span>
+    </div>
+  </div>
  </div>
  </div>
  )}
