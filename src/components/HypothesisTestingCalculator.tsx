@@ -2110,62 +2110,54 @@ export default function HypothesisTestingCalculator() {
 
 
  {/* Step 5: P-Value Calculation */}
-  <div className="space-y-3 pt-6 border-t border-slate-800/60 mt-4">
+  <div className="space-y-4 pt-4 border-t border-slate-800/60 mt-4 text-right">
     <div className="flex items-center gap-3 font-extrabold text-indigo-400">
       <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">5</span>
       <span className="text-xl sm:text-2xl font-black">חישוב ופירוש ערך ה-P-Value</span>
     </div>
     
-    <div className="bg-slate-900/60 p-5 sm:p-6 rounded-2xl border border-slate-800 space-y-5 text-right">
-      <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal">
-        ערך ה-P-Value (רמת מובהקות נצפית) מייצג את ההסתברות הסטטיסטית לקבל תוצאה במדגם שהיא קיצונית באותה מידה או יותר מהתוצאה שהתקבלה בפועל, תחת ההנחה המחמירה שהשערת האפס נכונה לחלוטין. ככל שערך זה קטן יותר, כך הראיות האמפיריות נגד השערת האפס חזקות יותר.
-      </p>
-      {tailType === 'two-tailed' && (
-        <div className="bg-blue-950/30 border-r-4 border-blue-500 p-3 text-sm sm:text-base text-blue-200 rounded-l-lg">
-          <strong className="underline decoration-blue-500/50 underline-offset-4 decoration-2">הערה למבחן דו-צדדי:</strong> מאחר ואנו בוחנים חריגה בשני הכיוונים של ההתפלגות באופן סימטרי, ההסתברות הסטטיסטית שהתקבלה מוכפלת פי שניים בכדי לשקף את ההסתברות הכוללת לשגיאה.
-        </div>
-      )}
-      
-      {/* P-Value Math Box */}
-      <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-700 shadow-lg flex flex-col gap-4 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-2 h-full bg-indigo-500/30"></div>
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <span className="font-black text-lg text-slate-200 flex items-center gap-2">
-            <Activity size={20} className="text-indigo-400" />
-            ערך ה-P-Value מול <InlineMath math="\alpha" />:
-          </span>
-          <div className={`px-5 py-2.5 rounded-xl border-2 font-mono text-2xl tracking-wider font-black shadow-inner flex items-center justify-center ${
-            decisionData.pValue < alpha 
-              ? 'bg-emerald-950/40 border-emerald-500/30 text-emerald-400' 
-              : 'bg-red-950/40 border-red-500/30 text-red-400'
-          }`}>
-            {decisionData.pValue < 0.0001 ? '< 0.0001' : decisionData.pValue.toFixed(4)}
-          </div>
-        </div>
-        <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-2" dir="ltr">
-          <div className="bg-slate-950/80 p-3 sm:p-4 rounded-xl border border-slate-800 text-center shadow-inner font-extrabold min-w-[280px]">
-            <BlockMath math={`P\text{-Value} = ${tailType === 'right' ? `P(${varianceKnown ? 'Z' : 't'} > ${decisionData.statObs.toFixed(3)})` : tailType === 'left' ? `P(${varianceKnown ? 'Z' : 't'} < ${decisionData.statObs.toFixed(3)})` : `2 \cdot P(|${varianceKnown ? 'Z' : 't'}| > |${decisionData.statObs.toFixed(3)}|)`} = ${decisionData.pValue.toFixed(4)}`} />
-          </div>
-        </div>
-        <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center border-t border-slate-800/60 pt-5 mt-2" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-          <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> {decisionData.pValue < alpha ? 'ההסתברות לקבל תוצאה זו מקרית הינה נמוכה ביותר, ולכן התוצאה מובהקת.' : 'ההסתברות לקבל תוצאה זו אינה נמוכה מספיק, ולכן התוצאה אינה מובהקת מספיק.'}
-        </p>
-      </div>
+    <p className="text-sm sm:text-base text-slate-100 font-extrabold mb-2 leading-relaxed">
+      ערך ה-P-Value (רמת מובהקות נצפית) מייצג את ההסתברות הסטטיסטית לקבל תוצאה במדגם שהיא קיצונית באותה מידה או יותר מהתוצאה שהתקבלה בפועל, תחת ההנחה המחמירה שהשערת האפס נכונה לחלוטין.
+    </p>
 
-      {/* Logic Conditions */}
-      <div className="mt-4 flex flex-col gap-3">
-        <h4 className="text-slate-300 font-bold mb-1">כללי הכרעה מבוססי P-Value:</h4>
-        <div className={`p-4 border-2 rounded-xl flex items-center gap-4 transition-all duration-300 ${decisionData.pValue < alpha ? 'bg-emerald-950/30 border-emerald-500/60 text-emerald-200 shadow-[0_0_15px_rgba(16,185,129,0.15)] scale-[1.01]' : 'bg-slate-900/40 border-slate-800/60 text-slate-500 opacity-60'}`}>
-          <div className="font-mono font-black text-lg w-28 shrink-0 text-center bg-slate-950/50 p-2 rounded-lg" dir="ltr">P &lt; &alpha;</div>
-          <div className="text-sm sm:text-base font-bold">דחיית השערת האפס (התוצאה מובהקת סטטיסטית).</div>
-          {decisionData.pValue < alpha && <CheckCircle size={24} className="text-emerald-400 mr-auto shrink-0" />}
-        </div>
-        <div className={`p-4 border-2 rounded-xl flex items-center gap-4 transition-all duration-300 ${decisionData.pValue >= alpha ? 'bg-red-950/30 border-red-500/60 text-red-200 shadow-[0_0_15px_rgba(239,68,68,0.15)] scale-[1.01]' : 'bg-slate-900/40 border-slate-800/60 text-slate-500 opacity-60'}`}>
-          <div className="font-mono font-black text-lg w-28 shrink-0 text-center bg-slate-950/50 p-2 rounded-lg" dir="ltr">P &ge; &alpha;</div>
-          <div className="text-sm sm:text-base font-bold">אי-דחיית השערת האפס (אין מספיק ראיות אמפיריות).</div>
-          {decisionData.pValue >= alpha && <CheckCircle size={24} className="text-red-400 mr-auto shrink-0" />}
-        </div>
+    {tailType === 'two-tailed' && (
+      <p className="text-sm sm:text-base text-blue-300 font-bold leading-relaxed mt-2">
+        <span className="underline decoration-blue-500/50 underline-offset-4 decoration-2">הערה למבחן דו-צדדי:</span> מאחר ואנו בוחנים חריגה בשני הכיוונים של ההתפלגות באופן סימטרי, ההסתברות הסטטיסטית שהתקבלה מוכפלת פי שניים.
+      </p>
+    )}
+    
+    <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-2" dir="ltr">
+      <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
+        {varianceKnown ? (
+          <>
+            <BlockMath math={`Z_{stat} = \frac{\bar{X} - \mu_0}{SE} = ${decisionData.statObs.toFixed(4)}`} />
+            <BlockMath math={`P\text{-Value} = ${tailType === 'right' ? `P(Z > Z_{stat})` : tailType === 'left' ? `P(Z < Z_{stat})` : `2 \cdot P(|Z| > |Z_{stat}|)`} = ${decisionData.pValue.toFixed(4)}`} />
+          </>
+        ) : (
+          <>
+            <BlockMath math={`t_{stat} = \frac{\bar{X} - \mu_0}{SE} = ${decisionData.statObs.toFixed(4)}`} />
+            <BlockMath math={`P\text{-Value} = ${tailType === 'right' ? `P(t_{df} > t_{stat})` : tailType === 'left' ? `P(t_{df} < t_{stat})` : `2 \cdot P(|t_{df}| > |t_{stat}|)`} = ${decisionData.pValue.toFixed(4)}`} />
+          </>
+        )}
       </div>
+    </div>
+    
+    <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center pt-2 mt-2" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
+      <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> {decisionData.pValue < alpha ? 'ההסתברות לקבל תוצאה זו מקרית הינה נמוכה ביותר, ולכן נדחה את השערת האפס.' : 'ההסתברות לקבל תוצאה זו אינה נמוכה מספיק, ולכן לא נוכל לדחות את השערת האפס.'}
+    </p>
+
+    <div className="mt-4 text-right">
+      <p className="text-sm sm:text-base text-slate-100 font-extrabold mb-2 leading-relaxed">
+        כללי הכרעה מבוססי P-Value:
+      </p>
+      <ul className="list-disc list-inside space-y-2 text-slate-300 font-medium text-sm sm:text-base">
+        <li className={decisionData.pValue < alpha ? 'text-emerald-400 font-black' : ''}>
+          אם <InlineMath math="P\text{-Value} < \alpha" /> - נדחה את השערת האפס. {decisionData.pValue < alpha && <CheckCircle size={16} className="inline ml-1 mb-1" />}
+        </li>
+        <li className={decisionData.pValue >= alpha ? 'text-red-400 font-black' : ''}>
+          אם <InlineMath math="P\text{-Value} \ge \alpha" /> - לא נדחה את השערת האפס. {decisionData.pValue >= alpha && <CheckCircle size={16} className="inline ml-1 mb-1" />}
+        </li>
+      </ul>
     </div>
   </div>
 
