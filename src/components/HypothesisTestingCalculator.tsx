@@ -22,7 +22,9 @@ import {
   XCircle,
   BarChart2,
   Check,
-  X
+  X,
+  PenTool,
+  Activity
 } from 'lucide-react';
 import {
  ResponsiveContainer,
@@ -1682,7 +1684,7 @@ export default function HypothesisTestingCalculator() {
  <BlockMath math={`H_0: \\mu = ${mu0}`} />
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: ההנחה כרגע היא כי הפרמטר הנחקר <span className="font-bold">שווה</span> ל-{mu0}.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> ההנחה כרגע היא כי הפרמטר הנחקר <span className="font-bold">שווה</span> ל-{mu0}.
  </p>
  </div>
 
@@ -1705,7 +1707,7 @@ export default function HypothesisTestingCalculator() {
  )}
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: פרמטר האוכלוסיה הנחקר {' '}
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> פרמטר האוכלוסיה הנחקר {' '}
  {tailType === 'right' ? (
  <span className="font-bold">גדול מ-{mu0} (מבחן חד-צדדי ימני).</span>
  ) : tailType === 'left' ? (
@@ -1744,7 +1746,7 @@ export default function HypothesisTestingCalculator() {
   </div>
   </div>
   <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  ℹ️ במילים: שגיאת התקן לתצפית בודדת שווה לסטיית התקן המקורית.
+  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> שגיאת התקן לתצפית בודדת שווה לסטיית התקן המקורית.
   </p>
  </div>
  ) : testType ==='mean' ? (
@@ -1760,7 +1762,7 @@ export default function HypothesisTestingCalculator() {
   </div>
   </div>
   <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  ℹ️ במילים: שגיאת התקן שווה לסטיית התקן חלקי שורש גודל המדגם.
+  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> שגיאת התקן שווה לסטיית התקן חלקי שורש גודל המדגם.
   </p>
  </div>
  ) : (
@@ -1776,7 +1778,7 @@ export default function HypothesisTestingCalculator() {
   </div>
   </div>
   <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  ℹ️ במילים: שגיאת התקן לסכום שווה לסטיית התקן כפול שורש גודל המדגם.
+  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> שגיאת התקן לסכום שווה לסטיית התקן כפול שורש גודל המדגם.
   </p>
  <div className="text-sm sm:text-base font-bold text-slate-200 mt-2 p-4 bg-slate-800 border border-slate-700 rounded-xl">
  ממוצעי ההתפלגות החדשים הופכים ל-
@@ -1852,7 +1854,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הדחייה - כל ערכי ה-{statName} בהינתן שהם גדולים או שווים ל-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה - כל ערכי ה-{statName} בהינתן שהם גדולים או שווים ל-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
  </p>
  </div>
 
@@ -1869,7 +1871,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הקבלה - כל ערכי ה-{statName} בהינתן שהם קטנים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה - כל ערכי ה-{statName} בהינתן שהם קטנים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
  </p>
  </div>
  </div>
@@ -1917,7 +1919,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הדחייה - כל ערכי ה-{statName} בהינתן שהם קטנים או שווים ל-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה - כל ערכי ה-{statName} בהינתן שהם קטנים או שווים ל-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
  </p>
  </div>
 
@@ -1934,7 +1936,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הקבלה - כל ערכי ה-{statName} בהינתן שהם גדולים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה - כל ערכי ה-{statName} בהינתן שהם גדולים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
  </p>
  </div>
  </div>
@@ -1980,7 +1982,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הדחייה - ערכי ה-{statName} בהינתן שהם קטנים מ-<InlineMath math={`${stats.c1.toFixed(3)}`} /> או גדולים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה - ערכי ה-{statName} בהינתן שהם קטנים מ-<InlineMath math={`${stats.c1.toFixed(3)}`} /> או גדולים מ-<InlineMath math={`${stats.c2.toFixed(3)}`} />.
  </p>
  </div>
 
@@ -1997,7 +1999,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  </div>
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- ℹ️ במילים: אזור הקבלה - ערכי ה-{statName} בהינתן שהם נופלים בין שני הערכים הקריטיים שנקבעו.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה - ערכי ה-{statName} בהינתן שהם נופלים בין שני הערכים הקריטיים שנקבעו.
  </p>
  </div>
  </div>
@@ -2160,17 +2162,12 @@ export default function HypothesisTestingCalculator() {
  </div>
  
   <div className="flex flex-col gap-3 mt-4">
-    <div className="bg-slate-900/80 p-6 rounded-2xl border border-slate-700/60 my-4 shadow-xl relative overflow-hidden">
-      {/* Decorative quotes or watermark could be here */}
-      <span className="absolute top-2 right-4 text-slate-700 text-6xl opacity-30 font-serif">"</span>
-      <p className="text-2xl sm:text-3xl font-handwriting font-normal text-slate-200/90 leading-relaxed text-center px-4 relative z-10" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-      {decisionData.verbalConclusion}
-      </p>
-    </div>
-    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-700 mt-6 shadow-lg flex flex-col gap-4 relative overflow-hidden">
+    {/* P-Value Box */}
+    <div className="bg-slate-900/40 p-5 rounded-2xl border border-slate-700 mt-2 shadow-lg flex flex-col gap-4 relative overflow-hidden">
       <div className="absolute top-0 right-0 w-2 h-full bg-indigo-500/30"></div>
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
         <span className="font-black text-lg text-slate-200 flex items-center gap-2">
+          <Activity size={20} className="text-indigo-400" />
           רמת המובהקות שהושגה בפועל (P-Value):
         </span>
         <div className={`px-5 py-2.5 rounded-xl border-2 font-mono text-2xl tracking-wider font-black shadow-inner flex items-center justify-center ${
@@ -2181,8 +2178,21 @@ export default function HypothesisTestingCalculator() {
           {decisionData.pValue < 0.0001 ? '< 0.0001' : decisionData.pValue.toFixed(4)}
         </div>
       </div>
+      <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-2" dir="ltr">
+        <div className="bg-slate-900/80 p-3 sm:p-4 rounded-xl border border-slate-800 text-center shadow-inner font-extrabold min-w-[280px]">
+          <BlockMath math={`P\\text{-Value} = ${tailType === 'right' ? `P(${statSymbol} > ${stats.stat.toFixed(3)})` : tailType === 'left' ? `P(${statSymbol} < ${stats.stat.toFixed(3)})` : `2 \\cdot P(|${statSymbol}| > |${stats.stat.toFixed(3)}|)`} = ${decisionData.pValue.toFixed(4)}`} />
+        </div>
+      </div>
       <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center border-t border-slate-800/60 pt-5 mt-2" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-      ℹ️ במילים: ה-P-Value מייצג את ההסתברות לקבל תוצאה קיצונית כזו בהנחה שהשערת האפס נכונה.
+      <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> ה-P-Value מייצג את ההסתברות לקבל תוצאה קיצונית כזו בהנחה שהשערת האפס נכונה.
+      </p>
+    </div>
+
+    {/* Verbal Conclusion Box */}
+    <div className={`p-6 rounded-2xl border-2 my-2 shadow-xl relative overflow-hidden transition-colors duration-500 ${decisionData.isReject ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-red-950/20 border-red-500/30'}`}>
+      <span className={`absolute top-2 right-4 text-6xl opacity-20 font-serif ${decisionData.isReject ? 'text-emerald-500' : 'text-red-500'}`}>"</span>
+      <p className={`text-2xl sm:text-3xl font-handwriting font-normal leading-relaxed text-center px-4 relative z-10 ${decisionData.isReject ? 'text-emerald-100' : 'text-red-100'}`} style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
+      {decisionData.verbalConclusion}
       </p>
     </div>
   </div>
