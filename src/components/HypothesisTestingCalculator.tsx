@@ -227,7 +227,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
   }
 
   return (
-    <table className="w-full text-base text-right border-collapse table-layout-fixed rounded-2xl overflow-hidden border-none !border-transparent">
+    <table className="w-full text-base text-right border-collapse table-layout-fixed rounded-2xl overflow-hidden bg-slate-900 shadow-sm border border-slate-800">
   <thead>
     <tr className="bg-slate-800/70 text-xs text-slate-200 font-black border-none !border-transparent">
           <th className="p-3 text-center font-black text-slate-100 bg-slate-800/25 w-[20%]">
@@ -243,35 +243,35 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
       </thead>
       <tbody>
         {/* Row 1: Fail to reject H0 */}
-        <tr className="font-semibold text-slate-50">
-          <td className="p-4 font-extrabold bg-red-950/20 text-red-100 border-r-4 border-r-red-500/80">
-            <span className="text-sm sm:text-base font-black block text-red-400">
+        <tr className="font-semibold text-slate-50 border-b border-slate-800/60">
+          <td className="p-3 font-extrabold bg-red-950/20 text-red-100 border-r-4 border-r-red-500/80">
+            <span className="text-sm font-black block text-red-400">
               קבלת <InlineMath math="H_0" />
             </span>
-            <span className="block text-[13px] font-semibold text-slate-400 mt-1" dir="ltr">
+            <span className="block text-xs font-semibold text-slate-400 mt-0.5" dir="ltr">
               <InlineMath math="\text{Fail to Reject } H_0" />
             </span>
           </td>
           
           {/* Cell 1-1: Correct decision (1 - Alpha) */}
-          <td className="p-4 bg-emerald-950/10 hover:bg-emerald-950/20 transition-all">
-            <div className="flex items-center justify-between gap-2 border-b border-emerald-800/20 pb-2 mb-2">
-              <span className="font-black text-emerald-400/80 flex items-center gap-2 text-xs sm:text-sm">
-                <CheckCircle size={16} className="text-emerald-500/80 shrink-0" />
+          <td className="p-3 border-l border-slate-800/60 bg-emerald-950/10 hover:bg-emerald-950/20 transition-all">
+            <div className="flex items-center justify-between gap-2 border-b border-emerald-800/20 pb-1.5 mb-1.5">
+              <span className="font-black text-emerald-400/80 flex items-center gap-1.5 text-xs">
+                <CheckCircle size={14} className="text-emerald-500/80 shrink-0" />
                 החלטה נכונה
               </span>
-              <span className="text-xs font-bold text-emerald-400/80 bg-emerald-950/30 px-2 py-0.5 rounded" dir="ltr">
+              <span className="text-xs font-bold text-emerald-400/80 bg-emerald-950/30 px-1.5 py-0.5 rounded" dir="ltr">
                 <InlineMath math="1 - \alpha" />
               </span>
             </div>
-            <div className="my-2 flex items-baseline gap-x-3 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-black text-emerald-300/80 tracking-tight">
+            <div className="my-1.5 flex items-baseline gap-x-2 flex-wrap">
+              <span className="text-xl sm:text-2xl font-black text-emerald-300/80 tracking-tight">
                 {((1 - alpha) * 100).toFixed(1)}%
               </span>
               <span className="text-xs font-black text-emerald-400/80">רמת סמך</span>
             </div>
-            <div className="text-[11px] text-slate-400 font-medium leading-relaxed mt-1">
-              <div className="mb-1 text-slate-500 font-bold text-[10px]" dir="ltr">
+            <div className="text-[10px] text-slate-400 font-medium leading-snug mt-1">
+              <div className="mb-0.5 text-slate-500 font-bold" dir="ltr">
                 <InlineMath math="P(\text{Accept } H_0 \mid H_0 \text{ is true})" />
               </div>
               ההסתברות לא לדחות את השערת האפס בצדק כאשר היא נכונה.
@@ -279,35 +279,35 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
           </td>
 
           {/* Cell 1-2: Type II Error (Beta) */}
-          <td className={`p-4 transition-all ${!calculatePower ? 'bg-slate-950/15 opacity-40 select-none' : 'bg-red-950/10 hover:bg-red-950/20'}`}>
+          <td className={`p-3 transition-all ${!calculatePower ? 'bg-slate-950/15 opacity-40 select-none' : 'bg-red-950/10 hover:bg-red-950/20'}`}>
             {calculatePower ? (
               <>
-                <div className="flex items-center justify-between gap-2 border-b border-red-900/30 pb-2 mb-2">
-                  <span className="font-black text-red-400/80 flex items-center gap-2 text-xs sm:text-sm">
-                    <XCircle size={16} className="text-red-500/80 shrink-0" />
+                <div className="flex items-center justify-between gap-2 border-b border-red-900/30 pb-1.5 mb-1.5">
+                  <span className="font-black text-red-400/80 flex items-center gap-1.5 text-xs">
+                    <XCircle size={14} className="text-red-500/80 shrink-0" />
                     טעות מסוג II
                   </span>
-                  <span className="text-xs font-bold text-red-400/80 bg-red-950/40 px-2 py-0.5 rounded" dir="ltr">
+                  <span className="text-xs font-bold text-red-400/80 bg-red-950/40 px-1.5 py-0.5 rounded" dir="ltr">
                     <InlineMath math="\beta" />
                   </span>
                 </div>
-                <div className="my-2 flex items-baseline gap-x-3 flex-wrap">
-                  <span className="text-2xl sm:text-3xl font-black text-red-300/80 tracking-tight">
+                <div className="my-1.5 flex items-baseline gap-x-2 flex-wrap">
+                  <span className="text-xl sm:text-2xl font-black text-red-300/80 tracking-tight">
                     {(stats.beta * 100).toFixed(2)}%
                   </span>
                   <span className="text-xs font-black text-red-400/80">החמצה</span>
                 </div>
-                <div className="text-[11px] text-slate-400 font-medium leading-relaxed mt-1">
-                  <div className="mb-1 text-slate-500 font-bold text-[10px]" dir="ltr">
+                <div className="text-[10px] text-slate-400 font-medium leading-snug mt-1">
+                  <div className="mb-0.5 text-slate-500 font-bold" dir="ltr">
                     <InlineMath math="P(\text{Accept } H_0 \mid H_1 \text{ is true})" />
                   </div>
                   הסיכוי שלא לדחות את השערת האפס למרות שהיא שקרית וקיים אפקט.
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-6 text-center text-slate-500 h-full">
-                <Info size={16} className="mb-2" />
-                <span className="text-xs font-bold">לא פעיל</span>
+              <div className="flex flex-col items-center justify-center py-4 text-center text-slate-500 h-full">
+                <Info size={14} className="mb-1.5" />
+                <span className="text-[10px] font-bold">לא פעיל</span>
               </div>
             )}
           </td>
@@ -315,34 +315,34 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
 
         {/* Row 2: Reject H0 */}
         <tr className="font-semibold text-slate-50">
-          <td className="p-4 font-extrabold bg-emerald-950/20 text-emerald-100 border-r-4 border-r-emerald-500/80">
-            <span className="text-sm sm:text-base font-black block text-emerald-400">
+          <td className="p-3 font-extrabold bg-emerald-950/20 text-emerald-100 border-r-4 border-r-emerald-500/80">
+            <span className="text-sm font-black block text-emerald-400">
               דחיית <InlineMath math="H_0" />
             </span>
-            <span className="block text-[13px] font-semibold text-slate-400 mt-1" dir="ltr">
+            <span className="block text-xs font-semibold text-slate-400 mt-0.5" dir="ltr">
               <InlineMath math="\text{Reject } H_0" />
             </span>
           </td>
 
           {/* Cell 2-1: Type I Error (Alpha) */}
-          <td className="p-4 bg-red-950/20 hover:bg-red-900/30 transition-all">
-            <div className="flex items-center justify-between gap-2 border-b border-red-500/30 pb-2 mb-2">
-              <span className="font-black text-red-400 flex items-center gap-2 text-xs sm:text-sm">
-                <XCircle size={16} className="text-red-500 shrink-0" />
+          <td className="p-3 border-l border-slate-800/60 bg-red-950/20 hover:bg-red-900/30 transition-all">
+            <div className="flex items-center justify-between gap-2 border-b border-red-500/30 pb-1.5 mb-1.5">
+              <span className="font-black text-red-400 flex items-center gap-1.5 text-xs">
+                <XCircle size={14} className="text-red-500 shrink-0" />
                 טעות מסוג I
               </span>
-              <span className="text-xs font-bold text-red-200 bg-red-700/40 px-2 py-0.5 rounded" dir="ltr">
+              <span className="text-xs font-bold text-red-200 bg-red-700/40 px-1.5 py-0.5 rounded" dir="ltr">
                 <InlineMath math="\alpha" />
               </span>
             </div>
-            <div className="my-2 flex items-baseline gap-x-3 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-black text-red-300 tracking-tight">
+            <div className="my-1.5 flex items-baseline gap-x-2 flex-wrap">
+              <span className="text-xl sm:text-2xl font-black text-red-300 tracking-tight">
                 {(alpha * 100).toFixed(1)}%
               </span>
               <span className="text-xs font-black text-red-400">רמת מובהקות</span>
             </div>
-            <div className="text-[11px] text-slate-300 font-medium leading-relaxed mt-1">
-              <div className="mb-1 text-red-500/80 font-bold text-[10px]" dir="ltr">
+            <div className="text-[10px] text-slate-300 font-medium leading-snug mt-1">
+              <div className="mb-0.5 text-red-500/80 font-bold" dir="ltr">
                 <InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is true})" />
               </div>
               הסיכוי לדחות בטעות את השערת האפס כשהיא נכונה במציאות (גילוי שווא).
@@ -350,39 +350,39 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
           </td>
 
           {/* Cell 2-2: Correct decision (1 - Beta) */}
-          <td className={`p-4 transition-all ${
+          <td className={`p-3 transition-all ${
             !calculatePower 
               ? 'bg-slate-950/15 opacity-40 select-none' 
               : 'bg-emerald-900/20 hover:bg-emerald-900/30'
           }`}>
             {calculatePower ? (
               <>
-                <div className="flex items-center justify-between gap-2 border-b border-emerald-500/30 pb-2 mb-2">
-                  <span className="font-black text-emerald-400 flex items-center gap-2 text-xs sm:text-sm">
-                    <CheckCircle size={16} className="text-emerald-400 shrink-0" />
+                <div className="flex items-center justify-between gap-2 border-b border-emerald-500/30 pb-1.5 mb-1.5">
+                  <span className="font-black text-emerald-400 flex items-center gap-1.5 text-xs">
+                    <CheckCircle size={14} className="text-emerald-400 shrink-0" />
                     החלטה נכונה
                   </span>
-                  <span className="text-xs font-bold text-emerald-200 bg-emerald-700/40 px-2 py-0.5 rounded" dir="ltr">
+                  <span className="text-xs font-bold text-emerald-200 bg-emerald-700/40 px-1.5 py-0.5 rounded" dir="ltr">
                     <InlineMath math="1 - \beta" />
                   </span>
                 </div>
-                <div className="my-2 flex items-baseline gap-x-3 flex-wrap">
-                  <span className="text-2xl sm:text-3xl font-black text-emerald-300 tracking-tight">
+                <div className="my-1.5 flex items-baseline gap-x-2 flex-wrap">
+                  <span className="text-xl sm:text-2xl font-black text-emerald-300 tracking-tight">
                     {(stats.power * 100).toFixed(2)}%
                   </span>
                   <span className="text-xs font-black text-emerald-400">עוצמת המבחן</span>
                 </div>
-                <div className="text-[11px] text-slate-300 font-medium leading-relaxed mt-1">
-                  <div className="mb-1 text-emerald-500/80 font-bold text-[10px]" dir="ltr">
+                <div className="text-[10px] text-slate-300 font-medium leading-snug mt-1">
+                  <div className="mb-0.5 text-emerald-500/80 font-bold" dir="ltr">
                     <InlineMath math="P(\text{Reject } H_0 \mid H_1 \text{ is true})" />
                   </div>
                   ההסתברות לזהות ולדחות השערת אפס שקרית בצדק (גילוי אפקט אמיתי).
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center py-6 text-center text-slate-500 h-full">
-                <Info size={16} className="mb-2" />
-                <span className="text-xs font-bold">לא פעיל</span>
+              <div className="flex flex-col items-center justify-center py-4 text-center text-slate-500 h-full">
+                <Info size={14} className="mb-1.5" />
+                <span className="text-[10px] font-bold">לא פעיל</span>
               </div>
             )}
           </td>
