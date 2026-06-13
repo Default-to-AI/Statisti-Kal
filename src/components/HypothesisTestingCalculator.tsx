@@ -240,7 +240,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <tr className="border-b border-slate-800 font-semibold text-slate-950 text-slate-50">
  <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-red-950/20 text-red-100 border-r-4 border-r-red-500/80">
  <span className="text-base font-black block text-red-400">קבלת <InlineMath math="H_0" /></span>
- <span className="block text-[11px] font-bold text-red-300 mt-1">אי-דחיית השערת האפס</span>
+ <span className="block text-[11px] font-bold text-red-300 mt-1">לא ניתן לדחות את השערת האפס <InlineMath math="Fail\ to\ Reject\ H_0" /></span>
  </td>
  
  {/* Cell 1-1: Accept H0 and H0 is true => Correct decision */}
@@ -250,14 +250,13 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <CheckCircle size={15} className="text-emerald-400" />
  החלטה נכונה
  </span>
- <span className="text-xs font-bold text-slate-400" dir="ltr">1 - α</span>
+ <span className="text-lg font-bold text-slate-400" dir="ltr">1 - α</span>
  </div>
  <div className="text-2xl sm:text-3xl font-black mt-2 text-emerald-300">
  {((1 - alpha) * 100).toFixed(1)}%
  </div>
  <p className="text-[11px] text-slate-400 mt-1.5 leading-normal font-medium max-w-sm">
- רמת הסמך הסטטיסטית (Confidence Level) – הסיכוי לא לקפוץ למסקנות שווא כאשר ההשערה אינה נכונה.
- </p>
+ <span dir="rtl"> רמת סמך <InlineMath math="(1-α)" /></span></p>
  </td>
 
  {/* Cell 1-2: Accept H0 but H1 is true => Type II Error Beta */}
@@ -267,15 +266,15 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <div className="flex items-center justify-between gap-2">
  <span className="font-extrabold text-amber-400 flex items-center gap-1.5 text-xs sm:text-sm">
  <XCircle size={15} className="text-amber-600" />
- טעות מסוג II
+ טעות מסוג II (קצב החמצה)
  </span>
- <span className="text-xs font-semibold text-slate-400" dir="ltr">β (Beta)</span>
+ <span className="text-xs font-semibold text-slate-400" dir="ltr">β (Miss Rate)</span>
  </div>
  <div className="text-2xl sm:text-3xl font-black mt-2 text-amber-300">
  {(stats.beta * 100).toFixed(2)}%
  </div>
  <p className="text-[11px] text-slate-400 mt-1.5 leading-normal font-medium max-w-sm">
- קבלת השערת האפס אף על פי שהיא שקרית – החמצת גילוי של אפקט או הבדל קיים במציאות.
+ הסיכוי שלא לדחות את השערת האפס למרות שהיא שקרית (פספוס אפקט קיים).
  </p>
  </>
  ) : (
@@ -292,7 +291,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <tr className="font-semibold text-slate-950 text-slate-50">
  <td className="p-4 sm:p-5 border-l border-slate-800 font-extrabold bg-emerald-950/20 text-emerald-100 border-r-4 border-r-emerald-500/80">
  <span className="text-base font-black block text-emerald-400">דחיית <InlineMath math="H_0" /></span>
- <span className="block text-[11px] font-bold text-emerald-300 mt-1">קבלת הטענה האלטרנטיבית</span>
+ <span className="block text-[11px] font-bold text-emerald-300 mt-1">קבלת טענת המחקר (התוצאות מובהקות סטטיסטית). <InlineMath math="Reject\ H_0" /></span>
  </td>
 
  {/* Cell 2-1: Reject H0 and H0 is true => Type I Error Alpha */}
@@ -300,15 +299,15 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <div className="flex items-center justify-between gap-2">
  <span className="font-extrabold text-red-400 flex items-center gap-1.5 text-xs sm:text-sm">
  <XCircle size={15} className="text-red-600" />
- טעות מסוג I
+ טעות מסוג I (רמת מובהקות)
  </span>
- <span className="text-xs font-semibold text-slate-400" dir="ltr">α (Alpha)</span>
+ <span className="text-xs font-semibold text-slate-400" dir="ltr">α (Significance Level)</span>
  </div>
  <div className="text-2xl sm:text-3xl font-black mt-2 text-red-300">
  {(alpha * 100).toFixed(1)}%
  </div>
  <p className="text-[11px] text-slate-400 mt-1.5 leading-normal font-medium max-w-sm">
- רמת המובהקות – הסיכוי לדחות בטעות את השערת האפס הנכונה, כלומר לטעון לקשר או אפקט שאינו קיים באמת.
+ הסיכוי לדחות בטעות את השערת האפס כשהיא נכונה (גילוי שווא / False Positive).
  </p>
  </td>
 
@@ -323,15 +322,15 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
  <div className="flex items-center justify-between gap-2">
  <span className="font-extrabold text-indigo-300 flex items-center gap-1.5 text-xs sm:text-sm">
  <CheckCircle size={15} className="text-indigo-400" />
- החלטה נכונה (עוצמה)
+ החלטה נכונה (עוצמת המבחן)
  </span>
- <span className="text-xs font-bold text-slate-400" dir="ltr">1 - β (Power)</span>
+ <span className="text-xs font-bold text-slate-400" dir="ltr">1 - β (Statistical Power)</span>
  </div>
  <div className="text-2xl sm:text-3xl font-black mt-2 text-indigo-400 tracking-tight">
  {(stats.power * 100).toFixed(2)}%
  </div>
  <p className="text-[11px] text-slate-400 mt-1.5 leading-normal font-medium max-w-sm">
- עוצמת המבחן – ההסתברות של המחקר לזהות ולדחות השערה מוטעית, ובכך להוכיח את קיומו של אפקט אמיתי.
+ ההסתברות לזהות ולדחות השערת אפס שקרית (גילוי אפקט אמיתי).
  </p>
  </>
  ) : (
@@ -1219,7 +1218,7 @@ export default function HypothesisTestingCalculator() {
     
     {/* Right Section: Title */}
     <div className="flex-1 flex flex-col items-start min-w-0">
-      <h4 className="text-sm font-black text-indigo-200 flex items-center gap-1.5 mb-1">
+      <h4 className="text-lg font-black text-indigo-200 flex items-center gap-1.5 mb-1">
         <Award size={16} className="text-indigo-500 shrink-0" />
         הגדרת השערות ובחירת כיווני המבחן:
       </h4>
@@ -1230,7 +1229,7 @@ export default function HypothesisTestingCalculator() {
 
     {/* Center Section: Formal Hypotheses Display */}
     <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-slate-950/90 border border-slate-800 rounded-xl min-w-[180px] text-center shadow-sm">
-      <div className="text-sm sm:text-base font-extrabold text-slate-100 font-mono tracking-wide flex justify-center w-full" dir="ltr">
+      <div className="text-lg sm:text-xl font-extrabold text-slate-100 font-mono tracking-wide flex justify-center w-full" dir="ltr">
         <InlineMath math={getFormalHypothesisMath()} />
       </div>
       <div className="text-[10px] text-slate-500 font-mono mt-1.5 border-t border-dotted border-slate-800 pt-1 flex justify-center w-full" dir="ltr">
@@ -1242,24 +1241,24 @@ export default function HypothesisTestingCalculator() {
     <div className="flex-1 flex justify-end gap-2">
       <button 
         onClick={() => setTailType('right')} 
-        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'right' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-xl border transition-all ${tailType === 'right' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
       >
-        <span className="text-xs font-black">ימני</span>
-        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ &gt; μ₀</span>
+        <span className="text-lg font-black">ימני</span>
+        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ &gt; μ₀</span>
       </button>
       <button 
         onClick={() => setTailType('two-tailed')} 
-        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'two-tailed' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-xl border transition-all ${tailType === 'two-tailed' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
       >
-        <span className="text-xs font-black">דו-צדדי</span>
-        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ ≠ μ₀</span>
+        <span className="text-lg font-black">דו-צדדי</span>
+        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ ≠ μ₀</span>
       </button>
       <button 
         onClick={() => setTailType('left')} 
-        className={`flex flex-col items-center justify-center w-[85px] h-16 rounded-xl border transition-all ${tailType === 'left' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
+        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-xl border transition-all ${tailType === 'left' ? 'bg-indigo-600/20 border-indigo-500 text-indigo-300 shadow-sm' : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-800 hover:text-slate-200'}`}
       >
-        <span className="text-xs font-black">שמאלי</span>
-        <span className="text-[10px] font-mono mt-1 font-bold" dir="ltr">μ &lt; μ₀</span>
+        <span className="text-lg font-black">שמאלי</span>
+        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ &lt; μ₀</span>
       </button>
     </div>
 
@@ -1270,11 +1269,11 @@ export default function HypothesisTestingCalculator() {
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
       <div className="flex items-center gap-1.5 text-slate-300">
         <Sliders size={14} className="text-indigo-400" />
-        <span className="text-xs font-black font-sans text-indigo-200">
-          ערכים וציוני תקן פופולריים למבחן {tailType === 'two-tailed' ? 'דו-צדדי' : 'חד-צדדי'}:
+        <span className="text-sm font-black font-sans text-indigo-200">
+          מבחנים סטטיסטיים נפוצים:
         </span>
       </div>
-      <span className="text-[10px] text-slate-400">מודגש אוטומטית בהתאם לקלט פעיל. לחצו למילוי ועדכון מהיר של הפרמטרים:</span>
+      <span className="text-[14px] text-slate-400">עדכון מהיר של הפרמטרים:</span>
     </div>
     
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
@@ -1316,13 +1315,13 @@ export default function HypothesisTestingCalculator() {
             )}
             <div>
               <div className="text-[10px] font-black text-indigo-300/90 leading-tight">{item.label}</div>
-              <div className="text-[12px] font-black text-slate-100 mt-0.5">רמת ביטחון: {item.confidence}</div>
+              <div className="text-[12px] font-black text-slate-100 mt--0.5">רמת ביטחון: {item.confidence}</div>
             </div>
-            <div className="flex items-center justify-between mt-1 pt-1 border-t border-slate-800 w-full" dir="ltr">
-              <div className="text-[10px] font-black text-indigo-300">
+            <div className="flex items-center justify-between mt--0.5 pt-1 border-t border-slate-800 w-full" dir="ltr">
+              <div className="text-[12px] font-black text-red-400">
                 <InlineMath math={`Z_{crit}=${item.z.toFixed(3)}`} />
               </div>
-              <div className="text-[10px] text-slate-400 opacity-70">
+              <div className="text-[12px] text-slate-400 opacity-70">
                 <InlineMath math={`\\Phi=${item.phi.toFixed(3)}`} />
               </div>
             </div>
