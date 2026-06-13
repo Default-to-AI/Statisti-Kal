@@ -1816,8 +1816,8 @@ export default function HypothesisTestingCalculator() {
  <div className="space-y-4">
  <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
  {varianceKnown 
- ? <>חד-צדדי ימני: אנו מחפשים שטח עבודה משמאל בגודל <InlineMath math="1-\\alpha" />.</>
- : <>חד-צדדי ימני (מבחן t): אנו מאתרים בקצה הימני שטח ברמת מובהקות <InlineMath math="\\alpha" />.</>}
+ ? <>חד-צדדי ימני: אנו מחפשים שטח עבודה משמאל בגודל <InlineMath math="1-\alpha" />.</>
+ : <>חד-צדדי ימני (מבחן t): אנו מאתרים בקצה הימני שטח ברמת מובהקות <InlineMath math="\alpha" />.</>}
  </p>
  <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
  <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
@@ -1944,7 +1944,7 @@ export default function HypothesisTestingCalculator() {
  </div>
  ) : (
  <div className="space-y-4">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">דו-צדדי: אנו מפצלים את המובהקות לשני קצוות ההתפלגות (<InlineMath math="\\alpha/2" /> בכל קצה).</p>
+ <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">דו-צדדי: אנו מפצלים את המובהקות לשני קצוות ההתפלגות (<InlineMath math="\alpha/2" /> בכל קצה).</p>
  <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
  <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
  {varianceKnown ? (
