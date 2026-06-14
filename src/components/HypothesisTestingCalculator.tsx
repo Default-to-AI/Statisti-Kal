@@ -210,6 +210,31 @@ type TailType ='right' |'left' |'two-tailed';
 
 // No props needed - dark-only theme
 
+// --- Formula / Calculation Display Blocks ---
+// FormulaBlock: Raw/general formula with symbolic variables (indigo theme)
+function FormulaBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`w-full overflow-x-auto py-2 scrollbar-thin ${className}`} dir="ltr">
+      <div className="relative bg-indigo-950/20 p-4 sm:p-5 rounded-2xl border-2 border-indigo-500/30 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-[0_0_12px_rgba(99,102,241,0.08)] font-extrabold min-w-[280px]">
+        <span className="absolute top-2 right-3 text-[10px] font-black text-indigo-400/60 tracking-wide uppercase select-none" dir="rtl">תבנית כללית</span>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// CalcBlock: Calculation with actual substituted values (amber theme)
+function CalcBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+  return (
+    <div className={`w-full overflow-x-auto py-2 scrollbar-thin ${className}`} dir="ltr">
+      <div className="relative bg-amber-950/15 p-4 sm:p-5 rounded-2xl border-2 border-amber-500/30 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-[0_0_12px_rgba(245,158,11,0.08)] font-extrabold min-w-[280px]">
+        <span className="absolute top-2 right-3 text-[10px] font-black text-amber-400/60 tracking-wide uppercase select-none" dir="rtl">יישום</span>
+        {children}
+      </div>
+    </div>
+  );
+}
+
 // --- Decision Matrix Helper Component ---
 interface DecisionMatrixProps {
   isValid: boolean;
@@ -248,7 +273,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
         <tr className="font-semibold text-slate-50 border-b border-slate-800/60">
           <td className="p-3 font-extrabold bg-red-950/20 text-red-100 border-r-4 border-r-red-500/80">
             <span className="text-sm font-black block text-red-400">
-              קבלת <InlineMath math="H_0" />
+              אי-דחייה של <InlineMath math="H_0" />
             </span>
             <span className="block text-xs font-semibold text-slate-400 mt-0.5" dir="ltr">
               <InlineMath math="\text{Fail to Reject } H_0" />
@@ -274,9 +299,9 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
             </div>
             <div className="text-[10px] text-slate-400 font-medium leading-snug mt-1">
               <div className="mb-0.5 text-slate-500 font-bold" dir="ltr">
-                <InlineMath math="P(\text{Accept } H_0 \mid H_0 \text{ is true})" />
+                <InlineMath math="P(\text{Fail to Reject } H_0 \mid H_0 \text{ is true})" />
               </div>
-              ההסתברות לא לדחות את השערת האפס בצדק כאשר היא נכונה.
+              ההסתברות לא לדחות את השערת האפס כאשר היא אכן נכונה.
             </div>
           </td>
 
@@ -301,9 +326,9 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                 </div>
                 <div className="text-[10px] text-slate-400 font-medium leading-snug mt-1">
                   <div className="mb-0.5 text-slate-500 font-bold" dir="ltr">
-                    <InlineMath math="P(\text{Accept } H_0 \mid H_1 \text{ is true})" />
+                    <InlineMath math="P(\text{Fail to Reject } H_0 \mid H_1 \text{ is true})" />
                   </div>
-                  הסיכוי שלא לדחות את השערת האפס למרות שהיא שקרית וקיים אפקט.
+                  הסיכוי לא לדחות את השערת האפס למרות שהיא שקרית וקיים אפקט אמיתי.
                 </div>
               </>
             ) : (
@@ -1656,130 +1681,103 @@ export default function HypothesisTestingCalculator() {
  animate={{ height:'auto', opacity: 1 }}
  exit={{ height: 0, opacity: 0 }}
  transition={{ duration: 0.2 }}
- className="px-8 py-6.5 space-y-8"
+ className="px-8 py-6.5"
  >
  {isValid && stats ? (
- <div className="space-y-8 text-base divide-y divide-slate-200 divide-slate-800/50">
+ <div className="text-base divide-y divide-slate-700/80">
  
- {/* Step 1: Hypothesis Formulation (New Step requested by user) */}
- <div className="space-y-3 pt-4">
+ {/* Step 1: Hypothesis Formulation */}
+ <div className="space-y-3 py-8">
  <div className="flex items-center gap-3 font-extrabold text-indigo-400">
- <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">1</span>
- <span className="text-xl sm:text-2xl font-black">הגדרת המשתנים וניסוח ההשערות</span>
+ <span className="w-9 h-9 rounded-full bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">1</span>
+ <span className="text-xl sm:text-2xl font-black">ניסוח השערות המחקר</span>
  </div>
 
- <div className="pr-5 py-1 space-y-2">
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
- {/* H0 Card */}
- <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 flex flex-col h-full text-right">
- <div className="flex items-center gap-2 text-blue-400 font-black justify-start mb-2">
- <span className="text-lg font-black px-2 py-0.5 rounded bg-blue-500/15 border border-blue-500/30 font-mono">H0</span>
- <span className="text-xl sm:text-xl font-black">השערת האפס</span>
- </div>
- <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal mb-4">
+ <div className="pr-5 py-1 space-y-4">
+ <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-semibold">
  יהי <InlineMath math="X" /> משתנה מקרי המייצג את התצפית באוכלוסייה. אנו בוחנים מדגם מקרי בגודל <InlineMath math="n" />.
- תחת השערת האפס — <span className="font-bold underline">אין שינוי</span>, הפרמטר הנבדק <span className="font-bold">שווה</span> לערך הבסיס שהוגדר.
+ נגדיר את השערת האפס (<InlineMath math="H_0" />) המניחה <span className="font-bold underline">היעדר שינוי</span>, מול השערת המחקר (<InlineMath math="H_1" />) המייצגת את טענת החוקר.
  </p>
- <div className="mt-auto bg-slate-950/80 py-2 px-1 rounded-xl border border-blue-500/40 text-center text-lg sm:text-xl md:text-2xl text-blue-100 shadow-inner" dir="ltr">
- <BlockMath math={`H_0: \\mu = ${mu0}`} />
+
+ {/* General formula template */}
+ <FormulaBlock>
+ <div className="space-y-2 text-base sm:text-lg md:text-xl">
+  <div className="flex items-center justify-center gap-3 flex-wrap">
+   <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'two-tailed' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' : 'text-slate-500'}`}>דו-צדדי</span>
+   <BlockMath math="H_0: \mu = \mu_0 \quad \text{vs} \quad H_1: \mu \neq \mu_0" />
+  </div>
+  <div className="flex items-center justify-center gap-3 flex-wrap">
+   <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'right' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' : 'text-slate-500'}`}>ימני</span>
+   <BlockMath math="H_0: \mu \le \mu_0 \quad \text{vs} \quad H_1: \mu > \mu_0" />
+  </div>
+  <div className="flex items-center justify-center gap-3 flex-wrap">
+   <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'left' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/40' : 'text-slate-500'}`}>שמאלי</span>
+   <BlockMath math="H_0: \mu \ge \mu_0 \quad \text{vs} \quad H_1: \mu < \mu_0" />
+  </div>
  </div>
+ </FormulaBlock>
+
+ {/* Applied with actual values */}
+ <CalcBlock>
+ {tailType === 'right' ? (
+  <BlockMath math={`H_0: \\mu \\le ${mu0} \\quad \\text{vs} \\quad H_1: \\mu > ${mu0}`} />
+ ) : tailType === 'left' ? (
+  <BlockMath math={`H_0: \\mu \\ge ${mu0} \\quad \\text{vs} \\quad H_1: \\mu < ${mu0}`} />
+ ) : (
+  <BlockMath math={`H_0: \\mu = ${mu0} \\quad \\text{vs} \\quad H_1: \\mu \\neq ${mu0}`} />
+ )}
+ </CalcBlock>
+
+ {/* Researcher's note */}
  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> תחת <InlineMath math="H_0" /> אנו מניחים חוסר שינוי — הפרמטר שווה ל-{mu0}.
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> ניסחנו מערכת השערות:{' '}
+ {tailType === 'right' ? (
+  <span className="font-bold">מבחן חד-צדדי ימני — אנו בודקים האם התוחלת <InlineMath math={`\\mu > ${mu0}`} />.</span>
+ ) : tailType === 'left' ? (
+  <span className="font-bold">מבחן חד-צדדי שמאלי — אנו בודקים האם התוחלת <InlineMath math={`\\mu < ${mu0}`} />.</span>
+ ) : (
+  <span className="font-bold">מבחן דו-צדדי — אנו בודקים האם התוחלת <InlineMath math={`\\mu \\neq ${mu0}`} />.</span>
+ )}
  </p>
+ </div>
  </div>
 
- {/* H1 Card */}
- <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 flex flex-col h-full text-right">
- <div className="flex items-center gap-2 text-amber-400 font-black justify-start mb-2">
- <span className="text-lg font-black px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 font-mono">H1</span>
- <span className="text-xl sm:text-xl font-black">השערת המחקר</span>
- </div>
- <p className="text-sm sm:text-base text-slate-200 leading-relaxed font-normal mb-4">
- ניסוח מערכת ההשערות — נבחר את <span className="font-bold underline text-amber-500">הכיוון המתאים</span> לפי השערת המחקר (גדול מ... / קטן מ... / שונה מ...) ביחס לערך הבסיס <InlineMath math="\mu_0" />.
- </p>
- <div className="mt-auto bg-slate-950/80 py-2 px-1 rounded-xl border border-amber-500/40 text-center text-lg sm:text-xl md:text-2xl text-amber-100 shadow-inner" dir="ltr">
- {tailType === 'right' ? (
- <BlockMath math={`H_1: \\mu > ${mu0}`} />
- ) : tailType === 'left' ? (
- <BlockMath math={`H_1: \\mu < ${mu0}`} />
- ) : (
- <BlockMath math={`H_1: \\mu \\neq ${mu0}`} />
- )}
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> מערכת ההשערות נוסחה:{' '}
- {tailType === 'right' ? (
- <span className="font-bold">מבחן חד-צדדי ימני — <InlineMath math={`\\mu > ${mu0}`} />.</span>
- ) : tailType === 'left' ? (
- <span className="font-bold">מבחן חד-צדדי שמאלי — <InlineMath math={`\\mu < ${mu0}`} />.</span>
- ) : (
- <span className="font-bold">מבחן דו-צדדי — <InlineMath math={`\\mu \\neq ${mu0}`} />.</span>
- )}
- </p>
- </div>
- </div>
- </div>
- </div>
 
- {/* Step 2: Definition of variables and SE */}
- <div className="space-y-3 pt-6">
+ {/* Step 2: Distribution & SE */}
+ <div className="space-y-3 py-8">
  <div className="flex items-center gap-3 font-extrabold text-indigo-400">
- <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">2</span>
+ <span className="w-9 h-9 rounded-full bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">2</span>
  <span className="text-xl sm:text-2xl font-black">התפלגות הסטטיסטי ושגיאת התקן (SE)</span>
  </div>
  <p className="text-base sm:text-lg text-slate-200 leading-relaxed pr-9 font-semibold">
  {varianceKnown 
- ? "תחת הנחת השערת האפס, נגדיר את התפלגות הסטטיסטי הנבדק ואת שגיאת התקן שלו. כאשר שונות האוכלוסייה ידועה: הסטטיסטי מתפלג נורמלית, ונשתמש בהתפלגות Z ~ N(0,1)."
- : "תחת הנחת השערת האפס, נגדיר את התפלגות הסטטיסטי הנבדק ואת שגיאת התקן שלו. כאשר שונות האוכלוסייה אינה ידועה: נאמוד אותה באמצעות סטיית התקן המדגמית (S). הסטטיסטי מתפלג לפי התפלגות סטודנט t עם df = n − 1 דרגות חופש."}
+ ? <>תחת הנחת <InlineMath math="H_0" />, כאשר שונות האוכלוסייה ידועה (<InlineMath math={`\\sigma = ${sigmaInput}`} />), הסטטיסטי מתפלג נורמלית ונשתמש בהתפלגות <InlineMath math={`Z \\sim N(0,1)`} />.</>
+ : <>תחת הנחת <InlineMath math="H_0" />, כאשר שונות האוכלוסייה אינה ידועה, נאמוד אותה באמצעות סטיית התקן המדגמית (<InlineMath math={`S = ${sigmaInput}`} />). הסטטיסטי מתפלג לפי התפלגות סטודנט <InlineMath math={`t`} /> עם <InlineMath math={`df = n - 1 = ${stats.df}`} /> דרגות חופש.</>}
  </p>
- <div className="pr-9 py-3 text-xl md:text-2xl">
- {testType ==='single' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
- {varianceKnown 
- ? "עבור תצפית בודדת (X): הפיזור המקורי של האוכלוסייה תקף."
- : "עבור תצפית בודדת (X): פיזור המדגם (S) משמש ישירות."}
- </p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-  <BlockMath math={`SE = ${varianceKnown ?'\\sigma' :'S'} = ${sigmaInput}`} />
-  </div>
-  </div>
-  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> עבור תצפית בודדת — שגיאת התקן שווה לסטיית התקן המקורית.
-  </p>
- </div>
- ) : testType ==='mean' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
- {varianceKnown 
- ? "עבור ממוצע מדגם (X̄): סטיית התקן מתכווצת על פי שורש גודל המדגם."
- : "עבור ממוצע מדגם (X̄): סטיית התקן המדגמית מתכווצת על פי שורש גודל המדגם."}
- </p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-  <BlockMath math={`SE = \\frac{${varianceKnown ?'\\sigma' :'S'}}{\\sqrt{n}} = \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${stats.se.toFixed(4)}`} />
-  </div>
-  </div>
-  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> עבור ממוצע מדגם — שגיאת התקן שווה לסטיית התקן חלקי שורש גודל המדגם.
-  </p>
- </div>
+ <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
+ {/* Raw formula */}
+ <FormulaBlock>
+ {testType === 'single' ? (
+  <BlockMath math={`SE = ${varianceKnown ? '\\sigma' : 'S'}`} />
+ ) : testType === 'mean' ? (
+  <BlockMath math={`SE = \\frac{${varianceKnown ? '\\sigma' : 'S'}}{\\sqrt{n}}`} />
  ) : (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
- {varianceKnown
- ? "עבור סכום מדגם (ΣX): ממוצעי ההשערה והפיזור גדלים על פי גודל המדגם."
- : "עבור סכום מדגם (ΣX): ממוצעי ההשערה והפיזור גדלים על פי גודל המדגם תוך שימוש ב-S."}
- </p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-  <BlockMath math={`SE = \\sqrt{n} \\cdot ${varianceKnown ?'\\sigma' :'S'} = \\sqrt{${nInput}} \\cdot ${sigmaInput} = ${stats.se.toFixed(4)}`} />
-  </div>
-  </div>
-  <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
-  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> עבור סכום מדגם — שגיאת התקן שווה לסטיית התקן כפול שורש גודל המדגם.
-  </p>
+  <BlockMath math={`SE = \\sqrt{n} \\cdot ${varianceKnown ? '\\sigma' : 'S'}`} />
+ )}
+ </FormulaBlock>
+
+ {/* Calculation with actual values */}
+ <CalcBlock>
+ {testType === 'single' ? (
+  <BlockMath math={`SE = ${varianceKnown ? '\\sigma' : 'S'} = ${sigmaInput}`} />
+ ) : testType === 'mean' ? (
+  <BlockMath math={`SE = \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = \\frac{${sigmaInput}}{${Math.sqrt(n).toFixed(4)}} = ${stats.se.toFixed(4)}`} />
+ ) : (
+  <BlockMath math={`SE = \\sqrt{${nInput}} \\cdot ${sigmaInput} = ${Math.sqrt(n).toFixed(4)} \\cdot ${sigmaInput} = ${stats.se.toFixed(4)}`} />
+ )}
+ </CalcBlock>
+
+ {testType === 'sum' && (
  <div className="text-sm sm:text-base font-bold text-slate-200 mt-2 p-4 bg-slate-800 border border-slate-700 rounded-xl">
  ממוצעי ההתפלגות החדשים הופכים ל-
  <InlineMath math={`n \\cdot \\mu`} />:
@@ -1788,13 +1786,22 @@ export default function HypothesisTestingCalculator() {
  <br />
  תחת H₁: <InlineMath math={`E(\\sum X) = ${nInput} \\cdot ${mu1Input} = ${stats.effectH1Mean}`} />
  </div>
- </div>
  )}
+
+ {/* Researcher's note */}
+ <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 mt-5 text-center">
+  <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> {testType === 'single' 
+   ? `חישבנו ששגיאת התקן שווה לסטיית התקן המקורית: SE = ${stats.se.toFixed(4)}.`
+   : testType === 'mean'
+   ? `חישבנו ששגיאת התקן של ממוצע המדגם היא SE = ${sigmaInput} / √${nInput} = ${stats.se.toFixed(4)}.`
+   : `חישבנו ששגיאת התקן של סכום המדגם היא SE = √${nInput} × ${sigmaInput} = ${stats.se.toFixed(4)}.`}
+ </p>
  </div>
  </div>
 
+
  {/* Step 3: Critical Value derivation */}
- <div className="space-y-3 pt-6">
+ <div className="space-y-3 py-8">
  <div className="flex items-center gap-3 font-extrabold text-indigo-400">
  <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">3</span>
  <span className="text-xl sm:text-2xl font-black">קביעת כלל ההחלטה (אזורי דחייה וקבלה)</span>
@@ -1812,32 +1819,79 @@ export default function HypothesisTestingCalculator() {
  </p>
 
  <div className="pr-9 py-3 space-y-5 text-xl md:text-2xl">
- {tailType ==='right' ? (
- <div className="space-y-4">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
- {varianceKnown 
- ? <>במבחן חד-צדדי ימני: ערך קריטי <InlineMath math="Z_{1-\alpha}" />.</>
- : <>במבחן חד-צדדי ימני (מבחן t): ערך קריטי <InlineMath math={`t_{${stats.df}, 1-\alpha}`} />.</>}
- </p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- {varianceKnown ? (
- <>
- <BlockMath math={`Z_{crit} = \\Phi^{-1}(1 - ${alpha}) = \\Phi^{-1}(${(1-alpha).toFixed(4)}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C = \\mu_0 + Z_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
+ {/* General formula template */}
+ <FormulaBlock>
+ {tailType === 'right' ? (
+  <>
+  <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${varianceKnown ? '\\Phi^{-1}(1 - \\alpha)' : 'F_{t,df}^{-1}(1 - \\alpha)'}`} />
+  <BlockMath math={`C = \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{crit} \\cdot SE`} />
+  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\ge \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{1-\\alpha} \\cdot SE \\right\\}`} />
+  <BlockMath math={`\\bar{C} = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} < \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{1-\\alpha} \\cdot SE \\right\\}`} />
+  </>
+ ) : tailType === 'left' ? (
+  <>
+  <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${varianceKnown ? '\\Phi^{-1}(\\alpha)' : 'F_{t,df}^{-1}(\\alpha)'}`} />
+  <BlockMath math={`C = \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{crit} \\cdot SE`} />
+  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\le \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{\\alpha} \\cdot SE \\right\\}`} />
+  <BlockMath math={`\\bar{C} = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} > \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{\\alpha} \\cdot SE \\right\\}`} />
+  </>
  ) : (
- <>
- <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(1 - ${alpha}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C = \\mu_0 + t_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
+  <>
+  <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${varianceKnown ? '\\Phi^{-1}(1 - \\alpha/2)' : 'F_{t,df}^{-1}(1 - \\alpha/2)'}`} />
+  <BlockMath math={`C_1 = \\mu_0 - ${varianceKnown ? 'Z' : 't'}_{crit} \\cdot SE \\quad,\\quad C_2 = \\mu_0 + ${varianceKnown ? 'Z' : 't'}_{crit} \\cdot SE`} />
+  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\le C_1 \\;\\cup\\; ${statSymbol} \\ge C_2 \\right\\}`} />
+  <BlockMath math={`\\bar{C} = \\left\\{ ${statSymbol} \\;\\middle|\\; C_1 < ${statSymbol} < C_2 \\right\\}`} />
+  </>
  )}
- </div>
- </div>
+ </FormulaBlock>
 
- <div className="mt-6 space-y-4 text-right" dir="rtl">
+ {/* Calculation with actual values */}
+ <CalcBlock>
+ {tailType === 'right' ? (
+  varianceKnown ? (
+  <>
+  <BlockMath math={`Z_{crit} = \\Phi^{-1}(1 - ${alpha}) = \\Phi^{-1}(${(1-alpha).toFixed(4)}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  ) : (
+  <>
+  <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(1 - ${alpha}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  )
+ ) : tailType === 'left' ? (
+  varianceKnown ? (
+  <>
+  <BlockMath math={`Z_{crit} = \\Phi^{-1}(${alpha}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  ) : (
+  <>
+  <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(${alpha}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  )
+ ) : (
+  varianceKnown ? (
+  <>
+  <BlockMath math={`Z_{crit} = \\Phi^{-1}(1 - \\frac{${alpha}}{2}) = \\Phi^{-1}(${(1 - alpha/2).toFixed(4)}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C_1 = ${stats.effectH0Mean} - (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c1.toFixed(4)}`} />
+  <BlockMath math={`C_2 = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  ) : (
+  <>
+  <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(1 - \\frac{${alpha}}{2}) = ${stats.zCrit.toFixed(4)}`} />
+  <BlockMath math={`C_1 = ${stats.effectH0Mean} - (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c1.toFixed(4)}`} />
+  <BlockMath math={`C_2 = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
+  </>
+  )
+ )}
+ </CalcBlock>
+
+ {/* C and C̄ zone sets */}
+ <div className="mt-4 space-y-4 text-right" dir="rtl">
  <p className="text-sm sm:text-base text-slate-100 font-extrabold mb-2 leading-relaxed">
- עבור ערך קריטי מוגדר <InlineMath math="c" /> וכלל החלטה (עבור {statName} <InlineMath math={statSymbol} />):
+ כלל ההחלטה המוגדר (עבור {statName} <InlineMath math={statSymbol} />):
  </p>
  
  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-2">
@@ -1845,274 +1899,141 @@ export default function HypothesisTestingCalculator() {
  <div className="flex items-start gap-2">
  <span className="text-emerald-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
  <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-emerald-400 font-black font-sans">אזור הדחייה (<InlineMath math="C" />):</strong> קבוצת הערכים שעבורם נחליט לדחות את השערת האפס <InlineMath math="H_0" />.
+ <strong className="text-emerald-400 font-black font-sans">אזור הדחייה (<InlineMath math="C" />):</strong> קבוצת הערכים שעבורם נדחה את <InlineMath math="H_0" />.
  </p>
  </div>
  <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
  <div className="bg-emerald-950/20 p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
+ {tailType === 'right' ? (
  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\ge ${stats.c2.toFixed(3)} \\right\\}`} />
- </div>
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה (C) — קבוצת כל הערכים שעבורם נדחה את <InlineMath math="H_0" />.
- </p>
- </div>
-
- <div className="space-y-1 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 flex flex-col h-full">
- <div className="flex items-start gap-2">
- <span className="text-red-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
- <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-red-400 font-black font-sans">אזור הקבלה / אי-הדחייה (<InlineMath math="C^c" />):</strong> קבוצת הערכים המשלימה שעבורם לא נדחה את השערת האפס <InlineMath math="H_0" />.
- </p>
- </div>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-red-950/20 p-4 sm:p-5 rounded-2xl border-2 border-red-500/30 text-red-300 shadow-[0_0_12px_rgba(239,68,68,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
- <BlockMath math={`C^c = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} < ${stats.c2.toFixed(3)} \\right\\}`} />
- </div>
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה (C̄) — המשלים לאזור הדחייה, שעבורו אין לדחות את <InlineMath math="H_0" />.
- </p>
- </div>
- </div>
- </div>
- </div>
- ) : tailType ==='left' ? (
- <div className="space-y-4">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">
- {varianceKnown 
- ? <>במבחן חד-צדדי שמאלי: ערך קריטי <InlineMath math="Z_{\alpha}" />.</>
- : <>במבחן חד-צדדי שמאלי (מבחן t): ערך קריטי <InlineMath math={`t_{${stats.df}, \alpha}`} />.</>}
- </p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- {varianceKnown ? (
- <>
- <BlockMath math={`Z_{crit} = \\Phi^{-1}(${alpha}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C = \\mu_0 + Z_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
- ) : (
- <>
- <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(${alpha}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C = \\mu_0 + t_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
- )}
- </div>
- </div>
-
- <div className="mt-6 space-y-4 text-right" dir="rtl">
- <p className="text-sm sm:text-base text-slate-100 font-extrabold mb-2 leading-relaxed">
- עבור ערך קריטי מוגדר <InlineMath math="c" /> וכלל החלטה (עבור {statName} <InlineMath math={statSymbol} />):
- </p>
- 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-2">
- <div className="space-y-1 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 flex flex-col h-full">
- <div className="flex items-start gap-2">
- <span className="text-emerald-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
- <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-emerald-400 font-black font-sans">אזור הדחייה (<InlineMath math="C" />):</strong> קבוצת הערכים שעבורם נחליט לדחות את השערת האפס <InlineMath math="H_0" />.
- </p>
- </div>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-emerald-950/20 p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
+ ) : tailType === 'left' ? (
  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\le ${stats.c2.toFixed(3)} \\right\\}`} />
- </div>
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה (C) — קבוצת כל הערכים שעבורם נדחה את <InlineMath math="H_0" />.
- </p>
- </div>
-
- <div className="space-y-1 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 flex flex-col h-full">
- <div className="flex items-start gap-2">
- <span className="text-red-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
- <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-red-400 font-black font-sans">אזור הקבלה / אי-הדחייה (<InlineMath math="C^c" />):</strong> קבוצת הערכים המשלימה שעבורם לא נדחה את השערת האפס <InlineMath math="H_0" />.
- </p>
- </div>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-red-950/20 p-4 sm:p-5 rounded-2xl border-2 border-red-500/30 text-red-300 shadow-[0_0_12px_rgba(239,68,68,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
- <BlockMath math={`C^c = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} > ${stats.c2.toFixed(3)} \\right\\}`} />
- </div>
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה (C̄) — המשלים לאזור הדחייה, שעבורו אין לדחות את <InlineMath math="H_0" />.
- </p>
- </div>
- </div>
- </div>
- </div>
  ) : (
- <div className="space-y-4">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">דו-צדדי: אנו מפצלים את המובהקות לשני קצוות ההתפלגות (<InlineMath math="\alpha/2" /> בכל קצה).</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- {varianceKnown ? (
- <>
- <BlockMath math={`Z_{crit} = \\Phi^{-1}(1 - \\frac{${alpha}}{2}) = \\Phi^{-1}(${(1 - alpha/2).toFixed(4)}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C_1 = \\mu_0 - Z_{crit} \\cdot SE = ${stats.effectH0Mean} - (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c1.toFixed(4)}`} />
- <BlockMath math={`C_2 = \\mu_0 + Z_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
- ) : (
- <>
- <BlockMath math={`t_{crit} = F_{t, ${stats.df}}^{-1}(1 - \\frac{${alpha}}{2}) = ${stats.zCrit.toFixed(4)}`} />
- <BlockMath math={`C_1 = \\mu_0 - t_{crit} \\cdot SE = ${stats.effectH0Mean} - (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c1.toFixed(4)}`} />
- <BlockMath math={`C_2 = \\mu_0 + t_{crit} \\cdot SE = ${stats.effectH0Mean} + (${stats.zCrit.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} = ${stats.c2.toFixed(4)}`} />
- </>
- )}
- </div>
- </div>
-
- <div className="mt-6 space-y-4 text-right" dir="rtl">
- <p className="text-sm sm:text-base text-slate-100 font-extrabold mb-2 leading-relaxed">
- עבור שני ערכים קריטיים מוגדרים <InlineMath math="c_1, c_2" /> וכלל החלטה (עבור {statName} <InlineMath math={statSymbol} />):
- </p>
- 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pr-2">
- <div className="space-y-1 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 flex flex-col h-full">
- <div className="flex items-start gap-2">
- <span className="text-emerald-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
- <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-emerald-400 font-black font-sans">אזור הדחייה (<InlineMath math="C" />):</strong> קבוצת הערכים שעבורם נחליט לדחות את השערת האפס <InlineMath math="H_0" />.
- </p>
- </div>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-emerald-950/20 p-4 sm:p-5 rounded-2xl border-2 border-emerald-500/30 text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
  <BlockMath math={`C = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} \\le ${stats.c1.toFixed(3)} \\;\\cup\\; ${statSymbol} \\ge ${stats.c2.toFixed(3)} \\right\\}`} />
+ )}
  </div>
  </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הדחייה (C) — קבוצת כל הערכים שעבורם נדחה את <InlineMath math="H_0" />.
- </p>
  </div>
 
  <div className="space-y-1 bg-slate-900/40 p-4 rounded-xl border border-slate-800/60 flex flex-col h-full">
  <div className="flex items-start gap-2">
  <span className="text-red-400 font-extrabold text-sm sm:text-base shrink-0">●</span>
  <p className="text-sm sm:text-base text-slate-200 font-extrabold leading-relaxed">
- <strong className="text-red-400 font-black font-sans">אזור הקבלה / אי-הדחייה (<InlineMath math="C^c" />):</strong> קבוצת הערכים המשלימה שעבורם לא נדחה את השערת האפס <InlineMath math="H_0" />.
+ <strong className="text-red-400 font-black font-sans">אזור אי-הדחייה (<InlineMath math="C^c" />):</strong> קבוצת הערכים המשלימה שעבורם לא נדחה את <InlineMath math="H_0" />.
  </p>
  </div>
  <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
  <div className="bg-red-950/20 p-4 sm:p-5 rounded-2xl border-2 border-red-500/30 text-red-300 shadow-[0_0_12px_rgba(239,68,68,0.1)] space-y-3 text-lg sm:text-xl md:text-2xl text-center font-extrabold min-w-[280px]">
+ {tailType === 'right' ? (
+ <BlockMath math={`C^c = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} < ${stats.c2.toFixed(3)} \\right\\}`} />
+ ) : tailType === 'left' ? (
+ <BlockMath math={`C^c = \\left\\{ ${statSymbol} \\;\\middle|\\; ${statSymbol} > ${stats.c2.toFixed(3)} \\right\\}`} />
+ ) : (
  <BlockMath math={`C^c = \\left\\{ ${statSymbol} \\;\\middle|\\; ${stats.c1.toFixed(3)} < ${statSymbol} < ${stats.c2.toFixed(3)} \\right\\}`} />
- </div>
- </div>
- <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
- <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אזור הקבלה (C̄) — המשלים לאזור הדחייה, שעבורו אין לדחות את <InlineMath math="H_0" />.
- </p>
- </div>
- </div>
- </div>
- </div>
  )}
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+
+ {/* Researcher's note */}
+ <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
+ <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> הגדרנו את אזורי ההחלטה: אם {statName} ייפול באזור <InlineMath math="C" /> — נדחה את <InlineMath math="H_0" />. אם ייפול באזור <InlineMath math="\bar{C}" /> — לא נדחה אותה.
+ </p>
  </div>
  </div>
 
 
  {/* Step 4: P-Value Calculation */}
-  <div className="space-y-4 pt-4 border-t border-slate-800/60 mt-4 text-right">
+  <div className="space-y-3 py-8 text-right">
     <div className="flex items-center gap-3 font-extrabold text-indigo-400">
       <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">4</span>
       <span className="text-xl sm:text-2xl font-black">חישוב סטטיסטי המבחן ומובהקות התוצאה (P-Value)</span>
     </div>
     
-    <div className="pr-5 py-1 space-y-4">
-      <div className="space-y-2 text-sm sm:text-base text-slate-100 font-medium leading-relaxed bg-slate-950/30 p-4 rounded-xl border border-slate-800/50">
-        <p>
-          <strong className="text-indigo-300">חישוב סטטיסטי המבחן התקני (Observed Statistic):</strong> נבצע התקננה (Standardization) לערך שהתקבל במדגם על מנת לחשב את המרחק במונחי שגיאות תקן: 
-        </p>
-        <p>
-          תקנון זה אומר לנו בדיוק <strong>כמה שגיאות תקן מרוחק המדגם שלנו</strong> מההשערה המקורית. אם המדגם קרוב לתוחלת המקורית (הפרש קרוב ל-0), התוצאה סבירה תחת <InlineMath math="H_0" />. ככל שהמרחק גדול יותר בערכו המוחלט, כך גוברות הראיות האמפיריות נגד השערת האפס.
-        </p>
-      </div>
-
-      <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-2" dir="ltr">
-        <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-          {varianceKnown ? (
-            <>
-              <BlockMath math={`Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
-              <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(Z > Z_{\\text{stat}})` : tailType === 'left' ? `P(Z < Z_{\\text{stat}})` : `2 \\cdot P(|Z| > |Z_{\\text{stat}}|)`} = ${decisionData.pValue.toFixed(4)}`} />
-            </>
-          ) : (
-            <>
-              <BlockMath math={`t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
-              <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(t_{\\text{df}} > t_{\\text{stat}})` : tailType === 'left' ? `P(t_{\\text{df}} < t_{\\text{stat}})` : `2 \\cdot P(|t_{\\text{df}}| > |t_{\\text{stat}}|)`} = ${decisionData.pValue.toFixed(4)}`} />
-            </>
-          )}
-        </div>
-      </div>
-
-      <div className="space-y-2 text-sm sm:text-base text-slate-100 font-medium leading-relaxed bg-slate-950/30 p-4 rounded-xl border border-slate-800/50 mt-4">
-        <p>
-          <strong className="text-emerald-300">מובהקות התוצאה (P-Value):</strong> ערך ה-P-Value מייצג את ההסתברות לקבל תוצאה קיצונית לפחות כמו זו שנצפתה, בהינתן ש-<InlineMath math="H_0" /> נכונה.
-        </p>
-        <p>
-          {tailType === 'right' && "במבחן חד-צדדי ימני, אנו מחשבים את ההסתברות לקבל במקרה ערך סטטיסטי הגדול או שווה לערך שחישבנו, ולכן אנו מודדים את השטח מימין למדד המבחן תחת עקומת ההתפלגות."}
-          {tailType === 'left' && "במבחן חד-צדדי שמאלי, אנו מחשבים את ההסתברות לקבל במקרה ערך סטטיסטי הקטן או שווה לערך שחישבנו, ולכן אנו מודדים את השטח משמאל למדד המבחן תחת עקומת ההתפלגות."}
-          {tailType === 'two-tailed' && "במבחן דו-צדדי, מאחר ואנו בוחנים חריגה סימטרית משני הכיוונים, אנו מחשבים את ההסתברות לקבל ערך סטטיסטי הקיצוני יותר בערכו המוחלט מהערך שחישבנו. לכן, השטח החד-צדדי מוכפל פי שניים בכדי לשקף את ההסתברות הכוללת."}
-        </p>
-      </div>
-      
-      <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center pt-2 mt-4" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-        <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> {decisionData.pValue < alpha ? 'ההסתברות לקבל תוצאה זו מקרית הינה נמוכה ביותר, ולכן נדחה את השערת האפס.' : 'ההסתברות לקבל תוצאה זו אינה נמוכה מספיק, ולכן לא נוכל לדחות את השערת האפס.'}
+    <div className="pr-5 py-1 space-y-5">
+      <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-semibold">
+      נחשב את סטטיסטי המבחן (מרחק התוצאה מ-<InlineMath math="\mu_0" /> במונחי שגיאות תקן) ולאחריו את ה-P-Value: ההסתברות לקבל תוצאה כזו או קיצונית יותר, בהנחה שהשערת האפס נכונה.
       </p>
 
-      <div className="mt-4 text-right">
-        <ul className="list-disc list-inside space-y-2 text-slate-300 font-medium text-sm sm:text-base">
-          <li className={decisionData.pValue < alpha ? 'text-emerald-400 font-black' : ''}>
-            אם <InlineMath math="P\text{-Value} < \alpha" /> - נדחה את השערת האפס. {decisionData.pValue < alpha && <CheckCircle size={16} className="inline ml-1 mb-1" />}
-          </li>
-          <li className={decisionData.pValue >= alpha ? 'text-red-400 font-black' : ''}>
-            אם <InlineMath math="P\text{-Value} \ge \alpha" /> - לא נדחה את השערת האפס. {decisionData.pValue >= alpha && <CheckCircle size={16} className="inline ml-1 mb-1" />}
-          </li>
-        </ul>
-      </div>
+      {/* Raw formula template */}
+      <FormulaBlock>
+      {varianceKnown ? (
+        <>
+        <BlockMath math={`Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+        <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(Z > Z_{\\text{stat}})` : tailType === 'left' ? `P(Z < Z_{\\text{stat}})` : `2 \\cdot P(|Z| > |Z_{\\text{stat}}|)`}`} />
+        </>
+      ) : (
+        <>
+        <BlockMath math={`t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+        <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(t > t_{\\text{stat}})` : tailType === 'left' ? `P(t < t_{\\text{stat}})` : `2 \\cdot P(|t| > |t_{\\text{stat}}|)`}`} />
+        </>
+      )}
+      </FormulaBlock>
+
+      {/* Calculation with actual values */}
+      <CalcBlock>
+      {varianceKnown ? (
+        <>
+        <BlockMath math={`Z_{\\text{stat}} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
+        <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(Z > ${decisionData.statObs.toFixed(4)})` : tailType === 'left' ? `P(Z < ${decisionData.statObs.toFixed(4)})` : `2 \\cdot P(|Z| > |${decisionData.statObs.toFixed(4)}|)`} = ${decisionData.pValue.toFixed(4)}`} />
+        </>
+      ) : (
+        <>
+        <BlockMath math={`t_{\\text{stat}} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
+        <BlockMath math={`\\text{P-Value} = ${tailType === 'right' ? `P(t_{${stats.df}} > ${decisionData.statObs.toFixed(4)})` : tailType === 'left' ? `P(t_{${stats.df}} < ${decisionData.statObs.toFixed(4)})` : `2 \\cdot P(|t_{${stats.df}}| > |${decisionData.statObs.toFixed(4)}|)`} = ${decisionData.pValue.toFixed(4)}`} />
+        </>
+      )}
+      </CalcBlock>
+      
+      {/* Researcher's note */}
+      <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 leading-relaxed mt-4 text-center">
+        <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> חישבנו כי סטטיסטי המבחן הוא {decisionData.statObs.toFixed(4)} וה-P-Value הוא {decisionData.pValue.toFixed(4)}. {decisionData.pValue < alpha ? 'מכיוון שההסתברות לקבל תוצאה זו במקרה הינה נמוכה ביותר, נדחה את השערת האפס.' : 'ההסתברות לקבל תוצאה זו אינה נמוכה מספיק, ולכן לא נוכל לדחות את השערת האפס.'}
+      </p>
     </div>
   </div>
 
   {/* Step 5: Final Decision Block */}
-  {decisionData && (
-  <div className={`mt-8 rounded-3xl p-6 md:p-8 border-2 shadow-lg transition-all text-right relative overflow-hidden ${
-  decisionData.isReject 
-  ?'bg-gradient-to-br from-emerald-950/25 to-teal-950/5 border-emerald-800' 
-  : 'bg-gradient-to-br from-red-950/25 to-rose-950/5 border-red-800'
-  }`}>
-  {/* Top Accent Strip */}
-  <div className={`absolute top-0 right-0 w-full h-1.5 ${decisionData.isReject ?'bg-emerald-500' :'bg-red-500'}`} />
-  
-  <h3 className="text-lg sm:text-xl font-black mb-4 flex items-center gap-3 pb-3 border-b border-dashed border-slate-800/85">
-  <span className={`w-9 h-9 rounded-full shrink-0 text-base font-black flex items-center justify-center border ${decisionData.isReject ? 'bg-emerald-100 bg-emerald-900/50 border-emerald-300 text-emerald-400' : 'bg-red-100 bg-red-900/50 border-red-300 text-red-400'}`}>5</span>
-  <span className={`text-xl font-black ${decisionData.isReject ? 'text-emerald-300' : 'text-red-300'}`}>
-  הכרעה סטטיסטית ומסקנה
-  </span>
-  <span className="text-xs font-bold text-slate-500 mr-auto font-mono">
-  <InlineMath math="\alpha" /> = {alpha} | <InlineMath math="n" /> = {n}
-  </span>
-  </h3>
+  <div className="space-y-3 py-8 text-right">
+    <div className="flex items-center gap-3 font-extrabold text-indigo-400">
+      <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">5</span>
+      <span className="text-xl sm:text-2xl font-black">הכרעה סטטיסטית ומסקנה</span>
+      <span className="text-xs font-bold text-slate-500 mr-auto font-mono">
+        <InlineMath math="\alpha" /> = {alpha} | <InlineMath math="n" /> = {n}
+      </span>
+    </div>
+    
+    <div className="pr-5 py-1 space-y-5">
+      {decisionData && (
+      <div className={`mt-2 rounded-3xl p-6 md:p-8 border-2 shadow-lg transition-all text-right relative overflow-hidden ${
+      decisionData.isReject 
+      ?'bg-gradient-to-br from-emerald-950/25 to-teal-950/5 border-emerald-800' 
+      : 'bg-gradient-to-br from-red-950/25 to-rose-950/5 border-red-800'
+      }`}>
+      {/* Top Accent Strip */}
+      <div className={`absolute top-0 right-0 w-full h-1.5 ${decisionData.isReject ?'bg-emerald-500' :'bg-red-500'}`} />
 
-  <div className="space-y-4">
+      <div className="space-y-4">
   <div className="p-4 rounded-xl bg-slate-900/60 border border-slate-800/80 leading-relaxed text-sm sm:text-base font-bold text-slate-200">
   <div className={`text-base sm:text-lg font-black flex justify-center items-center gap-2 ${decisionData.isReject ?'text-emerald-300' :'text-red-300'}`}>
-  <span>מצב: המדגם נמצא באזור {decisionData.isReject ? 'הדחייה' : 'הקבלה'}</span>
+  <span>ראינו כי המדגם נמצא באזור {decisionData.isReject ? 'הדחייה' : 'הקבלה'}</span>
   <span className="mt-1"><InlineMath math={decisionData.isReject ? 'C' : '\\bar{C}'} /></span>
   </div>
   <div className="text-base sm:text-lg font-black mt-2 flex justify-center items-center gap-2">
-  <span>החלטה פורמלית:</span>
+  <span>ולכן החלטנו:</span>
   <span className="font-mono underline decoration-2 mt-1" dir="ltr"><InlineMath math={decisionData.decisionHeading} /></span>
   </div>
 
   {/* Zone Formal Data */}
-  <div className="mt-5 p-3.5 bg-slate-950/40 rounded-xl border border-slate-800/50 flex flex-col gap-2.5 text-center text-sm">
-  <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-  <span className="text-slate-400 font-extrabold">הגדרת האזור:</span>
-  <span className="font-mono text-indigo-300" dir="ltr"><InlineMath math={decisionData.isReject ? decisionData.zoneRejectionTeX : decisionData.zoneAcceptanceTeX} /></span>
+  <div className="mt-5 text-center text-sm space-y-2 font-semibold">
+  <div className="text-slate-300">
+  מכיוון ש-<InlineMath math={decisionData.isReject ? decisionData.zoneRejectionTeX : decisionData.zoneAcceptanceTeX} />
   </div>
-  <div className="flex flex-col sm:flex-row justify-center items-center gap-2">
-  <span className="text-slate-400 font-extrabold flex items-center">הסתברות בהינתן <span className="font-mono ml-1 mt-0.5"><InlineMath math="H_0\ " /></span>:</span>
-  <span className="font-mono text-indigo-300" dir="ltr"><InlineMath math={decisionData.isReject ? `P(\\bar{X} \\in C \\mid H_0) = \\alpha = ${alpha}` : `P(\\bar{X} \\in \\bar{C} \\mid H_0) = 1 - \\alpha = ${parseFloat((1 - alpha).toFixed(4))}`} /></span>
+  <div className="text-slate-300">
+  וההסתברות לכך תחת השערת האפס היא <InlineMath math={decisionData.isReject ? `P(\\bar{X} \\in C \\mid H_0) = \\alpha = ${alpha}` : `P(\\bar{X} \\in \\bar{C} \\mid H_0) = 1 - \\alpha = ${parseFloat((1 - alpha).toFixed(4))}`} />
   </div>
-  <div className="text-slate-300 font-semibold mt-1">
+  <div className="text-slate-400 mt-2">
   {decisionData.belongingExplanationText}
   </div>
   </div>
@@ -2120,112 +2041,136 @@ export default function HypothesisTestingCalculator() {
   </div>
   
   <div className="flex flex-col gap-3 mt-4">
-    {/* Verbal Conclusion Box */}
-    <div className={`p-6 rounded-2xl border-2 my-2 shadow-xl relative overflow-hidden transition-colors duration-500 ${decisionData.isReject ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-red-950/20 border-red-500/30'}`}>
-      <span className={`absolute top-2 right-4 text-6xl opacity-20 font-serif ${decisionData.isReject ? 'text-emerald-500' : 'text-red-500'}`}>"</span>
-      <p className={`text-2xl sm:text-3xl font-handwriting font-normal leading-relaxed text-center px-4 relative z-10 ${decisionData.isReject ? 'text-emerald-100' : 'text-red-100'}`} style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-      {decisionData.verbalConclusion}
-      </p>
-    </div>
+    {/* Researcher's Note / Verbal Conclusion */}
+    <p className={`text-2xl sm:text-3xl font-handwriting font-normal leading-relaxed text-center px-4 mt-6 relative z-10 ${decisionData.isReject ? 'text-emerald-200' : 'text-red-200'}`} style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
+      <PenTool size={28} className={`inline-block ml-2 opacity-60 ${decisionData.isReject ? 'text-emerald-400' : 'text-red-400'}`} /> {decisionData.isReject 
+        ? `אנו מסיקים כי ברמת מובהקות של ${alpha}, קיימות ראיות סטטיסטיות מספקות לדחות את השערת האפס. לפיכך, אנו קובעים ב-${((1 - alpha) * 100).toFixed(0)}% ביטחון כי תוחלת האוכלוסייה ${tailType === 'right' ? `גדולה מ-${mu0}` : tailType === 'left' ? `קטנה מ-${mu0}` : `שונה מ-${mu0}`}.`
+        : `אנו מסיקים כי ברמת מובהקות של ${alpha}, אין בידינו עדות סטטיסטית מספקת לדחות את השערת האפס. לפיכך, לא נוכל לקבוע ב-${((1 - alpha) * 100).toFixed(0)}% ביטחון כי תוחלת האוכלוסייה ${tailType === 'right' ? `גדולה מ-${mu0}` : tailType === 'left' ? `קטנה מ-${mu0}` : `שונה מ-${mu0}`}.`
+      }
+    </p>
   </div>
  </div>
  </div>
  )}
-
- {/* ─── Visual Separator: Supplementary Calculations ─── */}
- <div className="flex items-center gap-4 mt-10 mb-2">
-  <div className="flex-1 h-px bg-gradient-to-l from-indigo-500/40 to-transparent" />
-  <span className="text-xs font-black text-indigo-400/60 tracking-widest uppercase shrink-0">חישובים משלימים</span>
-  <div className="flex-1 h-px bg-gradient-to-r from-indigo-500/40 to-transparent" />
+ </div>
  </div>
 
  {/* Step 6: Power calculation under H1 (moved from step 4) */}
- <div className="space-y-3 pt-6">
- <div className="flex items-center gap-3 font-extrabold text-indigo-400">
- <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">6</span>
+ <div className="space-y-3 py-8 text-right">
+  <div className="text-center mb-8">
+   <span className="inline-block text-xs font-black text-indigo-400/60 tracking-widest uppercase bg-indigo-950/30 border border-indigo-500/20 px-4 py-1.5 rounded-xl">חישובים משלימים</span>
+  </div>
+  <div className="flex items-center gap-3 font-extrabold text-indigo-400">
+   <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">6</span>
  <span className="text-xl sm:text-2xl font-black">חישוב טעות מסוג שני (<InlineMath math="\beta" />) ועוצמת המבחן (<InlineMath math="1-\beta" />)</span>
  </div>
  <p className="text-base sm:text-lg text-slate-200 leading-relaxed pr-9 font-semibold">
  טעות מסוג שני (<InlineMath math="\beta" />) היא ההסתברות לקבל החלטה שגויה של אי-דחיית השערת האפס, למרות שהיא שקרית במציאות. עוצמת המבחן (<InlineMath math="1-\beta" />) היא ההסתברות לדחות בצדק את השערת האפס (לזהות אפקט אמיתי). לצורך החישוב, יש להגדיר תוחלת ספציפית חלופית <InlineMath math="\mu_1" /> תחת <InlineMath math="H_1" />.
  </p>
  <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
+ <div className="pr-9 py-3 space-y-5 text-xl md:text-2xl">
  {calculatePower ? (
- varianceKnown ? (
- tailType ==='right' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן ימני: השטח באזור הקבלה מתחת לערך הקריטי C:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`Z_{H1} = \\frac{C - \\mu_1}{SE} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
- <BlockMath math={`\\beta = P(Accept\\ H_0 | H_1\\ is\\ True) = \\Phi(Z_{H1}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = 1 - \\beta = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- ) : tailType ==='left' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן שמאלי: השטח באזור הקבלה מעל הערך הקריטי C:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`Z_{H1} = \\frac{C - \\mu_1}{SE} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
- <BlockMath math={`\\beta = P(Accept\\ H_0 | H_1\\ is\\ True) = 1 - \\Phi(Z_{H1}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = \\Phi(Z_{H1}) = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- ) : (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן דו-צדדי: השטח באזור הקבלה בין שני הערכים הקריטיים C₁, C₂:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`Z_{H1,1} = \\frac{C_1 - \\mu_1}{SE} = \\frac{${stats.c1.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
- <BlockMath math={`Z_{H1,2} = \\frac{C_2 - \\mu_1}{SE} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
- <BlockMath math={`\\beta = \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(3)}) - \\Phi(${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(3)}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = 1 - \\beta = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- )
- ) : (
- tailType ==='right' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן t: חישוב β באמצעות התפלגות t לא-מרכזית עם NCP:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`NCP = \\frac{\\mu_{H1} - \\mu_{H0}}{SE} = \\frac{${stats.effectH1Mean} - ${stats.effectH0Mean}}{${stats.se.toFixed(4)}} = ${stats.ncp.toFixed(4)}`} />
- <BlockMath math={`t_{\\beta} = t_{crit} - NCP = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
- <BlockMath math={`\\beta = P(t_{df} < t_{\\beta}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = 1 - \\beta = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- ) : tailType ==='left' ? (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן t: חישוב β באמצעות התפלגות t לא-מרכזית עם NCP:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`NCP = \\frac{\\mu_{H1} - \\mu_{H0}}{SE} = \\frac{${stats.effectH1Mean} - ${stats.effectH0Mean}}{${stats.se.toFixed(4)}} = ${stats.ncp.toFixed(4)}`} />
- <BlockMath math={`t_{\\beta} = t_{crit} - NCP = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
- <BlockMath math={`\\beta = 1 - P(t_{df} < t_{\\beta}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- ) : (
- <div className="space-y-3">
- <p className="text-lg sm:text-xl text-slate-50 font-bold mb-2">מבחן t: חישוב β באמצעות התפלגות t לא-מרכזית עם NCP:</p>
- <div className="w-full overflow-x-auto py-2 scrollbar-thin mt-auto" dir="ltr">
- <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
- <BlockMath math={`NCP = \\frac{\\mu_{H1} - \\mu_{H0}}{SE} = \\frac{${stats.effectH1Mean} - ${stats.effectH0Mean}}{${stats.se.toFixed(4)}} = ${stats.ncp.toFixed(4)}`} />
- <BlockMath math={`t_{\\beta, 1} = -t_{crit} - NCP = ${(-stats.zCrit).toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(-stats.zCrit - stats.ncp).toFixed(4)}`} />
- <BlockMath math={`t_{\\beta, 2} = t_{crit} - NCP = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
- <BlockMath math={`\\beta = P(t_{df} < t_{\\beta, 2}) - P(t_{df} < t_{\\beta, 1}) = ${stats.beta.toFixed(4)}`} />
- <BlockMath math={`Power (1-\\beta) = 1 - \\beta = ${(stats.power).toFixed(4)}`} />
- </div>
- </div>
- </div>
- )
- )
+  <div className="space-y-4">
+  <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-semibold">
+  נמצא את ההסתברות לאי-דחיית <InlineMath math="H_0" /> (שהמדגם ייפול ב-<InlineMath math="\bar{C}" />), תחת ההנחה כי התוחלת האמיתית היא <InlineMath math="\mu_1" /> (התפלגות <InlineMath math="H_1" />).
+  </p>
+
+  {/* General formula template */}
+  <FormulaBlock>
+  {varianceKnown ? (
+   tailType === 'right' ? (
+   <>
+   <BlockMath math={`Z_{H_1} = \\frac{C - \\mu_1}{SE}`} />
+   <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = \\Phi(Z_{H_1})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   ) : tailType === 'left' ? (
+   <>
+   <BlockMath math={`Z_{H_1} = \\frac{C - \\mu_1}{SE}`} />
+   <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = 1 - \\Phi(Z_{H_1})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   ) : (
+   <>
+   <BlockMath math={`Z_{H_1,1} = \\frac{C_1 - \\mu_1}{SE} \\quad,\\quad Z_{H_1,2} = \\frac{C_2 - \\mu_1}{SE}`} />
+   <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = \\Phi(Z_{H_1,2}) - \\Phi(Z_{H_1,1})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   )
+  ) : (
+   <>
+   <BlockMath math={`NCP = \\frac{\\mu_1 - \\mu_0}{SE}`} />
+   {tailType === 'right' ? (
+   <>
+   <BlockMath math={`t_{\\beta} = t_{crit} - NCP`} />
+   <BlockMath math={`\\beta = P(t_{df} < t_{\\beta})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   ) : tailType === 'left' ? (
+   <>
+   <BlockMath math={`t_{\\beta} = t_{crit} - NCP`} />
+   <BlockMath math={`\\beta = 1 - P(t_{df} < t_{\\beta})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   ) : (
+   <>
+   <BlockMath math={`t_{\\beta, 1} = -t_{crit} - NCP \\quad,\\quad t_{\\beta, 2} = t_{crit} - NCP`} />
+   <BlockMath math={`\\beta = P(t_{df} < t_{\\beta, 2}) - P(t_{df} < t_{\\beta, 1})`} />
+   <BlockMath math={`\\text{Power} = 1 - \\beta`} />
+   </>
+   )}
+   </>
+  )}
+  </FormulaBlock>
+
+  {/* Calculation with actual values */}
+  <CalcBlock>
+  {varianceKnown ? (
+   tailType === 'right' ? (
+   <>
+   <BlockMath math={`Z_{H_1} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
+   <BlockMath math={`\\beta = \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
+   <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
+   </>
+   ) : tailType === 'left' ? (
+   <>
+   <BlockMath math={`Z_{H_1} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
+   <BlockMath math={`\\beta = 1 - \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
+   <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
+   </>
+   ) : (
+   <>
+   <BlockMath math={`Z_{H_1,1} = \\frac{${stats.c1.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
+   <BlockMath math={`Z_{H_1,2} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
+   <BlockMath math={`\\beta = \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(3)}) - \\Phi(${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(3)}) = ${stats.beta.toFixed(4)}`} />
+   <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
+   </>
+   )
+  ) : (
+   <>
+   <BlockMath math={`NCP = \\frac{${stats.effectH1Mean} - ${stats.effectH0Mean}}{${stats.se.toFixed(4)}} = ${stats.ncp.toFixed(4)}`} />
+   {tailType === 'right' ? (
+   <>
+   <BlockMath math={`t_{\\beta} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
+   <BlockMath math={`\\beta = P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
+   </>
+   ) : tailType === 'left' ? (
+   <>
+   <BlockMath math={`t_{\\beta} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
+   <BlockMath math={`\\beta = 1 - P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
+   </>
+   ) : (
+   <>
+   <BlockMath math={`t_{\\beta, 1} = ${(-stats.zCrit).toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(-stats.zCrit - stats.ncp).toFixed(4)}`} />
+   <BlockMath math={`t_{\\beta, 2} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
+   <BlockMath math={`\\beta = P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) - P(t_{${stats.df}} < ${(-stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
+   </>
+   )}
+   <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
+   </>
+  )}
+  </CalcBlock>
+  </div>
  ) : (
  <div className="bg-slate-900/60 p-5 rounded-2xl border border-slate-800 text-center text-slate-400 space-y-2 max-w-xl mx-auto">
  <Info size={20} className="mx-auto text-indigo-400" />
@@ -2239,73 +2184,88 @@ export default function HypothesisTestingCalculator() {
  </div>
 
  {/* Step 7: Confidence Interval */}
- <div className="space-y-4 pt-6 border-t border-slate-800/40 mt-4 text-right">
+ <div className="space-y-3 py-8 text-right">
   <div className="flex items-center gap-3 font-extrabold text-indigo-400">
    <span className="w-9 h-9 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">7</span>
    <span className="text-xl sm:text-2xl font-black">חישוב רווח סמך (Confidence Interval)</span>
   </div>
 
-  <div className="pr-5 py-1 space-y-4">
-   <div className="space-y-2 text-sm sm:text-base text-slate-100 font-medium leading-relaxed bg-slate-950/30 p-4 rounded-xl border border-slate-800/50">
-    <p>
-     <strong className="text-indigo-300">רווח סמך (CI)</strong> ברמת ביטחון של <InlineMath math={`1 - \\alpha = ${(1 - alpha).toFixed(2)}`} /> (<InlineMath math={`${((1 - alpha) * 100).toFixed(0)}\\%`} />) משמש לאמידת פרמטר האוכלוסייה (התוחלת <InlineMath math="\mu" />) מתוך נתוני המדגם.
+   <div className="pr-5 py-1 space-y-5">
+    <p className="text-base sm:text-lg text-slate-200 leading-relaxed font-semibold">
+     נבנה רווח סמך (CI) ברמת ביטחון של <InlineMath math={`1 - \\alpha = ${(1 - alpha).toFixed(2)}`} /> (<InlineMath math={`${((1 - alpha) * 100).toFixed(0)}\\%`} />) על מנת לאמוד את פרמטר האוכלוסייה מתוך נתוני המדגם.
     </p>
-   </div>
 
-   {/* General formula */}
-   <div className="w-full overflow-x-auto py-2 scrollbar-thin" dir="ltr">
-    <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-     {varianceKnown ? (
-      <BlockMath math={`CI = \\left[ \\bar{X} - Z_{1-\\alpha/2} \\cdot \\frac{\\sigma}{\\sqrt{n}}, \\quad \\bar{X} + Z_{1-\\alpha/2} \\cdot \\frac{\\sigma}{\\sqrt{n}} \\right]`} />
-     ) : (
-      <BlockMath math={`CI = \\left[ \\bar{X} - t_{n-1, 1-\\alpha/2} \\cdot \\frac{S}{\\sqrt{n}}, \\quad \\bar{X} + t_{n-1, 1-\\alpha/2} \\cdot \\frac{S}{\\sqrt{n}} \\right]`} />
-     )}
-    </div>
-   </div>
-
-   {/* Computed CI values */}
-   {(() => {
-    const ciCritZ = varianceKnown ? inverseNormalCDF(1 - alpha / 2) : studentTPPF(1 - alpha / 2, stats.df);
-    const ciLower = mu1 - ciCritZ * stats.se;
-    const ciUpper = mu1 + ciCritZ * stats.se;
-    const mu0InCI = mu0 >= ciLower && mu0 <= ciUpper;
-    return (
+    {/* Raw formula template */}
+    <FormulaBlock>
+    {varianceKnown ? (
      <>
-      <div className="w-full overflow-x-auto py-2 scrollbar-thin" dir="ltr">
-       <div className="bg-slate-900 p-4 sm:p-5 rounded-2xl border-2 border-slate-800 space-y-3 text-lg sm:text-xl md:text-2xl text-center shadow-inner font-extrabold min-w-[280px]">
-        <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${ciCritZ.toFixed(4)}`} />
-        <BlockMath math={`CI = \\left[ ${ciLower.toFixed(4)}, \\quad ${ciUpper.toFixed(4)} \\right]`} />
-       </div>
-      </div>
-
-      <div className={`p-4 rounded-2xl border-2 mt-4 ${mu0InCI ? 'bg-red-950/15 border-red-500/30' : 'bg-emerald-950/15 border-emerald-500/30'}`}>
-       <p className="text-sm sm:text-base text-slate-200 font-bold leading-relaxed mb-3">
-        <strong className={mu0InCI ? 'text-red-300' : 'text-emerald-300'}>קשר למבחן ההשערות (דו-צדדי):</strong>{' '}
-        {mu0InCI
-         ? <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-red-400">נמצא בתוך</strong> גבולות רווח הסמך — לא ניתן לדחות את <InlineMath math="H_0" />.</>
-         : <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-emerald-400">נמצא מחוץ</strong> לגבולות רווח הסמך — נדחה את <InlineMath math="H_0" /> ברמת מובהקות <InlineMath math={`\\alpha = ${alpha}`} />.</>
-        }
-       </p>
-      </div>
-
-      <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center pt-2 mt-4" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-       <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אנו בטוחים ברמת ביטחון של {((1 - alpha) * 100).toFixed(0)}% שהתוחלת האמיתית של האוכלוסייה נמצאת בטווח [{ciLower.toFixed(4)}, {ciUpper.toFixed(4)}].
-      </p>
+     <BlockMath math={`Z_{crit} = \\Phi^{-1}(1 - \\alpha/2)`} />
+     <BlockMath math={`CI = \\left[ \\bar{X} - Z_{crit} \\cdot SE, \\quad \\bar{X} + Z_{crit} \\cdot SE \\right]`} />
      </>
-    );
-   })()}
+    ) : (
+     <>
+     <BlockMath math={`t_{crit} = F_{t,df}^{-1}(1 - \\alpha/2)`} />
+     <BlockMath math={`CI = \\left[ \\bar{X} - t_{crit} \\cdot SE, \\quad \\bar{X} + t_{crit} \\cdot SE \\right]`} />
+     </>
+    )}
+    </FormulaBlock>
+
+    {/* Computed CI values */}
+    {(() => {
+     const ciCritZ = varianceKnown ? inverseNormalCDF(1 - alpha / 2) : studentTPPF(1 - alpha / 2, stats.df);
+     const ciLower = mu1 - ciCritZ * stats.se;
+     const ciUpper = mu1 + ciCritZ * stats.se;
+     const mu0InCI = mu0 >= ciLower && mu0 <= ciUpper;
+     return (
+      <CalcBlock>
+       <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${ciCritZ.toFixed(4)}`} />
+       <BlockMath math={`CI = \\left[ ${mu1} - (${ciCritZ.toFixed(4)}) \\cdot ${stats.se.toFixed(4)}, \\quad ${mu1} + (${ciCritZ.toFixed(4)}) \\cdot ${stats.se.toFixed(4)} \\right]`} />
+       <BlockMath math={`CI = \\left[ ${ciLower.toFixed(4)}, \\quad ${ciUpper.toFixed(4)} \\right]`} />
+      </CalcBlock>
+     );
+    })()}
+
+    {/* Supplementary Note: Connection to Hypothesis Test */}
+    {(() => {
+     const ciCritZ = varianceKnown ? inverseNormalCDF(1 - alpha / 2) : studentTPPF(1 - alpha / 2, stats.df);
+     const ciLower = mu1 - ciCritZ * stats.se;
+     const ciUpper = mu1 + ciCritZ * stats.se;
+     const mu0InCI = mu0 >= ciLower && mu0 <= ciUpper;
+     return (
+      <>
+       {tailType === 'two-tailed' && (
+        <div className={`p-4 rounded-2xl border-2 mt-4 text-center ${mu0InCI ? 'bg-red-950/15 border-red-500/30' : 'bg-emerald-950/15 border-emerald-500/30'}`}>
+         <p className="text-sm sm:text-base text-slate-200 font-bold leading-relaxed mb-1">
+          <strong className={mu0InCI ? 'text-red-300' : 'text-emerald-300'}>קשר למבחן ההשערות הדו-צדדי:</strong>{' '}
+         </p>
+         <p className="text-sm sm:text-base text-slate-300 font-semibold leading-relaxed">
+         {mu0InCI
+          ? <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-red-400">נמצא בתוך</strong> גבולות רווח הסמך ולכן לא ניתן לדחות את <InlineMath math="H_0" />.</>
+          : <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-emerald-400">נמצא מחוץ</strong> לגבולות רווח הסמך ולכן נדחה את <InlineMath math="H_0" />.</>
+         }
+         </p>
+        </div>
+       )}
+
+       {/* Researcher's note */}
+       <p className="text-xl sm:text-2xl font-handwriting font-normal text-slate-300 text-center pt-2 mt-4" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
+        <PenTool size={22} className="inline-block ml-2 opacity-60 text-indigo-400" /> אנו בטוחים ברמת ביטחון של {((1 - alpha) * 100).toFixed(0)}% שהתוחלת האמיתית של האוכלוסייה נמצאת בטווח [{ciLower.toFixed(4)}, {ciUpper.toFixed(4)}].
+       </p>
+      </>
+     );
+    })()}
+   </div>
   </div>
- </div>
 
- </div>
-
- ) : (
- <p className="text-xl text-red-700 font-extrabold">הנתונים אינם תקינים</p>
- )}
- </motion.div>
- )}
- </AnimatePresence>
- </div>
+  </div>
+  </div>
+  ) : (
+  <p className="text-xl text-red-700 font-extrabold text-center py-8">הנתונים אינם תקינים</p>
+  )}
+  </motion.div>
+  )}
+  </AnimatePresence>
+  </div>
 
  {/* LEFT Column - Info & Explanations Panel */}
   <div className="contents">
