@@ -1158,204 +1158,204 @@ export default function HypothesisTestingCalculator() {
                         {/* Custom Parameters Table Layout */}
                         <div className="overflow-visible rounded-sm border border-[var(--color-border)] bg-[var(--color-bg)]/10 transition-all mb-6" dir="rtl">
                             <table className="w-full border-collapse border-spacing-0">
-                                <thead>
-                                    <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                                        <th className="p-3.5 text-right font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-[28%] border-l border-[var(--color-border)]">
-                                            <div className="flex items-center gap-2.5 justify-start">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setVarianceKnown(!varianceKnown)}
-                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${varianceKnown ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
-                                                        }`}
-                                                >
-                                                    {/* On State Checkmark */}
-                                                    <span className={`absolute right-1 top-0 bottom-0 flex items-center justify-center text-white transition-opacity duration-200 ${varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                        <Check size={10} className="stroke-[3.5]" />
-                                                    </span>
+                                            <thead>
+                                                <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+                                                    <th className="p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                                        <div className="flex flex-col xl:flex-row items-center justify-between gap-2">
+                                                            <div className="flex items-center gap-1.5 justify-center">
+                                                                <span>אוכלוסייה</span>
+                                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-indigo-500/20 border border-[var(--color-border)] text-[var(--color-neutral-accent)] font-bold shrink-0">H₀</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-2">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setVarianceKnown(!varianceKnown)}
+                                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${varianceKnown ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
+                                                                        }`}
+                                                                >
+                                                                    {/* On State Checkmark */}
+                                                                    <span className={`absolute right-1 top-0 bottom-0 flex items-center justify-center text-white transition-opacity duration-200 ${varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                                                                        <Check size={10} className="stroke-[3.5]" />
+                                                                    </span>
 
-                                                    {/* Off State X */}
-                                                    <span className={`absolute left-1 top-0 bottom-0 flex items-center justify-center text-[var(--color-text-primary)] transition-opacity duration-200 ${!varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                        <X size={10} className="stroke-[3.5]" />
-                                                    </span>
+                                                                    {/* Off State X */}
+                                                                    <span className={`absolute left-1 top-0 bottom-0 flex items-center justify-center text-[var(--color-text-primary)] transition-opacity duration-200 ${!varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
+                                                                        <X size={10} className="stroke-[3.5]" />
+                                                                    </span>
 
-                                                    <span
-                                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${varianceKnown ? '-translate-x-5' : 'translate-x-0'
-                                                            }`}
-                                                    />
-                                                </button>
-                                                <span>שונות ידועה:</span>
-                                            </div>
-                                        </th>
-                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-[24%] border-l border-[var(--color-border)]">
-                                            <div className="flex items-center gap-1.5 justify-center">
-                                                <span>אוכלוסייה</span>
-                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-indigo-500/20 border border-[var(--color-border)] text-[var(--color-neutral-accent)] font-bold shrink-0">H₀</span>
-                                            </div>
-                                        </th>
-                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-[24%] border-l border-[var(--color-border)]">
-                                            מדגם
-                                        </th>
-                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-[24%]">
-                                            <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
-                                                <div className="flex items-center gap-1.5 justify-center cursor-help">
-                                                    <span>השערת המחקר</span>
-                                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-amber-500/20 border border-[var(--color-border)] text-amber-300 font-bold shrink-0">H₁</span>
-                                                </div>
-                                            </InputTooltip>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* Row 1: mu0, n, and power toggle */}
-                                    <tr className="border-b border-[var(--color-border)]">
-                                        <td className="p-4 text-right align-middle text-xs sm:text-sm font-semibold border-l border-[var(--color-border)] bg-[var(--color-bg)]/20">
-                                            <div className="flex items-center gap-1.5 justify-start">
-                                                <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)" className="w-full justify-between">
-                                                    <span className="cursor-help border-b border-dotted border-slate-500">
-                                                        תוחלת (μ₀):
-                                                    </span>
-                                                </InputTooltip>
-                                            </div>
-                                        </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                            <input
-                                                type="text"
-                                                value={mu0Input}
-                                                onChange={(e) => handleMu0Change(e.target.value)}
-                                                className={`w-full bg-transparent px-3 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu0 ? 'text-[var(--color-error)] font-bold' : ''
-                                                    }`}
-                                                placeholder="100"
-                                                dir="ltr"
-                                            />
-                                            {errors.mu0 && (
-                                                <div className="text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center">{errors.mu0}</div>
-                                            )}
-                                        </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="מספר התצפיות במדגם (n)">
-                                                    <span className={`text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${testType === 'single' ? 'opacity-30' : ''}`}>
-                                                        גודל מדגם (n):
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0">
-                                                    <input
-                                                        type="text"
-                                                        value={testType === 'single' ? '1' : nInput}
-                                                        disabled={testType === 'single'}
-                                                        onChange={(e) => handleNChange(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-slate-100/5' : ''
-                                                            } ${errors.n && testType !== 'single' ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                        placeholder="36"
-                                                        dir="ltr"
-                                                    />
-                                                </div>
-                                            </div>
-                                            {errors.n && testType !== 'single' && (
-                                                <div className="text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-right">{errors.n}</div>
-                                            )}
-                                        </td>
-                                        <td className="p-3 align-middle bg-[var(--color-bg)]/40">
-                                            <div className="flex items-center gap-2 justify-center">
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCalculatePower(!calculatePower)}
-                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${calculatePower ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
-                                                        }`}
-                                                >
-                                                    <span
-                                                        className={`pointer-events-none flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${calculatePower ? '-translate-x-5' : 'translate-x-0'
-                                                            }`}
-                                                    >
-                                                        {calculatePower ? (
-                                                            <div className="w-[2px] h-[10px] bg-indigo-600 rounded-full" />
-                                                        ) : (
-                                                            <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-400" />
-                                                        )}
-                                                    </span>
-                                                </button>
-                                                <span className="text-xs sm:text-sm font-bold text-[var(--color-text-primary)]">
-                                                    חישוב עוצמה
-                                                </span>
-                                            </div>
-                                        </td>
-                                    </tr>
+                                                                    <span
+                                                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${varianceKnown ? '-translate-x-5' : 'translate-x-0'
+                                                                            }`}
+                                                                    />
+                                                                </button>
+                                                                <span className="text-xs">שונות ידועה:</span>
+                                                            </div>
+                                                        </div>
+                                                    </th>
+                                                    <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                                        מדגם
+                                                    </th>
+                                                    <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
+                                                        <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
+                                                            <div className="flex items-center gap-1.5 justify-center cursor-help">
+                                                                <span>השערת המחקר</span>
+                                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-amber-500/20 border border-[var(--color-border)] text-amber-300 font-bold shrink-0">H₁</span>
+                                                            </div>
+                                                        </InputTooltip>
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {/* Row 1: mu0, n, and power toggle */}
+                                                <tr className="border-b border-[var(--color-border)]">
+                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)">
+                                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
+                                                                    תוחלת (μ₀):
+                                                                </span>
+                                                            </InputTooltip>
+                                                            <div className="w-16 sm:w-20 shrink-0 relative">
+                                                                <input
+                                                                    type="text"
+                                                                    value={mu0Input}
+                                                                    onChange={(e) => handleMu0Change(e.target.value)}
+                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu0 ? 'text-[var(--color-error)] font-bold' : ''
+                                                                        }`}
+                                                                    placeholder="100"
+                                                                    dir="ltr"
+                                                                />
+                                                                {errors.mu0 && (
+                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu0}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <InputTooltip content="מספר התצפיות במדגם (n)">
+                                                                <span className={`text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${testType === 'single' ? 'opacity-30' : ''}`}>
+                                                                    גודל מדגם (n):
+                                                                </span>
+                                                            </InputTooltip>
+                                                            <div className="w-16 sm:w-20 shrink-0 relative">
+                                                                <input
+                                                                    type="text"
+                                                                    value={testType === 'single' ? '1' : nInput}
+                                                                    disabled={testType === 'single'}
+                                                                    onChange={(e) => handleNChange(e.target.value)}
+                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-slate-100/5' : ''
+                                                                        } ${errors.n && testType !== 'single' ? 'text-[var(--color-error)] font-bold' : ''}`}
+                                                                    placeholder="36"
+                                                                    dir="ltr"
+                                                                />
+                                                                {errors.n && testType !== 'single' && (
+                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.n}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-3 align-middle bg-[var(--color-bg)]/40">
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
+                                                                חישוב עוצמה
+                                                            </span>
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => setCalculatePower(!calculatePower)}
+                                                                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${calculatePower ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
+                                                                    }`}
+                                                            >
+                                                                <span
+                                                                    className={`pointer-events-none flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${calculatePower ? '-translate-x-5' : 'translate-x-0'
+                                                                        }`}
+                                                                >
+                                                                    {calculatePower ? (
+                                                                        <div className="w-[2px] h-[10px] bg-indigo-600 rounded-full" />
+                                                                    ) : (
+                                                                        <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-400" />
+                                                                    )}
+                                                                </span>
+                                                            </button>
+                                                        </div>
+                                                    </td>
+                                                </tr>
 
-                                    {/* Row 2: sigma and mu1(Xbar) */}
-                                    <tr>
-                                        <td className="p-4 text-right align-middle text-xs sm:text-sm font-semibold border-l border-[var(--color-border)] bg-[var(--color-bg)]/20">
-                                            <div className="flex items-center gap-1.5 justify-start">
-                                                <InputTooltip content={varianceKnown ? "סטיית תקן של האוכלוסייה (σ)" : "סטיית תקן מדגמית (S) המשמשת כאומד לסטיית התקן"} className="w-full justify-between">
-                                                    <span className="cursor-help border-b border-dotted border-slate-500">
-                                                        {varianceKnown ? 'סטיית תקן (σ):' : 'סטיית תקן (S):'}
-                                                    </span>
-                                                </InputTooltip>
-                                            </div>
-                                        </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                            <input
-                                                type="text"
-                                                value={sigmaInput}
-                                                onChange={(e) => handleSigmaChange(e.target.value)}
-                                                className={`w-full bg-transparent px-3 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.sigma ? 'text-[var(--color-error)] font-bold' : ''
-                                                    }`}
-                                                placeholder="15"
-                                                dir="ltr"
-                                            />
-                                            {errors.sigma && (
-                                                <div className="text-[11px] text-red-00 text-[var(--color-error)] font-bold leading-tight mt-1 text-center">{errors.sigma}</div>
-                                            )}
-                                        </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="ממוצע המדגם בפועל">
-                                                    <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
-                                                        ממוצע מדגם (X̄):
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0">
-                                                    <input
-                                                        type="text"
-                                                        value={mu1Input}
-                                                        onChange={(e) => handleMu1Change(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu1 ? 'text-[var(--color-error)] font-bold' : ''
-                                                            }`}
-                                                        placeholder="108"
-                                                        dir="ltr"
-                                                    />
-                                                </div>
-                                            </div>
-                                            {errors.mu1 && (
-                                                <div className="text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-right">{errors.mu1}</div>
-                                            )}
-                                        </td>
-                                        <td className={`p-3 align-middle bg-[var(--color-bg)]/40 transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (H₁)">
-                                                    <span className={`text-xs sm:text-sm font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${!calculatePower ? 'text-[var(--color-text-primary)]0 opacity-50' : 'text-[var(--color-text-secondary)]'}`}>
-                                                        ממוצע (μ₁):
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0">
-                                                    <input
-                                                        type="text"
-                                                        value={muH1Input}
-                                                        disabled={!calculatePower}
-                                                        onChange={(e) => handleMuH1Change(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${!calculatePower ? 'opacity-40 cursor-not-allowed' : ''
-                                                            } ${calculatePower && errors.muH1 ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                        placeholder="108"
-                                                        dir="ltr"
-                                                    />
-                                                </div>
-                                            </div>
-                                            {calculatePower && errors.muH1 && (
-                                                <div className="text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-right">{errors.muH1}</div>
-                                            )}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                                {/* Row 2: sigma, xBar(mu1), and muH1 */}
+                                                <tr>
+                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <InputTooltip content={varianceKnown ? "סטיית תקן של האוכלוסייה (σ)" : "סטיית תקן מדגמית (S) המשמשת כאומד לסטיית התקן"}>
+                                                                <span className="cursor-help border-b border-dotted border-slate-500 text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
+                                                                    {varianceKnown ? 'סטיית תקן (σ):' : 'סטיית תקן (S):'}
+                                                                </span>
+                                                            </InputTooltip>
+                                                            <div className="w-16 sm:w-20 shrink-0 relative">
+                                                                <input
+                                                                    type="text"
+                                                                    value={sigmaInput}
+                                                                    onChange={(e) => handleSigmaChange(e.target.value)}
+                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.sigma ? 'text-[var(--color-error)] font-bold' : ''
+                                                                        }`}
+                                                                    placeholder="15"
+                                                                    dir="ltr"
+                                                                />
+                                                                {errors.sigma && (
+                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.sigma}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <InputTooltip content="ממוצע המדגם בפועל">
+                                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
+                                                                    ממוצע מדגם (X̄):
+                                                                </span>
+                                                            </InputTooltip>
+                                                            <div className="w-16 sm:w-20 shrink-0 relative">
+                                                                <input
+                                                                    type="text"
+                                                                    value={mu1Input}
+                                                                    onChange={(e) => handleMu1Change(e.target.value)}
+                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu1 ? 'text-[var(--color-error)] font-bold' : ''
+                                                                        }`}
+                                                                    placeholder="108"
+                                                                    dir="ltr"
+                                                                />
+                                                                {errors.mu1 && (
+                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu1}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className={`p-3 align-middle bg-[var(--color-bg)]/40 transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
+                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                            <InputTooltip content="התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (H₁)">
+                                                                <span className={`text-xs sm:text-sm font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-secondary)]'}`}>
+                                                                    ממוצע (μ₁):
+                                                                </span>
+                                                            </InputTooltip>
+                                                            <div className="w-16 sm:w-20 shrink-0 relative">
+                                                                <input
+                                                                    type="text"
+                                                                    value={muH1Input}
+                                                                    disabled={!calculatePower}
+                                                                    onChange={(e) => handleMuH1Change(e.target.value)}
+                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${!calculatePower ? 'opacity-40 cursor-not-allowed' : ''
+                                                                        } ${calculatePower && errors.muH1 ? 'text-[var(--color-error)] font-bold' : ''}`}
+                                                                    placeholder="108"
+                                                                    dir="ltr"
+                                                                />
+                                                                {calculatePower && errors.muH1 && (
+                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.muH1}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                         </div>
 
                         {/* Alpha Selection Row with type manually option */}
