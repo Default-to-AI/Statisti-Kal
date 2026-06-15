@@ -1359,6 +1359,7 @@ export default function HypothesisTestingCalculator() {
                         </div>
 
 
+                        </div>
                     {/* Main Test Statistic Type Selector */}
                     <div className="flex flex-col gap-3 shrink-0 h-[229.583px] w-[201px] bg-[var(--color-bg)]/20 border border-[var(--color-border)] p-4 rounded-sm">
                         <span className="text-xs sm:text-sm font-black text-[var(--color-text-primary)] text-right w-full">סטטיסטי המבחן:</span>
@@ -1973,7 +1974,6 @@ export default function HypothesisTestingCalculator() {
                                 <p className="text-[11px] text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
                             )}
                         </div>
-                    </div>
 
                                                 <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
                                                     <FormulaBlock>
