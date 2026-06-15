@@ -2152,7 +2152,7 @@ export default function HypothesisTestingCalculator() {
 
                                                     <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                         <FormulaBlock>
-                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת סטטיסטי המבחן (תאוריה)</div>
+                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת סטטיסטי המבחן:</div>
                                                             {tailType === 'right' && (
                                                                 varianceKnown ?
                                                                     <BlockMath math={`P(Z \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\alpha \\implies Z_{crit} = z_{\\alpha}`} /> :
@@ -2234,7 +2234,7 @@ export default function HypothesisTestingCalculator() {
 
                                                                 <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                                     <FormulaBlock>
-                                                                        <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת אזור הדחייה (תאוריה)</div>
+                                                                        <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת אזור הדחייה:</div>
                                                                         {tailType === 'right' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} + ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                         {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                         {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
@@ -2273,7 +2273,7 @@ export default function HypothesisTestingCalculator() {
 
                                                     <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                         <FormulaBlock>
-                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת מובהקות התוצאה (תאוריה)</div>
+                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת מובהקות התוצאה:</div>
                                                             {tailType === 'right' && (
                                                                 varianceKnown ?
                                                                     <BlockMath math={`P\\text{-Value} = P(Z \\ge Z_{\\text{stat}}) = 1 - \\Phi(Z_{\\text{stat}})`} /> :
