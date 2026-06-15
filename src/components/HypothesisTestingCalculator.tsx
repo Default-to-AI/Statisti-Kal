@@ -218,7 +218,7 @@ function FormulaBlock({ children, className = '' }: { children: React.ReactNode;
     return (
         <div className={`w-full overflow-x-auto py-4 my-2 scrollbar-thin ${className}`} dir="ltr">
             <div className="relative border-l-4 border-[var(--color-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-serif text-[var(--color-text-primary)]">
-                <span className="absolute -top-2 right-0 text-[10px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none bg-[var(--color-bg)] px-2" dir="rtl">תבנית כללית</span>
+                <span className="text-[11px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none mb-1" dir="rtl">תבנית כללית</span>
                 <div className="py-2">{children}</div>
             </div>
         </div>
@@ -230,7 +230,7 @@ function CalcBlock({ children, className = '' }: { children: React.ReactNode; cl
     return (
         <div className={`w-full overflow-x-auto py-4 my-2 scrollbar-thin ${className}`} dir="ltr">
             <div className="relative border-l-4 border-[var(--color-neutral-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-serif text-[var(--color-text-primary)]">
-                <span className="absolute -top-2 right-0 text-[10px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none bg-[var(--color-bg)] px-2" dir="rtl">יישום</span>
+                <span className="text-[11px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none mb-1" dir="rtl">יישום</span>
                 <div className="py-2">{children}</div>
             </div>
         </div>
@@ -1892,7 +1892,7 @@ export default function HypothesisTestingCalculator() {
                                                     <span className="w-9 h-9 rounded-full bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300">2</span>
                                                     <span className="text-xl sm:text-2xl font-black">בחירת מבחן סטטיסטי מתאים</span>
                                                 </div>
-                                                <div className="flex flex-col items-center w-full py-6 overflow-x-auto bg-[var(--color-bg)]/30 rounded-sm border border-[var(--color-border)] mb-6 mt-4">
+                                                <div className="flex flex-col items-center w-full py-6 overflow-x-auto mb-6 mt-4">
                                                     <div className="flex flex-col items-center" dir="rtl">
                                                         {/* Q1 */}
                                                         <div className={`px-5 py-2.5 rounded-sm border-2 font-bold shadow-sm z-10 transition-all ${varianceKnown === true || varianceKnown === false ? 'bg-indigo-900/40 border-[var(--color-border)] text-indigo-100' : 'bg-[var(--color-surface)] border-slate-600 text-[var(--color-text-secondary)]'}`}>
@@ -2231,7 +2231,7 @@ export default function HypothesisTestingCalculator() {
                                                                     <BlockMath math={`P(|Z| \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\frac{\\alpha}{2} \\implies Z_{crit_{1,2}} = \\pm z_{\\alpha/2}`} /> :
                                                                     <BlockMath math={`P(|t_{(n-1)}| \\ge t_{crit}) = \\alpha \\implies t_{crit_{1,2}} = \\pm t_{\\alpha/2}`} />
                                                             )}
-                                                            <div className="mt-6 border-t border-[var(--color-border)]/50 pt-4">
+                                                            <div className="mt-6 pt-2">
                                                                 {tailType === 'right' ? (
                                                                     <>
                                                                         <div className="text-[var(--color-success)] font-bold">
@@ -2301,7 +2301,7 @@ export default function HypothesisTestingCalculator() {
                                                                         {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                         {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
 
-                                                                        <div className="mt-6 border-t border-[var(--color-border)]/50 pt-4">
+                                                                        <div className="mt-6 pt-2">
                                                                             <div className="text-[var(--color-success)] font-bold">
                                                                                 {tailType === 'right' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\ge ${paramSymbol}_{crit} \\}`} />}
                                                                                 {tailType === 'left' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\le ${paramSymbol}_{crit} \\}`} />}
@@ -2352,7 +2352,7 @@ export default function HypothesisTestingCalculator() {
                                                                     <BlockMath math={`P\\text{-Value} = 2 \\cdot P(|t_{(n-1)}| \\ge |t_{\\text{stat}}|)`} />
                                                             )}
 
-                                                            <div className="mt-6 border-t border-[var(--color-border)]/50 pt-4">
+                                                            <div className="mt-6 pt-2">
                                                                 <div className="text-[var(--color-success)] font-bold">
                                                                     <BlockMath math={`\\text{If: P-Value } \\le \\alpha \\text{ , Reject } H_0`} />
                                                                 </div>
