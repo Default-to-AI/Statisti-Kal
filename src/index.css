@@ -4,24 +4,40 @@
 
 @theme {
   --font-sans: "Assistant", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-handwriting: "Gveret Levin", cursive;
 }
 
 :root {
-  /* Core brand colors matching the slate/indigo dark theme */
-  --color-text-primary: #cbd5e1;     /* slate-300: highly readable light gray for body/numbers */
-  --color-text-secondary: #94a3b8;   /* slate-400: muted gray for reference lines/labels */
-  --color-success: #34d399;          /* emerald-400: emerald green for success metrics/intervals */
-  --color-error: #f87171;            /* red-400: vivid red for alpha/rejection controls */
-  --color-accent: #3b82f6;           /* blue-500: beautiful bright blue for H0 reference */
+  /* Academic Precision Dark Theme */
+  --color-bg: #12141A;               /* Deep charcoal/midnight, less blue than slate */
+  --color-surface: #1A1D24;          /* Slightly elevated surface */
+  --color-surface-raised: #242831;   /* Raised surface for interactive elements */
+  --color-border: #2E3340;           /* Structural lines */
+  
+  --color-text-primary: #F0F1F5;     /* High contrast off-white for body/numbers */
+  --color-text-secondary: #8A93A6;   /* Muted gray for reference lines/labels */
+  
+  /* Core Semantic Colors (User requested to keep red/green logic intact) */
+  --color-success: #3BA98D;          /* Professional muted emerald green for success metrics/intervals */
+  --color-error: #D95B5B;            /* Professional muted brick red for alpha/rejection controls */
+  --color-accent: #CBA461;           /* Academic Brass/Gold for primary mathematical highlights / H0 reference */
+  --color-neutral-accent: #5C8ECA;   /* Muted academic blue for neutral/secondary elements */
 
   /* Dedicated Recharts visual aesthetics */
-  --chart-4: #f59e0b;                /* amber-500: soft golden orange for H1 reference */
-  --chart-grid: #334155;             /* slate-700: subtle grid overlay line */
-  --chart-axis-label: #94a3b8;       /* slate-400: axis ticks */
-  --chart-rejection: rgba(248, 113, 113, 0.45);   /* alpha shaded region (Type I Error) */
-  --chart-acceptance: rgba(52, 211, 153, 0.45);  /* power shaded region (1 - Beta) */
+  --chart-4: #E2A03F;                /* Golden/brass orange for H1 reference */
+  --chart-grid: #2E3340;             /* Subtle grid overlay line matching borders */
+  --chart-axis-label: #8A93A6;       /* Axis ticks */
+  --chart-rejection: rgba(217, 91, 91, 0.45);   /* alpha shaded region (Type I Error) */
+  --chart-acceptance: rgba(59, 169, 141, 0.45);  /* power shaded region (1 - Beta) */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-size: 16.5px;
+  letter-spacing: 0.015em;
 }
 
 /* Ensure KaTeX math renders from left to right (LTR) even in RTL pages without breaking layout */
