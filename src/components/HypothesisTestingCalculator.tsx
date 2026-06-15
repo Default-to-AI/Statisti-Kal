@@ -490,58 +490,7 @@ export default function HypothesisTestingCalculator() {
     const statName = testType === 'single' ? 'הערך הבודד' : testType === 'sum' ? 'סכום המדגם' : 'ממוצע המדגם';
     const statNamePlural = testType === 'single' ? 'ערכים בודדים' : testType === 'sum' ? 'סכומי מדגם' : 'ממוצעי מדגם';
 
-    // Dynamic parameterized formal hypothesis
-    const getFormalHypothesisMath = () => {
-        let parameterSymbol = '\\mu';
-        let h0Val = mu0Input;
 
-        if (testType === 'sum') {
-            parameterSymbol = 'E(\\sum X)';
-            const parsedMu0 = parseFloat(mu0Input);
-            const parsedN = parseInt(nInput, 10);
-            if (!isNaN(parsedMu0) && !isNaN(parsedN)) {
-                h0Val = (parsedN * parsedMu0).toString();
-            } else {
-                h0Val = 'n \\cdot \\mu_0';
-            }
-        }
-
-        let h0Symbol = '=';
-        let h1Symbol = '\\neq';
-
-        if (tailType === 'right') {
-            h0Symbol = '\\le';
-            h1Symbol = '>';
-        } else if (tailType === 'left') {
-            h0Symbol = '\\ge';
-            h1Symbol = '<';
-        }
-
-        return `H_0: ${parameterSymbol} ${h0Symbol} ${h0Val} \\quad \\text{Vs.} \\quad H_1: ${parameterSymbol} ${h1Symbol} ${h0Val}`;
-    };
-
-    // Dynamic theoretical (general) formal hypothesis
-    const getGeneralFormalHypothesisMath = () => {
-        let parameterSymbol = '\\mu';
-        if (testType === 'sum') {
-            parameterSymbol = 'E(\\sum X)';
-        }
-
-        const nullValueSymbol = testType === 'sum' ? 'n \\cdot \\mu_0' : '\\mu_0';
-
-        let h0Symbol = '=';
-        let h1Symbol = '\\neq';
-
-        if (tailType === 'right') {
-            h0Symbol = '\\le';
-            h1Symbol = '>';
-        } else if (tailType === 'left') {
-            h0Symbol = '\\ge';
-            h1Symbol = '<';
-        }
-
-        return `H_0: ${parameterSymbol} ${h0Symbol} ${nullValueSymbol} \\quad \\text{Vs.} \\quad H_1: ${parameterSymbol} ${h1Symbol} ${nullValueSymbol}`;
-    };
 
     // Accordion state
     const [showSteps, setShowSteps] = useState<boolean>(true);
@@ -1385,56 +1334,6 @@ export default function HypothesisTestingCalculator() {
                     </div>
                 </div>
             </div>
-            {/* Dynamic Formal Hypotheses Display Banner with H1 Buttons */}
-            <div className="mb-6 p-4 rounded-sm border border-indigo-900/40 bg-[var(--color-surface)] flex flex-col xl:flex-row items-center justify-between gap-6 transition-all" dir="rtl">
-
-                {/* Right Section: Title */}
-                <div className="flex-1 flex flex-col items-start min-w-0">
-                    <h4 className="text-lg font-black text-[var(--color-neutral-accent)] flex items-center gap-1.5 mb-1">
-                        <Award size={16} className="text-indigo-500 shrink-0" />
-                        הגדרת השערות ובחירת כיווני המבחן:
-                    </h4>
-                    <span className="text-xs text-[var(--color-text-secondary)] block mt-1 leading-relaxed font-medium max-w-sm text-right">
-                        בחירת כיוון השערת המחקר, למול השערת האפס המבטאת חוסר שינוי:
-                    </span>
-                </div>
-
-                {/* Center Section: Formal Hypotheses Display */}
-                <div className="shrink-0 flex flex-col items-center justify-center p-3 bg-[var(--color-bg)]/90 border border-[var(--color-border)] rounded-sm min-w-[180px] text-center shadow-sm">
-                    <div className="text-lg sm:text-xl font-extrabold text-[var(--color-text-primary)] font-mono tracking-wide flex justify-center w-full" dir="ltr">
-                        <InlineMath math={getFormalHypothesisMath()} />
-                    </div>
-                    <div className="text-[10px] text-[var(--color-text-primary)]0 font-mono mt-1.5 border-t border-dotted border-[var(--color-border)] pt-1 flex justify-center w-full" dir="ltr">
-                        <InlineMath math={getGeneralFormalHypothesisMath()} />
-                    </div>
-                </div>
-
-                {/* Left Section: Squared Buttons for H1 */}
-                <div className="flex-1 flex justify-end gap-2">
-                    <button
-                        onClick={() => setTailType('right')}
-                        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-sm border transition-all ${tailType === 'right' ? 'bg-indigo-600/20 border-[var(--color-border)] text-[var(--color-neutral-accent)] shadow-sm' : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]'}`}
-                    >
-                        <span className="text-lg font-black">ימני</span>
-                        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ &gt; μ₀</span>
-                    </button>
-                    <button
-                        onClick={() => setTailType('two-tailed')}
-                        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-sm border transition-all ${tailType === 'two-tailed' ? 'bg-indigo-600/20 border-[var(--color-border)] text-[var(--color-neutral-accent)] shadow-sm' : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]'}`}
-                    >
-                        <span className="text-lg font-black">דו-צדדי</span>
-                        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ ≠ μ₀</span>
-                    </button>
-                    <button
-                        onClick={() => setTailType('left')}
-                        className={`flex flex-col items-center justify-center w-[100px] h-20 rounded-sm border transition-all ${tailType === 'left' ? 'bg-indigo-600/20 border-[var(--color-border)] text-[var(--color-neutral-accent)] shadow-sm' : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]'}`}
-                    >
-                        <span className="text-lg font-black">שמאלי</span>
-                        <span className="text-[14px] font-mono mt-1 font-bold" dir="ltr">μ &lt; μ₀</span>
-                    </button>
-                </div>
-
-            </div>
 
             {/* Popular Z & Phi Row for Hypothesis Testing */}
             <div className="mb-6 bg-[var(--color-bg)]/60 border border-[var(--color-border)] rounded-sm p-4 text-right space-y-3 shadow-sm">
@@ -1805,34 +1704,72 @@ export default function HypothesisTestingCalculator() {
                                                         נגדיר את השערת האפס (<InlineMath math="H_0" />) המניחה <span className="font-bold underline">היעדר שינוי</span>, מול השערת המחקר (<InlineMath math="H_1" />) המייצגת את טענת החוקר.
                                                     </p>
 
-                                                    {/* General formula template */}
-                                                    <FormulaBlock>
-                                                        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-8 lg:gap-12 text-base sm:text-lg md:text-xl w-full px-2 md:px-8">
-                                                            <div className="flex flex-col items-center justify-center gap-2 min-w-[300px]">
-                                                                <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'left' ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)] border border-[var(--color-border)]' : 'text-[var(--color-text-primary)]0'}`}>שמאלי</span>
-                                                                <BlockMath math="H_0: \mu \ge \mu_0 \quad \text{Vs.} \quad H_1: \mu < \mu_0" />
-                                                            </div>
-                                                            <div className="flex flex-col items-center justify-center gap-2 min-w-[300px]">
-                                                                <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'two-tailed' ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)] border border-[var(--color-border)]' : 'text-[var(--color-text-primary)]0'}`}>דו-צדדי</span>
-                                                                <BlockMath math="H_0: \mu = \mu_0 \quad \text{Vs.} \quad H_1: \mu \neq \mu_0" />
-                                                            </div>
-                                                            <div className="flex flex-col items-center justify-center gap-2 min-w-[300px]">
-                                                                <span className={`px-3 py-1 rounded-lg text-sm font-black ${tailType === 'right' ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)] border border-[var(--color-border)]' : 'text-[var(--color-text-primary)]0'}`}>ימני</span>
-                                                                <BlockMath math="H_0: \mu \le \mu_0 \quad \text{Vs.} \quad H_1: \mu > \mu_0" />
-                                                            </div>
-                                                        </div>
-                                                    </FormulaBlock>
 
-                                                    {/* Applied with actual values */}
-                                                    <CalcBlock>
-                                                        {tailType === 'right' ? (
-                                                            <BlockMath math={`H_0: \\mu \\le ${mu0} \\quad \\text{Vs.} \\quad H_1: \\mu > ${mu0}`} />
-                                                        ) : tailType === 'left' ? (
-                                                            <BlockMath math={`H_0: \\mu \\ge ${mu0} \\quad \\text{Vs.} \\quad H_1: \\mu < ${mu0}`} />
-                                                        ) : (
-                                                            <BlockMath math={`H_0: \\mu = ${mu0} \\quad \\text{Vs.} \\quad H_1: \\mu \\neq ${mu0}`} />
-                                                        )}
-                                                    </CalcBlock>
+                                                    {/* Interactive Hypothesis Builder */}
+                                                    <div className="flex flex-col items-center justify-center gap-4 py-4 w-full">
+                                                        {(() => {
+                                                            let parameterSymbol = '\\mu';
+                                                            let h0Val = mu0Input;
+                                                            let nullValueSymbol = '\\mu_0';
+
+                                                            if (testType === 'sum') {
+                                                                parameterSymbol = 'E(\\sum X)';
+                                                                nullValueSymbol = 'n \\cdot \\mu_0';
+                                                                const parsedMu0 = parseFloat(mu0Input);
+                                                                const parsedN = parseInt(nInput, 10);
+                                                                if (!isNaN(parsedMu0) && !isNaN(parsedN)) {
+                                                                    h0Val = (parsedN * parsedMu0).toString();
+                                                                } else {
+                                                                    h0Val = 'n \\cdot \\mu_0';
+                                                                }
+                                                            }
+
+                                                            let h0Symbol = '=';
+                                                            let h1Symbol = '\\neq';
+
+                                                            if (tailType === 'right') {
+                                                                h0Symbol = '\\le';
+                                                                h1Symbol = '>';
+                                                            } else if (tailType === 'left') {
+                                                                h0Symbol = '\\ge';
+                                                                h1Symbol = '<';
+                                                            }
+
+                                                            return (
+                                                                <div className="flex flex-col items-center justify-center p-6 bg-[var(--color-bg)]/90 border border-[var(--color-border)] rounded-lg min-w-[280px] sm:min-w-[400px] text-center shadow-md relative group">
+                                                                    <div className="text-xl sm:text-2xl md:text-3xl font-extrabold text-[var(--color-text-primary)] font-mono tracking-wide flex items-center justify-center w-full z-10" dir="ltr">
+                                                                        <InlineMath math={`H_0: ${parameterSymbol} ${h0Symbol} ${h0Val} \\quad \\text{Vs.} \\quad H_1: ${parameterSymbol}`} />
+                                                                        <button
+                                                                            onClick={() => setTailType(tailType === 'two-tailed' ? 'right' : tailType === 'right' ? 'left' : 'two-tailed')}
+                                                                            className="mx-2 px-3 py-1 rounded-md bg-indigo-500/10 hover:bg-indigo-500/30 border border-indigo-500/30 text-indigo-500 hover:text-indigo-400 transition-all cursor-pointer transform hover:scale-110 active:scale-95 flex items-center justify-center min-w-[45px] shadow-sm"
+                                                                            title="לחץ לשינוי כיוון המבחן (שמאלי / דו-צדדי / ימני)"
+                                                                        >
+                                                                            <InlineMath math={h1Symbol} />
+                                                                        </button>
+                                                                        <InlineMath math={h0Val} />
+                                                                    </div>
+                                                                    
+                                                                    <div className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-mono mt-4 pt-3 border-t border-[var(--color-border)] flex items-center justify-center w-full z-10" dir="ltr">
+                                                                        <InlineMath math={`H_0: ${parameterSymbol} ${h0Symbol} ${nullValueSymbol} \\quad \\text{Vs.} \\quad H_1: ${parameterSymbol}`} />
+                                                                        <button
+                                                                            onClick={() => setTailType(tailType === 'two-tailed' ? 'right' : tailType === 'right' ? 'left' : 'two-tailed')}
+                                                                            className="mx-1 px-1.5 py-0.5 rounded-sm hover:bg-indigo-500/20 text-[var(--color-text-secondary)] hover:text-indigo-400 transition-colors cursor-pointer flex items-center justify-center shadow-sm"
+                                                                            title="לחץ לשינוי כיוון המבחן"
+                                                                        >
+                                                                            <InlineMath math={h1Symbol} />
+                                                                        </button>
+                                                                        <InlineMath math={nullValueSymbol} />
+                                                                    </div>
+                                                                </div>
+                                                            );
+                                                        })()}
+                                                        
+                                                        <p className="text-sm text-[var(--color-text-secondary)] font-medium mt-2">
+                                                            <span className="inline-block px-2 py-0.5 bg-indigo-500/10 rounded border border-indigo-500/20 mr-2 text-indigo-500 text-xs font-bold">טיפ אינטראקטיבי:</span>
+                                                            לחץ על הסימן הלוגי ( <InlineMath math="<, >, \neq" /> ) במשוואה כדי לשנות את כיוון המבחן.
+                                                        </p>
+                                                    </div>
+    
 
                                                     {/* Researcher's note */}
                                                     <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-4 text-center">
