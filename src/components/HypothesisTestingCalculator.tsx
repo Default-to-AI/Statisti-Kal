@@ -1358,44 +1358,6 @@ export default function HypothesisTestingCalculator() {
                                         </table>
                         </div>
 
-                        {/* Alpha Selection Row with type manually option */}
-                        <div className="flex flex-col sm:flex-row items-center justify-end gap-3 mt-4" dir="rtl">
-                            <span className="text-xs sm:text-sm font-black text-[var(--color-text-secondary)]">
-                                :(<InlineMath math="\alpha" />) מובהקות ורמת סמך
-                            </span>
-
-                            <div className="flex gap-1.5 bg-[var(--color-bg)]/40 p-1.5 rounded-sm border border-[var(--color-border)]">
-                                {[0.10, 0.05, 0.01].map((pVal) => (
-                                    <button
-                                        key={pVal}
-                                        type="button"
-                                        onClick={() => applyAlphaPreset(pVal)}
-                                        className={`px-3 py-1.5 text-xs sm:text-sm font-black rounded-lg transition-all ${alpha === pVal
-                                            ? 'bg-indigo-600 text-white shadow-sm'
-                                            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
-                                            }`}
-                                    >
-                                        {pVal * 100}%
-                                    </button>
-                                ))}
-                            </div>
-
-                            <div className="flex items-center gap-1">
-                                <input
-                                    type="text"
-                                    value={alphaInput}
-                                    onChange={(e) => handleAlphaChange(e.target.value)}
-                                    className={`w-18 px-2.5 py-1.5 bg-[var(--color-bg)] border rounded-sm text-center font-mono font-bold text-sm text-[var(--color-neutral-accent)] focus:bg-[var(--color-surface)] outline-none ${errors.alpha ? 'border-[var(--color-border)] text-[var(--color-error)] ring-4 ring-red-500/10' : 'border-[var(--color-border)] focus:ring-4 focus:ring-indigo-500/10'
-                                        }`}
-                                    placeholder="0.05"
-                                    dir="ltr"
-                                />
-                            </div>
-                            {errors.alpha && (
-                                <p className="text-[11px] text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
-                            )}
-                        </div>
-                    </div>
 
                     {/* Main Test Statistic Type Selector */}
                     <div className="flex flex-col gap-3 shrink-0 h-[229.583px] w-[201px] bg-[var(--color-bg)]/20 border border-[var(--color-border)] p-4 rounded-sm">
@@ -1974,6 +1936,44 @@ export default function HypothesisTestingCalculator() {
                                                 <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed pr-9 font-semibold">
                                                     רמת המובהקות (<InlineMath math="\alpha" />) מייצגת את ההסתברות המקסימלית שנסכים לקבל עבור שגיאה מסוג I, דחיית השערת האפס כשהיא למעשה נכונה <span className="text-[var(--color-error)] font-bold" dir="ltr"><InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is True})" /></span>. היא משלימה לרמת הביטחון שהגדרנו מראש:
                                                 </p>
+                        {/* Alpha Selection Row with type manually option */}
+                        <div className="flex flex-col sm:flex-row items-center justify-start gap-4 mt-6 pr-9" dir="rtl">
+                            <span className="text-xs sm:text-sm font-black text-[var(--color-text-secondary)]">
+                                בחר רמת מובהקות (<InlineMath math="\alpha" />):
+                            </span>
+
+                            <div className="flex gap-1.5 bg-[var(--color-bg)]/40 p-1.5 rounded-sm border border-[var(--color-border)]">
+                                {[0.10, 0.05, 0.01].map((pVal) => (
+                                    <button
+                                        key={pVal}
+                                        type="button"
+                                        onClick={() => applyAlphaPreset(pVal)}
+                                        className={`px-3 py-1.5 text-xs sm:text-sm font-black rounded-lg transition-all ${alpha === pVal
+                                            ? 'bg-indigo-600 text-white shadow-sm'
+                                            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                                            }`}
+                                    >
+                                        {pVal * 100}%
+                                    </button>
+                                ))}
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                                <input
+                                    type="text"
+                                    value={alphaInput}
+                                    onChange={(e) => handleAlphaChange(e.target.value)}
+                                    className={`w-18 px-2.5 py-1.5 bg-[var(--color-bg)] border rounded-sm text-center font-mono font-bold text-sm text-[var(--color-neutral-accent)] focus:bg-[var(--color-surface)] outline-none ${errors.alpha ? 'border-[var(--color-border)] text-[var(--color-error)] ring-4 ring-red-500/10' : 'border-[var(--color-border)] focus:ring-4 focus:ring-indigo-500/10'
+                                        }`}
+                                    placeholder="0.05"
+                                    dir="ltr"
+                                />
+                            </div>
+                            {errors.alpha && (
+                                <p className="text-[11px] text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
+                            )}
+                        </div>
+                    </div>
 
                                                 <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
                                                     <FormulaBlock>
