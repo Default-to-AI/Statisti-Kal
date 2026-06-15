@@ -217,7 +217,7 @@ type TailType = 'right' | 'left' | 'two-tailed';
 function FormulaBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
         <div className={`w-full overflow-x-auto py-4 my-2 scrollbar-thin ${className}`} dir="ltr">
-            <div className="relative border-l-4 border-[var(--color-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-serif text-[var(--color-text-primary)]">
+            <div className="relative border-l-4 border-[var(--color-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
                 <span className="text-[11px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none mb-1" dir="rtl">תבנית כללית</span>
                 <div className="py-2">{children}</div>
             </div>
@@ -229,7 +229,7 @@ function FormulaBlock({ children, className = '' }: { children: React.ReactNode;
 function CalcBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
         <div className={`w-full overflow-x-auto py-4 my-2 scrollbar-thin ${className}`} dir="ltr">
-            <div className="relative border-l-4 border-[var(--color-neutral-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-serif text-[var(--color-text-primary)]">
+            <div className="relative border-l-4 border-[var(--color-neutral-accent)] pl-5 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
                 <span className="text-[11px] font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none mb-1" dir="rtl">יישום</span>
                 <div className="py-2">{children}</div>
             </div>
@@ -263,10 +263,10 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                         החלטת המבחן
                     </th>
                     <th className="p-4 text-center w-[40%] border-l border-[var(--color-border)]">
-                        <span className="font-serif"><InlineMath math="H_0" /> נכונה במציאות</span>
+                        <span className="font-sans"><InlineMath math="H_0" /> נכונה במציאות</span>
                     </th>
                     <th className={`p-4 text-center w-[40%] transition-opacity ${!calculatePower ? 'opacity-30' : ''}`}>
-                        <span className="font-serif"><InlineMath math="H_1" /> נכונה במציאות</span>
+                        <span className="font-sans"><InlineMath math="H_1" /> נכונה במציאות</span>
                     </th>
                 </tr>
             </thead>
@@ -294,7 +294,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                             </span>
                         </div>
                         <div className="my-2 flex items-baseline gap-x-2 flex-wrap">
-                            <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[var(--color-text-primary)]">
+                            <span className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[var(--color-text-primary)]">
                                 {((1 - alpha) * 100).toFixed(1)}%
                             </span>
                             <span className="text-xs font-bold text-[var(--color-text-secondary)]">רמת סמך</span>
@@ -321,7 +321,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                                     </span>
                                 </div>
                                 <div className="my-2 flex items-baseline gap-x-2 flex-wrap">
-                                    <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[var(--color-text-primary)]">
+                                    <span className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[var(--color-text-primary)]">
                                         {(stats.beta * 100).toFixed(2)}%
                                     </span>
                                     <span className="text-xs font-bold text-[var(--color-text-secondary)]">החמצה</span>
@@ -365,7 +365,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                             </span>
                         </div>
                         <div className="my-2 flex items-baseline gap-x-2 flex-wrap">
-                            <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[var(--color-text-primary)]">
+                            <span className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[var(--color-text-primary)]">
                                 {(alpha * 100).toFixed(1)}%
                             </span>
                             <span className="text-xs font-bold text-[var(--color-text-secondary)]">רמת מובהקות</span>
@@ -392,7 +392,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                                     </span>
                                 </div>
                                 <div className="my-2 flex items-baseline gap-x-2 flex-wrap">
-                                    <span className="text-xl sm:text-2xl font-serif font-bold tracking-tight text-[var(--color-text-primary)]">
+                                    <span className="text-xl sm:text-2xl font-sans font-bold tracking-tight text-[var(--color-text-primary)]">
                                         {(stats.power * 100).toFixed(2)}%
                                     </span>
                                     <span className="text-xs font-bold text-[var(--color-text-secondary)]">עוצמת המבחן</span>
@@ -2215,7 +2215,7 @@ export default function HypothesisTestingCalculator() {
 
                                                     <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                         <FormulaBlock>
-                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2">גישת סטטיסטי המבחן (תאוריה)</div>
+                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת סטטיסטי המבחן (תאוריה)</div>
                                                             {tailType === 'right' && (
                                                                 varianceKnown ?
                                                                     <BlockMath math={`P(Z \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\alpha \\implies Z_{crit} = z_{\\alpha}`} /> :
@@ -2297,7 +2297,7 @@ export default function HypothesisTestingCalculator() {
 
                                                                 <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                                     <FormulaBlock>
-                                                                        <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2">גישת אזור הדחייה (תאוריה)</div>
+                                                                        <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת אזור הדחייה (תאוריה)</div>
                                                                         {tailType === 'right' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} + ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                         {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                         {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
@@ -2336,7 +2336,7 @@ export default function HypothesisTestingCalculator() {
 
                                                     <div className="py-3 space-y-4 text-xl md:text-2xl">
                                                         <FormulaBlock>
-                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2">גישת מובהקות התוצאה (תאוריה)</div>
+                                                            <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center">גישת מובהקות התוצאה (תאוריה)</div>
                                                             {tailType === 'right' && (
                                                                 varianceKnown ?
                                                                     <BlockMath math={`P\\text{-Value} = P(Z \\ge Z_{\\text{stat}}) = 1 - \\Phi(Z_{\\text{stat}})`} /> :

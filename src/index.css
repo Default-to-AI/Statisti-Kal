@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Assistant:wght@400;500;600;700&family=Gveret+Levin&family=Frank+Ruhl+Libre:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Assistant:wght@400;500;600;700&family=Gveret+Levin&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Assistant", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Frank Ruhl Libre", ui-serif, Georgia, serif;
+  --font-serif: ui-serif, Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --font-handwriting: "Gveret Levin", cursive;
 }
