@@ -278,12 +278,12 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                             אי-דחייה של <InlineMath math="H_0" />
                         </span>
                         <span className="block text-[11px] font-mono text-[var(--color-text-secondary)] mt-1" dir="ltr">
-                            Fail to Reject H_0
+                            <InlineMath math="\text{Fail to Reject } H_0" />
                         </span>
                     </td>
 
                     {/* Cell 1-1: Correct decision (1 - Alpha) */}
-                    <td className="p-4 border-l border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:bg-[var(--color-surface-raised)]">
+                    <td className="p-4 border-l border-[var(--color-border)] bg-[var(--color-success)]/10 transition-colors hover:bg-[var(--color-success)]/20">
                         <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2 mb-2">
                             <span className="font-bold text-[var(--color-success)] flex items-center gap-1.5 text-xs">
                                 <CheckCircle size={14} className="shrink-0" />
@@ -301,14 +301,14 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                         </div>
                         <div className="text-[11px] text-[var(--color-text-secondary)] leading-snug mt-2 border-t border-[var(--color-border)] pt-2 border-dashed">
                             <div className="mb-1 font-mono text-[10px]" dir="ltr">
-                                P(Fail to Reject H_0 | H_0 is true)
+                                <InlineMath math="P(\text{Fail to Reject } H_0 \mid H_0 \text{ is true})" />
                             </div>
                             ההסתברות לא לדחות את השערת האפס כאשר היא אכן נכונה.
                         </div>
                     </td>
 
                     {/* Cell 1-2: Type II Error (Beta) */}
-                    <td className={`p-4 transition-colors ${!calculatePower ? 'bg-[var(--color-surface)] opacity-40 select-none' : 'bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)]'}`}>
+                    <td className={`p-4 transition-colors ${!calculatePower ? 'bg-[var(--color-surface)] opacity-40 select-none' : 'bg-[var(--color-error)]/10 hover:bg-[var(--color-error)]/20'}`}>
                         {calculatePower ? (
                             <>
                                 <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2 mb-2">
@@ -328,7 +328,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                                 </div>
                                 <div className="text-[11px] text-[var(--color-text-secondary)] leading-snug mt-2 border-t border-[var(--color-border)] pt-2 border-dashed">
                                     <div className="mb-1 font-mono text-[10px]" dir="ltr">
-                                        P(Fail to Reject H_0 | H_1 is true)
+                                        <InlineMath math="P(\text{Fail to Reject } H_0 \mid H_1 \text{ is true})" />
                                     </div>
                                     הסיכוי לא לדחות את השערת האפס למרות שהיא שקרית וקיים אפקט אמיתי.
                                 </div>
@@ -349,12 +349,12 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                             דחיית <InlineMath math="H_0" />
                         </span>
                         <span className="block text-[11px] font-mono text-[var(--color-text-secondary)] mt-1" dir="ltr">
-                            Reject H_0
+                            <InlineMath math="\text{Reject } H_0" />
                         </span>
                     </td>
 
                     {/* Cell 2-1: Type I Error (Alpha) */}
-                    <td className="p-4 border-l border-[var(--color-border)] bg-[var(--color-surface)] transition-colors hover:bg-[var(--color-surface-raised)]">
+                    <td className="p-4 border-l border-[var(--color-border)] bg-[var(--color-error)]/20 transition-colors hover:bg-[var(--color-error)]/30">
                         <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2 mb-2">
                             <span className="font-bold text-[var(--color-error)] flex items-center gap-1.5 text-xs">
                                 <XCircle size={14} className="shrink-0" />
@@ -372,14 +372,14 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                         </div>
                         <div className="text-[11px] text-[var(--color-text-secondary)] leading-snug mt-2 border-t border-[var(--color-border)] pt-2 border-dashed">
                             <div className="mb-1 font-mono text-[10px]" dir="ltr">
-                                P(Reject H_0 | H_0 is true)
+                                <InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is true})" />
                             </div>
                             הסיכוי לדחות בטעות את השערת האפס כשהיא נכונה במציאות (גילוי שווא).
                         </div>
                     </td>
 
                     {/* Cell 2-2: Correct decision (1 - Beta) */}
-                    <td className={`p-4 transition-colors ${!calculatePower ? 'bg-[var(--color-surface)] opacity-40 select-none' : 'bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)]'}`}>
+                    <td className={`p-4 transition-colors ${!calculatePower ? 'bg-[var(--color-surface)] opacity-40 select-none' : 'bg-[var(--color-success)]/20 hover:bg-[var(--color-success)]/30'}`}>
                         {calculatePower ? (
                             <>
                                 <div className="flex items-center justify-between gap-2 border-b border-[var(--color-border)] pb-2 mb-2">
@@ -399,7 +399,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                                 </div>
                                 <div className="text-[11px] text-[var(--color-text-secondary)] leading-snug mt-2 border-t border-[var(--color-border)] pt-2 border-dashed">
                                     <div className="mb-1 font-mono text-[10px]" dir="ltr">
-                                        P(Reject H_0 | H_1 is true)
+                                        <InlineMath math="P(\text{Reject } H_0 \mid H_1 \text{ is true})" />
                                     </div>
                                     ההסתברות לזהות ולדחות השערת אפס שקרית בצדק (גילוי אפקט אמיתי).
                                 </div>
