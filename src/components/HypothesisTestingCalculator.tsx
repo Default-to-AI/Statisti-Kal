@@ -1115,30 +1115,7 @@ export default function HypothesisTestingCalculator() {
                                                                 <span>אוכלוסייה</span>
                                                                 <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-indigo-500/20 border border-[var(--color-border)] text-[var(--color-neutral-accent)] font-bold shrink-0">H₀</span>
                                                             </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setVarianceKnown(!varianceKnown)}
-                                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${varianceKnown ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
-                                                                        }`}
-                                                                >
-                                                                    {/* On State Checkmark */}
-                                                                    <span className={`absolute right-1 top-0 bottom-0 flex items-center justify-center text-white transition-opacity duration-200 ${varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                                        <Check size={10} className="stroke-[3.5]" />
-                                                                    </span>
-
-                                                                    {/* Off State X */}
-                                                                    <span className={`absolute left-1 top-0 bottom-0 flex items-center justify-center text-[var(--color-text-primary)] transition-opacity duration-200 ${!varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                                        <X size={10} className="stroke-[3.5]" />
-                                                                    </span>
-
-                                                                    <span
-                                                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${varianceKnown ? '-translate-x-5' : 'translate-x-0'
-                                                                            }`}
-                                                                    />
-                                                                </button>
-                                                                <span className="text-xs">שונות ידועה:</span>
-                                                            </div>
+                                                            {/* varianceKnown toggle removed from here */}
                                                         </div>
                                                     </th>
                                                     <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
@@ -1233,27 +1210,7 @@ export default function HypothesisTestingCalculator() {
                                                 {/* Row 2: sigma, xBar(mu1), and muH1 */}
                                                 <tr>
                                                     <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content={varianceKnown ? "סטיית תקן של האוכלוסייה (σ)" : "סטיית תקן מדגמית (S) המשמשת כאומד לסטיית התקן"}>
-                                                                <span className="cursor-help border-b border-dotted border-slate-500 text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
-                                                                    {varianceKnown ? 'סטיית תקן (σ):' : 'סטיית תקן (S):'}
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={sigmaInput}
-                                                                    onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.sigma ? 'text-[var(--color-error)] font-bold' : ''
-                                                                        }`}
-                                                                    placeholder="15"
-                                                                    dir="ltr"
-                                                                />
-                                                                {errors.sigma && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.sigma}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
+                                                        {/* sigma input removed from here - now in Step 2 */}
                                                     </td>
                                                     <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
                                                         <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
@@ -1806,7 +1763,12 @@ export default function HypothesisTestingCalculator() {
                                                             {/* YES Branch (Right side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
                                                                 <div className="w-[2px] h-[20px] bg-slate-600"></div>
-                                                                <span className={`text-xs font-bold mb-1 px-2 py-0.5 rounded-md transition-all ${varianceKnown ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setVarianceKnown(true)}
+                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-md transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${varianceKnown ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)] ring-2 ring-indigo-500' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    כן
+                                                                </button>
                                                                 <div className="w-[2px] h-[15px] bg-slate-600"></div>
                                                                 <div className={`w-full text-center px-2 py-2 rounded-sm border-2 font-bold z-10 text-sm transition-all ${varianceKnown ? 'bg-indigo-900/40 border-[var(--color-border)] text-indigo-100' : 'bg-[var(--color-surface)] border-slate-600 text-[var(--color-text-secondary)]'}`}>
                                                                     האם המדגם <InlineMath math="n \ge 30" />?
@@ -1836,16 +1798,92 @@ export default function HypothesisTestingCalculator() {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
+                                                                {/* YES path Standard Deviation Input */}
+                                                                <AnimatePresence>
+                                                                    {varianceKnown && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, height: 0 }}
+                                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                                            exit={{ opacity: 0, height: 0 }}
+                                                                            className="mt-6 w-[200px]"
+                                                                        >
+                                                                            <div className="bg-[var(--color-bg)]/80 p-3 rounded-lg border border-indigo-500/30 shadow-sm">
+                                                                                <label className="block text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
+                                                                                    הזן סטיית תקן של האוכלוסייה (<InlineMath math="\sigma" />):
+                                                                                </label>
+                                                                                <div className="relative">
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        value={sigmaInput}
+                                                                                        onChange={(e) => handleSigmaChange(e.target.value)}
+                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-indigo-500/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-red-500' : ''}`}
+                                                                                        placeholder="15"
+                                                                                        dir="ltr"
+                                                                                    />
+                                                                                    {errors.sigma && (
+                                                                                        <div className="absolute top-full left-0 right-0 text-[11px] text-[var(--color-error)] font-bold mt-1 text-center">
+                                                                                            {errors.sigma}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
                                                             </div>
 
                                                             {/* NO Branch (Left side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
                                                                 <div className="w-[2px] h-[20px] bg-slate-600"></div>
-                                                                <span className={`text-xs font-bold mb-1 px-2 py-0.5 rounded-md transition-all ${!varianceKnown ? 'bg-emerald-500/20 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setVarianceKnown(false)}
+                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-md transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${!varianceKnown ? 'bg-emerald-500/20 text-[var(--color-success)] ring-2 ring-emerald-500' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    לא
+                                                                </button>
                                                                 <div className="w-[2px] h-[15px] bg-slate-600"></div>
                                                                 <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-emerald-100 shadow-[0_0_15px_rgba(16,185,129,0.3)] ring-1 ring-emerald-400' : 'bg-[var(--color-surface)] border-slate-600 text-[var(--color-text-secondary)]'}`}>
                                                                     מבחן <InlineMath math="t" />
                                                                 </div>
+
+                                                                {/* NO path Standard Deviation Input */}
+                                                                <AnimatePresence>
+                                                                    {!varianceKnown && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, height: 0 }}
+                                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                                            exit={{ opacity: 0, height: 0 }}
+                                                                            className="mt-6 w-[200px]"
+                                                                        >
+                                                                            <div className="bg-[var(--color-bg)]/80 p-3 rounded-lg border border-emerald-500/30 shadow-sm">
+                                                                                <label className="flex flex-col items-center justify-center text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
+                                                                                    <div className="flex items-center gap-1">
+                                                                                        <span>הזן סטיית תקן מדגמית (<InlineMath math="S" />):</span>
+                                                                                    </div>
+                                                                                    <div className="mt-2 bg-[var(--color-surface)] px-2 py-1.5 rounded-md border border-[var(--color-border)] shadow-sm text-[10px] opacity-80">
+                                                                                        <InlineMath math="S = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n - 1}}" />
+                                                                                    </div>
+                                                                                </label>
+                                                                                <div className="relative">
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        value={sigmaInput}
+                                                                                        onChange={(e) => handleSigmaChange(e.target.value)}
+                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-emerald-500/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-red-500' : ''}`}
+                                                                                        placeholder="15"
+                                                                                        dir="ltr"
+                                                                                    />
+                                                                                    {errors.sigma && (
+                                                                                        <div className="absolute top-full left-0 right-0 text-[11px] text-[var(--color-error)] font-bold mt-1 text-center">
+                                                                                            {errors.sigma}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -2403,14 +2441,14 @@ export default function HypothesisTestingCalculator() {
                                                                 <tr>
                                                                     <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">גישה</th>
                                                                     <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">מדד ההשוואה</th>
-                                                                    <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">כלל ההחלטה (מבחן ימני)</th>
+                                                                    <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">כלל ההחלטה (מבחן {tailType === 'right' ? 'ימני' : tailType === 'left' ? 'שמאלי' : 'דו-צדדי'})</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody className="bg-[var(--color-bg)]/40 text-[var(--color-text-primary)]">
                                                                 <tr className="border-b border-[var(--color-border)]">
                                                                     <td className="p-4 font-bold text-center">סטטיסטי המבחן</td>
-                                                                    <td className="p-4 text-center" dir="ltr"><InlineMath math="Z_{stat} \text{ Vs. } z_{\alpha}" /></td>
-                                                                    <td className="p-4 text-center">אם <span dir="ltr"><InlineMath math="Z_{stat} \ge z_{\alpha}" /></span> &larr; דחיית <InlineMath math="H_0" /></td>
+                                                                    <td className="p-4 text-center" dir="ltr"><InlineMath math={`${varianceKnown ? 'Z' : 't'}_{stat} \\text{ Vs. } ${varianceKnown ? 'z' : 't'}_{${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'}}`} /></td>
+                                                                    <td className="p-4 text-center">אם <span dir="ltr"><InlineMath math={`${tailType === 'two-tailed' ? '|' : ''}${varianceKnown ? 'Z' : 't'}_{stat}${tailType === 'two-tailed' ? '|' : ''} ${tailType === 'left' ? '\\le' : '\\ge'} ${tailType === 'left' ? '-' : ''}${varianceKnown ? 'z' : 't'}_{${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'}}`} /></span> &larr; דחיית <InlineMath math="H_0" /></td>
                                                                 </tr>
                                                                 <tr className="border-b border-[var(--color-border)]">
                                                                     <td className="p-4 font-bold text-center">אזור הדחייה</td>
