@@ -888,7 +888,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  <AnimatePresence>
  {isZGuideOpen && (
  <motion.div
- initial={{ opacity: 0, height: 0 }}
+ initial={{ opacity: 0, height: 0Because the Dashboard V2 Figgy also has a purple screen  }}
  animate={{ opacity: 1, height: 'auto' }}
  exit={{ opacity: 0, height: 0 }}
  className="overflow-hidden mb-4"
