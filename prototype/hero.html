@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HypothesisTesting — Hero Prototype</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700;800&family=Assistant:wght@400;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+    <!-- KaTeX (CDN) — same math renderer the React tree uses
+         (react-katex). Loaded so the verdict math renders as typeset
+         LaTeX rather than raw Unicode `μ̄`/`x̄`/`z` inside SVG <text>. -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css"
+      crossorigin="anonymous"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"
+      crossorigin="anonymous"
+    ></script>
+    <style>
+      /* ============================================================
+       * Token bridge — values copied verbatim from DESIGN.md /
+       * src/index.css :root. The prototype intentionally mirrors the
+       * exact chromatic / typographic system used in production so
+       * the visual reaction translates 1:1 once we enter React.
+       * ============================================================ */
+      :root {
+        --color-background: #0d0f14;
+        --color-surface: #14171f;
+        --color-surface-raised: #1a1d24;
+        --color-border: #2a2f3e;
+        --color-text-primary: #f0f1f5;
+        --color-text-secondary: #8a93a6;
+        --color-primary: #d4a843;
+        --color-accent-brass: #d4a843;
+        --color-accent-teal: #2ec4b6;
+        --color-accent-crimson: #e85d5d;
+        --color-accent-cobalt: #4a9eff;
+
+        --font-display: "Space Grotesk", "Assistant", ui-sans-serif,
+          system-ui, sans-serif;
+        --font-sans: "Assistant", "Inter", ui-sans-serif, system-ui,
+          sans-serif;
+        --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular,
+          monospace;
+
+        --chart-grid: #2a2f3e;
+        --chart-axis-label: #8a93a6;
+        --chart-rejection: rgba(217, 91, 91, 0.18);
+        --chart-rejection-stroke: rgba(232, 93, 93, 0.55);
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--color-background);
+        color: var(--color-text-primary);
+        font-family: var(--font-sans);
+        font-feature-settings: "kern" 1, "liga" 1;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /*
+       * Hero stage — sits at the top of the page, mimics the production
+       * panel-hero variant (surface, rounded.xl, spacing.8). One chrome
+       * surface, no nav, no sidebar, no footer — so the eye lands on the
+       * curve immediately.
+       */
+      .hero {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: var(--hero-pad, 96px) 32px 64px;
+      }
+
+      /*
+       * H1 — display-h1 (restrained, per Q4 lock: 32–36px, NOT 64px).
+       * The signature move: a single 2px brass underline that sits slightly
+       * below the baseline, hand-drawn looking, scaled with the type. This
+       * is the ONE place brass appears as a typographic accent, so it feels
+       * earned.
+       */
+      .hero__title {
+        font-family: var(--font-display);
+        font-weight: 700;
+        /* Restrained per hero spec Q4-lock: scales ≈ display-h2 on
+           mobile/tablet (1.875rem) up to 2.25rem on desktop (between
+           display-h2 and display-h1). Token-aligned clamp avoids the
+           earlier magic-number version. The 2vw+0.75rem ideal term
+           is the only ramp value; floor + cap are real tokens. */
+        font-size: clamp(1.875rem, 2vw + 0.75rem, 2.25rem);
+        line-height: 1.15;
+        letter-spacing: -0.015em;
+        margin: 0 0 var(--spacing-5);
+        color: var(--color-text-primary);
+        /* RTL Hebrew */
+        text-align: right;
+      }
+      .hero__title .underline {
+        position: relative;
+        display: inline-block;
+        padding-bottom: 6px;
+      }
+      .hero__title .underline::after {
+        content: "";
+        position: absolute;
+        inset-inline-start: 8%;
+        inset-inline-end: 8%;
+        bottom: 0;
+        height: 2px;
+        background: var(--color-accent-brass);
+        border-radius: 1px;
+      }
+
+      /* Lead paragraph — body-base, secondary color, no CTA buttons.
+       * (Anti-AI-default #4: marketing page has no place here.) */
+      .hero__lead {
+        font-family: var(--font-sans);
+        font-weight: 400;
+        font-size: 1rem;
+        line-height: 1.6;
+        letter-spacing: 0.015em;
+        color: var(--color-text-secondary);
+        margin: 0 0 var(--spacing-12);
+        max-width: 56ch;
+        text-align: right;
+      }
+
+      /* Brass pulse on the H₀ reference marker (Q2 lock: 2s ease-in-out,
+       * opacity 1.0 → 0.5 → 1.0, gracefully disabled under reduced motion).
+       * Pulse lives on the marker, NOT on the decision boundary or the
+       * curve outline — the boundary stays static so it remains the
+       * decisive visual anchor. */
+      @keyframes brass-heartbeat {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.45;
+        }
+      }
+      .h0-marker-pulse {
+        animation: brass-heartbeat 2s ease-in-out infinite;
+        transform-origin: center;
+        transform-box: fill-box;
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .h0-marker-pulse {
+          animation: none;
+          opacity: 0.85;
+        }
+      }
+
+      /* ----- Chart scaffolding ----- */
+      .stage {
+        position: relative;
+        margin-top: 8px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 16px;
+        padding: 32px 28px 20px;
+      }
+      .stage__caption {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 16px;
+        margin-bottom: 18px;
+      }
+      /* caption-style label, mono-xs for the data side */
+      .stage__caption .label {
+        font-family: var(--font-sans);
+        font-weight: 800;
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-text-secondary);
+      }
+      .stage__caption .meta {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        font-size: 0.75rem;
+        letter-spacing: 0;
+        color: var(--color-text-secondary);
+        /* dir="ltr" is on .stage__caption itself; redundant to repeat here. */
+      }
+
+      svg.chart {
+        display: block;
+        width: 100%;
+        height: auto;
+        font-family: var(--font-mono);
+      }
+
+      /* Verdict row — sits directly under the curve.
+       * One brass caps word in display weight, with an English/math line
+       * underneath in mono so it's unambiguous regardless of language. */
+      .verdict {
+        margin-top: 28px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end; /* RTL: verdict hugs the start side */
+        gap: 6px;
+      }
+      .verdict__word {
+        font-family: var(--font-display);
+        font-weight: 800;
+        font-size: 1.85rem;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
+        color: var(--color-accent-brass);
+        /* Subtle "earned" glow — not a glow effect, just enough so brass
+         * reads higher than the surrounding surface. No competing gold. */
+      }
+      .verdict__subtitle {
+        font-family: var(--font-mono);
+        font-weight: 500;
+        font-size: 0.875rem;
+        color: var(--color-text-secondary);
+      }
+      /* KaTeX-rendered math span inside the verdict subtitle. Inherits
+       * the parent's LTR bidi so "Rej..." + math read in that order. */
+      .verdict__subtitle .math {
+        color: var(--color-text-primary);
+        font-size: 1rem;
+      }
+
+      /* Math summary panel — separates the visual "where" (the curve)
+       * from the analytical "what" (the formulas). Lives below the
+       * verdict so the eye reads hero → verdict → math derivations. */
+      .math-summary {
+        margin-top: 28px;
+        padding: 18px 20px;
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--rounded-md, 8px);
+        display: grid;
+        grid-template-columns: max-content 1fr;
+        column-gap: 20px;
+        row-gap: 14px;
+        align-items: center;
+      }
+      .math-summary__label {
+        font-family: var(--font-sans);
+        font-weight: 700;
+        font-size: 0.6875rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--color-text-secondary);
+      }
+      .math-summary__formula {
+        font-size: 1.05rem;
+        color: var(--color-text-primary);
+      }
+      /* Reset KaTeX display-mode default margins inside the formula
+       * cells so equations sit on the row centerline instead of being
+       * pushed down by katex-display's top margin. */
+      .math-summary__formula .katex-display {
+        margin: 0;
+      }
+
+      /*
+       * Brass audit footer (debug-only, for this prototype).
+       * Looks for any element whose computed color contains the brass hex
+       * and tallies them so we can verify Q4 ("brass appears only in
+       * signature places") with a glance. Hidden in a real page.
+       */
+      .brass-audit {
+        position: fixed;
+        bottom: var(--spacing-3);
+        inset-inline-end: var(--spacing-3);
+        font-family: var(--font-mono);
+        font-size: 0.6875rem;   /* = caption token */
+        color: var(--color-text-secondary);
+        background: var(--color-surface-raised);
+        border: 1px solid var(--color-border);
+        border-radius: var(--rounded-md);
+        padding: var(--spacing-1_5) var(--spacing-2_5);
+        direction: ltr;
+        unicode-bidi: isolate;
+        opacity: 0.7;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title" class="hero__title">
+        <span class="underline">בדיקת השערות מעל הסף</span>
+      </h1>
+      <p class="hero__lead">
+        העקומה הנורמלית, קו הסף הקריטי וקבלת ההחלטה — במקום אחד. הסטודנט
+        מסתכל על הגבול, לא קורא עליו.
+      </p>
+
+      <div class="stage" aria-label="Sampling distribution, decision boundaries, and test statistic">
+        <div class="stage__caption" dir="ltr">
+          <span class="label">Sampling distribution under H₀</span>
+          <span class="meta">Z-test · μ₀=100 · σ=15 · n=25 · α=0.05 · two-tailed</span>
+        </div>
+        <!-- Chart injected by inline script. Width 1000 × height 360 in
+             viewBox; scales fluidly with .stage. -->
+        <svg
+          class="chart"
+          dir="ltr"
+          viewBox="0 0 1000 360"
+          role="img"
+          aria-labelledby="chart-title chart-desc"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <title id="chart-title">
+            Standard normal sampling distribution with two-tailed rejection region at α=0.05
+          </title>
+          <desc id="chart-desc">
+            Two vertical brass lines at z = ±1.96 mark the decision boundaries.
+            The rejection regions are shaded to the left of the lower boundary
+            and to the right of the upper boundary. A pulsing brass marker at
+            μ₀ marks the H₀ reference. A cobalt dot at x̄ = 108 marks the
+            observed test statistic.
+          </desc>
+          <g id="chart-root"></g>
+        </svg>
+
+        <div class="verdict">
+          <div class="verdict__word">דחיית H₀</div>
+          <div class="verdict__subtitle" dir="ltr">
+            <span class="math" id="verdict-math">z = 2.67,\;\, p = 0.0076</span>
+          </div>
+        </div>
+
+        <!-- Math summary — KaTeX-rendered formulas. Three rows:
+             1. Sample mean (the "simple mean" formula = explicit
+                answer to the original user complaint).
+             2. Test statistic (worked derivation from x̄ and σ).
+             3. p-value (two-tailed from the z-score). -->
+        <div class="math-summary" dir="ltr" aria-label="Sample mean, test statistic, and p-value derivations">
+          <span class="math-summary__label">Sample mean</span>
+          <span class="math-summary__formula math" id="math-xbar"></span>
+          <span class="math-summary__label">Test statistic</span>
+          <span class="math-summary__formula math" id="math-z"></span>
+          <span class="math-summary__label">p-value</span>
+          <span class="math-summary__formula math" id="math-p"></span>
+        </div>
+      </div>
+    </main>
+
+    <div class="brass-audit" id="brass-audit" aria-hidden="true">
+      brass uses: <span id="brass-count">…</span>
+    </div>
+
+    <script>
+      // ============================================================
+      // Compute + render the bell curve, decision boundaries, and
+      // testing annotation. Pure DOM, no library — keeps the file
+      // truly standalone (no build, no network beyond fonts).
+      // ============================================================
+
+      // Statistical parameters for the example
+      const mu0 = 100;          // H₀: population mean
+      const sigma = 15;         // population s.d.
+      const n = 25;             // sample size
+      const alpha = 0.05;       // significance level
+      const tail = "two";       // two-tailed test for the prototype
+      const xObs = 108;         // observed sample mean
+      const sigmaMean = sigma / Math.sqrt(n); // s.d. of sample mean
+      const zObs = (xObs - mu0) / sigmaMean; // observed z-score
+
+      // Chart geometry
+      const xMin = 75,
+        xMax = 125,
+        xStep = 0.2;
+      const padL = 60,
+        padR = 40,
+        padT = 24,
+        padB = 56;
+      const W = 1000,
+        H = 360;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      // Critical values on the μ scale (production-equivalent numbers:
+      // z_{α/2} = ±1.96 for two-tailed α=.05)
+      const zCrit = 1.96;
+      const xCritLow = mu0 - zCrit * sigmaMean; // ≈94.12
+      const xCritHigh = mu0 + zCrit * sigmaMean; // ≈105.88
+
+      // Map data → svg coord. Inverted y so PDF peaks UP.
+      const xToSvg = (x) => padL + ((x - xMin) / (xMax - xMin)) * plotW;
+      // Compute peak of PDF so we can scale to plotH accurately.
+      const peakY = (1 / (sigmaMean * Math.sqrt(2 * Math.PI)));
+      const sigmaMean2 = sigmaMean * sigmaMean;
+      const pdfMu = (x) =>
+        (1 / (sigmaMean * Math.sqrt(2 * Math.PI))) *
+        Math.exp(-((x - mu0) * (x - mu0)) / (2 * sigmaMean2));
+
+      // Render the path through the bell curve
+      let d = "";
+      let first = true;
+      for (let x = xMin; x <= xMax + 0.0001; x += xStep) {
+        const y = pdfMu(x);
+        const sx = xToSvg(x);
+        const sy = padT + plotH - (y / peakY) * (plotH * 0.92);
+        d += `${first ? "M" : "L"}${sx.toFixed(2)},${sy.toFixed(2)} `;
+        first = false;
+      }
+      // Close the path along the x-axis so it reads as a filled shape.
+      const yZero = padT + plotH;
+      d += `L${xToSvg(xMax).toFixed(2)},${yZero.toFixed(2)} `;
+      d += `L${xToSvg(xMin).toFixed(2)},${yZero.toFixed(2)} Z`;
+
+      // Rejection region paths — filled crimson gradient.
+      // Left region: x ∈ [xMin, xCritLow]
+      const regionPath = (xStart, xEnd) => {
+        let p = "";
+        let f = true;
+        for (let x = xStart; x <= xEnd + 0.0001; x += xStep) {
+          const y = pdfMu(x);
+          const sx = xToSvg(x);
+          const sy = padT + plotH - (y / peakY) * (plotH * 0.92);
+          p += `${f ? "M" : "L"}${sx.toFixed(2)},${sy.toFixed(2)} `;
+          f = false;
+        }
+        p += `L${xToSvg(xEnd).toFixed(2)},${yZero.toFixed(2)} `;
+        p += `L${xToSvg(xStart).toFixed(2)},${yZero.toFixed(2)} Z`;
+        return p;
+      };
+      const dLeftRej = regionPath(xMin, xCritLow);
+      const dRightRej = regionPath(xCritHigh, xMax);
+
+      // Reference horizontal axis ticks
+      const ticks = [80, 85, 90, 95, 100, 105, 110, 115, 120];
+      const tickMarkup = ticks
+        .map(
+          (t) => `
+        <line x1="${xToSvg(t)}" y1="${padT + plotH}" x2="${xToSvg(t)}" y2="${
+            padT + plotH + 6
+          }"
+              stroke="#2a2f3e" stroke-width="1" />
+        <text x="${xToSvg(t)}" y="${padT + plotH + 22}"
+              text-anchor="middle" font-size="11" fill="#8a93a6"
+              style="font-family: var(--font-mono)">${t}</text>`
+        )
+        .join("");
+
+      // Horizontal gridline at the base
+      const axisLine = `<line x1="${padL}" y1="${padT + plotH}" x2="${
+        W - padR
+      }" y2="${padT + plotH}" stroke="#2a2f3e" stroke-width="1" />`;
+
+      // Axis label "μ" — centered under the x-axis
+      const muLabel = `<text x="${padL + plotW / 2}" y="${
+        padT + plotH + 44
+      }" text-anchor="middle" font-size="13" fill="#8a93a6"
+          style="font-family: var(--font-mono)">μ̄ (sample mean)</text>`;
+
+      // Critical-value annotations — boundary lines brass (signature
+      // decision marker), thick (2.5px) for visual weight. Lines
+      // trimmed slightly off the very top + bottom so they don't
+      // visually clip against the panel border and the axis labels.
+      // Labels above use the proper minus sign (U+2212, NOT a hyphen)
+      // so typeset-quality math.
+      const critLabels = `
+        <line x1="${xToSvg(xCritLow)}" y1="${padT + 6}" x2="${xToSvg(
+        xCritLow
+      )}" y2="${padT + plotH - 10}" stroke="#d4a843" stroke-width="2.5" />
+        <line x1="${xToSvg(xCritHigh)}" y1="${padT + 6}" x2="${xToSvg(
+        xCritHigh
+      )}" y2="${padT + plotH - 10}" stroke="#d4a843" stroke-width="2.5" />
+        <text x="${xToSvg(xCritLow)}" y="${padT - 4}" text-anchor="middle"
+              font-size="12" fill="#d4a843" font-weight="600"
+              style="font-family: var(--font-mono); letter-spacing: 0.05em">
+          z = −1.96
+        </text>
+        <text x="${xToSvg(xCritHigh)}" y="${padT - 4}" text-anchor="middle"
+              font-size="12" fill="#d4a843" font-weight="600"
+              style="font-family: var(--font-mono); letter-spacing: 0.05em">
+          z = +1.96
+        </text>`;
+
+      // H₀ reference — small upward-pointing teal triangle on the
+      // x-axis at μ₀. Replaces a full-width dotted brass line that
+      // crossed the entire chart (read as a mystery element above
+      // the x-axis). Teal = the distribution's color, so the marker
+      // visually pairs with the curve ("this is where the
+      // distribution is centered"), distinct from the brass boundary
+      // lines (decision rule). Triangle points UP from the axis so
+      // its apex never clips into the tick-numeral band below.
+      const h0Marker = `
+        <g class="h0-marker-pulse">
+          <polygon
+            points="${xToSvg(mu0) - 7},${padT + plotH}
+                    ${xToSvg(mu0) + 7},${padT + plotH}
+                    ${xToSvg(mu0)},${padT + plotH - 9}"
+            fill="#2ec4b6"
+            stroke="#2ec4b6"
+            stroke-width="1"
+            stroke-linejoin="round" />
+        </g>`;
+
+      // H₀ label above the curve. Teal (distribution color), bumped
+      // 11→13px so it reads as a headline-level reference, with tspan
+      // dy chains so the "0" subscript is typeset cleanly next to μ
+      // instead of relying on Unicode "μ₀" rendering.
+      const h0Label = `
+        <text x="${xToSvg(mu0)}" y="${padT - 20}" text-anchor="middle"
+              font-size="13" fill="#2ec4b6" font-weight="600"
+              style="font-family: var(--font-mono); letter-spacing: 0.04em">
+          <tspan>μ</tspan><tspan dy="3" font-size="9">0</tspan><tspan dy="-3"> = 100</tspan>
+        </text>`;
+
+      // Observed test statistic — cobalt dot sits at x̄ so the eye
+      // reads "x̄ is past z=+1.96 → reject". Bumped 5→6px radius,
+      // 11→13px text, with a 2px background-colored stroke so the dot
+      // doesn't disappear against the curve fill. Sits above the
+      // H₀ triangle so neither scribbles on the other.
+      const obsMarker = `
+        <circle cx="${xToSvg(xObs)}" cy="${padT + plotH - 18}" r="6"
+                fill="#4a9eff" stroke="#0d0f14" stroke-width="2" />
+        <text x="${xToSvg(xObs)}" y="${padT + plotH + 30}" text-anchor="middle"
+              font-size="13" fill="#4a9eff" font-weight="600"
+              style="font-family: var(--font-mono); letter-spacing: 0.04em">
+          x̄ = 108
+        </text>`;
+
+      // Compose + inject
+      const root = document.getElementById("chart-root");
+      root.innerHTML = `
+        <!-- Rejection regions (drawn first so curve + boundaries overlay) -->
+        <path d="${dLeftRej}" fill="#e85d5d" fill-opacity="0.14" stroke="none" />
+        <path d="${dRightRej}" fill="#e85d5d" fill-opacity="0.14" stroke="none" />
+
+        <!-- Curve fill: subtle teal at low opacity so it reads as the
+             distribution, not chrome. Stroke: muted cobalt. -->
+        <path d="${d}" fill="#2ec4b6" fill-opacity="0.06"
+              stroke="#4a9eff" stroke-width="1.5" stroke-linejoin="round" />
+
+        <!-- H₀ reference (pulses) -->
+        ${h0Marker}
+
+        <!-- Critical-value boundary lines (static) -->
+        ${critLabels}
+
+        <!-- Axis -->
+        ${axisLine}
+        ${tickMarkup}
+        ${muLabel}
+
+        <!-- H₀ label sits above the curve, above the pulse marker -->
+        ${h0Label}
+
+        <!-- Observed test statistic (right tail, well past the boundary) -->
+        ${obsMarker}
+      `;
+
+      // KaTeX — render the verdict math + summary formulas. CDN script
+      // is deferred so it may not be ready on the same tick; `render`
+      // retries on a microtask + on DOMContentLoaded until the global
+      // is available, then renders each placeholder element. Replaces
+      // a prior version that rendered math as raw Unicode (`μ̄`, `x̄`)
+      // inside inline `<text>` — KaTeX gives proper LaTeX-grade math.
+      function renderMath() {
+        if (typeof katex === "undefined") {
+          window.addEventListener("DOMContentLoaded", renderMath, {
+            once: true,
+          });
+          return;
+        }
+        // Sample mean (the "simple mean" formula) — explicit answer
+        // to the original user complaint: "math doesn't render the
+        // simple mean." Now the formula itself renders as typeset
+        // LaTeX, not as Unicode `Σx̄`.
+        katex.render(
+          "\\bar{x} = \\dfrac{1}{n}\\sum_{i=1}^{n} x_i",
+          document.getElementById("math-xbar"),
+          { throwOnError: false, displayMode: true }
+        );
+        // Display-mode for the summary panel (= proper equation
+        // blocks in the 2-col grid). Inline for verdict-math inside
+        // the sentence.
+        katex.render(
+          "z = \\dfrac{\\bar{x} - \\mu_0}{\\sigma/\\sqrt{n}} = \\dfrac{108 - 100}{15/\\sqrt{25}} = 2.67",
+          document.getElementById("math-z"),
+          { throwOnError: false, displayMode: true }
+        );
+        katex.render(
+          "p\\text{-value} = 2\\cdot P(Z > 2.67) \\approx 0.0076",
+          document.getElementById("math-p"),
+          { throwOnError: false, displayMode: true }
+        );
+        katex.render(
+          "z = 2.67,\\;\\;p\\text{-value} = 0.0076",
+          document.getElementById("verdict-math"),
+          { throwOnError: false, displayMode: false }
+        );
+      }
+      renderMath();
+
+      // Brass audit — count post-render brass uses to validate Q4
+      // (brass restraint) at a glance. The H₀ marker moved from
+      // brass→teal so brass dropped from 9 to 6 (and from 4 to 3
+      // logical places: H1 underline, boundary cluster, verdict word).
+      // `querySelectorAll` rejects the `::after` pseudo-element so we
+      // count via attribute selectors (SVG fill/stroke) plus the two
+      // HTML nodes that carry brass via CSS. The footer ships ONLY in
+      // this prototype — it's stripped before any of this lands in
+      // the React tree.
+      // Expected: 6 elements across 3 logical places
+      //   1. H1 underline          (HTML, via ::after on .hero__title)
+      //   2. left decision boundary (SVG line)
+      //   3. right decision boundary (SVG line)
+      //   4. z = −1.96 label        (SVG text)
+      //   5. z = +1.96 label        (SVG text)
+      //   6. verdict word           (HTML, .verdict__word)
+      const auditEl = document.getElementById("brass-count");
+      const brassHtml = document.querySelectorAll(".hero__title, .verdict__word");
+      const brassSvg = document.querySelectorAll(
+        "text[fill='#d4a843'], " +
+          "line[stroke='#d4a843'], " +
+          "circle[fill='#d4a843']"
+      );
+      const total = brassHtml.length + brassSvg.length;
+      auditEl.textContent =
+        total + " elements across 3 places (expected 6 — H₀ marker is teal, not brass)";
+    </script>
+  </body>
+</html>
