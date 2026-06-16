@@ -669,15 +669,14 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  if (activeZ === null && !showSearch) return null;
  
  const actualZ = useMemo(() => {
- if (searchType === 'phi') {
- const parsedPhi = parseFloat(phiSearchVal);
- if (isNaN(parsedPhi) || parsedPhi < 0 || parsedPhi > 1) return null;
- return findZByPhiVal(parsedPhi);
- }
- if (activeZ !== null) return activeZ;
- const parsed = parseFloat(searchVal);
- return isNaN(parsed) ? null : parsed;
- }, [activeZ, searchVal, phiSearchVal, searchType, rows, cols]);
+  if (searchType === 'phi') {
+  const parsedPhi = parseFloat(phiSearchVal);
+  if (isNaN(parsedPhi) || parsedPhi < 0 || parsedPhi > 1) return null;
+  return findZByPhiVal(parsedPhi);
+  }
+  const parsed = parseFloat(searchVal);
+  return isNaN(parsed) ? null : parsed;
+ }, [searchVal, phiSearchVal, searchType, rows, cols]);
 
  const isZNegative = actualZ !== null && actualZ < 0;
  const lookupZ = actualZ !== null ? Math.abs(actualZ) : null;
@@ -839,14 +838,14 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  return (
  <td 
  key={colIdx} 
- className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums ${
+ className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-[13px] sm:text-[15px] ${
  isActive 
  ? 'bg-indigo-600 text-white bg-indigo-500 font-extrabold scale-102 shadow-sm z-10 relative rounded-md' 
  : isRowActive
- ? 'bg-indigo-100/40 text-indigo-900 bg-indigo-900/20 text-[var(--color-neutral-accent)] font-semibold'
+ ? 'bg-indigo-100/40 text-indigo-900 bg-indigo-900/20 text-[var(--color-neutral-accent)] font-bold'
  : isActiveCol
- ? 'bg-indigo-100/40 text-indigo-900 bg-indigo-900/20 text-[var(--color-neutral-accent)] font-semibold'
- : 'text-slate-355 hover:bg-[var(--color-surface)] font-medium'
+ ? 'bg-indigo-100/40 text-indigo-900 bg-indigo-900/20 text-[var(--color-neutral-accent)] font-bold'
+ : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] font-medium'
  }`}
  >
  {val.toFixed(3)}
@@ -863,73 +862,19 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
 
  return (
  <div className="bg-[var(--color-bg)]/25 border border-[var(--color-border)] rounded-sm p-5 space-y-6 text-right" dir="rtl">
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[var(--color-border)] pb-4">
- <div>
+ <div className="border-b border-[var(--color-border)] pb-4">
  <h3 className="text-lg font-bold text-[var(--color-text-primary)]">טבלאות התפלגות סטטיסטיות</h3>
  <p className="text-xs text-[var(--color-text-secondary)] mt-1 font-sans">איתור ערכים קריטיים וחיפוש מדויק בהתפלגות נורמלית ובהתפלגות t של Student</p>
  </div>
- <div className="flex gap-2">
- <button
- onClick={() => setSearchType(searchType === 'z' ? 'phi' : 'z')}
- className="px-3 py-1.5 rounded-sm text-xs font-bold bg-[var(--color-surface)] hover:bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border border-[var(--color-border)]/80 transition font-sans"
- >
- {searchType === 'z' ? 'חיפוש לפי הסתברות Φ(Z)' : 'חיפוש לפי ציון תקן Z'}
- </button>
- </div>
- </div>
-
- {searchType === 'z' ? (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-[var(--color-bg)]/40 p-4 rounded-sm border border-[var(--color-border)]">
- <div>
- <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans">ציון תקן Z לאיתור:</label>
- <input
- type="text"
- value={searchVal}
- onChange={e => setSearchVal(e.target.value)}
- placeholder="לדוגמה: 1.96"
- className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-indigo-600 focus:outline-none"
- />
- </div>
- <div className="md:col-span-2">
- <span className="text-xs sm:text-sm text-[var(--color-text-primary)] leading-normal font-medium">
- {actualZ !== null && (
- <>
- עבור ציון תקן <InlineMath math={`Z = ${actualZ.toFixed(2)}`} />:
- השטח המצטבר משמאל <InlineMath math={`\\Phi(Z) = ${normalCDF(actualZ, 0, 1).toFixed(4)}`} /> (כלומר <span className="font-mono text-[var(--color-neutral-accent)] font-bold">{(normalCDF(actualZ, 0, 1) * 100).toFixed(2)}%</span> מהאוכלוסייה נמצאים מתחת לערך זה).
- </>
- )}
- </span>
- </div>
- </div>
- ) : (
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end bg-[var(--color-bg)]/40 p-4 rounded-sm border border-[var(--color-border)]">
- <div>
- <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans">הסתברות מצטברת Φ(Z) מבוקשת:</label>
- <input
- type="text"
- value={phiSearchVal}
- onChange={e => setPhiSearchVal(e.target.value)}
- placeholder="לדוגמה: 0.95"
- className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-indigo-600 focus:outline-none"
- />
- </div>
- <div className="md:col-span-2">
- <span className="text-xs sm:text-sm text-[var(--color-text-primary)] leading-normal font-medium">
- {actualZ !== null && (
- <>
- ההסתברות המצטברת היא <span className="font-mono text-[var(--color-neutral-accent)] font-bold">{(parseFloat(phiSearchVal) * 100).toFixed(1)}%</span>:
- מתקבל ציון תקן מתאים של <InlineMath math={`Z \\approx ${actualZ.toFixed(2)}`} />.
- </>
- )}
- </span>
- </div>
- </div>
- )}
 
  <div className="space-y-6">
  <div>
- <div className="flex items-center justify-between mb-3">
- <h4 className="text-sm font-black text-[var(--color-neutral-accent)] font-sans">1. טבלת התפלגות נורמלית סטנדרטית Φ(Z)</h4>
+ <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+ <div className="flex items-center gap-3">
+ <h4 className="text-sm font-black text-[var(--color-neutral-accent)] font-sans flex items-center gap-1.5">
+   <span>1. טבלת התפלגות נורמלית סטנדרטית</span>
+   <InlineMath math="\Phi(Z)" />
+ </h4>
  <button
  onClick={() => setIsZGuideOpen(!isZGuideOpen)}
  className="text-xs text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] flex items-center gap-1 font-sans cursor-pointer"
@@ -938,6 +883,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  {isZGuideOpen ? 'הסתר הסבר' : 'כיצד לקרוא את הטבלה?'}
  </button>
  </div>
+ </div>
 
  <AnimatePresence>
  {isZGuideOpen && (
@@ -945,7 +891,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  initial={{ opacity: 0, height: 0 }}
  animate={{ opacity: 1, height: 'auto' }}
  exit={{ opacity: 0, height: 0 }}
- className="overflow-hidden mb-3"
+ className="overflow-hidden mb-4"
  >
  <div className="p-4 bg-[var(--color-bg)]/60 border border-[var(--color-border)] rounded-sm text-xs text-[var(--color-text-primary)] leading-relaxed space-y-1 text-right">
  <p>● <strong>השורה הראשונה (Z):</strong> מציגה את ערך ה-Z בדיוק של ספרה אחת לאחר הנקודה (למשל: 1.2).</p>
@@ -955,6 +901,72 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  </motion.div>
  )}
  </AnimatePresence>
+
+ <div className="flex flex-col gap-4 mb-8">
+   <div className="flex flex-col md:flex-row items-center md:items-end justify-between gap-6 bg-[var(--color-bg)]/40 p-4 rounded-sm border border-[var(--color-border)]">
+     <div className="flex flex-col bg-[var(--color-surface)] rounded-md border border-[var(--color-border)]/50 p-1 shadow-sm w-full md:w-auto shrink-0">
+       <button
+         onClick={() => setSearchType('z')}
+         className={`px-4 py-2 rounded-sm text-xs font-bold transition-all flex items-center justify-center gap-1 ${searchType === 'z' ? 'bg-[var(--color-bg)] text-[var(--color-text-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+       >
+         חיפוש לפי ציון תקן <InlineMath math="Z" />
+       </button>
+       <button
+         onClick={() => setSearchType('phi')}
+         className={`px-4 py-2 rounded-sm text-xs font-bold transition-all flex items-center justify-center gap-1 ${searchType === 'phi' ? 'bg-[var(--color-bg)] text-[var(--color-text-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+       >
+         חיפוש לפי הסתברות <InlineMath math="\Phi" />
+       </button>
+     </div>
+
+     <div className="w-full flex-1 max-w-[220px] flex flex-col items-center">
+       <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans text-center flex items-center gap-1">
+         {searchType === 'z' ? <>ציון תקן <InlineMath math="Z" /> לאיתור:</> : <>הסתברות מצטברת <InlineMath math="\Phi(Z)" />:</>}
+       </label>
+       <input
+         type="text"
+         value={searchType === 'z' ? searchVal : phiSearchVal}
+         onChange={e => searchType === 'z' ? setSearchVal(e.target.value) : setPhiSearchVal(e.target.value)}
+         placeholder={searchType === 'z' ? 'לדוגמה: 1.96' : 'לדוגמה: 0.95'}
+         className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-3 text-sm text-[var(--color-text-primary)] font-mono focus:border-indigo-600 focus:outline-none transition-colors text-center"
+         dir="ltr"
+       />
+     </div>
+
+     <div className="w-full flex-1 flex items-center justify-center min-h-[50px]">
+       {actualZ !== null ? (
+         <div className="w-full font-bold text-[var(--color-neutral-accent)] text-center bg-[var(--color-bg)] border border-[var(--color-border)] p-3 rounded-sm shadow-sm flex items-center justify-center">
+           <span dir="ltr">
+             {searchType === 'z' 
+               ? <InlineMath math={`\\Phi(${actualZ.toFixed(2)}) = \\int_{-\\infty}^{${actualZ.toFixed(2)}} f_Z dz = ${normalCDF(actualZ, 0, 1).toFixed(4)}`} />
+               : <InlineMath math={`Z = \\Phi^{-1}(${parseFloat(phiSearchVal).toFixed(4)}) \\approx ${actualZ.toFixed(2)}`} />
+             }
+           </span>
+         </div>
+       ) : (
+         <div className="h-[46px]" />
+       )}
+     </div>
+   </div>
+
+   <div className="w-full flex flex-col items-center justify-center min-h-[40px]">
+     {actualZ !== null && (
+       <div className="text-center text-xs sm:text-sm text-[var(--color-text-primary)] leading-normal font-medium bg-[var(--color-bg)]/40 p-3 rounded-sm border border-[var(--color-border)]/50 w-full">
+         {searchType === 'z' ? (
+           <>
+             עבור ציון תקן <span dir="ltr"><InlineMath math={`Z = ${actualZ.toFixed(2)}`} /></span>:<br/>
+             השטח המצטבר <span dir="ltr"><InlineMath math={`\\Phi(Z) = ${normalCDF(actualZ, 0, 1).toFixed(4)}`} /></span> (<span className="font-mono text-[var(--color-neutral-accent)] font-bold"><InlineMath math={`${(normalCDF(actualZ, 0, 1) * 100).toFixed(2)}\\%`} /></span>).
+           </>
+         ) : (
+           <>
+             ההסתברות היא <span className="font-mono text-[var(--color-neutral-accent)] font-bold"><InlineMath math={`${(parseFloat(phiSearchVal) * 100).toFixed(1)}\\%`} /></span>:<br/>
+             ציון תקן <span dir="ltr"><InlineMath math={`Z \\approx ${actualZ.toFixed(2)}`} /></span>.
+           </>
+         )}
+       </div>
+     )}
+   </div>
+ </div>
 
   {renderTableSection(rows)}
 
@@ -1015,7 +1027,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  </div>
 
  <div>
- <div className="flex items-center justify-between mb-3 pt-4 border-t border-slate-850">
+ <div className="flex items-center justify-between mb-3 pt-4 border-t border-[var(--color-border)]">
  <h4 className="text-sm font-black text-[var(--color-neutral-accent)] font-sans">2. טבלת התפלגות Student's T (ערכים קריטיים)</h4>
  <button
  onClick={() => setIsTGuideOpen(!isTGuideOpen)}
@@ -1043,42 +1055,45 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
  )}
  </AnimatePresence>
 
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-end mb-4 bg-[var(--color-bg)]/40 p-4 rounded-sm border border-slate-850">
- <div>
- <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans">דרגות חופש (df):</label>
- <input
- type="number"
- value={tDf}
- onChange={e => setTDf(Math.max(1, parseInt(e.target.value) || 1))}
- className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-1.5 text-sm text-[var(--color-text-primary)] font-mono"
- />
- </div>
- <div>
- <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans">אלפא (מובהקות):</label>
- <select
- value={tAlpha}
- onChange={e => setTAlpha(parseFloat(e.target.value))}
- className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-1.5 text-sm text-[var(--color-text-primary)] font-bold"
- >
- <option value={0.20}>0.20</option>
- <option value={0.10}>0.10</option>
- <option value={0.05}>0.05</option>
- <option value={0.02}>0.02</option>
- <option value={0.01}>0.01</option>
- <option value={0.001}>0.001</option>
- </select>
- </div>
- <div>
- <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans">סוג המבחן:</label>
- <select
- value={tSide}
- onChange={e => setTSide(e.target.value as any)}
- className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-1.5 text-sm text-[var(--color-text-primary)] font-bold"
- >
- <option value="two">דו-צדדי (Two-Tailed)</option>
- <option value="one">חד-צדדי (One-Tailed)</option>
- </select>
- </div>
+ <div className="mb-4 bg-[var(--color-bg)]/40 p-4 rounded-sm border border-[var(--color-border)]">
+   <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+     <div className="md:col-span-2 flex flex-col justify-end">
+       <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">דרגות חופש (df):</label>
+       <input
+       type="number"
+       value={tDf}
+       onChange={e => setTDf(Math.max(1, parseInt(e.target.value) || 1))}
+       className="w-full bg-[var(--color-bg)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-indigo-600 focus:outline-none transition-colors"
+       />
+     </div>
+     <div className="md:col-span-4 lg:col-span-3 flex flex-col justify-end">
+       <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">סוג המבחן:</label>
+       <div className="flex bg-[var(--color-surface)] rounded-md border border-[var(--color-border)]/50 p-1 shadow-sm w-full">
+         <button
+           onClick={() => setTSide('two')}
+           className={`flex-1 py-1.5 rounded-sm text-xs font-bold transition-all ${tSide === 'two' ? 'bg-[var(--color-bg)] text-[var(--color-text-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+         >דו-צדדי</button>
+         <button
+           onClick={() => setTSide('one')}
+           className={`flex-1 py-1.5 rounded-sm text-xs font-bold transition-all ${tSide === 'one' ? 'bg-[var(--color-bg)] text-[var(--color-text-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+         >חד-צדדי</button>
+       </div>
+     </div>
+     <div className="md:col-span-6 lg:col-span-7 flex flex-col justify-end">
+       <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">אלפא (מובהקות):</label>
+       <div className="flex flex-wrap sm:flex-nowrap bg-[var(--color-surface)] rounded-md border border-[var(--color-border)]/50 p-1 shadow-sm w-full gap-1">
+         {[0.20, 0.10, 0.05, 0.02, 0.01, 0.001].map(a => (
+           <button
+             key={a}
+             onClick={() => setTAlpha(a)}
+             className={`flex-1 min-w-[40px] py-1.5 rounded-sm text-xs font-bold font-mono transition-all ${tAlpha === a ? 'bg-[var(--color-bg)] text-[var(--color-text-primary)] shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'}`}
+           >
+             {a}
+           </button>
+         ))}
+       </div>
+     </div>
+   </div>
  </div>
 
  {computedTCritical !== null && (

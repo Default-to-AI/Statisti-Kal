@@ -1107,208 +1107,165 @@ export default function HypothesisTestingCalculator() {
                         {/* Custom Parameters Table Layout */}
                         <div className="overflow-visible rounded-sm border border-[var(--color-border)] bg-[var(--color-bg)]/10 transition-all mb-6" dir="rtl">
                             <table className="w-full border-collapse border-spacing-0">
-                                            <thead>
-                                                <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                                                    <th className="p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
-                                                        <div className="flex flex-col xl:flex-row items-center justify-between gap-2">
-                                                            <div className="flex items-center gap-1.5 justify-center">
-                                                                <span>אוכלוסייה</span>
-                                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-indigo-500/20 border border-[var(--color-border)] text-[var(--color-neutral-accent)] font-bold shrink-0">H₀</span>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => setVarianceKnown(!varianceKnown)}
-                                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${varianceKnown ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
-                                                                        }`}
-                                                                >
-                                                                    {/* On State Checkmark */}
-                                                                    <span className={`absolute right-1 top-0 bottom-0 flex items-center justify-center text-white transition-opacity duration-200 ${varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                                        <Check size={10} className="stroke-[3.5]" />
-                                                                    </span>
+                                <thead>
+                                    <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+                                        <th className="p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                            <div className="flex flex-col xl:flex-row items-center justify-between gap-2">
+                                                <div className="flex items-center gap-1.5 justify-center">
+                                                    <span>אוכלוסייה</span>
+                                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-indigo-500/20 border border-[var(--color-border)] text-[var(--color-neutral-accent)] font-bold shrink-0">H₀</span>
+                                                </div>
+                                                {/* varianceKnown toggle removed from here */}
+                                            </div>
+                                        </th>
+                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                            מדגם
+                                        </th>
+                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
+                                            <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
+                                                <div className="flex items-center gap-1.5 justify-center cursor-help">
+                                                    <span>השערת המחקר</span>
+                                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-amber-500/20 border border-[var(--color-border)] text-amber-300 font-bold shrink-0">H₁</span>
+                                                </div>
+                                            </InputTooltip>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Row 1: mu0, n, and power toggle */}
+                                    <tr className="border-b border-[var(--color-border)]">
+                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)">
+                                                    <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
+                                                        תוחלת (μ₀):
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={mu0Input}
+                                                        onChange={(e) => handleMu0Change(e.target.value)}
+                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu0 ? 'text-[var(--color-error)] font-bold' : ''
+                                                            }`}
+                                                        placeholder="100"
+                                                        dir="ltr"
+                                                    />
+                                                    {errors.mu0 && (
+                                                        <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu0}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="מספר התצפיות במדגם (n)">
+                                                    <span className={`text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${testType === 'single' ? 'opacity-30' : ''}`}>
+                                                        גודל מדגם (n):
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={testType === 'single' ? '1' : nInput}
+                                                        disabled={testType === 'single'}
+                                                        onChange={(e) => handleNChange(e.target.value)}
+                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-slate-100/5' : ''
+                                                            } ${errors.n && testType !== 'single' ? 'text-[var(--color-error)] font-bold' : ''}`}
+                                                        placeholder="36"
+                                                        dir="ltr"
+                                                    />
+                                                    {errors.n && testType !== 'single' && (
+                                                        <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.n}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="p-3 align-middle bg-[var(--color-bg)]/40">
+                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
+                                                    חישוב עוצמה
+                                                </span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setCalculatePower(!calculatePower)}
+                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${calculatePower ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
+                                                        }`}
+                                                >
+                                                    <span
+                                                        className={`pointer-events-none flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${calculatePower ? '-translate-x-5' : 'translate-x-0'
+                                                            }`}
+                                                    >
+                                                        {calculatePower ? (
+                                                            <div className="w-[2px] h-[10px] bg-indigo-600 rounded-full" />
+                                                        ) : (
+                                                            <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-400" />
+                                                        )}
+                                                    </span>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                                                                    {/* Off State X */}
-                                                                    <span className={`absolute left-1 top-0 bottom-0 flex items-center justify-center text-[var(--color-text-primary)] transition-opacity duration-200 ${!varianceKnown ? 'opacity-100 scale-100' : 'opacity-0 scale-75'}`}>
-                                                                        <X size={10} className="stroke-[3.5]" />
-                                                                    </span>
-
-                                                                    <span
-                                                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${varianceKnown ? '-translate-x-5' : 'translate-x-0'
-                                                                            }`}
-                                                                    />
-                                                                </button>
-                                                                <span className="text-xs">שונות ידועה:</span>
-                                                            </div>
-                                                        </div>
-                                                    </th>
-                                                    <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
-                                                        מדגם
-                                                    </th>
-                                                    <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
-                                                        <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
-                                                            <div className="flex items-center gap-1.5 justify-center cursor-help">
-                                                                <span>השערת המחקר</span>
-                                                                <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-none bg-amber-500/20 border border-[var(--color-border)] text-amber-300 font-bold shrink-0">H₁</span>
-                                                            </div>
-                                                        </InputTooltip>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {/* Row 1: mu0, n, and power toggle */}
-                                                <tr className="border-b border-[var(--color-border)]">
-                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)">
-                                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
-                                                                    תוחלת (μ₀):
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={mu0Input}
-                                                                    onChange={(e) => handleMu0Change(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu0 ? 'text-[var(--color-error)] font-bold' : ''
-                                                                        }`}
-                                                                    placeholder="100"
-                                                                    dir="ltr"
-                                                                />
-                                                                {errors.mu0 && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu0}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content="מספר התצפיות במדגם (n)">
-                                                                <span className={`text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${testType === 'single' ? 'opacity-30' : ''}`}>
-                                                                    גודל מדגם (n):
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={testType === 'single' ? '1' : nInput}
-                                                                    disabled={testType === 'single'}
-                                                                    onChange={(e) => handleNChange(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-slate-100/5' : ''
-                                                                        } ${errors.n && testType !== 'single' ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                                    placeholder="36"
-                                                                    dir="ltr"
-                                                                />
-                                                                {errors.n && testType !== 'single' && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.n}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="p-3 align-middle bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
-                                                                חישוב עוצמה
-                                                            </span>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => setCalculatePower(!calculatePower)}
-                                                                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${calculatePower ? 'bg-indigo-600' : 'bg-[var(--color-surface-raised)]/80'
-                                                                    }`}
-                                                            >
-                                                                <span
-                                                                    className={`pointer-events-none flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${calculatePower ? '-translate-x-5' : 'translate-x-0'
-                                                                        }`}
-                                                                >
-                                                                    {calculatePower ? (
-                                                                        <div className="w-[2px] h-[10px] bg-indigo-600 rounded-full" />
-                                                                    ) : (
-                                                                        <div className="w-2.5 h-2.5 rounded-full border-2 border-slate-400" />
-                                                                    )}
-                                                                </span>
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-
-                                                {/* Row 2: sigma, xBar(mu1), and muH1 */}
-                                                <tr>
-                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content={varianceKnown ? "סטיית תקן של האוכלוסייה (σ)" : "סטיית תקן מדגמית (S) המשמשת כאומד לסטיית התקן"}>
-                                                                <span className="cursor-help border-b border-dotted border-slate-500 text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
-                                                                    {varianceKnown ? 'סטיית תקן (σ):' : 'סטיית תקן (S):'}
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={sigmaInput}
-                                                                    onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.sigma ? 'text-[var(--color-error)] font-bold' : ''
-                                                                        }`}
-                                                                    placeholder="15"
-                                                                    dir="ltr"
-                                                                />
-                                                                {errors.sigma && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.sigma}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content="ממוצע המדגם בפועל">
-                                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
-                                                                    ממוצע מדגם (X̄):
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={mu1Input}
-                                                                    onChange={(e) => handleMu1Change(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu1 ? 'text-[var(--color-error)] font-bold' : ''
-                                                                        }`}
-                                                                    placeholder="108"
-                                                                    dir="ltr"
-                                                                />
-                                                                {errors.mu1 && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu1}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                    <td className={`p-3 align-middle bg-[var(--color-bg)]/40 transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
-                                                        <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                            <InputTooltip content="התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (H₁)">
-                                                                <span className={`text-xs sm:text-sm font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-secondary)]'}`}>
-                                                                    ממוצע (μ₁):
-                                                                </span>
-                                                            </InputTooltip>
-                                                            <div className="w-16 sm:w-20 shrink-0 relative">
-                                                                <input
-                                                                    type="text"
-                                                                    value={muH1Input}
-                                                                    disabled={!calculatePower}
-                                                                    onChange={(e) => handleMuH1Change(e.target.value)}
-                                                                    className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${!calculatePower ? 'opacity-40 cursor-not-allowed' : ''
-                                                                        } ${calculatePower && errors.muH1 ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                                    placeholder="108"
-                                                                    dir="ltr"
-                                                                />
-                                                                {calculatePower && errors.muH1 && (
-                                                                    <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.muH1}</div>
-                                                                )}
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    {/* Row 2: sigma, xBar(mu1), and muH1 */}
+                                    <tr>
+                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                            {/* sigma input removed from here - now in Step 2 */}
+                                        </td>
+                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-bg)]/40">
+                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="ממוצע המדגם בפועל">
+                                                    <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-slate-500">
+                                                        ממוצע מדגם (X̄):
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={mu1Input}
+                                                        onChange={(e) => handleMu1Change(e.target.value)}
+                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu1 ? 'text-[var(--color-error)] font-bold' : ''
+                                                            }`}
+                                                        placeholder="108"
+                                                        dir="ltr"
+                                                    />
+                                                    {errors.mu1 && (
+                                                        <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu1}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className={`p-3 align-middle bg-[var(--color-bg)]/40 transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
+                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (H₁)">
+                                                    <span className={`text-xs sm:text-sm font-bold shrink-0 cursor-help border-b border-dotted border-slate-500 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-secondary)]'}`}>
+                                                        ממוצע (μ₁):
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={muH1Input}
+                                                        disabled={!calculatePower}
+                                                        onChange={(e) => handleMuH1Change(e.target.value)}
+                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${!calculatePower ? 'opacity-40 cursor-not-allowed' : ''
+                                                            } ${calculatePower && errors.muH1 ? 'text-[var(--color-error)] font-bold' : ''}`}
+                                                        placeholder="108"
+                                                        dir="ltr"
+                                                    />
+                                                    {calculatePower && errors.muH1 && (
+                                                        <div className="absolute top-full right-0 text-[11px] text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.muH1}</div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
 
 
-                        </div>
+                    </div>
                     {/* Main Test Statistic Type Selector */}
                     <div className="flex flex-col gap-3 shrink-0 h-[229.583px] w-[201px] bg-[var(--color-bg)]/20 border border-[var(--color-border)] p-4 rounded-sm">
                         <span className="text-xs sm:text-sm font-black text-[var(--color-text-primary)] text-right w-full">סטטיסטי המבחן:</span>
@@ -1748,7 +1705,7 @@ export default function HypothesisTestingCalculator() {
                                                                         </button>
                                                                         <InlineMath math={h0Val} />
                                                                     </div>
-                                                                    
+
                                                                     <div className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-mono mt-4 pt-3 border-t border-[var(--color-border)] flex items-center justify-center w-full z-10" dir="ltr">
                                                                         <InlineMath math={`H_0: ${parameterSymbol} ${h0Symbol} ${nullValueSymbol} \\quad \\text{Vs.} \\quad H_1: ${parameterSymbol}`} />
                                                                         <button
@@ -1763,13 +1720,13 @@ export default function HypothesisTestingCalculator() {
                                                                 </div>
                                                             );
                                                         })()}
-                                                        
+
                                                         <p className="text-sm text-[var(--color-text-secondary)] font-medium mt-2">
                                                             <span className="inline-block px-2 py-0.5 bg-indigo-500/10 rounded border border-indigo-500/20 mr-2 text-indigo-500 text-xs font-bold">טיפ אינטראקטיבי:</span>
                                                             לחץ על הסימן הלוגי ( <InlineMath math="<, >, \neq" /> ) במשוואה כדי לשנות את כיוון המבחן.
                                                         </p>
                                                     </div>
-    
+
 
                                                     {/* Researcher's note */}
                                                     <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-4 text-center">
@@ -1806,7 +1763,12 @@ export default function HypothesisTestingCalculator() {
                                                             {/* YES Branch (Right side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
                                                                 <div className="w-[2px] h-[20px] bg-slate-600"></div>
-                                                                <span className={`text-xs font-bold mb-1 px-2 py-0.5 rounded-md transition-all ${varianceKnown ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setVarianceKnown(true)}
+                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-md transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${varianceKnown ? 'bg-indigo-500/20 text-[var(--color-neutral-accent)] ring-2 ring-indigo-500' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    כן
+                                                                </button>
                                                                 <div className="w-[2px] h-[15px] bg-slate-600"></div>
                                                                 <div className={`w-full text-center px-2 py-2 rounded-sm border-2 font-bold z-10 text-sm transition-all ${varianceKnown ? 'bg-indigo-900/40 border-[var(--color-border)] text-indigo-100' : 'bg-[var(--color-surface)] border-slate-600 text-[var(--color-text-secondary)]'}`}>
                                                                     האם המדגם <InlineMath math="n \ge 30" />?
@@ -1836,16 +1798,92 @@ export default function HypothesisTestingCalculator() {
                                                                         </div>
                                                                     </div>
                                                                 </div>
+
+                                                                {/* YES path Standard Deviation Input */}
+                                                                <AnimatePresence>
+                                                                    {varianceKnown && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, height: 0 }}
+                                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                                            exit={{ opacity: 0, height: 0 }}
+                                                                            className="mt-6 w-[200px]"
+                                                                        >
+                                                                            <div className="bg-[var(--color-bg)]/80 p-3 rounded-lg border border-indigo-500/30 shadow-sm">
+                                                                                <label className="block text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
+                                                                                    הזן סטיית תקן של האוכלוסייה (<InlineMath math="\sigma" />):
+                                                                                </label>
+                                                                                <div className="relative">
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        value={sigmaInput}
+                                                                                        onChange={(e) => handleSigmaChange(e.target.value)}
+                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-indigo-500/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-red-500' : ''}`}
+                                                                                        placeholder="15"
+                                                                                        dir="ltr"
+                                                                                    />
+                                                                                    {errors.sigma && (
+                                                                                        <div className="absolute top-full left-0 right-0 text-[11px] text-[var(--color-error)] font-bold mt-1 text-center">
+                                                                                            {errors.sigma}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
                                                             </div>
 
                                                             {/* NO Branch (Left side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
                                                                 <div className="w-[2px] h-[20px] bg-slate-600"></div>
-                                                                <span className={`text-xs font-bold mb-1 px-2 py-0.5 rounded-md transition-all ${!varianceKnown ? 'bg-emerald-500/20 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => setVarianceKnown(false)}
+                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-md transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${!varianceKnown ? 'bg-emerald-500/20 text-[var(--color-success)] ring-2 ring-emerald-500' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    לא
+                                                                </button>
                                                                 <div className="w-[2px] h-[15px] bg-slate-600"></div>
                                                                 <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-emerald-100 shadow-[0_0_15px_rgba(16,185,129,0.3)] ring-1 ring-emerald-400' : 'bg-[var(--color-surface)] border-slate-600 text-[var(--color-text-secondary)]'}`}>
                                                                     מבחן <InlineMath math="t" />
                                                                 </div>
+
+                                                                {/* NO path Standard Deviation Input */}
+                                                                <AnimatePresence>
+                                                                    {!varianceKnown && (
+                                                                        <motion.div
+                                                                            initial={{ opacity: 0, height: 0 }}
+                                                                            animate={{ opacity: 1, height: 'auto' }}
+                                                                            exit={{ opacity: 0, height: 0 }}
+                                                                            className="mt-6 w-[200px]"
+                                                                        >
+                                                                            <div className="bg-[var(--color-bg)]/80 p-3 rounded-lg border border-emerald-500/30 shadow-sm">
+                                                                                <label className="flex flex-col items-center justify-center text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
+                                                                                    <div className="flex items-center gap-1">
+                                                                                        <span>הזן סטיית תקן מדגמית (<InlineMath math="S" />):</span>
+                                                                                    </div>
+                                                                                    <div className="mt-2 bg-[var(--color-surface)] px-2 py-1.5 rounded-md border border-[var(--color-border)] shadow-sm text-[10px] opacity-80">
+                                                                                        <InlineMath math="S = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n - 1}}" />
+                                                                                    </div>
+                                                                                </label>
+                                                                                <div className="relative">
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        value={sigmaInput}
+                                                                                        onChange={(e) => handleSigmaChange(e.target.value)}
+                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder-slate-400 outline-none transition-all focus:ring-2 focus:ring-emerald-500/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-red-500' : ''}`}
+                                                                                        placeholder="15"
+                                                                                        dir="ltr"
+                                                                                    />
+                                                                                    {errors.sigma && (
+                                                                                        <div className="absolute top-full left-0 right-0 text-[11px] text-[var(--color-error)] font-bold mt-1 text-center">
+                                                                                            {errors.sigma}
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
+                                                                            </div>
+                                                                        </motion.div>
+                                                                    )}
+                                                                </AnimatePresence>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -1872,45 +1910,45 @@ export default function HypothesisTestingCalculator() {
                                                 </div>
 
                                                 <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed pr-9 font-semibold">
-                                                    רמת המובהקות (<InlineMath math="\alpha" />) מייצגת את ההסתברות המקסימלית שנסכים לקבל עבור שגיאה מסוג I, דחיית השערת האפס כשהיא למעשה נכונה <span className="text-[var(--color-error)] font-bold" dir="ltr"><InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is True})" /></span>. היא משלימה לרמת הביטחון שהגדרנו מראש:
+                                                    רמת המובהקות (<InlineMath math="\alpha" />) מייצגת את ההסתברות המקסימלית שנסכים לקבל עבור שגיאה מסוג I, דחיית השערת האפס כשהיא למעשה נכונה <span className="text-[var(--color-error)] font-bold" dir="ltr"><InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is True})" /></span>:
                                                 </p>
-                        {/* Alpha Selection Row with type manually option */}
-                        <div className="flex flex-col sm:flex-row items-center justify-start gap-4 mt-6 pr-9" dir="rtl">
-                            <span className="text-xs sm:text-sm font-black text-[var(--color-text-secondary)]">
-                                בחר רמת מובהקות (<InlineMath math="\alpha" />):
-                            </span>
+                                                {/* Alpha Selection Row with type manually option */}
+                                                <div className="flex flex-col sm:flex-row items-center justify-start gap-4 mt-6 pr-9" dir="rtl">
+                                                    <span className="text-xs sm:text-sm font-black text-[var(--color-text-secondary)]">
+                                                        בחר רמת מובהקות (<InlineMath math="\alpha" />):
+                                                    </span>
 
-                            <div className="flex gap-1.5 bg-[var(--color-bg)]/40 p-1.5 rounded-sm border border-[var(--color-border)]">
-                                {[0.10, 0.05, 0.01].map((pVal) => (
-                                    <button
-                                        key={pVal}
-                                        type="button"
-                                        onClick={() => applyAlphaPreset(pVal)}
-                                        className={`px-3 py-1.5 text-xs sm:text-sm font-black rounded-lg transition-all ${alpha === pVal
-                                            ? 'bg-indigo-600 text-white shadow-sm'
-                                            : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
-                                            }`}
-                                    >
-                                        {pVal * 100}%
-                                    </button>
-                                ))}
-                            </div>
+                                                    <div className="flex gap-1.5 bg-[var(--color-bg)]/40 p-1.5 rounded-sm border border-[var(--color-border)]">
+                                                        {[0.10, 0.05, 0.01].map((pVal) => (
+                                                            <button
+                                                                key={pVal}
+                                                                type="button"
+                                                                onClick={() => applyAlphaPreset(pVal)}
+                                                                className={`px-3 py-1.5 text-xs sm:text-sm font-black rounded-lg transition-all ${alpha === pVal
+                                                                    ? 'bg-indigo-600 text-white shadow-sm'
+                                                                    : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
+                                                                    }`}
+                                                            >
+                                                                {pVal * 100}%
+                                                            </button>
+                                                        ))}
+                                                    </div>
 
-                            <div className="flex items-center gap-1">
-                                <input
-                                    type="text"
-                                    value={alphaInput}
-                                    onChange={(e) => handleAlphaChange(e.target.value)}
-                                    className={`w-18 px-2.5 py-1.5 bg-[var(--color-bg)] border rounded-sm text-center font-mono font-bold text-sm text-[var(--color-neutral-accent)] focus:bg-[var(--color-surface)] outline-none ${errors.alpha ? 'border-[var(--color-border)] text-[var(--color-error)] ring-4 ring-red-500/10' : 'border-[var(--color-border)] focus:ring-4 focus:ring-indigo-500/10'
-                                        }`}
-                                    placeholder="0.05"
-                                    dir="ltr"
-                                />
-                            </div>
-                            {errors.alpha && (
-                                <p className="text-[11px] text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
-                            )}
-                        </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <input
+                                                            type="text"
+                                                            value={alphaInput}
+                                                            onChange={(e) => handleAlphaChange(e.target.value)}
+                                                            className={`w-18 px-2.5 py-1.5 bg-[var(--color-bg)] border rounded-sm text-center font-mono font-bold text-sm text-[var(--color-neutral-accent)] focus:bg-[var(--color-surface)] outline-none ${errors.alpha ? 'border-[var(--color-border)] text-[var(--color-error)] ring-4 ring-red-500/10' : 'border-[var(--color-border)] focus:ring-4 focus:ring-indigo-500/10'
+                                                                }`}
+                                                            placeholder="0.05"
+                                                            dir="ltr"
+                                                        />
+                                                    </div>
+                                                    {errors.alpha && (
+                                                        <p className="text-[11px] text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
+                                                    )}
+                                                </div>
 
                                                 <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
                                                     <FormulaBlock>
@@ -2228,8 +2266,8 @@ export default function HypothesisTestingCalculator() {
                                                         return (
                                                             <>
                                                                 <hr className="my-10 border-[var(--color-border)] opacity-30 w-1/2 mx-auto" />
-<p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
-לחלופין, נגדיר את אזור הדחייה (<InlineMath math="C" />) במונחי הערך המקורי ({testType === 'sum' ? 'סכום התצפיות' : testType === 'single' ? 'התצפית הבודדת' : 'ממוצע המדגם'}):
+                                                                <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
+                                                                    לחלופין, נגדיר את אזור הדחייה (<InlineMath math="C" />) במונחי הערך המקורי ({testType === 'sum' ? 'סכום התצפיות' : testType === 'single' ? 'התצפית הבודדת' : 'ממוצע המדגם'}):
                                                                 </p>
 
                                                                 <div className="py-3 space-y-4 text-xl md:text-2xl">
@@ -2403,14 +2441,14 @@ export default function HypothesisTestingCalculator() {
                                                                 <tr>
                                                                     <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">גישה</th>
                                                                     <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">מדד ההשוואה</th>
-                                                                    <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">כלל ההחלטה (מבחן ימני)</th>
+                                                                    <th className="p-4 font-bold border-b border-[var(--color-border)]/50 text-center">כלל ההחלטה (מבחן {tailType === 'right' ? 'ימני' : tailType === 'left' ? 'שמאלי' : 'דו-צדדי'})</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody className="bg-[var(--color-bg)]/40 text-[var(--color-text-primary)]">
                                                                 <tr className="border-b border-[var(--color-border)]">
                                                                     <td className="p-4 font-bold text-center">סטטיסטי המבחן</td>
-                                                                    <td className="p-4 text-center" dir="ltr"><InlineMath math="Z_{stat} \text{ Vs. } z_{\alpha}" /></td>
-                                                                    <td className="p-4 text-center">אם <span dir="ltr"><InlineMath math="Z_{stat} \ge z_{\alpha}" /></span> &larr; דחיית <InlineMath math="H_0" /></td>
+                                                                    <td className="p-4 text-center" dir="ltr"><InlineMath math={`${varianceKnown ? 'Z' : 't'}_{stat} \\text{ Vs. } ${varianceKnown ? 'z' : 't'}_{${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'}}`} /></td>
+                                                                    <td className="p-4 text-center">אם <span dir="ltr"><InlineMath math={`${tailType === 'two-tailed' ? '|' : ''}${varianceKnown ? 'Z' : 't'}_{stat}${tailType === 'two-tailed' ? '|' : ''} ${tailType === 'left' ? '\\le' : '\\ge'} ${tailType === 'left' ? '-' : ''}${varianceKnown ? 'z' : 't'}_{${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'}}`} /></span> &larr; דחיית <InlineMath math="H_0" /></td>
                                                                 </tr>
                                                                 <tr className="border-b border-[var(--color-border)]">
                                                                     <td className="p-4 font-bold text-center">אזור הדחייה</td>
@@ -2683,276 +2721,63 @@ export default function HypothesisTestingCalculator() {
                                 <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 sm:p-6 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden border-b border-transparent group-open:border-[var(--color-border)] group-open:bg-[var(--color-surface)]">
                                     <div className="flex items-center gap-4">
                                         <div className="p-2.5 bg-indigo-500/10 rounded-sm text-[var(--color-neutral-accent)]">
-                                            <Sliders size={26} />
+                                            <Target size={26} />
                                         </div>
-                                        <span className="text-xl sm:text-2xl font-black">רווח סמך (Confidence Interval)</span>
+                                        <span className="text-xl sm:text-2xl font-black">חסם / רווח סמך (CL = Confidence Interval)</span>
                                     </div>
                                     <span className="transition-transform duration-300 group-open:rotate-180 bg-[var(--color-surface)] p-2 rounded-full">
                                         <ChevronDown size={22} className="text-[var(--color-text-secondary)]" />
                                     </span>
                                 </summary>
-                                <div className="p-5 sm:p-8 space-y-8 bg-[var(--color-bg)]/20">
-                                    <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-medium">
-                                        רווח סמך מספק לנו טווח של ערכים שבו אנו מעריכים שנמצא פרמטר האוכלוסייה (התוחלת <InlineMath math="\mu" />), לעומת מבחן השערות שמספק תשובה החלטית של "כן/לא". להלן שלבי החישוב מבוססים על נתוני המדגם.
-                                    </p>
-
-                                    <div className="space-y-6">
-                                        <div>
-                                            <div className="flex items-center gap-3 font-extrabold text-[var(--color-neutral-accent)] mb-4">
-                                                <span className="w-8 h-8 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">1</span>
-                                                <span className="text-lg font-black">ממוצע המדגם וסטיית התקן (Sample Mean & Standard Deviation)</span>
-                                            </div>
-                                            <CalcBlock>
-                                                <BlockMath math={`\\bar{X} = ${mu1}`} />
-                                                {varianceKnown ? (
-                                                    <BlockMath math={`\\sigma = ${sigma} \\quad \\text{(Population SD known)}`} />
-                                                ) : (
-                                                    <BlockMath math={`s = ${sigma} \\quad \\text{(Sample SD)}`} />
-                                                )}
-                                            </CalcBlock>
-                                        </div>
-
-                                        <div>
-                                            <div className="flex items-center gap-3 font-extrabold text-[var(--color-neutral-accent)] mb-4">
-                                                <span className="w-8 h-8 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">2</span>
-                                                <span className="text-lg font-black">טעות התקן (Standard Error)</span>
-                                            </div>
-                                            <FormulaBlock>
-                                                <BlockMath math={`SE = \\frac{${varianceKnown ? '\\sigma' : 's'}}{\\sqrt{n}}`} />
-                                            </FormulaBlock>
-                                            <CalcBlock>
-                                                <BlockMath math={`SE = \\frac{${sigma}}{\\sqrt{${n}}} = ${stats.se.toFixed(4)}`} />
-                                            </CalcBlock>
-                                        </div>
-
-                                        <div>
-                                            <div className="flex items-center gap-3 font-extrabold text-[var(--color-neutral-accent)] mb-4">
-                                                <span className="w-8 h-8 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">3</span>
-                                                <span className="text-lg font-black">רמת ביטחון וערך קריטי (Confidence Level & Critical Value)</span>
-                                            </div>
-                                            <p className="text-[var(--color-text-primary)] mb-3 text-sm">
-                                                עבור רמת מובהקות של <InlineMath math={`\\alpha = ${alpha}`} />, רמת הביטחון היא <InlineMath math={`1-\\alpha = ${(1 - alpha).toFixed(2)}`} /> (<InlineMath math={`${((1 - alpha) * 100).toFixed(0)}\\%`} />).
-                                            </p>
-
-                                            {(() => {
-                                                const ciCrit2Side = varianceKnown ? inverseNormalCDF(1 - alpha / 2) : studentTPPF(1 - alpha / 2, stats.df);
-                                                const ciCrit1Side = varianceKnown ? inverseNormalCDF(1 - alpha) : studentTPPF(1 - alpha, stats.df);
-                                                const MoE2Side = ciCrit2Side * stats.se;
-                                                const MoE1Side = ciCrit1Side * stats.se;
-
-                                                return (
-                                                    <div className="w-full">
-                                                        {tailType === 'two-tailed' ? (
-                                                            <div className="bg-[var(--color-bg)]/50 border border-[var(--color-border)]/50 p-4 rounded-sm max-w-2xl mx-auto">
-                                                                <div className="text-center font-bold text-[var(--color-text-primary)] mb-3">דו-צדדי (Two-Sided)</div>
-                                                                <FormulaBlock>
-                                                                    {varianceKnown ? (
-                                                                        <BlockMath math={`Z_{1-\\alpha/2} = Z_{${(1 - alpha / 2).toFixed(3)}}`} />
-                                                                    ) : (
-                                                                        <BlockMath math={`t_{n-1, 1-\\alpha/2} = t_{${stats.df}, ${(1 - alpha / 2).toFixed(3)}}`} />
-                                                                    )}
-                                                                </FormulaBlock>
-                                                                <CalcBlock>
-                                                                    <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${ciCrit2Side.toFixed(4)}`} />
-                                                                </CalcBlock>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="bg-[var(--color-bg)]/50 border border-[var(--color-border)]/50 p-4 rounded-sm max-w-2xl mx-auto">
-                                                                <div className="text-center font-bold text-[var(--color-text-primary)] mb-3">חד-צדדי (One-Sided)</div>
-                                                                <FormulaBlock>
-                                                                    {varianceKnown ? (
-                                                                        <BlockMath math={`Z_{1-\\alpha} = Z_{${(1 - alpha).toFixed(3)}}`} />
-                                                                    ) : (
-                                                                        <BlockMath math={`t_{n-1, 1-\\alpha} = t_{${stats.df}, ${(1 - alpha).toFixed(3)}}`} />
-                                                                    )}
-                                                                </FormulaBlock>
-                                                                <CalcBlock>
-                                                                    <BlockMath math={`${varianceKnown ? 'Z' : 't'}_{crit} = ${ciCrit1Side.toFixed(4)}`} />
-                                                                </CalcBlock>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                );
-                                            })()}
-                                        </div>
-
-                                        <div>
-                                            <div className="flex items-center gap-3 font-extrabold text-[var(--color-neutral-accent)] mb-4">
-                                                <span className="w-8 h-8 rounded-full bg-indigo-100 bg-indigo-900/50 text-base font-black flex items-center justify-center border border-indigo-300 shrink-0">4</span>
-                                                <span className="text-lg font-black">מרווח טעות ורווח סמך (Margin of Error & Confidence Interval)</span>
-                                            </div>
-                                            {(() => {
-                                                const ciCrit2Side = varianceKnown ? inverseNormalCDF(1 - alpha / 2) : studentTPPF(1 - alpha / 2, stats.df);
-                                                const ciCrit1Side = varianceKnown ? inverseNormalCDF(1 - alpha) : studentTPPF(1 - alpha, stats.df);
-                                                const MoE2Side = ciCrit2Side * stats.se;
-                                                const MoE1Side = ciCrit1Side * stats.se;
-
-                                                const lower2Side = mu1 - MoE2Side;
-                                                const upper2Side = mu1 + MoE2Side;
-                                                const lower1Side = mu1 - MoE1Side;
-                                                const upper1Side = mu1 + MoE1Side;
-
-                                                const mu0In2Side = mu0 >= lower2Side && mu0 <= upper2Side;
-
-                                                return (
-                                                    <div className="space-y-6">
-                                                        {tailType === 'two-tailed' ? (
-                                                            <div className="bg-[var(--color-surface)] border-2 border-[var(--color-border)] p-5 rounded-sm">
-                                                                <div className="text-center font-bold text-[var(--color-neutral-accent)] text-xl mb-4">רווח סמך דו-צדדי (Two-Sided CI)</div>
-                                                                <FormulaBlock>
-                                                                    <BlockMath math={`MoE = ${varianceKnown ? 'Z' : 't'}_{crit} \\cdot SE`} />
-                                                                    <BlockMath math={`CI = \\left[ \\bar{X} - MoE, \\quad \\bar{X} + MoE \\right]`} />
-                                                                </FormulaBlock>
-                                                                <CalcBlock>
-                                                                    <BlockMath math={`MoE = ${ciCrit2Side.toFixed(4)} \\cdot ${stats.se.toFixed(4)} = ${MoE2Side.toFixed(4)}`} />
-                                                                    <BlockMath math={`CI = \\left[ ${mu1} - ${MoE2Side.toFixed(4)}, \\quad ${mu1} + ${MoE2Side.toFixed(4)} \\right]`} />
-                                                                    <div className="mt-4 p-3 bg-indigo-900/40 rounded-lg border border-indigo-400/30 text-indigo-100 font-bold text-2xl text-center">
-                                                                        <BlockMath math={`CI_{2\\text{-sided}} = \\left[ ${lower2Side.toFixed(4)}, \\quad ${upper2Side.toFixed(4)} \\right]`} />
-                                                                    </div>
-                                                                </CalcBlock>
-                                                            </div>
-                                                        ) : (
-                                                            <div className="bg-[var(--color-bg)]/40 border border-[var(--color-border)]/50 p-5 rounded-sm">
-                                                                <div className="text-center font-bold text-[var(--color-text-primary)] text-lg mb-4">חסם סמך חד-צדדי (One-Sided Bound)</div>
-                                                                <CalcBlock>
-                                                                    <BlockMath math={`MoE = ${ciCrit1Side.toFixed(4)} \\cdot ${stats.se.toFixed(4)} = ${MoE1Side.toFixed(4)}`} />
-                                                                </CalcBlock>
-                                                                <div className="mt-4 p-4 bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)]/50 text-center">
-                                                                    {tailType === 'right' ? (
-                                                                        <>
-                                                                            <div className="text-sm text-[var(--color-text-secondary)] mb-2">חסם תחתון (Lower Bound)</div>
-                                                                            <BlockMath math={`\\left[ \\bar{X} - MoE, \\quad \\infty \\right)`} />
-                                                                            <div className="text-lg font-bold text-[var(--color-text-primary)] mt-2" dir="ltr">
-                                                                                <InlineMath math={`[${lower1Side.toFixed(4)}, \\infty)`} />
-                                                                            </div>
-                                                                        </>
-                                                                    ) : (
-                                                                        <>
-                                                                            <div className="text-sm text-[var(--color-text-secondary)] mb-2">חסם עליון (Upper Bound)</div>
-                                                                            <BlockMath math={`\\left( -\\infty, \\quad \\bar{X} + MoE \\right]`} />
-                                                                            <div className="text-lg font-bold text-[var(--color-text-primary)] mt-2" dir="ltr">
-                                                                                <InlineMath math={`(-\\infty, ${upper1Side.toFixed(4)}]`} />
-                                                                            </div>
-                                                                        </>
-                                                                    )}
-                                                                </div>
-                                                            </div>
-                                                        )}
-
-                                                        <div className="mt-8 mb-4 border border-[var(--color-border)] rounded-sm overflow-hidden bg-[var(--color-bg)]/40 p-4">
-                                                            <div className="text-center font-bold text-[var(--color-text-primary)] text-lg mb-4">תצוגה גרפית - התפלגות המדגם מול האוכלוסייה</div>
-                                                            <div className="w-full h-64 md:h-80" dir="ltr">
-                                                                <ResponsiveContainer width="100%" height="100%">
-                                                                    <AreaChart data={ciChartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
-                                                                        <defs>
-                                                                            <linearGradient id="ciPopColor" x1="0" y1="0" x2="0" y2="1">
-                                                                                <stop offset="5%" stopColor={'var(--color-accent)'} stopOpacity={0.1} />
-                                                                                <stop offset="95%" stopColor={'var(--color-accent)'} stopOpacity={0} />
-                                                                            </linearGradient>
-                                                                            <linearGradient id="ciSampleColor" x1="0" y1="0" x2="0" y2="1">
-                                                                                <stop offset="5%" stopColor="var(--chart-4)" stopOpacity={0.1} />
-                                                                                <stop offset="95%" stopColor="var(--chart-4)" stopOpacity={0} />
-                                                                            </linearGradient>
-                                                                            <linearGradient id="ciFill" x1="0" y1="0" x2="0" y2="1">
-                                                                                <stop offset="5%" stopColor="var(--chart-4)" stopOpacity={0.4} />
-                                                                                <stop offset="95%" stopColor="var(--chart-4)" stopOpacity={0.1} />
-                                                                            </linearGradient>
-                                                                        </defs>
-                                                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--chart-grid)'} />
-
-                                                                        <XAxis
-                                                                            dataKey="x"
-                                                                            type="number"
-                                                                            domain={['dataMin', 'dataMax']}
-                                                                            ticks={ciChartTicks}
-                                                                            tick={{ fill: 'var(--chart-axis-label)', fontSize: 15, fontWeight: 'bold' }}
-                                                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                                                            tickLine={true}
-                                                                            tickFormatter={(val) => val.toFixed(2)}
-                                                                        />
-                                                                        <YAxis
-                                                                            tickFormatter={(val) => val.toFixed(2)}
-                                                                            tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }}
-                                                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                                                            tickLine={true}
-                                                                            width={45}
-                                                                        />
-                                                                        <RechartsTooltip content={<CustomCIChartTooltip />} />
-
-                                                                        {/* Population Curve Base Area */}
-                                                                        <Area
-                                                                            type="monotone"
-                                                                            dataKey="pdfPop"
-                                                                            stroke={'var(--color-accent)'}
-                                                                            strokeWidth={2}
-                                                                            strokeDasharray="5 5"
-                                                                            fill="url(#ciPopColor)"
-                                                                            dot={false}
-                                                                            isAnimationActive={true}
-                                                                        />
-
-                                                                        {/* Sample Curve Base Area */}
-                                                                        <Area
-                                                                            type="monotone"
-                                                                            dataKey="pdfSample"
-                                                                            stroke="var(--chart-4)"
-                                                                            strokeWidth={2}
-                                                                            fill="url(#ciSampleColor)"
-                                                                            dot={false}
-                                                                            isAnimationActive={true}
-                                                                        />
-
-                                                                        {/* CI Filled Area */}
-                                                                        <Area
-                                                                            type="monotone"
-                                                                            dataKey="pdfSampleCI"
-                                                                            stroke="none"
-                                                                            fill="url(#ciFill)"
-                                                                            dot={false}
-                                                                            isAnimationActive={false}
-                                                                        />
-
-                                                                        <ReferenceLine x={mu0} stroke={'var(--color-accent)'} strokeDasharray="3 3" label={{ position: 'top', value: 'μ₀', fill: 'var(--color-accent)' }} />
-                                                                        <ReferenceLine x={mu1} stroke="var(--chart-4)" strokeDasharray="3 3" label={{ position: 'top', value: 'x̄', fill: 'var(--chart-4)' }} />
-
-                                                                        <Legend verticalAlign="bottom" height={36} content={(props) => {
-                                                                            return (
-                                                                                <div className="flex justify-center gap-6 mt-2 text-sm text-[var(--color-text-primary)]" dir="rtl">
-                                                                                    <span className="flex items-center gap-2"><div className="w-4 h-0.5 border-t-2 border-dashed" style={{ borderColor: 'var(--color-accent)' }}></div> התפלגות האוכלוסייה (תחת H₀)</span>
-                                                                                    <span className="flex items-center gap-2"><div className="w-4 h-0.5" style={{ backgroundColor: 'var(--chart-4)' }}></div> התפלגות המדגם</span>
-                                                                                    <span className="flex items-center gap-2"><div className="w-4 h-4 opacity-40 border" style={{ backgroundColor: 'var(--chart-4)', borderColor: 'var(--chart-4)' }}></div> רווח סמך</span>
-                                                                                </div>
-                                                                            );
-                                                                        }} />
-                                                                    </AreaChart>
-                                                                </ResponsiveContainer>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Connection to Hypothesis Test */}
-                                                        {tailType === 'two-tailed' && (
-                                                            <div className={`p-4 rounded-sm border-2 mt-4 text-center transition-all ${mu0In2Side ? 'bg-[var(--color-surface)] border-[var(--color-border)]' : 'bg-[var(--color-surface)] border-[var(--color-border)]'}`}>
-                                                                <p className="text-sm sm:text-base text-[var(--color-text-primary)] font-bold leading-relaxed mb-1">
-                                                                    <strong className={mu0In2Side ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}>קשר למבחן ההשערות הדו-צדדי:</strong>{' '}
-                                                                </p>
-                                                                <p className="text-sm sm:text-base text-[var(--color-text-primary)] font-semibold leading-relaxed">
-                                                                    {mu0In2Side
-                                                                        ? <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-[var(--color-error)]">נמצא בתוך</strong> גבולות רווח הסמך הדו-צדדי, ולכן לא ניתן לדחות את <InlineMath math="H_0" />.</>
-                                                                        : <>ערך השערת האפס <InlineMath math={`\\mu_0 = ${mu0}`} /> <strong className="text-[var(--color-success)]">נמצא מחוץ</strong> לגבולות רווח הסמך הדו-צדדי, ולכן נדחה את <InlineMath math="H_0" />.</>
-                                                                    }
-                                                                </p>
-                                                            </div>
-                                                        )}
-
-                                                        {/* Researcher's note */}
-                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] text-center pt-2 mt-4" style={{ letterSpacing: '0.02em', WebkitFontSmoothing: 'antialiased' }}>
-                                                            <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-neutral-accent)]" /> אנו בטוחים ברמת ביטחון של {((1 - alpha) * 100).toFixed(0)}% שהתוחלת האמיתית של האוכלוסייה נמצאת בטווח [{lower2Side.toFixed(4)}, {upper2Side.toFixed(4)}].
-                                                        </p>
-                                                    </div>
-                                                );
-                                            })()}
-                                        </div>
+                                <div className="p-5 sm:p-8 space-y-8 bg-[var(--color-bg)]/20 text-right">
+                                    <div className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed">
+                                        <h3 className="font-bold underline mb-2 text-xl">רווח סמך</h3>
+                                        <p>
+                                            זוהי אמידה מרווחית (באינטרוול) של פרמטר באוכלוסייה, ע"י שימוש בתוצאות מדגם. רווח הסמך נבנה כך שההסתברות שהפרמטר יהיה בתוך הקטע נקבעת מראש ושווה <InlineMath math="1-\alpha" />. הסתברות זו נקראת <strong>"רמת סמך"</strong> או <strong>"רמת בטחון"</strong>.
+                                        </p>
+                                        <p className="mt-2">
+                                            <InlineMath math="\alpha" /> נקראת <strong>"רמת מובהקות"</strong> (היא השגיאה המותרת באומדן) <InlineMath math="0 \le \alpha \le 1" />.
+                                        </p>
                                     </div>
+
+                                    {/* Known Variance */}
+                                    <div className={`p-6 rounded-md border transition-all \${varianceKnown ? 'bg-[var(--color-surface)] border-indigo-500/50 shadow-sm' : 'bg-[var(--color-bg)]/40 border-[var(--color-border)] opacity-70'}`}>
+                                        <h3 className="font-bold text-lg mb-4 underline">רווח סמך עבור תוחלת האוכלוסייה, כאשר שונותה ידועה</h3>
+                                        <FormulaBlock>
+                                            <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}`} />
+                                        </FormulaBlock>
+                                        
+                                        {varianceKnown && stats && decisionData && (
+                                            <div className="mt-6 border-t border-[var(--color-border)] pt-4">
+                                                <CalcBlock>
+                                                    <BlockMath math={`\\bar{X} \\pm z_{${1 - alpha / 2}} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(inverseNormalCDF(alpha / 2)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                    <BlockMath math={`[${(decisionData.xBar - Math.abs(inverseNormalCDF(alpha / 2)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(inverseNormalCDF(alpha / 2)) * stats.se).toFixed(4)}]`} />
+                                                </CalcBlock>
+                                            </div>
+                                        )}
+                                    </div>
+
+                                    {/* Unknown Variance */}
+                                    <div className={`p-6 rounded-md border transition-all \${!varianceKnown ? 'bg-[var(--color-surface)] border-emerald-500/50 shadow-sm' : 'bg-[var(--color-bg)]/40 border-[var(--color-border)] opacity-70'}`}>
+                                        <h3 className="font-bold text-lg mb-4 underline">רווח סמך עבור תוחלת האוכלוסייה, כאשר שונותה איננה ידועה</h3>
+                                        <div className="text-base sm:text-lg mb-4 text-[var(--color-text-primary)]">
+                                            נסמן את סטיית התקן המדגמית:
+                                            <BlockMath math={`S = \\sqrt{\\frac{\\sum(x_i - \\bar{x})^2}{n-1}} = \\sqrt{\\frac{\\sum x_i^2 - n\\bar{x}^2}{n-1}}`} />
+                                        </div>
+                                        <FormulaBlock>
+                                            <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm t_{(n-1, 1-\\alpha/2)} \\frac{S}{\\sqrt{n}}`} />
+                                        </FormulaBlock>
+
+                                        {!varianceKnown && stats && decisionData && (
+                                            <div className="mt-6 border-t border-[var(--color-border)] pt-4">
+                                                <CalcBlock>
+                                                    <BlockMath math={`\\bar{X} \\pm t_{(${stats.df}, ${1 - alpha / 2})} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(studentTPPF(alpha / 2, stats.df)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                    <BlockMath math={`[${(decisionData.xBar - Math.abs(studentTPPF(alpha / 2, stats.df)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(studentTPPF(alpha / 2, stats.df)) * stats.se).toFixed(4)}]`} />
+                                                </CalcBlock>
+                                            </div>
+                                        )}
+                                    </div>
+
                                 </div>
                             </details>
 
@@ -3087,6 +2912,7 @@ export default function HypothesisTestingCalculator() {
                                     )}
                                 </div>
                             </details>
+
                         </div>
                     )}
 
