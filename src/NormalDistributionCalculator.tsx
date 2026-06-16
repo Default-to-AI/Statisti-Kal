@@ -8,31 +8,32 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InlineMath, BlockMath } from 'react-katex';
 import { 
- Info, 
- Calculator, 
- RefreshCw, 
- HelpCircle, 
- AlertCircle, 
- BookOpen, 
- Settings, 
- ChevronDown,
- ChevronUp,
- Award,
- Sliders,
- TrendingUp
+  Info, 
+  Calculator, 
+  RefreshCw, 
+  HelpCircle, 
+  AlertCircle, 
+  BookOpen, 
+  Settings, 
+  ChevronDown,
+  ChevronUp,
+  Sliders,
+  X,
+  Award,
+  TrendingUp
 } from 'lucide-react';
 import {
- ResponsiveContainer,
- AreaChart,
- Area,
- XAxis,
- YAxis,
- Tooltip as RechartsTooltip,
- ReferenceLine,
- CartesianGrid
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  Tooltip as RechartsTooltip,
+  ReferenceLine,
+  CartesianGrid
 } from 'recharts';
+
 import HypothesisTestingCalculator from './components/HypothesisTestingCalculator';
-import FormulaSheet from './components/FormulaSheet';
 
 // --- Math Utilities ---
 
@@ -177,9 +178,8 @@ function studentTInverseCDF(p: number, df: number): number {
 
 // --- Types ---
 
-type CalcMode = 'forward' | 'inverse' | 'table' | 'hypothesis' | 'formula-sheet';
-type CalcType = 'below' | 'above' | 'between' | 'outside' | 'conditional';
-type CondType = 'below' | 'above' | 'between';
+type CalcMode = 'forward' | 'inverse';
+type CalcType = 'below' | 'above' | 'between' | 'outside';
 
 interface CalculationResult {
  probability: number;
@@ -1112,70 +1112,109 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
 
 export default function NormalDistributionCalculator() {
  // Main persistent states
- const [mode, setMode] = useLocalStorageState<CalcMode>('ND_mode', 'forward');
+  const [mode, setMode] = useLocalStorageState<CalcMode>('ND_mode', 'forward');
  
- // Normal parameters
- const [mean, setMean] = useLocalStorageState<number>('ND_mean', 100);
- const [meanInput, setMeanInput] = useLocalStorageState<string>('ND_meanInput', '100');
+  // Normal parameters
+  const [mean, setMean] = useLocalStorageState<number>('ND_mean', 100);
+  const [meanInput, setMeanInput] = useLocalStorageState<string>('ND_meanInput', '100');
  
- const [stdDev, setStdDev] = useLocalStorageState<number>('ND_stdDev', 15);
- const [stdDevInput, setStdDevInput] = useLocalStorageState<string>('ND_stdDevInput', '15');
+  const [stdDev, setStdDev] = useLocalStorageState<number>('ND_stdDev', 15);
+  const [stdDevInput, setStdDevInput] = useLocalStorageState<string>('ND_stdDevInput', '15');
 
- // Forward calculations values
- const [forwardType, setForwardType] = useLocalStorageState<CalcType>('ND_forwardType', 'below');
- const [x1, setX1] = useLocalStorageState<number>('ND_x1', 115);
- const [x1Input, setX1Input] = useLocalStorageState<string>('ND_x1Input', '115');
- const [x2, setX2] = useLocalStorageState<number>('ND_x2', 125);
- const [x2Input, setX2Input] = useLocalStorageState<string>('ND_x2Input', '125');
+  // Forward calculations values
+  const [forwardType, setForwardType] = useLocalStorageState<CalcType>('ND_forwardType', 'below');
+  const [x1, setX1] = useLocalStorageState<number>('ND_x1', 115);
+  const [x1Input, setX1Input] = useLocalStorageState<string>('ND_x1Input', '115');
+  const [x2, setX2] = useLocalStorageState<number>('ND_x2', 125);
+  const [x2Input, setX2Input] = useLocalStorageState<string>('ND_x2Input', '125');
 
- // Conditional probability values
- const [condType, setCondType] = useLocalStorageState<CondType>('ND_condType', 'above');
- const [condTypeA, setCondTypeA] = useLocalStorageState<CondType>('ND_condTypeA', 'between');
- const [condX1, setCondX1] = useLocalStorageState<number>('ND_condX1', 110);
- const [condX1Input, setCondX1Input] = useLocalStorageState<string>('ND_condX1Input', '110');
- const [condX2, setCondX2] = useLocalStorageState<number>('ND_condX2', 130);
- const [condX2Input, setCondX2Input] = useLocalStorageState<string>('ND_condX2Input', '130');
+  // Inverse calculations values
+  const [inverseProb, setInverseProb] = useLocalStorageState<number>('ND_inverseProb', 0.95);
+  const [inverseProbInput, setInverseProbInput] = useLocalStorageState<string>('ND_inverseProbInput', '0.95');
+  const [inverseType, setInverseType] = useLocalStorageState<CalcType>('ND_inverseType', 'below');
 
- // Inverse calculations values
- const [inverseProb, setInverseProb] = useLocalStorageState<number>('ND_inverseProb', 0.95);
- const [inverseProbInput, setInverseProbInput] = useLocalStorageState<string>('ND_inverseProbInput', '0.95');
- const [inverseType, setInverseType] = useLocalStorageState<CalcType>('ND_inverseType', 'below');
+  // Conditional calculations values
+  const [condType, setCondType] = useLocalStorageState<CondType>('ND_condType', 'above');
+  const [condTypeA, setCondTypeA] = useLocalStorageState<CondType>('ND_condTypeA', 'below');
+  const [condX1, setCondX1] = useLocalStorageState<number>('ND_condX1', 110);
+  const [condX1Input, setCondX1Input] = useLocalStorageState<string>('ND_condX1Input', '110');
+  const [condX2, setCondX2] = useLocalStorageState<number>('ND_condX2', 120);
+  const [condX2Input, setCondX2Input] = useLocalStorageState<string>('ND_condX2Input', '120');
 
- // URL Routing for Direct Links
- useEffect(() => {
-  const params = new URLSearchParams(window.location.search);
-  const urlMode = params.get('mode') || window.location.hash.replace('#', '');
-  const validModes = ['forward', 'inverse', 'table', 'hypothesis', 'formula-sheet'];
-  if (urlMode && validModes.includes(urlMode)) {
-   setMode(urlMode as CalcMode);
-  }
- }, []);
+  // URL Routing for Direct Links
+  useEffect(() => {
+   const params = new URLSearchParams(window.location.search);
+   const urlMode = params.get('mode') || window.location.hash.replace('#', '');
+   const validModes = ['forward', 'inverse'];
+   if (urlMode && validModes.includes(urlMode)) {
+    setMode(urlMode as CalcMode);
+   }
+   // Forward/Inverse type from URL
+   const urlType = params.get('type');
+   const validTypes = ['below', 'above', 'between', 'outside'];
+   if (urlType && validTypes.includes(urlType)) {
+    if (urlMode === 'forward' || urlMode === null) {
+     setForwardType(urlType as CalcType);
+    } else if (urlMode === 'inverse') {
+     setInverseType(urlType as CalcType);
+    }
+   }
+   // Parameters from URL
+   const urlMu = params.get('mu');
+   if (urlMu && !isNaN(parseFloat(urlMu))) {
+    const val = parseFloat(urlMu);
+    setMean(val);
+    setMeanInput(urlMu);
+   }
+   const urlSigma = params.get('sd') || params.get('sigma');
+   if (urlSigma && !isNaN(parseFloat(urlSigma))) {
+    const val = parseFloat(urlSigma);
+    setStdDev(val);
+    setStdDevInput(urlSigma);
+   }
+   const urlX = params.get('x');
+   if (urlX && !isNaN(parseFloat(urlX))) {
+    const val = parseFloat(urlX);
+    setX1(val);
+    setX1Input(urlX);
+   }
+   const urlX2 = params.get('x2');
+   if (urlX2 && !isNaN(parseFloat(urlX2))) {
+    const val = parseFloat(urlX2);
+    setX2(val);
+    setX2Input(urlX2);
+   }
+   const urlP = params.get('p');
+   if (urlP && !isNaN(parseFloat(urlP))) {
+    const val = parseFloat(urlP);
+    if (val > 0 && val < 1) {
+     setInverseProb(val);
+     setInverseProbInput(urlP);
+    }
+   }
+  }, []);
 
  // Validations
- const errors = useMemo(() => {
-  const errs: { [key: string]: string } = {};
-  if (meanInput.trim() === '' || isNaN(parseFloat(meanInput))) errs.mean = 'נא להזין מספר תקין';
-  const sdVal = parseFloat(stdDevInput);
-  if (stdDevInput.trim() === '' || isNaN(sdVal)) errs.stdDev = 'נא להזין מספר תקין';
-  else if (sdVal <= 0) errs.stdDev = 'סטיית תקן חייבת להיות גדולה מ-0';
+  const errors = useMemo(() => {
+   const errs: { [key: string]: string } = {};
+   if (meanInput.trim() === '' || isNaN(parseFloat(meanInput))) errs.mean = 'נא להזין מספר תקין';
+   const sdVal = parseFloat(stdDevInput);
+   if (stdDevInput.trim() === '' || isNaN(sdVal)) errs.stdDev = 'נא להזין מספר תקין';
+   else if (sdVal <= 0) errs.stdDev = 'סטיית תקן חייבת להיות גדולה מ-0';
 
-  if (mode === 'forward') {
-   if (x1Input.trim() === '' || isNaN(parseFloat(x1Input))) errs.x1 = 'נא להזין מספר תקין';
-   if ((forwardType === 'between' || forwardType === 'outside') && (x2Input.trim() === '' || isNaN(parseFloat(x2Input)))) {
-    errs.x2 = 'נא להזין מספר תקין';
+   if (mode === 'forward') {
+    if (x1Input.trim() === '' || isNaN(parseFloat(x1Input))) errs.x1 = 'נא להזין מספר תקין';
+    if ((forwardType === 'between' || forwardType === 'outside') && (x2Input.trim() === '' || isNaN(parseFloat(x2Input)))) {
+     errs.x2 = 'נא להזין מספר תקין';
+    }
+   } else if (mode === 'inverse') {
+    const probVal = parseFloat(inverseProbInput);
+    if (inverseProbInput.trim() === '' || isNaN(probVal)) errs.inverseProb = 'נא להזין מ-0 עד 1';
+    else if (probVal <= 0 || probVal >= 1) errs.inverseProb = 'הסתברות חייבת להיות בטווח הפתוח (0, 1)';
    }
-   if (forwardType === 'conditional') {
-    if (condX1Input.trim() === '' || isNaN(parseFloat(condX1Input))) errs.condX1 = 'נא להזין מספר';
-    if (condType === 'between' && (condX2Input.trim() === '' || isNaN(parseFloat(condX2Input)))) errs.condX2 = 'נא להזין מספר';
-   }
-  } else if (mode === 'inverse') {
-   const probVal = parseFloat(inverseProbInput);
-   if (inverseProbInput.trim() === '' || isNaN(probVal)) errs.inverseProb = 'נא להזין מ-0 עד 1';
-   else if (probVal <= 0 || probVal >= 1) errs.inverseProb = 'הסתברות חייבת להיות בטווח הפתוח (0, 1)';
-  }
 
-  return errs;
- }, [meanInput, stdDevInput, x1Input, x2Input, condX1Input, condX2Input, inverseProbInput, forwardType, condType, mode]);
+   return errs;
+  }, [meanInput, stdDevInput, x1Input, x2Input, inverseProbInput, forwardType, mode]);
 
  const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
@@ -1199,9 +1238,15 @@ export default function NormalDistributionCalculator() {
  };
 
  const handleX2Change = (val: string) => {
-  setX2Input(val);
+   setX2Input(val);
+   const parsed = parseFloat(val);
+   if (!isNaN(parsed)) setX2(parsed);
+ };
+
+ const handleInverseProbChange = (val: string) => {
+  setInverseProbInput(val);
   const parsed = parseFloat(val);
-  if (!isNaN(parsed)) setX2(parsed);
+  if (!isNaN(parsed) && parsed > 0 && parsed < 1) setInverseProb(parsed);
  };
 
  const handleCondX1Change = (val: string) => {
@@ -1214,12 +1259,6 @@ export default function NormalDistributionCalculator() {
   setCondX2Input(val);
   const parsed = parseFloat(val);
   if (!isNaN(parsed)) setCondX2(parsed);
- };
-
- const handleInverseProbChange = (val: string) => {
-  setInverseProbInput(val);
-  const parsed = parseFloat(val);
-  if (!isNaN(parsed) && parsed > 0 && parsed < 1) setInverseProb(parsed);
  };
 
  // Core Calculations
