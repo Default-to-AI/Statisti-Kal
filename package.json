@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
-    "lint": "tsc --noEmit"
+    "lint": "npm run lint:tsc && npm run lint:colors",
+    "lint:tsc": "tsc --noEmit",
+    "lint:colors": "node scripts/lint-colors.mjs"
   },
   "dependencies": {
     "@google/genai": "^1.29.0",
