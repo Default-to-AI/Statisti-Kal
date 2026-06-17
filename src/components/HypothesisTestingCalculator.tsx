@@ -419,12 +419,13 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
 
 // --- Tooltip helper for Input Labels ---
 interface InputTooltipProps {
-    content: string;
+    content: React.ReactNode;
     children: React.ReactNode;
     className?: string;
+    tooltipClassName?: string;
 }
 
-const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, className = "" }) => {
+const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, className = "", tooltipClassName = "w-52" }) => {
     const [isVisible, setIsVisible] = useState(false);
     const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
 
@@ -449,7 +450,7 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
                         initial={{ opacity: 0, y: 5, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                        className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2.5 text-xs rounded-sm shadow-sm pointer-events-none text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans"
+                        className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 p-2.5 text-xs rounded-sm shadow-sm pointer-events-none text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans ${tooltipClassName}`}
                     >
                         {content}
                         <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
@@ -1765,14 +1766,14 @@ export default function HypothesisTestingCalculator() {
                 </summary>
                 <div className="p-5 sm:p-6 space-y-4">
             
-                                                <div className="flex flex-col items-center w-full py-6 overflow-x-auto mb-6 mt-4">
+                                                <div className="flex flex-col items-center w-full py-6 overflow-x-auto overflow-y-hidden mb-6 mt-4">
                                                     <div className="flex flex-col items-center" dir="rtl">
                                                         {/* Q1 */}
                                                         <div className={`px-5 py-2.5 rounded-sm border-2 font-bold shadow-sm z-10 transition-all ${varianceKnown === true || varianceKnown === false ? 'bg-[var(--color-accent-cobalt-strong)]/40 border-[var(--color-border)] text-[var(--color-text-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                             האם סטיית התקן (<InlineMath math="\sigma" />) ידועה?
                                                         </div>
 
-                                                        <div className="flex w-[320px] justify-between relative mt-0">
+                                                        <div className="flex w-[440px] justify-between relative mt-0">
                                                             {/* Horizontal Line connecting YES and NO */}
                                                             <div className="absolute top-[20px] left-[60px] right-[60px] h-[2px] bg-[var(--color-surface-raised)]"></div>
 
@@ -1782,37 +1783,12 @@ export default function HypothesisTestingCalculator() {
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(true)}
-                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-lg transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${varianceKnown ? 'bg-[var(--color-accent-cobalt-bg)]/20 text-[var(--color-accent-cobalt)] ring-2 ring-[var(--color-accent-cobalt-line)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${varianceKnown ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-success)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-success)]'}`}>
                                                                     כן
                                                                 </button>
                                                                 <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
-                                                                <div className={`w-full text-center px-2 py-2 rounded-sm border-2 font-bold z-10 text-sm transition-all ${varianceKnown ? 'bg-[var(--color-accent-cobalt-strong)]/40 border-[var(--color-border)] text-[var(--color-text-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
-                                                                    האם המדגם <InlineMath math="n \ge 30" />?
-                                                                </div>
-
-                                                                {/* Child branches for Q2 */}
-                                                                <div className="flex w-[180px] justify-between relative mt-0">
-                                                                    <div className="absolute top-[15px] left-[35px] right-[35px] h-[2px] bg-[var(--color-surface-raised)]"></div>
-
-                                                                    {/* YES for Q2 (Right in RTL) */}
-                                                                    <div className="flex flex-col items-center relative z-10 w-[70px]">
-                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
-                                                                        <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${varianceKnown && n >= 30 ? 'bg-[var(--color-accent-cobalt-bg)]/20 text-[var(--color-accent-brass)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
-                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
-                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown && n >= 30 ? 'bg-[var(--color-accent-cobalt-strong)]/40 border-[var(--color-accent-cobalt-line)] text-[var(--color-text-primary)] shadow-[0_0_15px_rgba(59,130,246,0.3)] ring-1 ring-[var(--color-accent-cobalt)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
-                                                                            מבחן <InlineMath math="Z" />
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {/* NO for Q2 (Left in RTL) */}
-                                                                    <div className="flex flex-col items-center relative z-10 w-[70px]">
-                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
-                                                                        <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${varianceKnown && n < 30 ? 'bg-[var(--color-accent-teal)]/20 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
-                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
-                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown && n < 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-accent-teal)] shadow-[0_0_15px_rgba(16,185,129,0.3)] ring-1 ring-[var(--color-accent-teal)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
-                                                                            מבחן <InlineMath math="t" />
-                                                                        </div>
-                                                                    </div>
+                                                                <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                    מבחן <InlineMath math="Z" />
                                                                 </div>
 
                                                                 {/* YES path Standard Deviation Input */}
@@ -1822,18 +1798,35 @@ export default function HypothesisTestingCalculator() {
                                                                             initial={{ opacity: 0, height: 0 }}
                                                                             animate={{ opacity: 1, height: 'auto' }}
                                                                             exit={{ opacity: 0, height: 0 }}
-                                                                            className="mt-6 w-[200px]"
+                                                                            className="mt-6 w-[240px]"
                                                                         >
-                                                                            <div className="bg-[var(--color-surface)] p-3 rounded-lg border border-[var(--color-accent-cobalt-line)]/30 shadow-sm">
-                                                                                <label className="block text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
-                                                                                    הזן סטיית תקן של האוכלוסייה (<InlineMath math="\sigma" />):
-                                                                                </label>
+                                                                            <div className="bg-[var(--color-surface)] p-3 rounded-lg border border-[var(--color-success)]/30 shadow-sm">
+                                                                                <div className="flex justify-center mb-4 mt-1">
+                                                                                    <InputTooltip 
+                                                                                        tooltipClassName="w-[260px] p-3 shadow-lg"
+                                                                                        content={
+                                                                                            <div className="flex flex-col items-center justify-center space-y-3">
+                                                                                                <div className="text-sm font-medium text-[var(--color-text-primary)]">
+                                                                                                    <InlineMath math="\sigma = \sqrt{\frac{\sum (x_i - \mu)^2}{N}}" />
+                                                                                                </div>
+                                                                                                <div className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed text-center font-normal border-t border-[var(--color-border)] pt-2 w-full">
+                                                                                                    <span className="font-bold text-[var(--color-text-primary)] block mb-1">במילים פשוטות:</span>
+                                                                                                    השורש הריבועי של סכום ריבועי הסטיות של כל תצפית (<InlineMath math="x_i" />) מתוחלת האוכלוסייה (<InlineMath math="\mu" />), מחולק בגודל האוכלוסייה הכולל (<InlineMath math="N" />).
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+                                                                                    >
+                                                                                        <span className="text-xs font-bold text-[var(--color-text-secondary)] cursor-help border-b border-dotted border-[var(--color-border)] hover:text-[var(--color-text-primary)] transition-colors">
+                                                                                            מהי סטיית התקן (<InlineMath math="\sigma" />)?
+                                                                                        </span>
+                                                                                    </InputTooltip>
+                                                                                </div>
                                                                                 <div className="relative">
                                                                                     <input
                                                                                         type="text"
                                                                                         value={sigmaInput}
                                                                                         onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-accent-cobalt-line)]/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-[var(--color-accent-crimson)]' : ''}`}
+                                                                                        className={`w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:border-[var(--color-success)] focus:ring-4 focus:ring-[var(--color-success)]/20 ${errors.sigma ? 'text-[var(--color-error)] border-[var(--color-error)] ring-4 ring-[var(--color-error)]/20' : ''}`}
                                                                                         placeholder="15"
                                                                                         dir="ltr"
                                                                                     />
@@ -1855,12 +1848,37 @@ export default function HypothesisTestingCalculator() {
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(false)}
-                                                                    className={`text-xs font-bold mb-1 px-4 py-1 rounded-lg transition-all cursor-pointer hover:scale-105 shadow-sm active:scale-95 ${!varianceKnown ? 'bg-[var(--color-accent-teal)]/20 text-[var(--color-success)] ring-2 ring-[var(--color-accent-teal)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] border border-[var(--color-border)]'}`}>
+                                                                    className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${!varianceKnown ? 'bg-[var(--color-error)]/15 text-[var(--color-error)] border-[var(--color-error)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-error)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-error)]'}`}>
                                                                     לא
                                                                 </button>
                                                                 <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
-                                                                <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-accent-teal)] shadow-[0_0_15px_rgba(16,185,129,0.3)] ring-1 ring-[var(--color-accent-teal)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
-                                                                    מבחן <InlineMath math="t" />
+                                                                <div className={`w-full text-center px-2 py-2 rounded-sm border-2 font-bold z-10 text-sm transition-all ${!varianceKnown ? 'bg-[var(--color-error)]/15 border-[var(--color-border)] text-[var(--color-text-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                    האם המדגם <InlineMath math="n \ge 30" />?
+                                                                </div>
+
+                                                                {/* Child branches for Q2 */}
+                                                                <div className="flex w-[180px] justify-between relative mt-0">
+                                                                    <div className="absolute top-[15px] left-[35px] right-[35px] h-[2px] bg-[var(--color-surface-raised)]"></div>
+
+                                                                    {/* YES for Q2 (Right in RTL) */}
+                                                                    <div className="flex flex-col items-center relative z-10 w-[70px]">
+                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
+                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                            מבחן <InlineMath math="Z" />
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {/* NO for Q2 (Left in RTL) */}
+                                                                    <div className="flex flex-col items-center relative z-10 w-[70px]">
+                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-error)]/15 text-[var(--color-error)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
+                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-error)] shadow-[0_0_15px_rgba(217,91,91,0.3)] ring-1 ring-[var(--color-error)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                            מבחן <InlineMath math="t" />
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
 
                                                                 {/* NO path Standard Deviation Input */}
@@ -1870,23 +1888,36 @@ export default function HypothesisTestingCalculator() {
                                                                             initial={{ opacity: 0, height: 0 }}
                                                                             animate={{ opacity: 1, height: 'auto' }}
                                                                             exit={{ opacity: 0, height: 0 }}
-                                                                            className="mt-6 w-[200px]"
+                                                                            className="mt-6 w-[240px]"
                                                                         >
-                                                                            <div className="bg-[var(--color-surface)] p-3 rounded-lg border border-[var(--color-accent-teal)]/30 shadow-sm">
-                                                                                <label className="flex flex-col items-center justify-center text-xs font-bold text-[var(--color-text-secondary)] mb-2 text-center">
-                                                                                    <div className="flex items-center gap-1">
-                                                                                        <span>הזן סטיית תקן מדגמית (<InlineMath math="S" />):</span>
-                                                                                    </div>
-                                                                                    <div className="mt-2 bg-[var(--color-surface)] px-2 py-1.5 rounded-lg border border-[var(--color-border)] shadow-sm text-body-xs opacity-80">
-                                                                                        <InlineMath math="S = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n - 1}}" />
-                                                                                    </div>
-                                                                                </label>
+                                                                            <div className="bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-error)]/30 shadow-md">
+                                                                                <div className="flex justify-center mb-4 mt-1">
+                                                                                    <InputTooltip 
+                                                                                        tooltipClassName="w-[260px] p-3 shadow-lg"
+                                                                                        content={
+                                                                                            <div className="flex flex-col items-center justify-center space-y-3">
+                                                                                                <div className="text-sm font-medium text-[var(--color-text-primary)]">
+                                                                                                    <InlineMath math="S = \sqrt{\frac{\sum (x_i - \bar{x})^2}{n - 1}}" />
+                                                                                                </div>
+                                                                                                <div className="text-[11px] text-[var(--color-text-secondary)] leading-relaxed text-center font-normal border-t border-[var(--color-border)] pt-2 w-full">
+                                                                                                    <span className="font-bold text-[var(--color-text-primary)] block mb-1">במילים פשוטות:</span>
+                                                                                                    השורש הריבועי של סכום ריבועי הסטיות של כל תצפית (<InlineMath math="x_i" />) מממוצע המדגם (<InlineMath math="\bar{x}" />), מחולק בגודל המדגם פחות אחד (<InlineMath math="n - 1" />).
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        }
+                                                                                    >
+                                                                                        <span className="text-xs font-bold text-[var(--color-text-secondary)] cursor-help border-b border-dotted border-[var(--color-border)] hover:text-[var(--color-text-primary)] transition-colors">
+                                                                                            מהי סטיית התקן המדגמית (<InlineMath math="S" />)?
+                                                                                        </span>
+                                                                                    </InputTooltip>
+                                                                                </div>
+
                                                                                 <div className="relative">
                                                                                     <input
                                                                                         type="text"
                                                                                         value={sigmaInput}
                                                                                         onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                                        className={`w-full bg-[var(--color-surface)] px-3 py-2 rounded font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:ring-2 focus:ring-[var(--color-accent-teal)]/50 ${errors.sigma ? 'text-[var(--color-error)] ring-2 ring-[var(--color-accent-crimson)]' : ''}`}
+                                                                                        className={`w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:border-[var(--color-error)] focus:ring-4 focus:ring-[var(--color-error)]/20 ${errors.sigma ? 'text-[var(--color-error)] border-[var(--color-error)] ring-4 ring-[var(--color-error)]/20' : ''}`}
                                                                                         placeholder="15"
                                                                                         dir="ltr"
                                                                                     />
@@ -1908,12 +1939,12 @@ export default function HypothesisTestingCalculator() {
                                                 {/* Researcher's note */}
                                                 <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-6 text-center">
                                                     <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
-                                                    {varianceKnown && n >= 30 ? (
-                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">ידועה</span> וגודל המדגם <InlineMath math="n \ge 30" />, המבחן הסטטיסטי המתאים הוא <span className="font-bold">מבחן <InlineMath math="Z" /></span>.</span>
-                                                    ) : varianceKnown && n < 30 ? (
-                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">ידועה</span> אך גודל המדגם קטן מ-30 (<InlineMath math="n < 30" />), נשתמש ב<span className="font-bold">מבחן <InlineMath math="t" /></span>.</span>
+                                                    {varianceKnown ? (
+                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">ידועה</span>, המבחן הסטטיסטי המתאים הוא <span className="font-bold">מבחן <InlineMath math="Z" /></span>.</span>
+                                                    ) : !varianceKnown && n >= 30 ? (
+                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">אינה ידועה</span> אך גודל המדגם הוא <InlineMath math="n \ge 30" />, ניתן להשתמש בקירוב באמצעות <span className="font-bold">מבחן <InlineMath math="Z" /></span>.</span>
                                                     ) : (
-                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">אינה ידועה</span>, המבחן הסטטיסטי המתאים הוא <span className="font-bold">מבחן <InlineMath math="t" /></span>.</span>
+                                                        <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">אינה ידועה</span> וגודל המדגם קטן מ-30 (<InlineMath math="n < 30" />), נשתמש ב<span className="font-bold">מבחן <InlineMath math="t" /></span>.</span>
                                                     )}
                                                 </p>
                                             </div></details>
