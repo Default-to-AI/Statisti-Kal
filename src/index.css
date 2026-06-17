@@ -114,10 +114,10 @@
   --color-text-secondary: #8A93A6;    /* Muted gray */
 
   /* === Primary === */
-  --color-primary: #D4A843;           /* Hero brass */
+  --color-primary: #FACC15;           /* Hero gold */
 
   /* === Accent layer (semantic) === */
-  --color-accent-brass: #D4A843;      /* H₀ reference, critical values */
+  --color-accent-brass: #FACC15;      /* H₀ reference, critical values */
   --color-accent-teal: #2EC4B6;       /* Power, acceptance regions */
   --color-accent-crimson: #E85D5D;    /* Type I error, rejection */
   --color-accent-cobalt: #6366F1;     /* Z-scores, standard normal, primary interactive elements (Indigo 500) */
@@ -260,10 +260,10 @@ body {
   flex-shrink: 0;
 }
 
-/* .curve-glow — Brass+teal blur glow. Appears on active calculation panels, live results. */
+/* .curve-glow — Gold+teal blur glow. Appears on active calculation panels, live results. */
 .curve-glow {
   box-shadow:
-    0 0 24px rgba(212, 168, 67, 0.35),
+    0 0 24px rgba(250, 204, 21, 0.35),
     0 0 48px rgba(46, 196, 182, 0.25);
   transition: box-shadow 300ms ease-out;
 }
@@ -298,10 +298,10 @@ body {
 
 @keyframes pulse-brass {
   0%, 100% {
-    box-shadow: 0 0 0 rgba(212, 168, 67, 0);
+    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
   }
   50% {
-    box-shadow: 0 0 16px rgba(212, 168, 67, 0.6), 0 0 32px rgba(212, 168, 67, 0.3);
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.6), 0 0 32px rgba(250, 204, 21, 0.3);
   }
 }
 

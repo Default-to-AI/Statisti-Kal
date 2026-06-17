@@ -180,7 +180,7 @@ function studentTInverseCDF(p: number, df: number): number {
 
 // --- Types ---
 
-type CalcMode = 'forward' | 'inverse';
+type CalcMode = 'forward' | 'inverse' | 'table' | 'hypothesis' | 'formula-sheet';
 type CalcType = 'below' | 'above' | 'between' | 'outside' | 'conditional';
 type CondType = 'below' | 'above' | 'between';
 
