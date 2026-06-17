@@ -273,7 +273,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
             <tbody className="text-[var(--color-text-primary)]">
                 {/* Row 1: Fail to reject H0 */}
                 <tr className="border-b border-[var(--color-border)]">
-                    <td className="p-4 font-bold border-l border-[var(--color-border)] bg-[var(--color-surface)]">
+                    <td className="p-4 font-bold border-l border-[var(--color-border)] bg-[var(--color-error)]/10">
                         <span className="text-sm block text-[var(--color-text-primary)]">
                             אי-דחייה של <InlineMath math="H_0" />
                         </span>
@@ -344,7 +344,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
 
                 {/* Row 2: Reject H0 */}
                 <tr>
-                    <td className="p-4 font-bold border-l border-[var(--color-border)] bg-[var(--color-surface)]">
+                    <td className="p-4 font-bold border-l border-[var(--color-border)] bg-[var(--color-success)]/10">
                         <span className="text-sm block text-[var(--color-text-primary)]">
                             דחיית <InlineMath math="H_0" />
                         </span>
@@ -361,7 +361,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                                 טעות מסוג I
                             </span>
                             <span className="text-xs font-mono font-bold text-[var(--color-text-secondary)]" dir="ltr">
-                                <InlineMath math="\alpha" />
+                                <InlineMath math="\alpha " />
                             </span>
                         </div>
                         <div className="my-2 flex items-baseline gap-x-2 flex-wrap">
@@ -374,7 +374,7 @@ function DecisionMatrix({ isValid, stats, alpha, calculatePower }: DecisionMatri
                             <div className="mb-1 font-mono text-mono-xs" dir="ltr">
                                 <InlineMath math="P(\text{Reject } H_0 \mid H_0 \text{ is true})" />
                             </div>
-                            הסיכוי לדחות בטעות את השערת האפס כשהיא נכונה במציאות (גילוי שווא).
+                            הסיכוי לדחות בטעות את השערת האפס כשהיא נכונה במציאות (גילוasdasdי שווא).
                         </div>
                     </td>
 
@@ -1111,10 +1111,10 @@ export default function HypothesisTestingCalculator() {
                                 <thead>
                                     <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
                                         <th className="p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
-                                            <div className="flex flex-col xl:flex-row items-center justify-between gap-2">
+                                            <div className="flex flex-col xl:flex-row items-center justify-center gap-2">
                                                 <div className="flex items-center gap-1.5 justify-center">
-                                                    <span>אוכלוסייה</span>
-                                                    <span className="text-caption font-mono px-1.5 py-0.5 rounded-none bg-[var(--color-accent-cobalt-bg)]/20 border border-[var(--color-border)] text-[var(--color-accent-cobalt)] font-bold shrink-0">H₀</span>
+                                                    <span>השערת האפס</span>
+                                                    <span className="text-caption font-mono px-1.5 py-0.5 rounded-none bg-[var(--color-accent-cobalt-bg)]/20 border border-[var(--color-border)] text-[var(--color-accent-cobalt)] font-bold shrink-0"><InlineMath math="H_0" /></span>
                                                 </div>
                                                 {/* varianceKnown toggle removed from here */}
                                             </div>
@@ -1126,7 +1126,7 @@ export default function HypothesisTestingCalculator() {
                                             <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
                                                 <div className="flex items-center gap-1.5 justify-center cursor-help">
                                                     <span>השערת המחקר</span>
-                                                    <span className="text-caption font-mono px-1.5 py-0.5 rounded-none bg-[var(--color-accent-teal)]/20 border border-[var(--color-border)] text-[var(--color-accent-teal)] font-bold shrink-0">H₁</span>
+                                                    <span className="text-caption font-mono px-1.5 py-0.5 rounded-none bg-[var(--color-accent-teal)]/20 border border-[var(--color-border)] text-[var(--color-accent-teal)] font-bold shrink-0"><InlineMath math="H_1" /></span>
                                                 </div>
                                             </InputTooltip>
                                         </th>
@@ -1136,10 +1136,10 @@ export default function HypothesisTestingCalculator() {
                                     {/* Row 1: mu0, n, and power toggle */}
                                     <tr className="border-b border-[var(--color-border)]">
                                         <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="תוחלת אוכלוסיית הבסיס (השערת האפס H₀)">
-                                                    <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)]">
-                                                        תוחלת (μ₀):
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content={<span>תוחלת אוכלוסיית הבסיס (השערת האפס <InlineMath math="H_0" />)</span>}>
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+                                                        <span>תוחלת (</span><InlineMath math="\mu_0" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
@@ -1147,22 +1147,32 @@ export default function HypothesisTestingCalculator() {
                                                         type="text"
                                                         value={mu0Input}
                                                         onChange={(e) => handleMu0Change(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu0 ? 'text-[var(--color-error)] font-bold' : ''
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu0Input || errors.mu0) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
                                                             }`}
-                                                        placeholder="100"
+                                                        placeholder="ℝ"
                                                         dir="ltr"
                                                     />
-                                                    {errors.mu0 && (
-                                                        <div className="absolute top-full right-0 text-caption text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu0}</div>
-                                                    )}
+                                                    <AnimatePresence>
+                                                        {errors.mu0 && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.mu0}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="מספר התצפיות במדגם (n)">
-                                                    <span className={`text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] ${testType === 'single' ? 'opacity-30' : ''}`}>
-                                                        גודל מדגם (n):
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}>
+                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${testType === 'single' ? 'opacity-30' : ''}`}>
+                                                        <span>גודל מדגם (</span><InlineMath math="n" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
@@ -1171,21 +1181,31 @@ export default function HypothesisTestingCalculator() {
                                                         value={testType === 'single' ? '1' : nInput}
                                                         disabled={testType === 'single'}
                                                         onChange={(e) => handleNChange(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all rounded focus:bg-[var(--color-surface)] ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-[var(--color-surface-raised)]/5' : ''
-                                                            } ${errors.n && testType !== 'single' ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                        placeholder="36"
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-[var(--color-surface-raised)]/5 border-transparent' : ''
+                                                            } ${testType !== 'single' && (!nInput || errors.n) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : testType !== 'single' ? 'border-[var(--color-border)]' : ''}`}
+                                                        placeholder="n > 1"
                                                         dir="ltr"
                                                     />
-                                                    {errors.n && testType !== 'single' && (
-                                                        <div className="absolute top-full right-0 text-caption text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.n}</div>
-                                                    )}
+                                                    <AnimatePresence>
+                                                        {errors.n && testType !== 'single' && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.n}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="p-3 align-middle bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0">
-                                                    חישוב עוצמה
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <span className="w-36 sm:w-44 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1 whitespace-nowrap">
+                                                    <span>חישוב עוצמה (</span><InlineMath math="1-\beta" /><span>)</span>
                                                 </span>
                                                 <button
                                                     type="button"
@@ -1210,14 +1230,42 @@ export default function HypothesisTestingCalculator() {
 
                                     {/* Row 2: sigma, xBar(mu1), and muH1 */}
                                     <tr>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            {/* sigma input removed from here - now in Step 2 */}
+                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)] transition-all">
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)">
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+                                                        <span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span>
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative flex justify-center items-center h-[38px]">
+                                                    {varianceKnown && sigmaInput && !errors.sigma ? (
+                                                        <span className="font-mono font-bold text-lg text-[var(--color-text-primary)] bg-[var(--color-surface)] border border-[var(--color-border)] w-full py-1 rounded shadow-inner text-center">
+                                                            {sigmaInput}
+                                                        </span>
+                                                    ) : (
+                                                        <a 
+                                                            href="#step-2"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                const el = document.getElementById('step-2');
+                                                                if (el) {
+                                                                    el.scrollIntoView({ behavior: 'smooth' });
+                                                                    el.setAttribute('open', '');
+                                                                }
+                                                            }}
+                                                            className="text-sm text-[var(--color-text-secondary)] font-medium underline decoration-dotted underline-offset-4 hover:text-[var(--color-accent-cobalt)] transition-colors whitespace-nowrap"
+                                                        >
+                                                            לא נקבע
+                                                        </a>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </td>
                                         <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content="ממוצע המדגם בפועל">
-                                                    <span className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)]">
-                                                        ממוצע מדגם (X̄):
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+                                                        <span>ממוצע מדגם (</span><InlineMath math="\bar{X}" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
@@ -1225,22 +1273,32 @@ export default function HypothesisTestingCalculator() {
                                                         type="text"
                                                         value={mu1Input}
                                                         onChange={(e) => handleMu1Change(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all rounded focus:bg-[var(--color-surface)] ${errors.mu1 ? 'text-[var(--color-error)] font-bold' : ''
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu1Input || errors.mu1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
                                                             }`}
-                                                        placeholder="108"
+                                                        placeholder="ℝ"
                                                         dir="ltr"
                                                     />
-                                                    {errors.mu1 && (
-                                                        <div className="absolute top-full right-0 text-caption text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.mu1}</div>
-                                                    )}
+                                                    <AnimatePresence>
+                                                        {errors.mu1 && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.mu1}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
                                                 </div>
                                             </div>
                                         </td>
                                         <td className={`p-3 align-middle bg-[var(--color-surface-raised)] transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
-                                            <div className="flex items-center justify-between gap-2 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (H₁)">
-                                                    <span className={`text-xs sm:text-sm font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-secondary)]'}`}>
-                                                        ממוצע (μ₁):
+                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
+                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-primary)]/90'}`}>
+                                                        <span>ממוצע (</span><InlineMath math="\mu_1" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
@@ -1249,14 +1307,23 @@ export default function HypothesisTestingCalculator() {
                                                         value={muH1Input}
                                                         disabled={!calculatePower}
                                                         onChange={(e) => handleMuH1Change(e.target.value)}
-                                                        className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all rounded focus:bg-[var(--color-surface)] ${!calculatePower ? 'opacity-40 cursor-not-allowed' : ''
-                                                            } ${calculatePower && errors.muH1 ? 'text-[var(--color-error)] font-bold' : ''}`}
-                                                        placeholder="108"
-                                                        dir="ltr"
-                                                    />
-                                                    {calculatePower && errors.muH1 && (
-                                                        <div className="absolute top-full right-0 text-caption text-[var(--color-error)] font-bold leading-tight mt-1 text-center w-full">{errors.muH1}</div>
-                                                    )}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${!calculatePower ? 'opacity-40 cursor-not-allowed border-transparent' : ''
+                                                            } ${calculatePower && (!muH1Input || errors.muH1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : calculatePower ? 'border-[var(--color-border)]' : ''}`}
+                                                        placeholder="ℝ"
+                                                        dir="ltr"/>
+                                                    <AnimatePresence>
+                                                        {calculatePower && errors.muH1 && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.muH1}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
                                                 </div>
                                             </div>
                                         </td>
@@ -1268,13 +1335,13 @@ export default function HypothesisTestingCalculator() {
 
                     </div>
                     {/* Main Test Statistic Type Selector */}
-                    <div className="flex flex-col gap-3 shrink-0 h-[229.583px] w-[201px] bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
+                    <div className="flex flex-col gap-3 shrink-0 h-full w-full bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
                         <span className="text-xs sm:text-sm font-black text-[var(--color-text-primary)] text-right w-full">סטטיסטי המבחן:</span>
                         <div className="flex flex-col gap-2 w-full">
                             {[
-                                { id: 'single', label: 'תצפית X' },
-                                { id: 'mean', label: 'ממוצע X̄' },
-                                { id: 'sum', label: 'סכום ΣX' }
+                                { id: 'single', label: <span>תצפית <InlineMath math="X" /></span> },
+                                { id: 'mean', label: <span>ממוצע <InlineMath math="\bar{X}" /></span> },
+                                { id: 'sum', label: <span>סכום <InlineMath math="\Sigma X" /></span> }
                             ].map((item) => (
                                 <button
                                     key={item.id}
@@ -1646,7 +1713,6 @@ export default function HypothesisTestingCalculator() {
                                     transition={{ duration: 0.2 }}
                                     className="px-8 py-6.5"
                                 >
-                                    {isValid && stats ? (
                                         <div className="text-base flex flex-col gap-4 py-4">
 
                                             {/* Step 1: Hypothesis Formulation */}
@@ -1753,7 +1819,7 @@ export default function HypothesisTestingCalculator() {
 
 
                                             {/* Step 2: Select an appropriate test */}
-                                            <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                            <details id="step-2" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
                                                 
                 <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
                     <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
@@ -1800,7 +1866,7 @@ export default function HypothesisTestingCalculator() {
                                                                             exit={{ opacity: 0, height: 0 }}
                                                                             className="mt-6 w-[240px]"
                                                                         >
-                                                                            <div className="bg-[var(--color-surface)] p-3 rounded-lg border border-[var(--color-success)]/30 shadow-sm">
+                                                                            <div className="bg-[var(--color-surface)] p-4 rounded-xl border border-[var(--color-success)]/30 shadow-md">
                                                                                 <div className="flex justify-center mb-4 mt-1">
                                                                                     <InputTooltip 
                                                                                         tooltipClassName="w-[260px] p-3 shadow-lg"
@@ -1826,15 +1892,23 @@ export default function HypothesisTestingCalculator() {
                                                                                         type="text"
                                                                                         value={sigmaInput}
                                                                                         onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                                        className={`w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:border-[var(--color-success)] focus:ring-4 focus:ring-[var(--color-success)]/20 ${errors.sigma ? 'text-[var(--color-error)] border-[var(--color-error)] ring-4 ring-[var(--color-error)]/20' : ''}`}
-                                                                                        placeholder="15"
+                                                                                        className={`w-full bg-[var(--color-surface)] border px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all shadow-inner focus:border-[var(--color-success)] focus:ring-2 focus:ring-[var(--color-success)]/20 ${(!sigmaInput || errors.sigma) ? 'text-[var(--color-error)] border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20' : 'border-[var(--color-border)]'}`}
+                                                                                        placeholder="σ > 0"
                                                                                         dir="ltr"
                                                                                     />
-                                                                                    {errors.sigma && (
-                                                                                        <div className="absolute top-full left-0 right-0 text-caption text-[var(--color-error)] font-bold mt-1 text-center">
-                                                                                            {errors.sigma}
-                                                                                        </div>
-                                                                                    )}
+                                                                                    <AnimatePresence>
+                                                                                        {errors.sigma && (
+                                                                                            <motion.div
+                                                                                                initial={{ opacity: 0, y: -5 }}
+                                                                                                animate={{ opacity: 1, y: 0 }}
+                                                                                                exit={{ opacity: 0, y: -5 }}
+                                                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 px-3 py-1.5 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                                                            >
+                                                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                                                <span className="relative z-10">{errors.sigma}</span>
+                                                                                            </motion.div>
+                                                                                        )}
+                                                                                    </AnimatePresence>
                                                                                 </div>
                                                                             </div>
                                                                         </motion.div>
@@ -1917,15 +1991,23 @@ export default function HypothesisTestingCalculator() {
                                                                                         type="text"
                                                                                         value={sigmaInput}
                                                                                         onChange={(e) => handleSigmaChange(e.target.value)}
-                                                                                        className={`w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)] outline-none transition-all focus:border-[var(--color-error)] focus:ring-4 focus:ring-[var(--color-error)]/20 ${errors.sigma ? 'text-[var(--color-error)] border-[var(--color-error)] ring-4 ring-[var(--color-error)]/20' : ''}`}
-                                                                                        placeholder="15"
+                                                                                        className={`w-full bg-[var(--color-surface)] border px-3 py-2 rounded-lg font-mono font-bold text-center text-lg text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all shadow-inner focus:border-[var(--color-error)] focus:ring-2 focus:ring-[var(--color-error)]/20 ${(!sigmaInput || errors.sigma) ? 'text-[var(--color-error)] border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20' : 'border-[var(--color-border)]'}`}
+                                                                                        placeholder="S > 0"
                                                                                         dir="ltr"
                                                                                     />
-                                                                                    {errors.sigma && (
-                                                                                        <div className="absolute top-full left-0 right-0 text-caption text-[var(--color-error)] font-bold mt-1 text-center">
-                                                                                            {errors.sigma}
-                                                                                        </div>
-                                                                                    )}
+                                                                                    <AnimatePresence>
+                                                                                        {errors.sigma && (
+                                                                                            <motion.div
+                                                                                                initial={{ opacity: 0, y: -5 }}
+                                                                                                animate={{ opacity: 1, y: 0 }}
+                                                                                                exit={{ opacity: 0, y: -5 }}
+                                                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2.5 px-3 py-1.5 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                                                            >
+                                                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                                                <span className="relative z-10">{errors.sigma}</span>
+                                                                                            </motion.div>
+                                                                                        )}
+                                                                                    </AnimatePresence>
                                                                                 </div>
                                                                             </div>
                                                                         </motion.div>
@@ -1994,15 +2076,27 @@ export default function HypothesisTestingCalculator() {
                                                             type="text"
                                                             value={alphaInput}
                                                             onChange={(e) => handleAlphaChange(e.target.value)}
-                                                            className={`w-18 px-2.5 py-1.5 bg-[var(--color-surface)] border rounded-sm text-center font-mono font-bold text-sm text-[var(--color-accent-cobalt)] focus:bg-[var(--color-surface)] outline-none ${errors.alpha ? 'border-[var(--color-border)] text-[var(--color-error)] ring-4 ring-[var(--color-accent-crimson)]/10' : 'border-[var(--color-border)] focus:ring-4 focus:ring-[var(--color-accent-cobalt-line)]/10'
+                                                            className={`w-24 px-2.5 py-1.5 bg-[var(--color-surface)] border rounded-md text-center font-mono font-bold text-sm text-[var(--color-accent-cobalt)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium outline-none transition-all shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!alphaInput || errors.alpha) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
                                                                 }`}
-                                                            placeholder="0.05"
+                                                            placeholder="0 < α < 1"
                                                             dir="ltr"
                                                         />
                                                     </div>
-                                                    {errors.alpha && (
-                                                        <p className="text-caption text-[var(--color-error)] font-bold mt-1 text-right">{errors.alpha}</p>
-                                                    )}
+                                                    <div className="relative">
+                                                        <AnimatePresence>
+                                                            {errors.alpha && (
+                                                                <motion.div
+                                                                    initial={{ opacity: 0, y: -5 }}
+                                                                    animate={{ opacity: 1, y: 0 }}
+                                                                    exit={{ opacity: 0, y: -5 }}
+                                                                    className="absolute top-full left-1/2 -translate-x-1/2 mt-3 px-3 py-1.5 bg-[var(--color-error)] text-white text-[11px] font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                                >
+                                                                    <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                    <span className="relative z-10">{errors.alpha}</span>
+                                                                </motion.div>
+                                                            )}
+                                                        </AnimatePresence>
+                                                    </div>
                                                 </div>
 
                                                 <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
@@ -2024,8 +2118,10 @@ export default function HypothesisTestingCalculator() {
                                             </div></details>
 
 
-                                            {/* Step 4: Critical Value derivation & SE */}
-                                            <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                            {isValid && stats && decisionData ? (
+                                                <>
+                                                    {/* Step 4: Critical Value derivation & SE */}
+                                                    <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
                                                 
                 <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
                     <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
@@ -2776,12 +2872,14 @@ export default function HypothesisTestingCalculator() {
                                                     </div>
                                                 </div>
                                             </div></details>
-
-
+                                                </>
+                                            ) : (
+                                                <div className="py-12 text-center font-bold text-lg md:text-xl text-[var(--color-error)] opacity-80 flex flex-col items-center gap-4 border border-[var(--color-error)]/30 bg-[var(--color-surface)] rounded-lg mt-4">
+                                                    <XCircle size={48} className="opacity-50" />
+                                                    יש לתקן את השגיאות בשלבים הקודמים כדי להמשיך בפתרון
+                                                </div>
+                                            )}
                                         </div>
-                                    ) : (
-                                        <p className="text-xl text-[var(--color-accent-crimson)] font-extrabold text-center py-8">הנתונים אינם תקינים</p>
-                                    )}
                                 </motion.div>
                             )}
                         </AnimatePresence>
