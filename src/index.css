@@ -247,6 +247,94 @@ body {
 }
 
 /* ============================================================================
+ * Signature Elements — DESIGN.md §Signature Elements
+ * The unique visual identity: the things users remember.
+ * ============================================================================ */
+
+/* .accent-bar — 48×4px brass→teal gradient bar. Marks hero sections, primary actions, page titles. */
+.accent-bar {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent-brass), var(--color-accent-teal));
+  border-radius: var(--rounded-full);
+  flex-shrink: 0;
+}
+
+/* .curve-glow — Brass+teal blur glow. Appears on active calculation panels, live results. */
+.curve-glow {
+  box-shadow:
+    0 0 24px rgba(212, 168, 67, 0.35),
+    0 0 48px rgba(46, 196, 182, 0.25);
+  transition: box-shadow 300ms ease-out;
+}
+
+/* .stagger-in — Choreographed entrance (50ms stagger). Page load, mode switches. */
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: stagger-in 500ms ease-out forwards;
+}
+
+.stagger-in > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger-in > *:nth-child(2)  { animation-delay: 50ms; }
+.stagger-in > *:nth-child(3)  { animation-delay: 100ms; }
+.stagger-in > *:nth-child(4)  { animation-delay: 150ms; }
+.stagger-in > *:nth-child(5)  { animation-delay: 200ms; }
+.stagger-in > *:nth-child(6)  { animation-delay: 250ms; }
+.stagger-in > *:nth-child(7)  { animation-delay: 300ms; }
+.stagger-in > *:nth-child(8)  { animation-delay: 350ms; }
+
+@keyframes stagger-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* .pulse-brass — Live calculation indicator. Breathing brass glow on active results. */
+.pulse-brass {
+  animation: pulse-brass 2s ease-in-out infinite;
+}
+
+@keyframes pulse-brass {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(212, 168, 67, 0);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(212, 168, 67, 0.6), 0 0 32px rgba(212, 168, 67, 0.3);
+  }
+}
+
+/* Respect prefers-reduced-motion — disable all signature animations */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in > * {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .pulse-brass {
+    animation: none !important;
+  }
+  .curve-glow {
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+ * Motion Tokens — DESIGN.md §Motion (for component consumption via var())
+ * ============================================================================ */
+:root {
+  --motion-duration-fast: 150ms;
+  --motion-duration-normal: 280ms;
+  --motion-duration-slow: 500ms;
+  --motion-duration-choreographed: 1000ms;
+  --motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-easing-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-stagger-delay: 50ms;
+}
+
+/* ============================================================================
  * Premium font scaling for enhanced Hebrew legibility
  * (Task 7 will review these utility overrides for removal; keep for now to
  * preserve visual parity during token migration.)
