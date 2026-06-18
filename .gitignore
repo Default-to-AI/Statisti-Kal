@@ -7,3 +7,8 @@ coverage/
 .env*
 !.env.example
 Agent-Skills
+
+# Agent context files
+AGENTS.md
+CONTEXT.md
+STRATEGY.md

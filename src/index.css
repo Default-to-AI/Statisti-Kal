@@ -114,29 +114,29 @@
   --color-text-secondary: #8A93A6;    /* Muted gray */
 
   /* === Primary === */
-  --color-primary: #D4A843;           /* Hero brass */
+  --color-primary: #FACC15;           /* Hero gold */
 
   /* === Accent layer (semantic) === */
-  --color-accent-brass: #D4A843;      /* H₀ reference, critical values */
+  --color-accent-brass: #FACC15;      /* H₀ reference, critical values */
   --color-accent-teal: #2EC4B6;       /* Power, acceptance regions */
   --color-accent-crimson: #E85D5D;    /* Type I error, rejection */
-  --color-accent-cobalt: #4A9EFF;     /* Z-scores, standard normal */
+  --color-accent-cobalt: #6366F1;     /* Z-scores, standard normal, primary interactive elements (Indigo 500) */
 
   /* === Accent variants for backgrounds, borders, and active states ===
      These provide translucent and darker shades for use in composite
      components (badges, active tabs, hover surfaces) without falling back
      to generic Tailwind colors like indigo-/slate-/. */
-  --color-accent-cobalt-bg: rgba(74, 158, 255, 0.15);          /* Soft cobalt surface (badges) */
-  --color-accent-cobalt-bg-hover: rgba(74, 158, 255, 0.30);    /* Stronger cobalt surface (tooltips, hover) */
-  --color-accent-cobalt-line: rgba(74, 158, 255, 0.40);        /* Cobalt border */
-  --color-accent-cobalt-strong: #2563EB;                       /* Active button background (Z-scores, active tabs) */
-  --color-accent-cobalt-dark: #1E40AF;                         /* Active button border (darker cobalt) */
+  --color-accent-cobalt-bg: rgba(99, 102, 241, 0.15);          /* Soft indigo surface (badges) */
+  --color-accent-cobalt-bg-hover: rgba(99, 102, 241, 0.30);    /* Stronger indigo surface (tooltips, hover) */
+  --color-accent-cobalt-line: rgba(99, 102, 241, 0.40);        /* Indigo border */
+  --color-accent-cobalt-strong: #4F46E5;                       /* Active button background (Z-scores, active tabs) - Indigo 600 */
+  --color-accent-cobalt-dark: #4338CA;                         /* Active button border (darker indigo) - Indigo 700 */
 
   /* === Semantic aliases === */
   --color-success: #3BA98D;
   --color-error: #D95B5B;
   --color-warning: #F4A261;
-  --color-info: #4A9EFF;
+  --color-info: #6366F1;
 
   /* === Spacing scale (4px base unit) — var()-only consumption ===
      These are NOT in @theme because the design intent (per handoff) is direct
@@ -244,6 +244,94 @@ body {
   display: inline-block !important;
   unicode-bidi: isolate !important;
   white-space: nowrap !important;
+}
+
+/* ============================================================================
+ * Signature Elements — DESIGN.md §Signature Elements
+ * The unique visual identity: the things users remember.
+ * ============================================================================ */
+
+/* .accent-bar — 48×4px brass→teal gradient bar. Marks hero sections, primary actions, page titles. */
+.accent-bar {
+  width: 48px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-accent-brass), var(--color-accent-teal));
+  border-radius: var(--rounded-full);
+  flex-shrink: 0;
+}
+
+/* .curve-glow — Gold+teal blur glow. Appears on active calculation panels, live results. */
+.curve-glow {
+  box-shadow:
+    0 0 24px rgba(250, 204, 21, 0.35),
+    0 0 48px rgba(46, 196, 182, 0.25);
+  transition: box-shadow 300ms ease-out;
+}
+
+/* .stagger-in — Choreographed entrance (50ms stagger). Page load, mode switches. */
+.stagger-in > * {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: stagger-in 500ms ease-out forwards;
+}
+
+.stagger-in > *:nth-child(1)  { animation-delay: 0ms; }
+.stagger-in > *:nth-child(2)  { animation-delay: 50ms; }
+.stagger-in > *:nth-child(3)  { animation-delay: 100ms; }
+.stagger-in > *:nth-child(4)  { animation-delay: 150ms; }
+.stagger-in > *:nth-child(5)  { animation-delay: 200ms; }
+.stagger-in > *:nth-child(6)  { animation-delay: 250ms; }
+.stagger-in > *:nth-child(7)  { animation-delay: 300ms; }
+.stagger-in > *:nth-child(8)  { animation-delay: 350ms; }
+
+@keyframes stagger-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* .pulse-brass — Live calculation indicator. Breathing brass glow on active results. */
+.pulse-brass {
+  animation: pulse-brass 2s ease-in-out infinite;
+}
+
+@keyframes pulse-brass {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.6), 0 0 32px rgba(250, 204, 21, 0.3);
+  }
+}
+
+/* Respect prefers-reduced-motion — disable all signature animations */
+@media (prefers-reduced-motion: reduce) {
+  .stagger-in > * {
+    animation: none !important;
+    opacity: 1;
+    transform: none;
+  }
+  .pulse-brass {
+    animation: none !important;
+  }
+  .curve-glow {
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+ * Motion Tokens — DESIGN.md §Motion (for component consumption via var())
+ * ============================================================================ */
+:root {
+  --motion-duration-fast: 150ms;
+  --motion-duration-normal: 280ms;
+  --motion-duration-slow: 500ms;
+  --motion-duration-choreographed: 1000ms;
+  --motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-easing-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-easing-exit: cubic-bezier(0.4, 0, 1, 1);
+  --motion-stagger-delay: 50ms;
 }
 
 /* ============================================================================

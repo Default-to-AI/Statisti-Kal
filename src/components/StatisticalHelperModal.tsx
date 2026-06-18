@@ -70,7 +70,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
               <h3 className="font-extrabold text-sm sm:text-base text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] font-sans">
                 מדריך אינטראקטיבי: סודות שגיאת התקן והשונות
               </h3>
-              <p className="text-[11px] sm:text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)]">
+              <p className="text-body-xs sm:text-caption text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)]">
                 פענוח ההבדל בין מדגם לאוכלוסייה, ומדוע שגיאת הממוצע מתכווצת עם <InlineMath math="\sqrt{n}" />
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 {/* Population Side */}
                 <div className="p-4 rounded-lg border border-[var(--color-accent-cobalt-line)] dark:border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 dark:bg-[var(--color-accent-cobalt-strong)]/5 hover:border-[var(--color-accent-cobalt-line)] dark:hover:border-[var(--color-accent-cobalt-line)] transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-accent-cobalt-strong)]/30 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] text-[10px] sm:text-xs font-black">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-accent-cobalt-strong)]/30 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] text-caption sm:text-xs font-black">
                       אוכלוסייה (עולם תיאורטי)
                     </span>
                     <span className="text-xl font-bold text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] font-mono"><InlineMath math="\sigma" /> (Sigma)</span>
@@ -163,7 +163,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                   </p>
 
                   <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded-lg border border-[var(--color-accent-cobalt-line)] dark:border-[var(--color-border)] text-center">
-                    <span className="block text-[10px] text-[var(--color-text-secondary)] mb-1">נוסחת החישוב באוכלוסייה (חלוקה ב-N):</span>
+                    <span className="block text-body-xs text-[var(--color-text-secondary)] mb-1">נוסחת החישוב באוכלוסייה (חלוקה ב-N):</span>
                     <InlineMath math="\sigma = \sqrt{\frac{\sum_{i=1}^{N}(x_i - \mu)^2}{N}}" />
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 {/* Sample Side */}
                 <div className="p-4 rounded-lg border border-[var(--color-accent-teal)] dark:border-[var(--color-accent-teal)]/40 bg-[var(--color-accent-teal)]/10 dark:bg-[var(--color-accent-teal)]/5 hover:border-[var(--color-accent-teal)] dark:hover:border-[var(--color-accent-teal)] transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-teal)] dark:bg-[var(--color-accent-teal)]/30 text-[var(--color-success)] dark:text-[var(--color-accent-teal)] text-[10px] sm:text-xs font-black">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-teal)] dark:bg-[var(--color-accent-teal)]/30 text-[var(--color-success)] dark:text-[var(--color-accent-teal)] text-caption sm:text-xs font-black">
                       מדגם (עולם מעשי - הנתונים שיש לנו)
                     </span>
                     <span className="text-xl font-bold text-[var(--color-success)] dark:text-[var(--color-success)] font-mono"><InlineMath math="S" /> (Capital S)</span>
@@ -185,7 +185,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                   </p>
 
                   <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded-lg border border-[var(--color-accent-teal)] dark:border-[var(--color-border)] text-center">
-                    <span className="block text-[10px] text-[var(--color-text-secondary)] mb-1">נוסחת המדגם המתוקנת (חלוקה ב-n-1):</span>
+                    <span className="block text-body-xs text-[var(--color-text-secondary)] mb-1">נוסחת המדגם המתוקנת (חלוקה ב-n-1):</span>
                     <InlineMath math="S = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \overline{X})^2}{n - 1}}" />
                   </div>
                 </div>
@@ -261,7 +261,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                     <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded border border-[var(--color-border)] dark:border-[var(--color-border)] text-center font-mono">
                       <BlockMath math="Var(\overline{X}) = Var\left( \frac{1}{n} \sum X_i \right) = \frac{1}{n^2} \cdot Var\left( \sum X_i \right) = \frac{1}{n^2} \cdot (n\sigma^2) = \frac{\sigma^2}{n}" />
                     </div>
-                    <p className="text-[11px] text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] font-bold mt-1">
+                    <p className="text-caption text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] font-bold mt-1">
                       ⭐ שימו לב: השונות של הממוצע היא השונות המקורית מחולקת ישירות ב-n! החלוקה היא בלי שורש!
                     </p>
                   </div>
@@ -282,7 +282,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                     <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded border border-[var(--color-border)] dark:border-[var(--color-border)] text-center font-mono text-base font-black text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] flex items-center justify-center gap-2">
                       <span><InlineMath math="SE = \sqrt{Var(\overline{X})} = \sqrt{\frac{\sigma^2}{n}} = \frac{\sigma}{\sqrt{n}}" /></span>
                     </div>
-                    <p className="text-[11px] text-[var(--color-success)] dark:text-[var(--color-success)] leading-relaxed font-black mt-2">
+                    <p className="text-caption text-[var(--color-success)] dark:text-[var(--color-success)] leading-relaxed font-black mt-2">
                       🏆 הנה זה! השורש של ה-n נובע לגמרי מתוך חוקי השונות והשורש הריבועי ההיפוכי. זהו אכן פשוט סטיית התקן חלקי שורש המדגם!
                     </p>
                   </div>
@@ -324,7 +324,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                     onChange={(e) => setPopSigma(Number(e.target.value))}
                     className="w-full cursor-pointer h-1.5 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface-raised)] rounded-lg appearance-none accent-indigo-600"
                   />
-                  <span className="block text-[10px] text-[var(--color-text-secondary)]">
+                  <span className="block text-body-xs text-[var(--color-text-secondary)]">
                     מייצגת את הפיזור הפנימי המקורי בכל דגימה בנפרד.
                   </span>
                 </div>
@@ -348,7 +348,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                     onChange={(e) => setSampleSize(Number(e.target.value))}
                     className="w-full cursor-pointer h-1.5 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface-raised)] rounded-lg appearance-none accent-indigo-600"
                   />
-                  <span className="block text-[10px] text-[var(--color-text-secondary)] flex items-center gap-1">
+                  <span className="block text-body-xs text-[var(--color-text-secondary)] flex items-center gap-1">
                     <span>שורש מספר הדגימות:</span>
                     <span className="font-mono font-bold text-[var(--color-accent-cobalt)]"><InlineMath math={`\\sqrt{n} = ${Math.sqrt(sampleSize).toFixed(2)}`} /></span>
                   </span>
@@ -358,19 +358,19 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
               {/* Real-time Math Output Box */}
               <div className="p-3 bg-gradient-to-r from-[var(--color-accent-cobalt)]/5 to-[var(--color-accent-cobalt)]/20 dark:from-[var(--color-background)] bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)]/40 rounded-lg border border-dashed border-[var(--color-accent-cobalt-line)] dark:border-[var(--color-border)] text-center grid grid-cols-1 md:grid-cols-3 gap-3 items-center">
                 <div className="space-y-1">
-                  <span className="block text-[10px] text-[var(--color-text-secondary)]">סטיית תקן בריבוע (שונות האוכלוסייה):</span>
+                  <span className="block text-body-xs text-[var(--color-text-secondary)]">סטיית תקן בריבוע (שונות האוכלוסייה):</span>
                   <span className="font-mono text-sm font-extrabold text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)]">
                     <InlineMath math={`\\sigma^2 = ${popSigma}^2 = ${popSigma * popSigma}`} />
                   </span>
                 </div>
                 <div className="space-y-1 border-y md:border-y-0 md:border-x border-[var(--color-border)] dark:border-[var(--color-border)] py-2 md:py-0">
-                  <span className="block text-[10px] text-[var(--color-accent-cobalt)]">חישוב שונות הממוצע (בלי שורש):</span>
+                  <span className="block text-body-xs text-[var(--color-accent-cobalt)]">חישוב שונות הממוצע (בלי שורש):</span>
                   <span className="font-mono text-sm font-extrabold text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]">
                     <InlineMath math={`Var(\\overline{X}) = \\frac{\\sigma^2}{n} = \\frac{${popSigma * popSigma}}{${sampleSize}} = ${(popSigma * popSigma / sampleSize).toFixed(2)}`} />
                   </span>
                 </div>
                 <div className="space-y-1">
-                  <span className="block text-[10px] text-[var(--color-success)]">שגיאת התקן של הממוצע (עם שורש n):</span>
+                  <span className="block text-body-xs text-[var(--color-success)]">שגיאת התקן של הממוצע (עם שורש n):</span>
                   <span className="font-mono text-base font-black text-[var(--color-success)] dark:text-[var(--color-success)] block bg-[var(--color-accent-teal)] dark:bg-[var(--color-accent-teal)]/20 px-3 py-1 rounded inline-block">
                     <InlineMath math={`SE = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${popSigma}}{\\sqrt{${sampleSize}}} = ${standardError.toFixed(3)}`} />
                   </span>
@@ -421,7 +421,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                   </svg>
                 </div>
                 
-                <p className="text-[11px] text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-center leading-relaxed">
+                <p className="text-body-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-center leading-relaxed">
                   העקומה הסטנדרטית הכללית מציגה כי ככל שגודל המדגם <InlineMath math="n" /> גדל, הממוצעים של המדגמים נוטים להתרכז בחוזקה מוחלטת סביב המרכז. השגיאה הולכת ונמוגה במהירות!
                 </p>
               </div>

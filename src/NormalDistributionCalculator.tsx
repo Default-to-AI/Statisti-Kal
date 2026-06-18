@@ -180,7 +180,7 @@ function studentTInverseCDF(p: number, df: number): number {
 
 // --- Types ---
 
-type CalcMode = 'forward' | 'inverse';
+type CalcMode = 'forward' | 'inverse' | 'table' | 'hypothesis' | 'formula-sheet';
 type CalcType = 'below' | 'above' | 'between' | 'outside' | 'conditional';
 type CondType = 'below' | 'above' | 'between';
 
@@ -221,7 +221,7 @@ const Tooltip: React.FC<{ content: string; children: React.ReactNode }> = ({ con
             className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2.5 text-xs rounded-sm shadow-sm pointer-events-none text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)]"
           >
             {content}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-slate-800" />
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
           </motion.div>
         )}
       </AnimatePresence>
@@ -580,9 +580,9 @@ const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
   const parts = text.split(/\[MATH\](.*?)\[\/MATH\]/g);
 
   return (
-    <div className={`text-sm md:text-base leading-relaxed w-full transition-all ${isResult
-        ? 'font-bold text-[var(--color-accent-brass)] bg-[var(--color-surface)] p-5 rounded-lg border border-[var(--color-accent-cobalt-line)] shadow-sm'
-        : 'text-[var(--color-text-primary)]'
+    <div className={`text-sm md:text-base leading-relaxed w-full transition-all p-4 sm:p-5 rounded-lg border shadow-sm ${isResult
+        ? 'font-bold text-[var(--color-accent-brass)] bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]'
+        : 'text-[var(--color-text-primary)] bg-[var(--color-surface-raised)] border-[var(--color-border)]'
       }`}>
       {parts.map((part, i) => {
         if (i % 2 === 1) {
@@ -596,7 +596,7 @@ const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
             return (
               <div
                 key={i}
-                className="my-3 text-center py-3 px-2 rounded-lg border shadow-inner overflow-x-auto bg-[var(--color-surface)] border-[var(--color-border)]/60"
+                className="my-3 text-center py-3 px-2 rounded-lg border shadow-sm overflow-x-auto bg-[var(--color-surface-raised)] border-[var(--color-border)]"
                 dir="ltr"
               >
                 <BlockMath math={part} />
@@ -809,7 +809,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
                       : 'bg-[var(--color-surface)]'
                     }`}
                 >
-                  <div className="text-[10px] opacity-75">חד-צדדי: {c.oneTail}</div>
+                  <div className="text-caption opacity-75">חד-צדדי: {c.oneTail}</div>
                   <div className="text-xs">דו-צדדי: {c.twoTail}</div>
                 </th>
               );
@@ -837,7 +837,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
                   return (
                     <td
                       key={colIdx}
-                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-[13px] sm:text-[15px] ${isActive
+                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-mono-sm sm:text-mono-base ${isActive
                           ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white bg-[var(--color-accent-cobalt-bg)]0 font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
                           : isRowActive
                             ? 'bg-[var(--color-accent-cobalt-bg)]/40 text-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-accent-cobalt)] font-bold'
@@ -1015,7 +1015,7 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
             >
               <div className="p-5 bg-[var(--color-surface)] space-y-3">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span className="text-[10px] text-[var(--color-text-secondary)] text-[var(--color-text-secondary)]">מודגש אוטומטית בהתאם לקלט פעיל. לחצו למילוי מהיר:</span>
+              <span className="text-body-xs text-[var(--color-text-secondary)]">מודגש אוטומטית בהתאם לקלט פעיל. לחצו למילוי מהיר:</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2.5">
@@ -1049,13 +1049,13 @@ const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }> = ({ a
                       <div className="absolute top-0 right-0 left-0 h-0.5 bg-gradient-to-l from-[var(--color-accent-cobalt)] to-[var(--color-accent-cobalt)]" />
                     )}
                     <div>
-                      <div className="text-[10px] font-black text-[var(--color-accent-cobalt)]/90 leading-tight">{item.label}</div>
-                      <div className="text-[13px] font-black text-[var(--color-text-primary)] mt-1">רמת ביטחון {item.confidence}</div>
+                      <div className="text-caption font-black text-[var(--color-accent-cobalt)]/90 leading-tight">{item.label}</div>
+                      <div className="text-body-sm font-black text-[var(--color-text-primary)] mt-1">רמת ביטחון {item.confidence}</div>
                     </div>
                     <div className="flex items-baseline justify-between mt-1 pt-1 border-t border-[var(--color-border)]">
-                      <span className="text-[9px] text-[var(--color-text-secondary)] font-mono">Z_crit:</span>
+                      <span className="text-caption text-[var(--color-text-secondary)] font-mono">Z_crit:</span>
                       <span className="text-xs font-black font-mono text-[var(--color-accent-cobalt)]">{item.z.toFixed(3)}</span>
-                      <span className="text-[9px] text-[var(--color-text-secondary)] font-mono">Φ: {item.phi.toFixed(4)}</span>
+                      <span className="text-caption text-[var(--color-text-secondary)] font-mono">Φ: {item.phi.toFixed(4)}</span>
                     </div>
                   </button>
                 );
@@ -1654,7 +1654,7 @@ export default function NormalDistributionCalculator() {
                         onChange={e => handleMeanChange(e.target.value)}
                         className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                       />
-                      {errors.mean && <p className="text-[var(--color-error)] text-[10px] font-bold mt-1">{errors.mean}</p>}
+                      {errors.mean && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.mean}</p>}
                     </div>
                   </div>
 
@@ -1667,7 +1667,7 @@ export default function NormalDistributionCalculator() {
                         onChange={e => handleStdDevChange(e.target.value)}
                         className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                       />
-                      {errors.stdDev && <p className="text-[var(--color-error)] text-[10px] font-bold mt-1">{errors.stdDev}</p>}
+                      {errors.stdDev && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.stdDev}</p>}
                     </div>
                   </div>
                 </div>
@@ -1692,9 +1692,9 @@ export default function NormalDistributionCalculator() {
 
                     {forwardType === 'conditional' ? (
                       <div className="space-y-4 bg-[var(--color-surface-raised)] p-3.5 rounded-lg border border-[var(--color-border)]">
-                        <span className="text-[11px] font-black leading-relaxed block text-[var(--color-accent-cobalt)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5">הגדרת מאורע B ברקע (התנאי):</span>
+                        <span className="text-body-sm font-black leading-relaxed block text-[var(--color-accent-cobalt)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5">הגדרת מאורע B ברקע (התנאי):</span>
                         <div>
-                          <label className="block text-[10px] font-bold text-[var(--color-text-secondary)] mb-1">סוג המאורע B:</label>
+                          <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">סוג המאורע B:</label>
                           <select
                             value={condType}
                             onChange={e => setCondType(e.target.value as any)}
@@ -1708,32 +1708,32 @@ export default function NormalDistributionCalculator() {
 
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <label className="block text-[10px] font-bold text-[var(--color-text-secondary)] mb-1">ערך b₁:</label>
+                            <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">ערך b₁:</label>
                             <input
                               type="text"
                               value={condX1Input}
                               onChange={e => handleCondX1Change(e.target.value)}
                               className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)] font-mono"
                             />
-                            {errors.condX1 && <p className="text-[var(--color-error)] text-[9px] mt-0.5">{errors.condX1}</p>}
+                            {errors.condX1 && <p className="text-[var(--color-error)] text-caption mt-0.5">{errors.condX1}</p>}
                           </div>
                           {condType === 'between' && (
                             <div>
-                              <label className="block text-[10px] font-bold text-[var(--color-text-secondary)] mb-1">ערך b₂:</label>
+                              <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">ערך b₂:</label>
                               <input
                                 type="text"
                                 value={condX2Input}
                                 onChange={e => handleCondX2Change(e.target.value)}
                                 className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)] font-mono"
                               />
-                              {errors.condX2 && <p className="text-[var(--color-error)] text-[9px] mt-0.5">{errors.condX2}</p>}
+                              {errors.condX2 && <p className="text-[var(--color-error)] text-caption mt-0.5">{errors.condX2}</p>}
                             </div>
                           )}
                         </div>
 
-                        <span className="text-[11px] font-black leading-relaxed block text-[var(--color-accent-crimson)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1.5">הגדרת מאורע A (ההסתברות מתוך B):</span>
+                        <span className="text-body-sm font-black leading-relaxed block text-[var(--color-accent-crimson)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1.5">הגדרת מאורע A (ההסתברות מתוך B):</span>
                         <div>
-                          <label className="block text-[10px] font-bold text-[var(--color-text-secondary)] mb-1">סוג המאורע A:</label>
+                          <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">סוג המאורע A:</label>
                           <select
                             value={condTypeA}
                             onChange={e => setCondTypeA(e.target.value as any)}
@@ -1758,7 +1758,7 @@ export default function NormalDistributionCalculator() {
                           onChange={e => handleX1Change(e.target.value)}
                           className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                         />
-                        {errors.x1 && <p className="text-[var(--color-error)] text-[10px] font-bold mt-1">{errors.x1}</p>}
+                        {errors.x1 && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.x1}</p>}
                       </div>
 
                       {(forwardType === 'between' || forwardType === 'outside' || (forwardType === 'conditional' && condTypeA === 'between')) && (
@@ -1772,7 +1772,7 @@ export default function NormalDistributionCalculator() {
                             onChange={e => handleX2Change(e.target.value)}
                             className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                           />
-                          {errors.x2 && <p className="text-[var(--color-error)] text-[10px] font-bold mt-1">{errors.x2}</p>}
+                          {errors.x2 && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.x2}</p>}
                         </div>
                       )}
                     </div>
@@ -1788,7 +1788,7 @@ export default function NormalDistributionCalculator() {
                         placeholder="לדוגמה: 0.95"
                         className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                       />
-                      {errors.inverseProb && <p className="text-[var(--color-error)] text-[10px] font-bold mt-1">{errors.inverseProb}</p>}
+                      {errors.inverseProb && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.inverseProb}</p>}
                     </div>
 
                     <div>
