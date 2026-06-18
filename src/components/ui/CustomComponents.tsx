@@ -693,11 +693,10 @@ export const FormulaTranslation: React.FC<FormulaTranslationProps> = ({
     <div className={`relative inline-flex items-center justify-center ${className}`} ref={tooltipRef}>
       <button 
         onClick={toggleOpen}
-        className="relative flex items-center justify-center p-1.5 rounded-full text-[var(--color-accent-cobalt)] hover:bg-[var(--color-accent-cobalt-bg)] transition-colors shadow-sm bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 hover:scale-105 active:scale-95"
+        className="relative flex items-center justify-center p-1.5 rounded-full text-[var(--color-accent-brass)] hover:bg-[var(--color-accent-brass)]/10 transition-colors shadow-sm bg-[var(--color-surface)] border border-[var(--color-accent-brass)]/50 hover:scale-105 active:scale-95"
         title="קריאת הנוסחה במילים"
       >
-        <MessageCircle size={24} strokeWidth={1.5} />
-        <span className="absolute text-[11px] font-bold font-serif -mt-0.5" style={{ transform: 'scale(0.9)' }}>i</span>
+        <Info size={24} strokeWidth={2} />
       </button>
 
       {isOpen && createPortal(
@@ -708,14 +707,14 @@ export const FormulaTranslation: React.FC<FormulaTranslationProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -5, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-0 -translate-x-1/2 w-[280px] sm:w-[320px] p-4 rounded-xl bg-[var(--color-surface-raised)] border border-[var(--color-accent-cobalt-line)] shadow-xl"
+              className="absolute top-0 -translate-x-1/2 w-[280px] sm:w-[320px] p-4 rounded-xl bg-[var(--color-surface-raised)] border border-[var(--color-accent-brass)] shadow-xl"
               dir="rtl"
             >
               {/* Arrow pointing up */}
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-accent-cobalt-line)] rotate-45"></div>
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-accent-brass)] rotate-45"></div>
               
               <div className="relative z-10 text-center space-y-2">
-                <div className="text-sm font-black text-[var(--color-accent-cobalt)] mb-1">{formulaName}</div>
+                <div className="text-sm font-black text-[var(--color-accent-brass)] mb-1">{formulaName}</div>
                 <div className="text-sm sm:text-base font-medium leading-relaxed text-[var(--color-text-primary)]">
                   {translation}
                 </div>

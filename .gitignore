@@ -12,3 +12,6 @@ Agent-Skills
 AGENTS.md
 CONTEXT.md
 STRATEGY.md
+remove_calcblock_props.cjs
+update-icons.cjs
+update.cjs

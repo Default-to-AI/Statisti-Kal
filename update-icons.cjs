@@ -1,4 +1,4 @@
-const fs = require('fs');
+onst fs = require('fs');
 const path = 'src/components/HypothesisTestingCalculator.tsx';
 let content = fs.readFileSync(path, 'utf8');
 

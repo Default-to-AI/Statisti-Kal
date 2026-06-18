@@ -216,11 +216,26 @@ type TailType = 'right' | 'left' | 'two-tailed';
 // No props needed - dark-only theme
 
 // FormulaBlock: Raw/general formula with symbolic variables
-function FormulaBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
+function FormulaBlock({ 
+    children, 
+    className = '',
+    formulaName,
+    translation
+}: { 
+    children: React.ReactNode; 
+    className?: string;
+    formulaName?: string;
+    translation?: string;
+}) {
     return (
         <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
-            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
-                <div className="relative border border-[var(--color-border)] border-l-4 border-dashed border-l-[var(--color-accent-brass)]/70 rounded-lg bg-[var(--color-accent-brass)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
+            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm relative group">
+                <div className="relative border border-[var(--color-border)] border-l-4 border-dashed border-l-[var(--color-accent-brass)]/70 rounded-lg bg-[var(--color-accent-brass)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
+                    {formulaName && translation && (
+                        <div className="absolute top-2.5 left-2.5 z-10 transition-opacity opacity-60 hover:opacity-100">
+                            <FormulaTranslation formulaName={formulaName} translation={translation} />
+                        </div>
+                    )}
                     {children}
                 </div>
             </div>
@@ -236,7 +251,7 @@ function CalcBlock({ children, className = '' }: { children: React.ReactNode; cl
     return (
         <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
             <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
-                <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-accent-cobalt)] rounded-lg bg-[var(--color-accent-cobalt)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
+                <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-accent-cobalt)] rounded-lg bg-[var(--color-accent-cobalt)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
                     {children}
                 </div>
             </div>
@@ -2144,7 +2159,10 @@ export default function HypothesisTestingCalculator() {
                                                 </div>
 
                                                 <div className="pr-9 py-3 space-y-4 text-xl md:text-2xl">
-                                                    <FormulaBlock>
+                                                    <FormulaBlock
+                                                        formulaName="רמת מובהקות (α)"
+                                                        translation="1 פחות רמת הביטחון. מייצג את הסיכוי המקסימלי לטעות מסוג ראשון (דחיית השערת האפס כשהיא נכונה)."
+                                                    >
                                                         <BlockMath math={`\\alpha = 1 - \\text{Confidence Level}`} />
                                                     </FormulaBlock>
                                                     <CalcBlock>
@@ -2281,7 +2299,10 @@ export default function HypothesisTestingCalculator() {
                                                                 return (
                                                                     <>
                                                                         <div className="py-3 text-xl md:text-2xl space-y-4">
-                                                                            <FormulaBlock>
+                                                                            <FormulaBlock
+                                                                                formulaName="הערך הקריטי בטבלה"
+                                                                                translation="הערך שמקבלים מפונקציית ההתפלגות ההופכית (Inverse CDF) עבור השטח המבוקש. מסמן את גבול אזור הדחייה."
+                                                                            >
                                                                                 {tailType === 'right' ? (
                                                                                     <>
                                                                                         <BlockMath math={`p = 1 - \\alpha`} />
@@ -2405,7 +2426,10 @@ export default function HypothesisTestingCalculator() {
                                                                     </summary>
                                                                     <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
                                                                         <div className="py-2 space-y-4 text-xl md:text-2xl">
-                                                                            <FormulaBlock>
+                                                                            <FormulaBlock
+                                                                                formulaName="ערך קריטי (Critical Value)"
+                                                                                translation="הערך שמפריד בין אזור אי-הדחייה לאזור הדחייה. מתקבל על ידי מציאת הערך בהתפלגות (Z או t) שמשאיר שטח של אלפא (α) בזנב/זנבות הדחייה."
+                                                                            >
                                                                                 {tailType === 'right' && (
                                                                                     varianceKnown ?
                                                                                         <BlockMath math={`P(Z \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\alpha \\implies Z_{crit} = z_{\\alpha}`} /> :
@@ -2478,7 +2502,10 @@ export default function HypothesisTestingCalculator() {
                                                                             </summary>
                                                                             <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
                                                                                 <div className="py-2 space-y-4 text-xl md:text-2xl">
-                                                                                    <FormulaBlock>
+                                                                                    <FormulaBlock
+                                                                                formulaName="אזור הדחייה (Rejection Region)"
+                                                                                translation="הערך הקריטי בסולם המקורי של המשתנה. מחושב על ידי הוספת מרווח הטעות (הערך הקריטי כפול שגיאת התקן) לתוחלת המשוערת."
+                                                                            >
                                                                                         {tailType === 'right' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} + ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                                         {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
                                                                                         {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
@@ -2520,7 +2547,10 @@ export default function HypothesisTestingCalculator() {
                                                                     </summary>
                                                                     <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
                                                                         <div className="py-2 space-y-4 text-xl md:text-2xl">
-                                                                            <FormulaBlock>
+                                                                            <FormulaBlock
+                                                                                formulaName="ערך ה-P (P-Value)"
+                                                                                translation="ההסתברות לקבל תוצאה קיצונית לפחות כמו במדגם שלנו, בהנחה שהשערת האפס נכונה. מחושב כשטח מתחת לעקומה מעבר לסטטיסטי המבחן."
+                                                                            >
                                                                                 {tailType === 'right' && (
                                                                                     varianceKnown ?
                                                                                         <BlockMath math={`P\\text{-Value} = P(Z \\ge Z_{\\text{stat}}) = 1 - \\Phi(Z_{\\text{stat}})`} /> :
@@ -2616,18 +2646,15 @@ export default function HypothesisTestingCalculator() {
                                                             </p>
 
                                                             {/* Raw formula template */}
-                                                            <FormulaBlock>
-                                                                <div className="flex flex-wrap sm:flex-nowrap justify-center items-center gap-4 w-full py-2">
-                                                                    {varianceKnown ? (
-                                                                        <InlineMath math={`\\displaystyle Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
-                                                                    ) : (
-                                                                        <InlineMath math={`\\displaystyle t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
-                                                                    )}
-                                                                    <FormulaTranslation
-                                                                        formulaName="סטטיסטי המבחן"
-                                                                        translation="ההפרש בין ממוצע המדגם לתוחלת השערת האפס, מחולק בשגיאת התקן"
-                                                                    />
-                                                                </div>
+                                                            <FormulaBlock
+                                                                formulaName="סטטיסטי המבחן - מודד כמה סטיות תקן המדגם שלנו רחוק מהתוחלת המשוערת תחת השערת האפס."
+                                                                translation="הסטטיסטי שווה לממוצע המדגם פחות התוחלת המשוערת, לחלק לשגיאת התקן."
+                                                            >
+                                                                {varianceKnown ? (
+                                                                    <BlockMath math={`Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+                                                                ) : (
+                                                                    <BlockMath math={`t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+                                                                )}
                                                             </FormulaBlock>
 
                                                             {/* Calculation with actual values */}
@@ -3096,7 +3123,10 @@ export default function HypothesisTestingCalculator() {
                                     {/* Known Variance */}
                                     <div className={`p-6 rounded-lg border transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]/50 shadow-sm' : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] opacity-70'}`}>
                                         <h3 className="font-bold text-lg mb-4 underline">רווח סמך עבור תוחלת האוכלוסייה, כאשר שונותה ידועה</h3>
-                                        <FormulaBlock>
+                                        <FormulaBlock
+                                            formulaName="רווח בר סמך לתוחלת (Z)"
+                                            translation="טווח הערכים שבו אנו מעריכים שהתוחלת האמיתית של האוכלוסייה תימצא ברמת ביטחון מסוימת. מבוסס על התפלגות Z כיוון שסטיית התקן של האוכלוסייה נתונה."
+                                        >
                                             {ciTailType === 'two-tailed' ? (
                                                 <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}`} />
                                             ) : ciTailType === 'left' ? (
@@ -3137,7 +3167,10 @@ export default function HypothesisTestingCalculator() {
                                             נסמן את סטיית התקן המדגמית:
                                             <BlockMath math={`S = \\sqrt{\\frac{\\sum(x_i - \\bar{x})^2}{n-1}} = \\sqrt{\\frac{\\sum x_i^2 - n\\bar{x}^2}{n-1}}`} />
                                         </div>
-                                        <FormulaBlock>
+                                        <FormulaBlock
+                                            formulaName="רווח בר סמך לתוחלת (T)"
+                                            translation="מחשב את טווח הערכים שבו התוחלת עשויה להיות ברמת ביטחון נתונה. משתמש בסטיית התקן של המדגם, ולכן מסתמך על התפלגות T של סטודנט."
+                                        >
                                             {ciTailType === 'two-tailed' ? (
                                                 <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm t_{(n-1, 1-\\alpha/2)} \\frac{S}{\\sqrt{n}}`} />
                                             ) : ciTailType === 'left' ? (
@@ -3199,7 +3232,10 @@ export default function HypothesisTestingCalculator() {
                                             </p>
 
                                             {/* General formula template */}
-                                            <FormulaBlock>
+                                            <FormulaBlock
+                                                formulaName="חישוב עוצמת מבחן (Power)"
+                                                translation="מחשב את עוצמת המבחן וההסתברות לטעות מסוג שני (β). הערך Z_{H_1} משקף את מיקום הערך הקריטי תחת ההתפלגות האלטרנטיבית."
+                                            >
                                                 {varianceKnown ? (
                                                     tailType === 'right' ? (
                                                         <>
