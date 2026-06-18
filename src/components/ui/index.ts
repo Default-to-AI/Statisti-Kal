@@ -25,6 +25,7 @@ export {
   EmptyState,
   // Bonus helpers
   InputTooltip,
+  AnimatedDetails,
   Disclosure,
 } from './CustomComponents';
 

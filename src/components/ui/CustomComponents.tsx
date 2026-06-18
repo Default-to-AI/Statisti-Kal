@@ -539,6 +539,53 @@ export const InputTooltip: React.FC<InputTooltipProps> = ({
 // consistent styling matching the calculators' accordion pattern.
 // ============================================================================
 
+export interface AnimatedDetailsProps {
+  children: React.ReactNode;
+  className?: string;
+  defaultOpen?: boolean;
+  id?: string;
+}
+
+export const AnimatedDetails: React.FC<AnimatedDetailsProps> = ({
+  children,
+  className = '',
+  defaultOpen = false,
+  id,
+}) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
+
+  // separate children into summary and the rest
+  const childrenArray = React.Children.toArray(children);
+  const summary = childrenArray.find((child) => React.isValidElement(child) && (child as React.ReactElement).type === 'summary');
+  const content = childrenArray.filter((child) => child !== summary);
+
+  return (
+    <div id={id} className={`group ${isOpen ? 'is-open' : ''} ${className}`}>
+      {summary && React.cloneElement(summary as React.ReactElement<any>, {
+        onClick: (e: React.MouseEvent) => {
+          e.preventDefault();
+          setIsOpen(!isOpen);
+        },
+        role: "button",
+        "aria-expanded": isOpen,
+      })}
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: 'auto', opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2, ease: 'easeInOut' }}
+            className="overflow-hidden"
+          >
+            {content}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+};
+
 export interface DisclosureProps {
   title: React.ReactNode;
   icon?: React.ReactNode;
@@ -550,10 +597,10 @@ export interface DisclosureProps {
 }
 
 const DISCLOSURE_ACCENT: Record<NonNullable<DisclosureProps['accentOnOpen']>, string> = {
-  cobalt: 'group-open:border-[var(--color-accent-cobalt)]',
-  brass: 'group-open:border-[var(--color-accent-brass)]',
-  teal: 'group-open:border-[var(--color-accent-teal)]',
-  crimson: 'group-open:border-[var(--color-accent-crimson)]',
+  cobalt: 'group-[.is-open]:border-[var(--color-accent-cobalt)]',
+  brass: 'group-[.is-open]:border-[var(--color-accent-brass)]',
+  teal: 'group-[.is-open]:border-[var(--color-accent-teal)]',
+  crimson: 'group-[.is-open]:border-[var(--color-accent-crimson)]',
 };
 
 export const Disclosure: React.FC<DisclosureProps> = ({
@@ -565,20 +612,20 @@ export const Disclosure: React.FC<DisclosureProps> = ({
   className = '',
 }) => {
   return (
-    <details
+    <AnimatedDetails
       defaultOpen={defaultOpen}
-      className={`group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)]/50 overflow-hidden ${DISCLOSURE_ACCENT[accentOnOpen]} ${className}`}
+      className={`border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)]/50 ${DISCLOSURE_ACCENT[accentOnOpen]} ${className}`}
     >
       <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden">
         <div className="flex items-center gap-3">
           {icon}
           <span>{title}</span>
         </div>
-        <span className="text-[var(--color-text-secondary)] transition-transform group-open:rotate-180">
+        <span className="text-[var(--color-text-secondary)] transition-transform group-[.is-open]:rotate-180">
           <ChevronDown size={20} />
         </span>
       </summary>
       <div className="px-5 pb-5 pt-1">{children}</div>
-    </details>
+    </AnimatedDetails>
   );
 };

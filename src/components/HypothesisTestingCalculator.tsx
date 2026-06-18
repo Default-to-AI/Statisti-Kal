@@ -6,6 +6,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { AnimatedDetails } from './ui/CustomComponents';
 import { InlineMath, BlockMath } from 'react-katex';
 import {
     Info,
@@ -1097,7 +1098,7 @@ export default function HypothesisTestingCalculator() {
             {/* Parameters Input Card */}
             <div className="rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
                 <div className="flex items-center gap-2 border-b border-[var(--color-border)] pb-4 mb-5">
-                    <Sliders size={20} className="text-[var(--color-accent-cobalt)]" />
+                    <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Sliders size={20} /></div>
                     <h3 className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
                     </h3>
@@ -1370,7 +1371,7 @@ export default function HypothesisTestingCalculator() {
             <div className="mb-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4 text-right space-y-3 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-1.5 text-[var(--color-text-primary)]">
-                        <Sliders size={14} className="text-[var(--color-accent-cobalt)]" />
+                        <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-1.5 rounded-md text-[var(--color-accent-cobalt)]"><Sliders size={14} /></div>
                         <span className="text-sm font-black font-sans text-[var(--color-accent-cobalt)]">
                             מבחנים סטטיסטיים נפוצים:
                         </span>
@@ -1703,7 +1704,7 @@ export default function HypothesisTestingCalculator() {
                         >
                             <div className="flex flex-col sm:flex-row sm:items-center gap-3 text-right">
                                 <div className="flex items-center gap-3">
-                                    <Calculator className="text-[var(--color-accent-cobalt)]" size={24} />
+                                    <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Calculator size={24} /></div>
                                     <span className="text-xl sm:text-2xl font-black">שלבי פתרון מתמטיים וגזירת הערכים</span>
                                 </div>
                                 {isValid && decisionData && (
@@ -1741,14 +1742,14 @@ export default function HypothesisTestingCalculator() {
                                     <div className="text-base flex flex-col gap-4 py-4">
 
                                         {/* Step 1: Hypothesis Formulation */}
-                                        <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                        <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50">1</span>
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">1</span>
                                                     <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">ניסוח השערות המחקר</span>
                                                 </div>
-                                                <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
                                                 </div>
                                             </summary>
@@ -1839,18 +1840,18 @@ export default function HypothesisTestingCalculator() {
                                                         )}
                                                     </p>
                                                 </div>
-                                            </div></details>
+                                            </div></AnimatedDetails>
 
 
                                         {/* Step 2: Select an appropriate test */}
-                                        <details id="step-2" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                        <AnimatedDetails id="step-2" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50">2</span>
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">2</span>
                                                     <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">בחירת מבחן סטטיסטי מתאים</span>
                                                 </div>
-                                                <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
                                                 </div>
                                             </summary>
@@ -2053,17 +2054,17 @@ export default function HypothesisTestingCalculator() {
                                                         <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">אינה ידועה</span> וגודל המדגם קטן מ-30 (<InlineMath math="n < 30" />), נשתמש ב<span className="font-bold">מבחן <InlineMath math="t" /></span>.</span>
                                                     )}
                                                 </p>
-                                            </div></details>
+                                            </div></AnimatedDetails>
 
                                         {/* Step 3: Specify the level of significance */}
-                                        <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                        <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50">3</span>
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">3</span>
                                                     <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קביעת רמת המובהקות (<InlineMath math="\alpha" />)</span>
                                                 </div>
-                                                <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
                                                 </div>
                                             </summary>
@@ -2139,20 +2140,20 @@ export default function HypothesisTestingCalculator() {
                                                     <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
                                                     קבענו שרמת המובהקות של המבחן תהיה <InlineMath math={`\\alpha = ${alpha}`} />, הנגזרת מרמת ביטחון של <InlineMath math={`${((1 - alpha) * 100).toFixed(0)}\\%`} />.
                                                 </p>
-                                            </div></details>
+                                            </div></AnimatedDetails>
 
 
                                         {isValid && stats && decisionData ? (
                                             <>
                                                 {/* Step 4: Critical Value derivation & SE */}
-                                                <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" open>
+                                                <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50">4</span>
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">4</span>
                                                             <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קביעת הערכים הקריטיים והגדרת כלל ההחלטה</span>
                                                         </div>
-                                                        <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                        <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
                                                         </div>
                                                     </summary>
@@ -2282,13 +2283,13 @@ export default function HypothesisTestingCalculator() {
                                                                         </div>
 
                                                                         {/* Theoretical Explanation Accordion */}
-                                                                        <details className="group mt-4 mb-6 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                                                                        <AnimatedDetails className="group mt-4 mb-6 rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
                                                                             <summary className="flex items-center gap-2 p-4 cursor-pointer text-[var(--color-warning)] font-bold outline-none select-none">
                                                                                 <div className="flex-1 flex items-center gap-2">
                                                                                     <Info size={16} />
                                                                                     <span>משמעות האינדקס התחתון <InlineMath math="( _\alpha )" />ומציאת הערך הקריטי</span>
                                                                                 </div>
-                                                                                <ChevronDown size={18} className="transition-transform duration-300 group-open:rotate-180 text-[var(--color-warning)]/70" />
+                                                                                <ChevronDown size={18} className="transition-transform duration-300 group-[.is-open]:rotate-180 text-[var(--color-warning)]/70" />
                                                                             </summary>
                                                                             <div className="p-4 pt-0 text-sm sm:text-base text-[var(--color-text-primary)] border-t border-[var(--color-border)] mt-2">
                                                                                 <ul className="list-disc pr-5 space-y-3 leading-relaxed marker:text-[var(--color-warning)]">
@@ -2306,7 +2307,7 @@ export default function HypothesisTestingCalculator() {
                                                                                     פונקציית התפלגות מצטברת הופכית = מציאת ערך ה-{varianceKnown ? 'Z' : 't'} (הערכים בשוליים) בטבלה לפי ההסתברות (הערכים הפנימיים).
                                                                                 </div>
                                                                             </div>
-                                                                        </details>
+                                                                        </AnimatedDetails>
 
                                                                         <div className="text-xl md:text-2xl space-y-4">
                                                                             <div className="text-right text-lg text-[var(--color-text-primary)] font-bold mb-4">החישוב בפועל</div>
@@ -2527,18 +2528,18 @@ export default function HypothesisTestingCalculator() {
                                                                 בגישת מובהקות התוצאה נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
                                                             </p>
                                                         </div>
-                                                    </div></details>
+                                                    </div></AnimatedDetails>
 
 
                                                 {/* Step 5: P-Value Calculation */}
-                                                <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" open>
+                                                <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">5</span>
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0 shrink-0">5</span>
                                                             <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">חישוב סטטיסטי המבחן</span>
                                                         </div>
-                                                        <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                        <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
                                                         </div>
                                                     </summary>
@@ -2609,20 +2610,20 @@ export default function HypothesisTestingCalculator() {
                                                                 <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" /> מצאנו כי סטטיסטי המבחן (מרחק התוצאה מתוחלת <InlineMath math="H_0" />) הוא <span dir="ltr"><InlineMath math={`${varianceKnown ? 'Z' : 't'} = ${decisionData.statObs.toFixed(4)}`} /></span>.
                                                             </p>
                                                         </div>
-                                                    </div></details>
+                                                    </div></AnimatedDetails>
 
                                                 {/* Step 6: P-Value Calculation and Final Decision */}
-                                                <details className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" open>
+                                                <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
-                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-open:border-[var(--color-border)]">
+                                                    <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">6</span>
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0 shrink-0">6</span>
                                                             <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קבלת החלטה / הסקת מסקנות</span>
                                                             <span className="text-xs font-bold text-[var(--color-text-primary)]0 mr-auto font-mono">
                                                                 <InlineMath math="\alpha" /> = {alpha} | <InlineMath math="n" /> = {n}
                                                             </span>
                                                         </div>
-                                                        <div className="text-[var(--color-text-secondary)] group-open:rotate-180 transition-transform duration-300">
+                                                        <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
                                                         </div>
                                                     </summary>
@@ -2680,13 +2681,13 @@ export default function HypothesisTestingCalculator() {
                                                                 return (
                                                                     <div className="space-y-4">
                                                                         {/* Accordion 1 */}
-                                                                        <details className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden" open>
+                                                                        <AnimatedDetails className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden" defaultOpen>
                                                                             <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden">
                                                                                 <div className="flex items-center gap-3">
                                                                                     <span className="w-8 h-8 rounded-full bg-[var(--color-accent-cobalt-bg)]/20 text-[var(--color-accent-cobalt)] flex items-center justify-center font-mono">1</span>
                                                                                     <span>סטטיסטי המבחן <span className="text-sm font-normal text-[var(--color-text-secondary)] hidden sm:inline-block mr-1">(Standardized Scale)</span></span>
                                                                                 </div>
-                                                                                <span className="transition group-open:rotate-180">
+                                                                                <span className="transition group-[.is-open]:rotate-180">
                                                                                     <ChevronDown size={20} className="text-[var(--color-text-primary)]0" />
                                                                                 </span>
                                                                             </summary>
@@ -2733,16 +2734,16 @@ export default function HypothesisTestingCalculator() {
                                                                                     </span>
                                                                                 </p>
                                                                             </div>
-                                                                        </details>
+                                                                        </AnimatedDetails>
 
                                                                         {/* Accordion 2 */}
-                                                                        <details className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden">
+                                                                        <AnimatedDetails className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden">
                                                                             <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden">
                                                                                 <div className="flex items-center gap-3">
                                                                                     <span className="w-8 h-8 rounded-full bg-[var(--color-accent-cobalt-bg)]/20 text-[var(--color-accent-cobalt)] flex items-center justify-center font-mono">2</span>
                                                                                     <span>אזורי דחייה/אי-דחייה ע"פ ממוצע המדגם <span dir="ltr" className="inline-block px-1">(<InlineMath math="\bar{X}" />)</span> <span className="text-sm font-normal text-[var(--color-text-secondary)] hidden sm:inline-block mr-1">(Original Scale)</span></span>
                                                                                 </div>
-                                                                                <span className="transition group-open:rotate-180">
+                                                                                <span className="transition group-[.is-open]:rotate-180">
                                                                                     <ChevronDown size={20} className="text-[var(--color-text-primary)]0" />
                                                                                 </span>
                                                                             </summary>
@@ -2790,16 +2791,16 @@ export default function HypothesisTestingCalculator() {
                                                                                     </span>
                                                                                 </p>
                                                                             </div>
-                                                                        </details>
+                                                                        </AnimatedDetails>
 
                                                                         {/* Accordion 3 */}
-                                                                        <details className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden">
+                                                                        <AnimatedDetails className="group border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)] overflow-hidden">
                                                                             <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden">
                                                                                 <div className="flex items-center gap-3">
                                                                                     <span className="w-8 h-8 rounded-full bg-[var(--color-accent-cobalt-bg)]/20 text-[var(--color-accent-cobalt)] flex items-center justify-center font-mono">3</span>
                                                                                     <span>מובהקות התוצאה (P-Value) <span className="text-sm font-normal text-[var(--color-text-secondary)] hidden sm:inline-block mr-1">(Probability)</span></span>
                                                                                 </div>
-                                                                                <span className="transition group-open:rotate-180">
+                                                                                <span className="transition group-[.is-open]:rotate-180">
                                                                                     <ChevronDown size={20} className="text-[var(--color-text-primary)]0" />
                                                                                 </span>
                                                                             </summary>
@@ -2839,7 +2840,7 @@ export default function HypothesisTestingCalculator() {
                                                                                     </span>
                                                                                 </p>
                                                                             </div>
-                                                                        </details>
+                                                                        </AnimatedDetails>
                                                                     </div>
                                                                 );
                                                             })()}
@@ -2895,7 +2896,7 @@ export default function HypothesisTestingCalculator() {
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div></details>
+                                                    </div></AnimatedDetails>
                                             </>
                                         ) : (
                                             <div className="py-12 text-center font-bold text-lg md:text-xl text-[var(--color-error)] opacity-80 flex flex-col items-center gap-4 border border-[var(--color-error)]/30 bg-[var(--color-surface)] rounded-lg mt-4">
@@ -2918,15 +2919,15 @@ export default function HypothesisTestingCalculator() {
                             </div>
 
                             {/* Confidence Interval Accordion */}
-                            <details className="group border-2 border-[var(--color-border)] rounded-lg bg-[var(--color-surface-raised)] overflow-hidden shadow-sm" open>
-                                <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 sm:p-6 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden border-b border-transparent group-open:border-[var(--color-border)] group-open:bg-[var(--color-surface)]">
+                            <AnimatedDetails className="group border-2 border-[var(--color-border)] rounded-lg bg-[var(--color-surface-raised)] overflow-hidden shadow-sm" defaultOpen>
+                                <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 sm:p-6 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden border-b border-transparent group-[.is-open]:border-[var(--color-border)] group-[.is-open]:bg-[var(--color-surface)]">
                                     <div className="flex items-center gap-4">
                                         <div className="p-2.5 bg-[var(--color-accent-cobalt-bg)]/10 rounded-lg text-[var(--color-accent-cobalt)]">
                                             <Target size={26} />
                                         </div>
                                         <span className="text-xl sm:text-2xl font-black">חסם / רווח סמך (CL = Confidence Interval)</span>
                                     </div>
-                                    <span className="transition-transform duration-300 group-open:rotate-180 bg-[var(--color-surface)] p-2 rounded-full">
+                                    <span className="transition-transform duration-300 group-[.is-open]:rotate-180 bg-[var(--color-surface)] p-2 rounded-full">
                                         <ChevronDown size={22} className="text-[var(--color-text-secondary)]" />
                                     </span>
                                 </summary>
@@ -2980,18 +2981,18 @@ export default function HypothesisTestingCalculator() {
                                     </div>
 
                                 </div>
-                            </details>
+                            </AnimatedDetails>
 
                             {/* Power Calc Accordion */}
-                            <details className="group border-2 border-[var(--color-border)] rounded-lg bg-[var(--color-surface-raised)] overflow-hidden shadow-sm">
-                                <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 sm:p-6 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden border-b border-transparent group-open:border-[var(--color-border)] group-open:bg-[var(--color-surface)]">
+                            <AnimatedDetails className="group border-2 border-[var(--color-border)] rounded-lg bg-[var(--color-surface-raised)] overflow-hidden shadow-sm">
+                                <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 sm:p-6 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden border-b border-transparent group-[.is-open]:border-[var(--color-border)] group-[.is-open]:bg-[var(--color-surface)]">
                                     <div className="flex items-center gap-4">
                                         <div className="p-2.5 bg-[var(--color-accent-cobalt-bg)]/10 rounded-lg text-[var(--color-accent-cobalt)]">
                                             <Activity size={26} />
                                         </div>
                                         <span className="text-xl sm:text-2xl font-black">חישוב עוצמת המבחן (Power & Type II Error)</span>
                                     </div>
-                                    <span className="transition-transform duration-300 group-open:rotate-180 bg-[var(--color-surface)] p-2 rounded-full">
+                                    <span className="transition-transform duration-300 group-[.is-open]:rotate-180 bg-[var(--color-surface)] p-2 rounded-full">
                                         <ChevronDown size={22} className="text-[var(--color-text-secondary)]" />
                                     </span>
                                 </summary>
@@ -3112,7 +3113,7 @@ export default function HypothesisTestingCalculator() {
                                         </div>
                                     )}
                                 </div>
-                            </details>
+                            </AnimatedDetails>
 
                         </div>
                     )}
