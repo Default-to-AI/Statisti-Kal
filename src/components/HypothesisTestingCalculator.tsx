@@ -1764,6 +1764,9 @@ export default function HypothesisTestingCalculator() {
 
                                                     {/* Interactive Hypothesis Builder */}
                                                     <div className="flex flex-col items-center justify-center gap-4 py-4 w-full">
+                                                        <p className="text-sm text-[var(--color-text-secondary)] font-medium">
+                                                            לחץ על הסימן הלוגי ( <InlineMath math="<, >, \neq" /> ) במשוואה כדי לשנות את כיוון המבחן.
+                                                        </p>
                                                         {(() => {
                                                             let parameterSymbol = '\\mu';
                                                             let h0Val = mu0Input;
@@ -1821,10 +1824,6 @@ export default function HypothesisTestingCalculator() {
                                                             );
                                                         })()}
 
-                                                        <p className="text-sm text-[var(--color-text-secondary)] font-medium mt-2">
-                                                            <span className="inline-block px-2 py-0.5 bg-[var(--color-accent-cobalt-bg)]/10 rounded border border-[var(--color-accent-cobalt-line)]/20 mr-2 text-[var(--color-accent-cobalt)] text-xs font-bold">טיפ אינטראקטיבי:</span>
-                                                            לחץ על הסימן הלוגי ( <InlineMath math="<, >, \neq" /> ) במשוואה כדי לשנות את כיוון המבחן.
-                                                        </p>
                                                     </div>
 
 
