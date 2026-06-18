@@ -1865,18 +1865,18 @@ export default function HypothesisTestingCalculator() {
 
                                                         <div className="flex w-[440px] justify-between relative mt-0">
                                                             {/* Horizontal Line connecting YES and NO */}
-                                                            <div className="absolute top-[20px] left-[60px] right-[60px] h-[2px] bg-[var(--color-surface-raised)]"></div>
+                                                            <div className="absolute top-[20px] left-[60px] right-[60px] h-[2px] bg-[var(--color-border)]"></div>
 
                                                             {/* YES Branch (Right side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
-                                                                <div className="w-[2px] h-[20px] bg-[var(--color-surface-raised)]"></div>
+                                                                <div className="w-[2px] h-[20px] bg-[var(--color-border)]"></div>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(true)}
                                                                     className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${varianceKnown ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-success)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-success)]'}`}>
                                                                     כן
                                                                 </button>
-                                                                <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                 <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                     מבחן <InlineMath math="Z" />
                                                                 </div>
@@ -1942,27 +1942,27 @@ export default function HypothesisTestingCalculator() {
 
                                                             {/* NO Branch (Left side in RTL) */}
                                                             <div className="flex flex-col items-center relative z-10 w-[120px]">
-                                                                <div className="w-[2px] h-[20px] bg-[var(--color-surface-raised)]"></div>
+                                                                <div className="w-[2px] h-[20px] bg-[var(--color-border)]"></div>
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(false)}
                                                                     className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${!varianceKnown ? 'bg-[var(--color-error)]/15 text-[var(--color-error)] border-[var(--color-error)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-error)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-error)]'}`}>
                                                                     לא
                                                                 </button>
-                                                                <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                 <div className={`w-full text-center px-2 py-2 rounded-sm border-2 font-bold z-10 text-sm transition-all ${!varianceKnown ? 'bg-[var(--color-error)]/15 border-[var(--color-border)] text-[var(--color-text-primary)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                     האם המדגם <InlineMath math="n \ge 30" />?
                                                                 </div>
 
                                                                 {/* Child branches for Q2 */}
                                                                 <div className="flex w-[180px] justify-between relative mt-0">
-                                                                    <div className="absolute top-[15px] left-[35px] right-[35px] h-[2px] bg-[var(--color-surface-raised)]"></div>
+                                                                    <div className="absolute top-[15px] left-[35px] right-[35px] h-[2px] bg-[var(--color-border)]"></div>
 
                                                                     {/* YES for Q2 (Right in RTL) */}
                                                                     <div className="flex flex-col items-center relative z-10 w-[70px]">
-                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                         <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
-                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-border)]"></div>
                                                                         <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                             מבחן <InlineMath math="Z" />
                                                                         </div>
@@ -1970,9 +1970,9 @@ export default function HypothesisTestingCalculator() {
 
                                                                     {/* NO for Q2 (Left in RTL) */}
                                                                     <div className="flex flex-col items-center relative z-10 w-[70px]">
-                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                         <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-error)]/15 text-[var(--color-error)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
-                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-surface-raised)]"></div>
+                                                                        <div className="w-[2px] h-[10px] bg-[var(--color-border)]"></div>
                                                                         <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-error)] shadow-[0_0_15px_rgba(217,91,91,0.3)] ring-1 ring-[var(--color-error)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                             מבחן <InlineMath math="t" />
                                                                         </div>
