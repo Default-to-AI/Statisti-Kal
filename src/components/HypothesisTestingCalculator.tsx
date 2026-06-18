@@ -1732,6 +1732,23 @@ export default function HypothesisTestingCalculator() {
                         )}
                     </div>
 
+                                        <div className="flex justify-end gap-3 lg:col-span-2 order-2 lg:order-2 mb-2">
+                        <button 
+                            onClick={() => { setShowHypothesisTesting(true); setShowCI(true); setShowPower(true); }}
+                            className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2"
+                        >
+                            <ChevronDown size={16} />
+                            הרחב הכל
+                        </button>
+                        <button 
+                            onClick={() => { setShowHypothesisTesting(false); setShowCI(false); setShowPower(false); }}
+                            className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2"
+                        >
+                            <ChevronUp size={16} />
+                            צמצם הכל
+                        </button>
+                    </div>
+
                     {/* Solutions Steps Accordion / Panel */}
                     <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
                         <button
@@ -1768,13 +1785,13 @@ export default function HypothesisTestingCalculator() {
                                         {decisionData.isReject ? (
                                             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-teal)]/15 text-[var(--color-success)] border border-[var(--color-border)] shadow-sm leading-none">
                                                 <CheckCircle size={18} className="text-[var(--color-success)] shrink-0" />
-                                                <span>החלטה: יש לדחות את </span>
+                                                <span>קפיצה למסקנה: יש לדחות את </span>
                                                 <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
                                             </div>
                                         ) : (
                                             <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-crimson)]/15 text-[var(--color-error)] border border-[var(--color-border)] shadow-sm leading-none">
                                                 <XCircle size={18} className="text-[var(--color-error)] shrink-0" />
-                                                <span>החלטה: אין לדחות את </span>
+                                                <span>קפיצה למסקנה: אין לדחות את </span>
                                                 <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
                                             </div>
                                         )}
