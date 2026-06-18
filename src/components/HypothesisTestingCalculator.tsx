@@ -6,7 +6,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AnimatedDetails } from './ui/CustomComponents';
+import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
 import { InlineMath, BlockMath } from 'react-katex';
 import {
     Info,
@@ -28,7 +28,8 @@ import {
     Activity,
     Target,
     Map,
-    Percent
+    Percent,
+    BookOpen
 } from 'lucide-react';
 import {
     ResponsiveContainer,
@@ -217,10 +218,14 @@ type TailType = 'right' | 'left' | 'two-tailed';
 // FormulaBlock: Raw/general formula with symbolic variables
 function FormulaBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
-        <div className={`w-full overflow-x-auto py-3 my-2 scrollbar-thin ${className}`} dir="ltr">
-            <div className="relative border border-[var(--color-border)] border-l-4 border-l-[var(--color-accent-brass)] rounded-lg bg-[var(--color-surface-raised)] p-4 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
-                <div className="text-right w-full mb-1"><span className="text-caption font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none" dir="rtl">תבנית כללית</span></div>
-                <div className="py-2">{children}</div>
+        <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
+            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
+                <div className="relative border border-[var(--color-border)] border-l-4 border-dashed border-l-[var(--color-accent-brass)]/70 rounded-lg bg-[var(--color-accent-brass)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
+                    {children}
+                </div>
+            </div>
+            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-brass)]/60">
+                <BookOpen size={36} strokeWidth={1.2} />
             </div>
         </div>
     );
@@ -229,10 +234,14 @@ function FormulaBlock({ children, className = '' }: { children: React.ReactNode;
 // CalcBlock: Calculation with actual substituted values
 function CalcBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
-        <div className={`w-full overflow-x-auto py-3 my-2 scrollbar-thin ${className}`} dir="ltr">
-            <div className="relative border border-[var(--color-border)] border-l-4 border-l-[var(--color-accent-cobalt)] rounded-lg bg-[var(--color-surface-raised)] p-4 space-y-3 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
-                <div className="text-right w-full mb-1"><span className="text-caption font-bold text-[var(--color-text-secondary)] tracking-wider uppercase select-none" dir="rtl">יישום</span></div>
-                <div className="py-2">{children}</div>
+        <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
+            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
+                <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-accent-cobalt)] rounded-lg bg-[var(--color-accent-cobalt)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl text-left w-full min-w-max [&_.katex-display]:!overflow-visible font-sans text-[var(--color-text-primary)]">
+                    {children}
+                </div>
+            </div>
+            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-cobalt)]/60">
+                <Calculator size={36} strokeWidth={1.2} />
             </div>
         </div>
     );
@@ -503,6 +512,7 @@ export default function HypothesisTestingCalculator() {
 
     // Accordion state
     const [showSteps, setShowSteps] = useState<boolean>(true);
+    const [conclusionMethod, setConclusionMethod] = useLocalStorageState<'test_statistic' | 'rejection_region' | 'p_value'>('HT_conclusionMethod', 'test_statistic');
 
     // Error validations
     const errors = useMemo(() => {
@@ -2377,165 +2387,174 @@ export default function HypothesisTestingCalculator() {
                                                                 </h4>
                                                             </div>
 
-                                                            <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold mt-6">
-                                                                כלל ההחלטה של המבחן הסטטיסטי הוא:
+                                                            <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed mt-6">
+                                                                כל שלוש הגישות (סטטיסטי המבחן, אזור הדחייה וה-P-Value) הן שקולות לחלוטין מבחינה מתמטית ומהוות התמרות אלגבריות שונות של אותו אי-שוויון. מאחר שכולן נשענות על אותם נתוני מדגם ואותה התפלגות של המשתנה המקרי, הן יובילו תמיד ובאופן מוחלט לאותה החלטה בדיוק בנוגע לדחייה או אי-דחייה של השערת האפס (<InlineMath math="H_0" />).
+                                                                <br /><br />
+                                                                הבחירה באיזו גישה להציג נובעת מההקשר היישומי, סוג התוצר או קהל היעד, ולא מהבדל בתוקף הסטטיסטי.
                                                             </p>
 
-                                                            <div className="py-3 space-y-4 text-xl md:text-2xl">
-                                                                <FormulaBlock>
-                                                                    <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת סטטיסטי המבחן:</div>
-                                                                    {tailType === 'right' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P(Z \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\alpha \\implies Z_{crit} = z_{\\alpha}`} /> :
-                                                                            <BlockMath math={`P(t_{(n-1)} \\ge t_{crit}) = \\alpha \\implies t_{crit} = t_{\\alpha}`} />
-                                                                    )}
-                                                                    {tailType === 'left' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P(Z \\le Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = \\alpha \\implies Z_{crit} = -z_{\\alpha}`} /> :
-                                                                            <BlockMath math={`P(t_{(n-1)} \\le t_{crit}) = \\alpha \\implies t_{crit} = -t_{\\alpha}`} />
-                                                                    )}
-                                                                    {tailType === 'two-tailed' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P(|Z| \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\frac{\\alpha}{2} \\implies Z_{crit_{1,2}} = \\pm z_{\\alpha/2}`} /> :
-                                                                            <BlockMath math={`P(|t_{(n-1)}| \\ge t_{crit}) = \\alpha \\implies t_{crit_{1,2}} = \\pm t_{\\alpha/2}`} />
-                                                                    )}
-                                                                    <div className="mt-6 pt-2">
-                                                                        {tailType === 'right' ? (
-                                                                            <>
-                                                                                <div className="text-[var(--color-success)] font-bold">
-                                                                                    <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} \\ge ${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Reject } H_0`} />
-                                                                                </div>
-                                                                                <div className="text-[var(--color-error)] font-bold mt-4">
-                                                                                    <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} < ${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Fail to Reject } H_0`} />
-                                                                                </div>
-                                                                            </>
-                                                                        ) : tailType === 'left' ? (
-                                                                            <>
-                                                                                <div className="text-[var(--color-success)] font-bold">
-                                                                                    <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} \\le -${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Reject } H_0`} />
-                                                                                </div>
-                                                                                <div className="text-[var(--color-error)] font-bold mt-4">
-                                                                                    <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} > -${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Fail to Reject } H_0`} />
-                                                                                </div>
-                                                                            </>
-                                                                        ) : (
-                                                                            <>
-                                                                                <div className="text-[var(--color-success)] font-bold">
-                                                                                    <BlockMath math={`\\text{If: } |${varianceKnown ? 'Z' : 't'}| \\ge ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\text{ , Reject } H_0`} />
-                                                                                </div>
-                                                                                <div className="text-[var(--color-error)] font-bold mt-4">
-                                                                                    <BlockMath math={`\\text{If: } |${varianceKnown ? 'Z' : 't'}| < ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\text{ , Fail to Reject } H_0`} />
-                                                                                </div>
-                                                                            </>
-                                                                        )}
-                                                                    </div>
-                                                                </FormulaBlock>
-                                                            </div>
-
-                                                            <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-2 mb-8">
-                                                                <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
-                                                                בגישת סטטיסטי המבחן נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם סטטיסטי המבחן המחושב נופל באזור הדחייה, מעבר לערך הסף הקריטי.
-                                                            </p>
-
-                                                            {(() => {
-                                                                if (!stats) return null;
-                                                                const getDisplayCriticalValue = () => {
-                                                                    if (!varianceKnown) return Math.abs(stats?.zCrit || 0).toFixed(4);
-                                                                    const a = Number(alpha);
-                                                                    if (tailType === 'right' || tailType === 'left') {
-                                                                        if (a === 0.05) return '1.645';
-                                                                        if (a === 0.01) return '2.326';
-                                                                        if (a === 0.10) return '1.282';
-                                                                    } else {
-                                                                        if (a === 0.05) return '1.960';
-                                                                        if (a === 0.01) return '2.576';
-                                                                        if (a === 0.10) return '1.645';
-                                                                    }
-                                                                    return Math.abs(stats?.zCrit || 0).toFixed(4);
-                                                                };
-                                                                const displayCrit = getDisplayCriticalValue();
-                                                                const paramSymbol = testType === 'sum' ? '\\sum X' : testType === 'single' ? 'X' : '\\bar{X}';
-                                                                const muSymbol = testType === 'sum' ? 'E(\\sum X)' : '\\mu_0';
-                                                                return (
-                                                                    <>
-                                                                        <hr className="my-10 border-[var(--color-border)] opacity-30 w-1/2 mx-auto" />
-                                                                        <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
-                                                                            לחלופין, נגדיר את אזור הדחייה (<InlineMath math="C" />) במונחי הערך המקורי ({testType === 'sum' ? 'סכום התצפיות' : testType === 'single' ? 'התצפית הבודדת' : 'ממוצע המדגם'}):
-                                                                        </p>
-
-                                                                        <div className="py-3 space-y-4 text-xl md:text-2xl">
+                                                            <div className="space-y-4 mt-8">
+                                                                {/* Approach 1 */}
+                                                                <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={true}>
+                                                                    <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
+                                                                        <div className="flex-1 flex items-center gap-3">
+                                                                            <Target size={20} />
+                                                                            <span className="text-lg sm:text-xl">גישת סטטיסטי המבחן</span>
+                                                                        </div>
+                                                                        <ChevronDown size={22} className="transition-transform duration-300 group-[.is-open]:rotate-180 text-[var(--color-text-secondary)]" />
+                                                                    </summary>
+                                                                    <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
+                                                                        <div className="py-2 space-y-4 text-xl md:text-2xl">
                                                                             <FormulaBlock>
-                                                                                <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת אזור הדחייה:</div>
-                                                                                {tailType === 'right' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} + ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
-                                                                                {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
-                                                                                {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
+                                                                                {tailType === 'right' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P(Z \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\alpha \\implies Z_{crit} = z_{\\alpha}`} /> :
+                                                                                        <BlockMath math={`P(t_{(n-1)} \\ge t_{crit}) = \\alpha \\implies t_{crit} = t_{\\alpha}`} />
+                                                                                )}
+                                                                                {tailType === 'left' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P(Z \\le Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = \\alpha \\implies Z_{crit} = -z_{\\alpha}`} /> :
+                                                                                        <BlockMath math={`P(t_{(n-1)} \\le t_{crit}) = \\alpha \\implies t_{crit} = -t_{\\alpha}`} />
+                                                                                )}
+                                                                                {tailType === 'two-tailed' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P(|Z| \\ge Z_{crit}) = \\alpha \\implies \\Phi(Z_{crit}) = 1 - \\frac{\\alpha}{2} \\implies Z_{crit_{1,2}} = \\pm z_{\\alpha/2}`} /> :
+                                                                                        <BlockMath math={`P(|t_{(n-1)}| \\ge t_{crit}) = \\alpha \\implies t_{crit_{1,2}} = \\pm t_{\\alpha/2}`} />
+                                                                                )}
+                                                                            </FormulaBlock>
+                                                                            <CalcBlock>
+                                                                                <div className="pt-2">
+                                                                                    {tailType === 'right' ? (
+                                                                                        <>
+                                                                                            <div className="text-[var(--color-success)] font-bold">
+                                                                                                <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} \\ge ${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Reject } H_0`} />
+                                                                                            </div>
+                                                                                            <div className="text-[var(--color-error)] font-bold mt-4">
+                                                                                                <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} < ${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Fail to Reject } H_0`} />
+                                                                                            </div>
+                                                                                        </>
+                                                                                    ) : tailType === 'left' ? (
+                                                                                        <>
+                                                                                            <div className="text-[var(--color-success)] font-bold">
+                                                                                                <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} \\le -${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Reject } H_0`} />
+                                                                                            </div>
+                                                                                            <div className="text-[var(--color-error)] font-bold mt-4">
+                                                                                                <BlockMath math={`\\text{If: } ${varianceKnown ? 'Z' : 't'} > -${varianceKnown ? 'z' : 't'}_{\\alpha} \\text{ , Fail to Reject } H_0`} />
+                                                                                            </div>
+                                                                                        </>
+                                                                                    ) : (
+                                                                                        <>
+                                                                                            <div className="text-[var(--color-success)] font-bold">
+                                                                                                <BlockMath math={`\\text{If: } |${varianceKnown ? 'Z' : 't'}| \\ge ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\text{ , Reject } H_0`} />
+                                                                                            </div>
+                                                                                            <div className="text-[var(--color-error)] font-bold mt-4">
+                                                                                                <BlockMath math={`\\text{If: } |${varianceKnown ? 'Z' : 't'}| < ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\text{ , Fail to Reject } H_0`} />
+                                                                                            </div>
+                                                                                        </>
+                                                                                    )}
+                                                                                </div>
+                                                                            </CalcBlock>
+                                                                        </div>
+                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
+                                                                            <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                            בגישת סטטיסטי המבחן נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם סטטיסטי המבחן המחושב נופל באזור הדחייה, מעבר לערך הסף הקריטי.
+                                                                        </p>
+                                                                    </div>
+                                                                </AnimatedDetails>
 
-                                                                                <div className="mt-6 pt-2">
+                                                                {/* Approach 2 */}
+                                                                {(() => {
+                                                                    if (!stats) return null;
+                                                                    const paramSymbol = testType === 'sum' ? '\\sum X' : testType === 'single' ? 'X' : '\\bar{X}';
+                                                                    const muSymbol = testType === 'sum' ? 'E(\\sum X)' : '\\mu_0';
+                                                                    return (
+                                                                        <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
+                                                                            <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
+                                                                                <div className="flex-1 flex items-center gap-3">
+                                                                                    <Map size={20} />
+                                                                                    <span className="text-lg sm:text-xl">גישת אזור הדחייה</span>
+                                                                                </div>
+                                                                                <ChevronDown size={22} className="transition-transform duration-300 group-[.is-open]:rotate-180 text-[var(--color-text-secondary)]" />
+                                                                            </summary>
+                                                                            <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
+                                                                                <div className="py-2 space-y-4 text-xl md:text-2xl">
+                                                                                    <FormulaBlock>
+                                                                                        {tailType === 'right' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} + ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
+                                                                                        {tailType === 'left' && <BlockMath math={`${paramSymbol}_{crit} = ${muSymbol} - ${varianceKnown ? 'z' : 't'}_{\\alpha} \\cdot SE`} />}
+                                                                                        {tailType === 'two-tailed' && <BlockMath math={`${paramSymbol}_{crit_{1,2}} = ${muSymbol} \\pm ${varianceKnown ? 'z' : 't'}_{\\alpha/2} \\cdot SE`} />}
+                                                                                    </FormulaBlock>
+                                                                                    <CalcBlock>
+                                                                                        <div className="pt-2">
+                                                                                            <div className="text-[var(--color-success)] font-bold">
+                                                                                                {tailType === 'right' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\ge ${paramSymbol}_{crit} \\}`} />}
+                                                                                                {tailType === 'left' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\le ${paramSymbol}_{crit} \\}`} />}
+                                                                                                {tailType === 'two-tailed' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\le ${paramSymbol}_{crit_1} \\text{ or } ${paramSymbol} \\ge ${paramSymbol}_{crit_2} \\}`} />}
+                                                                                                <BlockMath math={`\\text{If: } ${paramSymbol} \\in C \\text{ , Reject } H_0`} />
+                                                                                            </div>
+                                                                                            <div className="text-[var(--color-error)] font-bold mt-4">
+                                                                                                {tailType === 'right' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol} < ${paramSymbol}_{crit} \\}`} />}
+                                                                                                {tailType === 'left' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol} > ${paramSymbol}_{crit} \\}`} />}
+                                                                                                {tailType === 'two-tailed' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol}_{crit_1} < ${paramSymbol} < ${paramSymbol}_{crit_2} \\}`} />}
+                                                                                                <BlockMath math={`\\text{If: } ${paramSymbol} \\in \\bar{C} \\text{ , Fail to Reject } H_0`} />
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </CalcBlock>
+                                                                                </div>
+                                                                                <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
+                                                                                    <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                                    בגישת אזור הדחייה (הערך המקורי) נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם הערך המקורי של המדגם שייך לקבוצת הדחייה (<InlineMath math="C" />).
+                                                                                </p>
+                                                                            </div>
+                                                                        </AnimatedDetails>
+                                                                    );
+                                                                })()}
+
+                                                                {/* Approach 3 */}
+                                                                <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
+                                                                    <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
+                                                                        <div className="flex-1 flex items-center gap-3">
+                                                                            <Percent size={20} />
+                                                                            <span className="text-lg sm:text-xl">גישת מובהקות התוצאה (P-Value)</span>
+                                                                        </div>
+                                                                        <ChevronDown size={22} className="transition-transform duration-300 group-[.is-open]:rotate-180 text-[var(--color-text-secondary)]" />
+                                                                    </summary>
+                                                                    <div className="p-4 sm:p-6 bg-[var(--color-surface-raised)]/50 rounded-b-lg">
+                                                                        <div className="py-2 space-y-4 text-xl md:text-2xl">
+                                                                            <FormulaBlock>
+                                                                                {tailType === 'right' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P\\text{-Value} = P(Z \\ge Z_{\\text{stat}}) = 1 - \\Phi(Z_{\\text{stat}})`} /> :
+                                                                                        <BlockMath math={`P\\text{-Value} = P(t_{(n-1)} \\ge t_{\\text{stat}})`} />
+                                                                                )}
+                                                                                {tailType === 'left' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P\\text{-Value} = P(Z \\le Z_{\\text{stat}}) = \\Phi(Z_{\\text{stat}})`} /> :
+                                                                                        <BlockMath math={`P\\text{-Value} = P(t_{(n-1)} \\le t_{\\text{stat}})`} />
+                                                                                )}
+                                                                                {tailType === 'two-tailed' && (
+                                                                                    varianceKnown ?
+                                                                                        <BlockMath math={`P\\text{-Value} = 2 \\cdot P(Z \\ge |Z_{\\text{stat}}|) = 2 \\cdot (1 - \\Phi(|Z_{\\text{stat}}|))`} /> :
+                                                                                        <BlockMath math={`P\\text{-Value} = 2 \\cdot P(|t_{(n-1)}| \\ge |t_{\\text{stat}}|)`} />
+                                                                                )}
+                                                                            </FormulaBlock>
+                                                                            <CalcBlock>
+                                                                                <div className="pt-2">
                                                                                     <div className="text-[var(--color-success)] font-bold">
-                                                                                        {tailType === 'right' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\ge ${paramSymbol}_{crit} \\}`} />}
-                                                                                        {tailType === 'left' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\le ${paramSymbol}_{crit} \\}`} />}
-                                                                                        {tailType === 'two-tailed' && <BlockMath math={`C = \\{ ${paramSymbol} \\mid ${paramSymbol} \\le ${paramSymbol}_{crit_1} \\text{ or } ${paramSymbol} \\ge ${paramSymbol}_{crit_2} \\}`} />}
-                                                                                        <BlockMath math={`\\text{If: } ${paramSymbol} \\in C \\text{ , Reject } H_0`} />
+                                                                                        <BlockMath math={`\\text{If: P-Value } \\le \\alpha \\text{ , Reject } H_0`} />
                                                                                     </div>
                                                                                     <div className="text-[var(--color-error)] font-bold mt-4">
-                                                                                        {tailType === 'right' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol} < ${paramSymbol}_{crit} \\}`} />}
-                                                                                        {tailType === 'left' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol} > ${paramSymbol}_{crit} \\}`} />}
-                                                                                        {tailType === 'two-tailed' && <BlockMath math={`\\bar{C} = \\{ ${paramSymbol} \\mid ${paramSymbol}_{crit_1} < ${paramSymbol} < ${paramSymbol}_{crit_2} \\}`} />}
-                                                                                        <BlockMath math={`\\text{If: } ${paramSymbol} \\in \\bar{C} \\text{ , Fail to Reject } H_0`} />
+                                                                                        <BlockMath math={`\\text{If: P-Value } > \\alpha \\text{ , Fail to Reject } H_0`} />
                                                                                     </div>
                                                                                 </div>
-                                                                            </FormulaBlock>
+                                                                            </CalcBlock>
                                                                         </div>
-
-
-
-                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-2 mb-8">
+                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
                                                                             <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
-                                                                            בגישת אזור הדחייה (הערך המקורי) נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם הערך המקורי של המדגם שייך לקבוצת הדחייה (<InlineMath math="C" />).
+                                                                            בגישת מובהקות התוצאה נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
                                                                         </p>
-                                                                    </>
-                                                                );
-                                                            })()}
-
-
-                                                            <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold mt-4">
-                                                                כלל ההחלטה (מבוסס גישת P-Value) הוא:
-                                                            </p>
-
-                                                            <div className="py-3 space-y-4 text-xl md:text-2xl">
-                                                                <FormulaBlock>
-                                                                    <div className="text-[var(--color-text-secondary)] text-sm md:text-base font-bold mb-2 text-center underline underline-offset-4" dir="rtl">גישת מובהקות התוצאה:</div>
-                                                                    {tailType === 'right' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P\\text{-Value} = P(Z \\ge Z_{\\text{stat}}) = 1 - \\Phi(Z_{\\text{stat}})`} /> :
-                                                                            <BlockMath math={`P\\text{-Value} = P(t_{(n-1)} \\ge t_{\\text{stat}})`} />
-                                                                    )}
-                                                                    {tailType === 'left' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P\\text{-Value} = P(Z \\le Z_{\\text{stat}}) = \\Phi(Z_{\\text{stat}})`} /> :
-                                                                            <BlockMath math={`P\\text{-Value} = P(t_{(n-1)} \\le t_{\\text{stat}})`} />
-                                                                    )}
-                                                                    {tailType === 'two-tailed' && (
-                                                                        varianceKnown ?
-                                                                            <BlockMath math={`P\\text{-Value} = 2 \\cdot P(Z \\ge |Z_{\\text{stat}}|) = 2 \\cdot (1 - \\Phi(|Z_{\\text{stat}}|))`} /> :
-                                                                            <BlockMath math={`P\\text{-Value} = 2 \\cdot P(|t_{(n-1)}| \\ge |t_{\\text{stat}}|)`} />
-                                                                    )}
-
-                                                                    <div className="mt-6 pt-2">
-                                                                        <div className="text-[var(--color-success)] font-bold">
-                                                                            <BlockMath math={`\\text{If: P-Value } \\le \\alpha \\text{ , Reject } H_0`} />
-                                                                        </div>
-                                                                        <div className="text-[var(--color-error)] font-bold mt-4">
-                                                                            <BlockMath math={`\\text{If: P-Value } > \\alpha \\text{ , Fail to Reject } H_0`} />
-                                                                        </div>
                                                                     </div>
-                                                                </FormulaBlock>
+                                                                </AnimatedDetails>
                                                             </div>
-
-                                                            <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-2 mb-8">
-                                                                <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
-                                                                בגישת מובהקות התוצאה נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
-                                                            </p>
                                                         </div>
                                                     </div></AnimatedDetails>
 
@@ -2598,11 +2617,17 @@ export default function HypothesisTestingCalculator() {
 
                                                             {/* Raw formula template */}
                                                             <FormulaBlock>
-                                                                {varianceKnown ? (
-                                                                    <BlockMath math={`Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
-                                                                ) : (
-                                                                    <BlockMath math={`t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
-                                                                )}
+                                                                <div className="flex flex-wrap sm:flex-nowrap justify-center items-center gap-4 w-full py-2">
+                                                                    {varianceKnown ? (
+                                                                        <InlineMath math={`\\displaystyle Z_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+                                                                    ) : (
+                                                                        <InlineMath math={`\\displaystyle t_{\\text{stat}} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+                                                                    )}
+                                                                    <FormulaTranslation
+                                                                        formulaName="סטטיסטי המבחן"
+                                                                        translation="ההפרש בין ממוצע המדגם לתוחלת השערת האפס, מחולק בשגיאת התקן"
+                                                                    />
+                                                                </div>
                                                             </FormulaBlock>
 
                                                             {/* Calculation with actual values */}
@@ -2854,21 +2879,21 @@ export default function HypothesisTestingCalculator() {
                                                                 );
                                                             })()}
 
-                                                            <div className="mt-10 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg overflow-hidden shadow-md">
-                                                                <div className="bg-[var(--color-surface-raised)] px-6 py-5 border-b border-[var(--color-border)] flex items-center justify-between">
+                                                            <div className={`mt-10 bg-[var(--color-surface-raised)] border rounded-lg overflow-hidden shadow-md transition-colors duration-500 ${decisionData.isReject ? 'border-[var(--color-success)]/60 shadow-[0_0_15px_rgba(34,197,94,0.1)]' : 'border-[var(--color-error)]/60 shadow-[0_0_15px_rgba(248,113,113,0.1)]'}`}>
+                                                                <div className={`bg-[var(--color-surface-raised)] px-6 py-5 border-b flex items-center justify-between transition-colors duration-500 ${decisionData.isReject ? 'border-[var(--color-success)]/30' : 'border-[var(--color-error)]/30'}`}>
                                                                     <div className="flex items-center gap-3">
                                                                         <PenTool size={28} className="text-[var(--color-accent-brass)]" />
                                                                         <h3 className="text-2xl sm:text-3xl font-black text-[var(--color-text-primary)] m-0">סיכום ומסקנה סופית</h3>
                                                                     </div>
                                                                     <div className="mr-3 shrink-0">
                                                                         {decisionData.isReject ? (
-                                                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-teal)]/15 text-[var(--color-success)] border border-[var(--color-border)] shadow-sm leading-none">
+                                                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-teal)]/15 text-[var(--color-success)] border border-[var(--color-success)]/40 shadow-sm leading-none">
                                                                                 <CheckCircle size={18} className="text-[var(--color-success)] shrink-0" />
                                                                                 <span>דוחים את </span>
                                                                                 <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
                                                                             </div>
                                                                         ) : (
-                                                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-crimson)]/15 text-[var(--color-error)] border border-[var(--color-border)] shadow-sm leading-none">
+                                                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-crimson)]/15 text-[var(--color-error)] border border-[var(--color-error)]/40 shadow-sm leading-none">
                                                                                 <XCircle size={18} className="text-[var(--color-error)] shrink-0" />
                                                                                 <span>אין לדחות את </span>
                                                                                 <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
@@ -2877,15 +2902,96 @@ export default function HypothesisTestingCalculator() {
                                                                     </div>
                                                                 </div>
 
-                                                                <div className="p-6 space-y-5 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
-                                                                    <p>
-                                                                        <strong className="text-[var(--color-text-primary)]">מסקנה סטטיסטית:</strong> מכיוון שה-<span dir="ltr"><InlineMath math="P\text{-value}" /></span> שווה ל-<strong dir="ltr" className="inline-block px-1"><InlineMath math={`${decisionData.pValue.toFixed(4)}`} /></strong> והוא {decisionData.isReject ? 'קטן או שווה ל' : 'גדול מ'}-<strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></strong>, אנו <strong className={decisionData.isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>{decisionData.isReject ? 'דוחים את' : 'לא יכולים לדחות את'}</strong> השערת האפס (<InlineMath math="H_0" />).
-                                                                        {decisionData.isReject ? ` (כל הגישות לעיל מובילות בעקביות לאותה מסקנה, שכן גם סטטיסטי המבחן נופל באזור הדחייה).` : ` (כל הגישות לעיל מובילות בעקביות לאותה מסקנה, שכן סטטיסטי המבחן אינו מגיע לאזור הדחייה).`}
-                                                                    </p>
+                                                                <div className="bg-[var(--color-surface-raised)] border-b border-[var(--color-border)] p-4 sm:px-6">
+                                                                    <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                                                                        <button
+                                                                            onClick={() => setConclusionMethod('test_statistic')}
+                                                                            className={`px-4 py-2 rounded-md font-bold text-sm transition-all border ${conclusionMethod === 'test_statistic' ? 'bg-[var(--color-accent-cobalt)] text-white border-transparent shadow-sm' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/30'}`}
+                                                                        >
+                                                                            גישת סטטיסטי המבחן
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => setConclusionMethod('rejection_region')}
+                                                                            className={`px-4 py-2 rounded-md font-bold text-sm transition-all border ${conclusionMethod === 'rejection_region' ? 'bg-[var(--color-accent-cobalt)] text-white border-transparent shadow-sm' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/30'}`}
+                                                                        >
+                                                                            גישת אזור הדחייה
+                                                                        </button>
+                                                                        <button
+                                                                            onClick={() => setConclusionMethod('p_value')}
+                                                                            className={`px-4 py-2 rounded-md font-bold text-sm transition-all border ${conclusionMethod === 'p_value' ? 'bg-[var(--color-accent-cobalt)] text-white border-transparent shadow-sm' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/30'}`}
+                                                                        >
+                                                                            גישת מובהקות התוצאה (P-Value)
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
 
-                                                                    <p>
-                                                                        <strong className="text-[var(--color-text-primary)]">במילים אחרות:</strong> נתוני המדגם {decisionData.isReject ? 'מספקים ראיות חזקות לכך ש' : <span><strong>אינם</strong> מספקים עדות סטטיסטית מספקת לכך ש</span>}תוחלת האוכלוסייה (<InlineMath math="\mu" />) {tailType === 'right' ? 'גדולה מ' : tailType === 'left' ? 'קטנה מ' : 'שונה מ'}-<strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\mu_0 = ${mu0}`} /></strong> ברמת מובהקות של <strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></strong> (רמת ביטחון של <strong>{((1 - alpha) * 100).toFixed(0)}%</strong>).
-                                                                    </p>
+                                                                <div className="p-6 space-y-5 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
+                                                                    {(() => {
+                                                                        const isReject = decisionData.isReject;
+                                                                        const statType = varianceKnown ? 'Z' : 't';
+                                                                        const paramSym = testType === 'sum' ? '\\sum X' : testType === 'single' ? 'X' : '\\bar{X}';
+                                                                        const compWord = tailType === 'right' ? 'גדול' : tailType === 'left' ? 'קטן' : 'קיצוני';
+                                                                        
+                                                                        let critValStr = '';
+                                                                        if (tailType === 'right') critValStr = Math.abs(stats.zCrit).toFixed(4);
+                                                                        else if (tailType === 'left') critValStr = (-Math.abs(stats.zCrit)).toFixed(4);
+                                                                        else critValStr = `\\pm ${Math.abs(stats.zCrit).toFixed(4)}`;
+
+                                                                        let critParamStr = '';
+                                                                        if (tailType === 'two-tailed') {
+                                                                            critParamStr = `${stats.C_bar_value_1?.toFixed(4)} או ${stats.C_bar_value_2?.toFixed(4)}`;
+                                                                        } else {
+                                                                            critParamStr = `${stats.C_bar_value?.toFixed(4)}`;
+                                                                        }
+
+                                                                        const Highlight = ({ children }: { children: React.ReactNode }) => (
+                                                                            <span className="text-[var(--color-accent-brass)] font-bold bg-[var(--color-accent-brass)]/10 px-1 py-0.5 rounded border border-[var(--color-accent-brass)]/30 mx-1">{children}</span>
+                                                                        );
+
+                                                                        if (conclusionMethod === 'test_statistic') {
+                                                                            if (isReject) {
+                                                                                return (
+                                                                                    <p>
+                                                                                        ברמת מובהקות של <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, סטטיסטי המבחן שחושב, <span dir="ltr" className="inline-block px-1"><InlineMath math={`${statType} = ${decisionData.statObs.toFixed(4)}`} /></span>, נופל באזור הדחייה מכיוון שהוא <strong>{compWord}</strong> מהערך הקריטי <span dir="ltr" className="inline-block px-1"><InlineMath math={`${statType}_{crit} = ${critValStr}`} /></span>. לכן, אנו דוחים את השערת האפס (<InlineMath math="H_0" />) ומסיקים סטטיסטית כי <Highlight>[הזן את מסקנת המחקר במילים, למשל: ממוצע השכר אכן עלה]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            } else {
+                                                                                return (
+                                                                                    <p>
+                                                                                        ברמת מובהקות של <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, סטטיסטי המבחן שחושב, <span dir="ltr" className="inline-block px-1"><InlineMath math={`${statType} = ${decisionData.statObs.toFixed(4)}`} /></span>, אינו נופל באזור הדחייה מכיוון שהוא אינו <strong>{compWord}</strong> מהערך הקריטי <span dir="ltr" className="inline-block px-1"><InlineMath math={`${statType}_{crit} = ${critValStr}`} /></span>. לכן, אין בידינו מספיק עדות סטטיסטית כדי לדחות את השערת האפס (<InlineMath math="H_0" />), ולא ניתן להסיק כי <Highlight>[הזן את טענת החוקר במילים]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            }
+                                                                        } else if (conclusionMethod === 'rejection_region') {
+                                                                            if (isReject) {
+                                                                                return (
+                                                                                    <p>
+                                                                                        ברמת מובהקות של <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, הערך שהתקבל במדגם, <span dir="ltr" className="inline-block px-1"><InlineMath math={`${paramSym} = ${mu1}`} /></span>, חצה את ערך הסף הקריטי <span dir="ltr" className="inline-block px-1"><InlineMath math={`${paramSym}_{crit} = ${critParamStr}`} /></span> ושייך לאזור הדחייה. לפיכך, אנו דוחים את השערת האפס (<InlineMath math="H_0" />) ברמת ביטחון של <strong>{((1 - alpha) * 100).toFixed(0)}%</strong> ומקבלים את השערת החוקר כי <Highlight>[הזן את מסקנת המחקר במילים]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            } else {
+                                                                                return (
+                                                                                    <p>
+                                                                                        ברמת מובהקות של <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, הערך שהתקבל במדגם, <span dir="ltr" className="inline-block px-1"><InlineMath math={`${paramSym} = ${mu1}`} /></span>, אינו שייך לאזור הדחייה, שכן הוא אינו חורג מערך הסף הקריטי <span dir="ltr" className="inline-block px-1"><InlineMath math={`${paramSym}_{crit} = ${critParamStr}`} /></span>. לפיכך, אנו לא דוחים את השערת האפס (<InlineMath math="H_0" />); נתוני המדגם אינם מספקים תמיכה מובהקת לטענה כי <Highlight>[הזן את טענת החוקר במילים]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            }
+                                                                        } else {
+                                                                            if (isReject) {
+                                                                                return (
+                                                                                    <p>
+                                                                                        מכיוון שהתקבל ערך מובהקות (<span dir="ltr" className="inline-block px-1"><InlineMath math={`\\text{P-Value} = ${decisionData.pValue.toFixed(4)}`} /></span>) אשר קטן מרמת המובהקות שנקבעה, <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, התוצאה מובהקת סטטיסטית. לפיכך, אנו דוחים את השערת האפס (<InlineMath math="H_0" />) ומסיקים כי <Highlight>[הזן את מסקנת המחקר במילים]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            } else {
+                                                                                return (
+                                                                                    <p>
+                                                                                        מכיוון שהתקבל ערך מובהקות (<span dir="ltr" className="inline-block px-1"><InlineMath math={`\\text{P-Value} = ${decisionData.pValue.toFixed(4)}`} /></span>) אשר גדול מרמת המובהקות שנקבעה, <span dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></span>, התוצאה אינה מובהקת סטטיסטית. משום כך, אנו לא דוחים את השערת האפס (<InlineMath math="H_0" />), והמדגם לא סיפק עדות חזקה מספיק כדי לאשש את הטענה כי <Highlight>[הזן את טענת החוקר במילים]</Highlight>.
+                                                                                    </p>
+                                                                                );
+                                                                            }
+                                                                        }
+                                                                    })()}
 
                                                                     <div className="bg-[var(--color-surface)] border border-[var(--color-accent-brass)]/30 p-4 rounded-lg mt-4 flex gap-3 items-start">
                                                                         <AlertTriangle size={20} className="text-[var(--color-warning)] mt-0.5 shrink-0" />
@@ -2951,39 +3057,115 @@ export default function HypothesisTestingCalculator() {
                                         </p>
                                     </div>
 
+                                    {/* --- CI CONTROLS --- */}
+                                    <div className="flex flex-col md:flex-row gap-6 p-5 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg shadow-sm mb-6">
+                                        <div className="flex-1 space-y-3">
+                                            <span className="text-sm font-bold text-[var(--color-text-secondary)]">סוג רווח הסמך:</span>
+                                            <div className="flex gap-2">
+                                                {[
+                                                    { id: 'left', label: 'חסם עליון' },
+                                                    { id: 'two-tailed', label: 'דו-צדדי' },
+                                                    { id: 'right', label: 'חסם תחתון' }
+                                                ].map(t => (
+                                                    <button
+                                                        key={t.id}
+                                                        onClick={() => setCiTailType(t.id as TailType)}
+                                                        className={`flex-1 py-2 px-2 text-sm font-bold rounded-md border transition-all ${ciTailType === t.id ? 'bg-[var(--color-accent-cobalt-bg)] border-[var(--color-accent-cobalt)] text-[var(--color-accent-cobalt)] shadow-sm' : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)]'}`}
+                                                    >
+                                                        {t.label}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                        <div className="flex-1 space-y-3">
+                                            <span className="text-sm font-bold text-[var(--color-text-secondary)]">רמת סמך (<InlineMath math="1-\alpha" />):</span>
+                                            <div className="flex gap-2">
+                                                {[0.01, 0.05, 0.10].map((pVal) => (
+                                                    <button
+                                                        key={pVal}
+                                                        onClick={() => applyCiAlphaPreset(pVal)}
+                                                        className={`flex-1 py-2 px-2 text-sm font-bold rounded-md border transition-all ${ciAlpha === pVal ? 'bg-[var(--color-accent-cobalt-bg)] border-[var(--color-accent-cobalt)] text-[var(--color-accent-cobalt)] shadow-sm' : 'bg-[var(--color-bg)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)]'}`}
+                                                    >
+                                                        {((1 - pVal) * 100).toFixed(0)}%
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     {/* Known Variance */}
-                                    <div className={`p-6 rounded-lg border transition-all \${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]/50 shadow-sm' : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] opacity-70'}`}>
+                                    <div className={`p-6 rounded-lg border transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]/50 shadow-sm' : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] opacity-70'}`}>
                                         <h3 className="font-bold text-lg mb-4 underline">רווח סמך עבור תוחלת האוכלוסייה, כאשר שונותה ידועה</h3>
                                         <FormulaBlock>
-                                            <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}`} />
+                                            {ciTailType === 'two-tailed' ? (
+                                                <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm z_{1-\\alpha/2} \\frac{\\sigma}{\\sqrt{n}}`} />
+                                            ) : ciTailType === 'left' ? (
+                                                <BlockMath math={`\\text{חסם עליון ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad (-\\infty, \\bar{X} + z_{1-\\alpha} \\frac{\\sigma}{\\sqrt{n}}]`} />
+                                            ) : (
+                                                <BlockMath math={`\\text{חסם תחתון ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad [\\bar{X} - z_{1-\\alpha} \\frac{\\sigma}{\\sqrt{n}}, \\infty)`} />
+                                            )}
                                         </FormulaBlock>
 
                                         {varianceKnown && stats && decisionData && (
                                             <div className="mt-6 border-t border-[var(--color-border)] pt-4">
                                                 <CalcBlock>
-                                                    <BlockMath math={`\\bar{X} \\pm z_{${1 - alpha / 2}} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(inverseNormalCDF(alpha / 2)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
-                                                    <BlockMath math={`[${(decisionData.xBar - Math.abs(inverseNormalCDF(alpha / 2)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(inverseNormalCDF(alpha / 2)) * stats.se).toFixed(4)}]`} />
+                                                    {ciTailType === 'two-tailed' ? (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} \\pm z_{${1 - ciAlpha / 2}} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(inverseNormalCDF(ciAlpha / 2)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`[${(decisionData.xBar - Math.abs(inverseNormalCDF(ciAlpha / 2)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(inverseNormalCDF(ciAlpha / 2)) * stats.se).toFixed(4)}]`} />
+                                                        </>
+                                                    ) : ciTailType === 'left' ? (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} + z_{${1 - ciAlpha}} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} + ${Math.abs(inverseNormalCDF(ciAlpha)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`(-\\infty, ${(decisionData.xBar + Math.abs(inverseNormalCDF(ciAlpha)) * stats.se).toFixed(4)}]`} />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} - z_{${1 - ciAlpha}} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} - ${Math.abs(inverseNormalCDF(ciAlpha)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`[${(decisionData.xBar - Math.abs(inverseNormalCDF(ciAlpha)) * stats.se).toFixed(4)}, \\infty)`} />
+                                                        </>
+                                                    )}
                                                 </CalcBlock>
                                             </div>
                                         )}
                                     </div>
 
                                     {/* Unknown Variance */}
-                                    <div className={`p-6 rounded-lg border transition-all \${!varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-accent-teal)]/50 shadow-sm' : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] opacity-70'}`}>
+                                    <div className={`p-6 rounded-lg border transition-all ${!varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-accent-teal)]/50 shadow-sm' : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] opacity-70'}`}>
                                         <h3 className="font-bold text-lg mb-4 underline">רווח סמך עבור תוחלת האוכלוסייה, כאשר שונותה איננה ידועה</h3>
                                         <div className="text-base sm:text-lg mb-4 text-[var(--color-text-primary)]">
                                             נסמן את סטיית התקן המדגמית:
                                             <BlockMath math={`S = \\sqrt{\\frac{\\sum(x_i - \\bar{x})^2}{n-1}} = \\sqrt{\\frac{\\sum x_i^2 - n\\bar{x}^2}{n-1}}`} />
                                         </div>
                                         <FormulaBlock>
-                                            <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm t_{(n-1, 1-\\alpha/2)} \\frac{S}{\\sqrt{n}}`} />
+                                            {ciTailType === 'two-tailed' ? (
+                                                <BlockMath math={`\\text{רו"ס ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad \\bar{X} \\pm t_{(n-1, 1-\\alpha/2)} \\frac{S}{\\sqrt{n}}`} />
+                                            ) : ciTailType === 'left' ? (
+                                                <BlockMath math={`\\text{חסם עליון ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad (-\\infty, \\bar{X} + t_{(n-1, 1-\\alpha)} \\frac{S}{\\sqrt{n}}]`} />
+                                            ) : (
+                                                <BlockMath math={`\\text{חסם תחתון ברמת סמך } 1-\\alpha \\text{ עבור } \\mu : \\quad [\\bar{X} - t_{(n-1, 1-\\alpha)} \\frac{S}{\\sqrt{n}}, \\infty)`} />
+                                            )}
                                         </FormulaBlock>
 
                                         {!varianceKnown && stats && decisionData && (
                                             <div className="mt-6 border-t border-[var(--color-border)] pt-4">
                                                 <CalcBlock>
-                                                    <BlockMath math={`\\bar{X} \\pm t_{(${stats.df}, ${1 - alpha / 2})} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(studentTPPF(alpha / 2, stats.df)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
-                                                    <BlockMath math={`[${(decisionData.xBar - Math.abs(studentTPPF(alpha / 2, stats.df)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(studentTPPF(alpha / 2, stats.df)) * stats.se).toFixed(4)}]`} />
+                                                    {ciTailType === 'two-tailed' ? (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} \\pm t_{(${stats.df}, ${1 - ciAlpha / 2})} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} \\pm ${Math.abs(studentTPPF(ciAlpha / 2, stats.df)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`[${(decisionData.xBar - Math.abs(studentTPPF(ciAlpha / 2, stats.df)) * stats.se).toFixed(4)}, ${(decisionData.xBar + Math.abs(studentTPPF(ciAlpha / 2, stats.df)) * stats.se).toFixed(4)}]`} />
+                                                        </>
+                                                    ) : ciTailType === 'left' ? (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} + t_{(${stats.df}, ${1 - ciAlpha})} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} + ${Math.abs(studentTPPF(ciAlpha, stats.df)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`(-\\infty, ${(decisionData.xBar + Math.abs(studentTPPF(ciAlpha, stats.df)) * stats.se).toFixed(4)}]`} />
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <BlockMath math={`\\bar{X} - t_{(${stats.df}, ${1 - ciAlpha})} \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = ${decisionData.xBar} - ${Math.abs(studentTPPF(ciAlpha, stats.df)).toFixed(3)} \\cdot ${stats.se.toFixed(4)}`} />
+                                                            <BlockMath math={`[${(decisionData.xBar - Math.abs(studentTPPF(ciAlpha, stats.df)) * stats.se).toFixed(4)}, \\infty)`} />
+                                                        </>
+                                                    )}
                                                 </CalcBlock>
                                             </div>
                                         )}

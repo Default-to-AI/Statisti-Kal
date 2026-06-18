@@ -18,9 +18,9 @@
  */
 
 import React, { forwardRef, useId, useState, useRef, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Info, ChevronDown } from 'lucide-react';
-
+import { Info, ChevronDown, MessageCircle } from 'lucide-react';
 // ============================================================================
 // 1. InputGroup — Label + input + error + optional tooltip, in one block
 // ============================================================================
@@ -627,5 +627,104 @@ export const Disclosure: React.FC<DisclosureProps> = ({
       </summary>
       <div className="px-5 pb-5 pt-1">{children}</div>
     </AnimatedDetails>
+  );
+};
+
+// ============================================================================
+// 7. FormulaTranslation — Display a word translation under mathematical formulas
+// ============================================================================
+
+export interface FormulaTranslationProps {
+  /** The name of the formula (e.g., "שגיאת התקן") */
+  formulaName: string;
+  /** The translation of the formula (e.g., "סטיית תקן חלקי שורש ריבועי של גודל המדגם") */
+  translation: string;
+  className?: string;
+}
+
+export const FormulaTranslation: React.FC<FormulaTranslationProps> = ({
+  formulaName,
+  translation,
+  className = '',
+}) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState({ top: 0, left: 0 });
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+        const portalEl = document.getElementById('formula-tooltip-portal');
+        if (portalEl && portalEl.contains(event.target as Node)) {
+            return;
+        }
+        setIsOpen(false);
+      }
+    };
+
+    const handleScrollOrResize = () => {
+      setIsOpen(false);
+    };
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('scroll', handleScrollOrResize, true);
+      window.addEventListener('resize', handleScrollOrResize);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('scroll', handleScrollOrResize, true);
+      window.removeEventListener('resize', handleScrollOrResize);
+    };
+  }, [isOpen]);
+
+  const toggleOpen = () => {
+    if (!isOpen && tooltipRef.current) {
+        const rect = tooltipRef.current.getBoundingClientRect();
+        setCoords({
+            top: rect.bottom + window.scrollY + 10,
+            left: rect.left + window.scrollX + rect.width / 2
+        });
+    }
+    setIsOpen(!isOpen);
+  };
+
+  return (
+    <div className={`relative inline-flex items-center justify-center ${className}`} ref={tooltipRef}>
+      <button 
+        onClick={toggleOpen}
+        className="relative flex items-center justify-center p-1.5 rounded-full text-[var(--color-accent-cobalt)] hover:bg-[var(--color-accent-cobalt-bg)] transition-colors shadow-sm bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 hover:scale-105 active:scale-95"
+        title="קריאת הנוסחה במילים"
+      >
+        <MessageCircle size={24} strokeWidth={1.5} />
+        <span className="absolute text-[11px] font-bold font-serif -mt-0.5" style={{ transform: 'scale(0.9)' }}>i</span>
+      </button>
+
+      {isOpen && createPortal(
+        <div id="formula-tooltip-portal" className="absolute z-[9999]" style={{ top: coords.top, left: coords.left }}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              initial={{ opacity: 0, y: -5, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -5, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className="absolute top-0 -translate-x-1/2 w-[280px] sm:w-[320px] p-4 rounded-xl bg-[var(--color-surface-raised)] border border-[var(--color-accent-cobalt-line)] shadow-xl"
+              dir="rtl"
+            >
+              {/* Arrow pointing up */}
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-accent-cobalt-line)] rotate-45"></div>
+              
+              <div className="relative z-10 text-center space-y-2">
+                <div className="text-sm font-black text-[var(--color-accent-cobalt)] mb-1">{formulaName}</div>
+                <div className="text-sm sm:text-base font-medium leading-relaxed text-[var(--color-text-primary)]">
+                  {translation}
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+        </div>,
+        document.body
+      )}
+    </div>
   );
 };
