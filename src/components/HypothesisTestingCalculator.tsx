@@ -1140,10 +1140,10 @@ export default function HypothesisTestingCalculator() {
                     </h3>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_225px] gap-6">
-                    <div className="flex-1 min-w-0">
+                <div className="flex flex-col gap-6">
+                    <div className="w-full">
                         {/* Custom Parameters Table Layout */}
-                        <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all mb-6" dir="rtl">
+                        <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
                             <table className="w-full border-collapse border-spacing-0">
                                 <thead>
                                     <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
@@ -1377,10 +1377,10 @@ export default function HypothesisTestingCalculator() {
 
 
                     </div>
-                    {/* Main Test Statistic Type Selector */}
-                    <div className="flex flex-col gap-3 shrink-0 h-full w-full bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
-                        <span className="text-xs sm:text-sm font-black text-[var(--color-text-primary)] text-right w-full">סטטיסטי המבחן:</span>
-                        <div className="flex flex-col gap-2 w-full">
+                    {/* Main Test Parameter Selector */}
+                    <div className="flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
+                        <span className="text-sm font-black text-[var(--color-text-primary)] text-right shrink-0">הפרמטר:</span>
+                        <div className="grid grid-cols-3 gap-3 w-full">
                             {[
                                 { id: 'single', label: <span>תצפית <InlineMath math="X" /></span> },
                                 { id: 'mean', label: <span>ממוצע <InlineMath math="\bar{X}" /></span> },
@@ -1400,72 +1400,6 @@ export default function HypothesisTestingCalculator() {
                             ))}
                         </div>
                     </div>
-                </div>
-            </div>
-
-            {/* Popular Z & Phi Row for Hypothesis Testing */}
-            <div className="mb-6 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-4 text-right space-y-3 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                    <div className="flex items-center gap-1.5 text-[var(--color-text-primary)]">
-                        <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-1.5 rounded-md text-[var(--color-accent-cobalt)]"><Sliders size={14} /></div>
-                        <span className="text-sm font-black font-sans text-[var(--color-accent-cobalt)]">
-                            מבחנים סטטיסטיים נפוצים:
-                        </span>
-                    </div>
-                    <span className="text-[14px] text-[var(--color-text-secondary)]">עדכון מהיר של הפרמטרים:</span>
-                </div>
-
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
-                    {[
-                        { confidence: "99%", alpha: 0.01, tail: "two", phi: 0.9950, z: 2.576, label: "דו-צדדי (α=0.01)" },
-                        { confidence: "99%", alpha: 0.01, tail: "one", phi: 0.9900, z: 2.326, label: "חד-צדדי (α=0.01)" },
-                        { confidence: "95%", alpha: 0.05, tail: "two", phi: 0.9750, z: 1.960, label: "דו-צדדי (α=0.05)" },
-                        { confidence: "95%", alpha: 0.05, tail: "one", phi: 0.9500, z: 1.645, label: "חד-צדדי (α=0.05)" },
-                        { confidence: "90%", alpha: 0.10, tail: "two", phi: 0.9500, z: 1.645, label: "דו-צדדי (α=0.10)" },
-                        { confidence: "90%", alpha: 0.10, tail: "one", phi: 0.9000, z: 1.282, label: "חד-צדדי (α=0.10)" },
-                    ].map((item, idx) => {
-                        const isMatched = Math.abs(alpha - item.alpha) < 0.001 && (
-                            (tailType === 'two-tailed' && item.tail === 'two') ||
-                            (tailType !== 'two-tailed' && item.tail === 'one')
-                        );
-
-                        return (
-                            <button
-                                key={idx}
-                                type="button"
-                                onClick={() => {
-                                    applyAlphaPreset(item.alpha);
-                                    if (item.tail === 'two') {
-                                        setTailType('two-tailed');
-                                    } else {
-                                        if (tailType !== 'left' && tailType !== 'right') {
-                                            setTailType('right');
-                                        }
-                                    }
-                                }}
-                                className={`p-2 rounded-sm border text-center transition-all duration-300 relative overflow-hidden select-none cursor-pointer flex flex-col justify-between h-20 ${isMatched
-                                    ? 'bg-[var(--color-accent-cobalt-bg-hover)]/20 border-[var(--color-border)] shadow-[0_0_15px_rgba(99,102,241,0.25)] ring-1 ring-[var(--color-accent-cobalt-line)]'
-                                    : 'bg-[var(--color-surface-raised)] border-[var(--color-border)] hover:bg-[var(--color-surface)] opacity-40 hover:opacity-100'
-                                    }`}
-                            >
-                                {isMatched && (
-                                    <div className="absolute top-0 right-0 left-0 h-0.5 bg-gradient-to-l from-[var(--color-accent-cobalt)] to-[var(--color-accent-cobalt)]" />
-                                )}
-                                <div>
-                                    <div className="text-caption font-black text-[var(--color-accent-cobalt)]/90 leading-tight">{item.label}</div>
-                                    <div className="text-body-xs font-black text-[var(--color-text-primary)] mt--0.5">רמת ביטחון: {item.confidence}</div>
-                                </div>
-                                <div className="flex items-center justify-between mt--0.5 pt-1 border-t border-[var(--color-border)] w-full" dir="ltr">
-                                    <div className="text-body-xs font-black text-[var(--color-error)]">
-                                        <InlineMath math={`Z_{crit}=${item.z.toFixed(3)}`} />
-                                    </div>
-                                    <div className="text-body-xs text-[var(--color-text-secondary)] opacity-70">
-                                        <InlineMath math={`\\Phi=${item.phi.toFixed(3)}`} />
-                                    </div>
-                                </div>
-                            </button>
-                        );
-                    })}
                 </div>
             </div>
 
@@ -1732,6 +1666,14 @@ export default function HypothesisTestingCalculator() {
                         )}
                     </div>
 
+                    {/* Solutions Steps Accordion / Panel */}
+                    
+                    <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
+                        
+                        <button
+                            onClick={() => setShowHypothesisTesting(!showHypothesisTesting)}
+                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
+                        > 
                                         <div className="flex justify-end gap-3 lg:col-span-2 order-2 lg:order-2 mb-2">
                         <button 
                             onClick={() => { setShowHypothesisTesting(true); setShowCI(true); setShowPower(true); }}
@@ -1747,14 +1689,12 @@ export default function HypothesisTestingCalculator() {
                             <ChevronUp size={16} />
                             צמצם הכל
                         </button>
+                          <div className="relative z-10 flex items-center self-end sm:self-auto gap-4">
+                                <div className="text-[var(--color-text-secondary)]">
+                                    {showHypothesisTesting ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                                </div>
+                            </div>
                     </div>
-
-                    {/* Solutions Steps Accordion / Panel */}
-                    <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
-                        <button
-                            onClick={() => setShowHypothesisTesting(!showHypothesisTesting)}
-                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
-                        >
                             <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" dir="ltr">
                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-crimson)]">
                                     <InlineMath math="H_0" />
@@ -1776,45 +1716,49 @@ export default function HypothesisTestingCalculator() {
                                     <span className="text-xl sm:text-2xl font-black flex items-center flex-wrap gap-2">
                                         בדיקת השערות
                                         <span className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
-                                            <InlineMath math="\\text{Hypothesis Testing}" />
+                                            <InlineMath math={String.raw`\text{Hypothesis Testing}`} />
                                         </span>
                                     </span>
                                 </div>
                                 {isValid && decisionData && (
-                                    <div className="mr-0 sm:mr-3 flex items-center shrink-0">
-                                        {decisionData.isReject ? (
-                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-teal)]/15 text-[var(--color-success)] border border-[var(--color-border)] shadow-sm leading-none">
-                                                <CheckCircle size={18} className="text-[var(--color-success)] shrink-0" />
-                                                <span>קפיצה למסקנה: יש לדחות את </span>
-                                                <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
-                                            </div>
-                                        ) : (
-                                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm text-md font-black bg-[var(--color-accent-crimson)]/15 text-[var(--color-error)] border border-[var(--color-border)] shadow-sm leading-none">
-                                                <XCircle size={18} className="text-[var(--color-error)] shrink-0" />
-                                                <span>קפיצה למסקנה: אין לדחות את </span>
-                                                <span dir="ltr" className="inline-block"><InlineMath math="H_0" /></span>
-                                            </div>
-                                        )}
+                                    <div className="mr-0 sm:mr-3 flex items-center shrink-0 z-20">
+                                        <button
+                                            type="button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (!showHypothesisTesting) {
+                                                    setShowHypothesisTesting(true);
+                                                    setTimeout(() => {
+                                                        document.getElementById('step-6')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                    }, 350);
+                                                } else {
+                                                    document.getElementById('step-6')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                                }
+                                            }}
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base font-black bg-[var(--color-surface)] hover:bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)] hover:text-[var(--color-accent-cobalt)] border border-[var(--color-border)] shadow-md transition-all duration-300 leading-none group"
+                                        >
+                                            <span>קפיצה למסקנה</span>
+                                            <Target size={18} className="shrink-0 text-[var(--color-accent-cobalt)] group-hover:scale-110 transition-transform" />
+                                        
+                                        </button>
                                     </div>
                                 )}
                             </div>
-                            <div className="relative z-10 flex items-center self-end sm:self-auto gap-4">
-                                <div className="text-[var(--color-text-secondary)]">
-                                    {showHypothesisTesting ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
-                                </div>
-                            </div>
+                          
+                            
                         </button>
+                        
 
-                        <AnimatePresence>
+                        <AnimatePresence initial={false}>
                             {showHypothesisTesting && (
                                 <motion.div
                                     initial={{ height: 0, opacity: 0 }}
                                     animate={{ height: 'auto', opacity: 1 }}
                                     exit={{ height: 0, opacity: 0 }}
-                                    transition={{ duration: 0.2 }}
-                                    className="px-8 py-6.5"
+                                    transition={{ duration: 0.4, ease: [0.04, 0.62, 0.23, 0.98] }}
+                                    className="overflow-hidden"
                                 >
-                                    <div className="text-base flex flex-col gap-4 py-4">
+                                    <div className="px-8 py-6.5 text-base flex flex-col gap-4">
 
                                         {/* Step 1: Hypothesis Formulation */}
                                         <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden" defaultOpen>
@@ -2715,7 +2659,7 @@ export default function HypothesisTestingCalculator() {
                                                     </div></AnimatedDetails>
 
                                                 {/* Step 6: P-Value Calculation and Final Decision */}
-                                                <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" defaultOpen>
+                                                <AnimatedDetails id="step-6" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden" defaultOpen>
 
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
