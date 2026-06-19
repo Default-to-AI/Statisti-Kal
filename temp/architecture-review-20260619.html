@@ -1,0 +1,659 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Architecture review — statistics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({ startOnLoad: true, theme: "neutral", securityLevel: "loose" });
+    </script>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+      body { font-family: 'Inter', ui-sans-serif, system-ui, sans-serif; }
+      .seam { stroke-dasharray: 4 4; }
+      .leak { stroke: #dc2626; }
+      .deep { background: linear-gradient(135deg, #0f172a, #1e293b); }
+      .badge-strong { background: #059669; color: white; }
+      .badge-worth { background: #d97706; color: white; }
+      .badge-speculative { background: #64748b; color: white; }
+      .file-tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; color: #334155; }
+      .before-label { color: #dc2626; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+      .after-label { color: #059669; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+      /* Shallow module box */
+      .mod-shallow { border: 2px solid #94a3b8; border-radius: 8px; padding: 12px 16px; background: #f8fafc; position: relative; }
+      .mod-shallow .iface-bar { height: 32px; background: #fca5a5; border-radius: 4px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 700; color: #991b1b; letter-spacing: 0.05em; }
+      .mod-shallow .impl-bar { height: 36px; background: #e2e8f0; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.65rem; font-weight: 600; color: #475569; }
+
+      /* Deep module box */
+      .mod-deep { border: 3px solid #0f172a; border-radius: 8px; padding: 12px 16px; background: linear-gradient(135deg, #0f172a, #1e293b); position: relative; }
+      .mod-deep .iface-bar { height: 20px; background: #34d399; border-radius: 4px; margin-bottom: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 700; color: #064e3b; letter-spacing: 0.05em; }
+      .mod-deep .impl-bar { height: 80px; background: #334155; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.6rem; font-weight: 600; color: #94a3b8; flex-direction: column; gap: 2px; }
+
+      /* Cross-section layers */
+      .layer { display: flex; align-items: center; border-left: 4px solid; padding: 6px 12px; font-size: 0.7rem; font-weight: 600; }
+      .layer-shallow { border-color: #f87171; background: #fef2f2; color: #991b1b; height: 28px; }
+      .layer-deep { border-color: #0f172a; background: #f1f5f9; color: #334155; height: 56px; }
+      .layer-faded { border-color: #cbd5e1; background: #f8fafc; color: #94a3b8; height: 20px; opacity: 0.5; }
+    </style>
+  </head>
+  <body class="bg-stone-50 text-slate-900">
+    <main class="max-w-5xl mx-auto px-6 py-12 space-y-12">
+      <!-- Header -->
+      <header class="border-b border-slate-200 pb-8">
+        <h1 class="text-3xl font-extrabold tracking-tight text-slate-900">Architecture Review</h1>
+        <p class="text-sm text-slate-500 mt-1 font-medium">statistics — 19 Jun 2026</p>
+        <div class="flex items-center gap-6 mt-4 text-xs text-slate-500">
+          <span class="flex items-center gap-1.5">
+            <span class="w-4 h-4 border-2 border-slate-400 rounded inline-block"></span> Module
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-8 h-0 border-t-2 border-dashed border-slate-400 inline-block"></span> Seam
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-8 h-0 border-t-2 border-red-500 inline-block"></span> Leakage
+          </span>
+          <span class="flex items-center gap-1.5">
+            <span class="w-4 h-4 rounded inline-block" style="background: linear-gradient(135deg, #0f172a, #1e293b)"></span> Deep module
+          </span>
+        </div>
+      </header>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 1: Math Utilities Extraction                       -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-1">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">1. Deepen: Extract the Math module</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-strong text-xs font-bold px-2.5 py-0.5 rounded-full">Strong</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">NormalDistributionCalculator.tsx</span>
+          <span class="file-tag">HypothesisTestingCalculator.tsx</span>
+          <span class="file-tag">→ src/lib/math/distributions.ts</span>
+        </div>
+
+        <!-- Before/After diagram -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — identical code in two modules</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-4">
+              <pre class="mermaid">
+                flowchart TB
+                  NDC["NormalDistributionCalculator<br/><b>94 KB</b>"]
+                  HTC["HypothesisTestingCalculator<br/><b>315 KB</b>"]
+                  
+                  NDC --- erf1["erf()"]
+                  NDC --- ncdf1["normalCDF()"]
+                  NDC --- npdf1["normalPDF()"]
+                  NDC --- inv1["inverseNormalCDF()"]
+                  NDC --- stcdf1["studentTCDF()"]
+                  NDC --- stinv1["studentTInverseCDF()"]
+                  
+                  HTC --- erf2["erf()"]
+                  HTC --- ncdf2["normalCDF()"]
+                  HTC --- npdf2["normalPDF()"]
+                  HTC --- inv2["inverseNormalCDF()"]
+                  HTC --- stcdf2["studentTCDF()"]
+                  HTC --- stppf2["studentTPPF()"]
+                  HTC --- stpdf2["studentTPDF()"]
+                  HTC --- lngamma["lnGamma()"]
+                  
+                  style erf1 fill:#fecaca,stroke:#dc2626
+                  style erf2 fill:#fecaca,stroke:#dc2626
+                  style ncdf1 fill:#fecaca,stroke:#dc2626
+                  style ncdf2 fill:#fecaca,stroke:#dc2626
+                  style npdf1 fill:#fecaca,stroke:#dc2626
+                  style npdf2 fill:#fecaca,stroke:#dc2626
+                  style inv1 fill:#fecaca,stroke:#dc2626
+                  style inv2 fill:#fecaca,stroke:#dc2626
+                  style stcdf1 fill:#fecaca,stroke:#dc2626
+                  style stcdf2 fill:#fecaca,stroke:#dc2626
+              </pre>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — one deep module, two importers</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-4">
+              <pre class="mermaid">
+                flowchart TB
+                  MATH["<b>src/lib/math/distributions.ts</b><br/>erf · normalCDF · normalPDF<br/>inverseNormalCDF · studentTCDF<br/>studentTPDF · studentTPPF<br/>lnGamma"]
+                  NDC2["NormalDistributionCalculator"]
+                  HTC2["HypothesisTestingCalculator"]
+                  
+                  NDC2 -->|import| MATH
+                  HTC2 -->|import| MATH
+                  
+                  style MATH fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style NDC2 fill:#f1f5f9,stroke:#94a3b8
+                  style HTC2 fill:#f1f5f9,stroke:#94a3b8
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">Six math functions are <b>copy-pasted identically</b> across two calculators; two more exist only in HypothesisTestingCalculator. Any bug fix must happen twice. No shared seam for tests.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Extract all CDF/inverse/PDF functions into <code class="file-tag">src/lib/math/distributions.ts</code>. Both calculators import from one place.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li><b>Locality:</b> math bugs concentrate in one module</li>
+            <li><b>Leverage:</b> one interface, 2+ importers, N tests</li>
+            <li><b>Interface shrinks:</b> each calculator drops ~180 LOC</li>
+            <li><b>Test surface:</b> pure functions, trivially testable</li>
+            <li>Delete ~6 duplicate functions (~200 lines)</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 2: UI Component Deduplication                       -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-2">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">2. Deepen: Collapse duplicate UI modules</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-strong text-xs font-bold px-2.5 py-0.5 rounded-full">Strong</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">NormalDistributionCalculator.tsx (Tooltip)</span>
+          <span class="file-tag">HypothesisTestingCalculator.tsx (InputTooltip)</span>
+          <span class="file-tag">CustomComponents.tsx (InputTooltip)</span>
+        </div>
+
+        <!-- Before/After: mass diagram -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — 3 tooltip implementations</div>
+            <div class="space-y-2 p-4 border border-slate-200 rounded-lg">
+              <div class="mod-shallow">
+                <div class="text-xs font-mono font-bold text-slate-500 mb-2">NormalDistributionCalculator.tsx</div>
+                <div class="iface-bar">INTERFACE: Tooltip({content, children})</div>
+                <div class="impl-bar">~30 lines: hover, timeout, AnimatePresence, portal</div>
+              </div>
+              <div class="mod-shallow">
+                <div class="text-xs font-mono font-bold text-slate-500 mb-2">HypothesisTestingCalculator.tsx</div>
+                <div class="iface-bar">INTERFACE: InputTooltip({content, children, className})</div>
+                <div class="impl-bar">~35 lines: hover, timeout, AnimatePresence, portal</div>
+              </div>
+              <div class="mod-shallow">
+                <div class="text-xs font-mono font-bold text-slate-500 mb-2">CustomComponents.tsx</div>
+                <div class="iface-bar">INTERFACE: InputTooltip({content, children, delay})</div>
+                <div class="impl-bar">~50 lines: hover, timeout, AnimatePresence, portal</div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — one Tooltip module</div>
+            <div class="p-4 border border-slate-200 rounded-lg flex items-center justify-center" style="min-height: 280px;">
+              <div class="mod-deep w-full max-w-xs">
+                <div class="text-xs font-mono font-bold text-emerald-300 mb-2">ui/Tooltip.tsx</div>
+                <div class="iface-bar">INTERFACE: Tooltip({content, children})</div>
+                <div class="impl-bar">
+                  <span>hover + focus handlers</span>
+                  <span>delay config</span>
+                  <span>AnimatePresence animation</span>
+                  <span>portal positioning</span>
+                  <span>RTL-aware placement</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">The same tooltip pattern is re-implemented <b>three times</b> with trivial interface variations. FormulaTranslation adds a fourth variant. Each copy drifts independently.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Consolidate into a single <code class="file-tag">ui/Tooltip.tsx</code> module consumed by all three calculators and FormulaTranslation.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li><b>Locality:</b> tooltip bugs fix in one place</li>
+            <li><b>Leverage:</b> one interface, 4+ consumers</li>
+            <li>Delete ~115 lines of duplicate tooltip code</li>
+            <li>RTL-aware placement becomes the default, not per-copy</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 3: HypothesisTestingCalculator monolith split       -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-3">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">3. Deepen: Split the Hypothesis Testing monolith</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-strong text-xs font-bold px-2.5 py-0.5 rounded-full">Strong</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">HypothesisTestingCalculator.tsx — 315 KB, 3421 lines</span>
+        </div>
+
+        <!-- Cross-section diagram -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — one file, six responsibilities</div>
+            <div class="space-y-1 p-4 border border-slate-200 rounded-lg">
+              <div class="layer layer-shallow">Math utilities (erf, CDF, inverse, PDF, lnGamma) ~170 LOC</div>
+              <div class="layer layer-shallow">Types & Interfaces ~20 LOC</div>
+              <div class="layer layer-shallow">InputTooltip component ~40 LOC</div>
+              <div class="layer layer-shallow">FormulaBlock + CalcBlock components ~50 LOC</div>
+              <div class="layer layer-shallow">DecisionMatrix component ~170 LOC</div>
+              <div class="layer layer-shallow">Core calculation engine (useMemo) ~110 LOC</div>
+              <div class="layer layer-shallow">Decision data logic ~150 LOC</div>
+              <div class="layer layer-shallow">Confidence Interval logic ~100 LOC</div>
+              <div class="layer layer-shallow">Power Analysis chart + logic ~200 LOC</div>
+              <div class="layer layer-shallow">Main render: inputs, charts, steps, conclusion ~2300 LOC</div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — deep modules with small interfaces</div>
+            <div class="space-y-1 p-4 border border-slate-200 rounded-lg">
+              <div class="layer layer-faded">↗ src/lib/math/distributions.ts (Candidate 1)</div>
+              <div class="layer layer-faded">↗ ui/Tooltip.tsx (Candidate 2)</div>
+              <div class="layer layer-deep">useHypothesisTest(params) → result — hook, ~280 LOC</div>
+              <div class="layer layer-deep">useConfidenceInterval(params) → result — hook, ~120 LOC</div>
+              <div class="layer layer-deep">usePowerAnalysis(params) → result — hook, ~120 LOC</div>
+              <div class="layer" style="border-color: #0f172a; background: #f0fdf4; color: #166534; height: 40px;">HypothesisTestingCalculator — UI composition only, ~600 LOC</div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">315 KB file contains math, types, helper components, calculation engines, decision logic, CI logic, power analysis, and 2300 lines of JSX — all with <b>no seam between them</b>. The interface is the entire file; the implementation is the entire file. Depth ≈ 0.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Extract calculation logic into three hooks (<code class="file-tag">useHypothesisTest</code>, <code class="file-tag">useConfidenceInterval</code>, <code class="file-tag">usePowerAnalysis</code>). Each hook has a small interface (params in, result out) and a deep implementation. The remaining component composes UI from primitives.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li><b>Locality:</b> test logic bugs concentrate in hooks, not scattered across 3421 lines</li>
+            <li><b>Leverage:</b> hooks testable without rendering; UI testable without re-computing</li>
+            <li><b>Interface shrinks:</b> each hook has ~5 params, ~10 result fields vs. 50+ interleaved state vars</li>
+            <li>Bundle target: < 50KB (from 315KB)</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 4: Signature elements (dead CSS)                    -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-4">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">4. Wire signature elements — CSS exists, zero consumers</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-worth text-xs font-bold px-2.5 py-0.5 rounded-full">Worth exploring</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">src/index.css — .accent-bar, .curve-glow, .stagger-in, .pulse-brass</span>
+          <span class="file-tag">All component .tsx files — 0 usages</span>
+        </div>
+
+        <!-- Before/After -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — defined but never consumed</div>
+            <div class="p-4 border border-slate-200 rounded-lg space-y-3">
+              <div class="flex items-center gap-3 p-3 rounded bg-slate-50 border border-slate-200">
+                <div class="w-12 h-1 rounded-full" style="background: linear-gradient(90deg, #FACC15, #2EC4B6);"></div>
+                <span class="text-xs font-mono text-slate-500">.accent-bar — <b class="text-red-500">0 usages</b></span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-slate-50 border border-slate-200">
+                <div class="w-8 h-8 rounded" style="box-shadow: 0 0 24px rgba(250, 204, 21, 0.35), 0 0 48px rgba(46, 196, 182, 0.25); background: #1e293b;"></div>
+                <span class="text-xs font-mono text-slate-500">.curve-glow — <b class="text-red-500">0 usages</b></span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-slate-50 border border-slate-200">
+                <div class="w-4 h-4 rounded bg-slate-300 animate-pulse"></div>
+                <span class="text-xs font-mono text-slate-500">.stagger-in — <b class="text-red-500">0 usages</b></span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-slate-50 border border-slate-200">
+                <div class="w-4 h-4 rounded" style="animation: pulse 2s ease-in-out infinite; box-shadow: 0 0 16px rgba(250, 204, 21, 0.6); background: #FACC15;"></div>
+                <span class="text-xs font-mono text-slate-500">.pulse-brass — <b class="text-red-500">0 usages</b></span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-slate-50 border border-slate-200">
+                <span class="text-xs font-mono text-slate-500">.pulse-success, .pulse-error — <b class="text-red-500">0 usages</b></span>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — wired to components</div>
+            <div class="p-4 border border-slate-200 rounded-lg space-y-3">
+              <div class="flex items-center gap-3 p-3 rounded bg-emerald-50 border border-emerald-200">
+                <div class="w-12 h-1 rounded-full" style="background: linear-gradient(90deg, #FACC15, #2EC4B6);"></div>
+                <span class="text-xs font-mono text-emerald-700">.accent-bar → PageLayout header, section headings</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-emerald-50 border border-emerald-200">
+                <div class="w-8 h-8 rounded" style="box-shadow: 0 0 24px rgba(250, 204, 21, 0.35), 0 0 48px rgba(46, 196, 182, 0.25); background: #1e293b;"></div>
+                <span class="text-xs font-mono text-emerald-700">.curve-glow → active chart panel, live result card</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-emerald-50 border border-emerald-200">
+                <div class="w-4 h-4 rounded bg-slate-300 animate-pulse"></div>
+                <span class="text-xs font-mono text-emerald-700">.stagger-in → mode switch content, page load sections</span>
+              </div>
+              <div class="flex items-center gap-3 p-3 rounded bg-emerald-50 border border-emerald-200">
+                <div class="w-4 h-4 rounded" style="background: #FACC15;"></div>
+                <span class="text-xs font-mono text-emerald-700">.pulse-brass → live result badge ("שטח מחושב")</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">DESIGN.md specifies four signature elements as the product's visual identity. All four are faithfully implemented in <code class="file-tag">index.css</code> — but <b>not a single component references them</b>. The design investment is dead code.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Wire each class to its spec-defined location: <code>.accent-bar</code> on PageLayout header and section dividers, <code>.curve-glow</code> on the active chart panel, <code>.stagger-in</code> on mode-switched content, <code>.pulse-brass</code> on the live result badge.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li>Product identity becomes visible — not just spec'd</li>
+            <li>Zero new CSS — only class additions to components</li>
+            <li>Reduced-motion already respected in existing CSS</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 5: NormalDistributionCalculator monolith            -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-5">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">5. Deepen: Split the Normal Distribution monolith</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-worth text-xs font-bold px-2.5 py-0.5 rounded-full">Worth exploring</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">NormalDistributionCalculator.tsx — 94 KB, 1883 lines</span>
+        </div>
+
+        <!-- Mermaid call graph -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — one module owns everything</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-4">
+              <pre class="mermaid">
+                flowchart TB
+                  NDC["NormalDistributionCalculator<br/><b>1883 lines</b>"]
+                  NDC --> MATH["Math utils<br/>erf, CDF, PDF, inverse"]
+                  NDC --> TOOLTIP["Tooltip component"]
+                  NDC --> CHART["NormalChart component"]
+                  NDC --> FSTEP["FormattedStep component"]
+                  NDC --> ZTABLE["ZTable component<br/><b>564 lines!</b>"]
+                  NDC --> MAIN["Main render<br/>mode switch, inputs, routing"]
+                  
+                  classDef shallow fill:#fef2f2,stroke:#f87171,stroke-width:2px;
+                  class MATH,TOOLTIP,CHART,FSTEP,ZTABLE,MAIN shallow
+              </pre>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — extracted deep modules</div>
+            <div class="rounded-lg border border-slate-200 bg-white p-4">
+              <pre class="mermaid">
+                flowchart TB
+                  NDC2["NormalDistributionCalculator<br/><b>~400 lines</b><br/>composition only"]
+                  
+                  NDC2 -->|import| MATH2["lib/math (Candidate 1)"]
+                  NDC2 -->|import| TIP2["ui/Tooltip (Candidate 2)"]
+                  NDC2 -->|import| NCHART["components/NormalChart"]
+                  NDC2 -->|import| ZTAB["components/ZTable"]
+                  NDC2 -->|import| HOOK["hooks/useNormalCalculation"]
+                  
+                  style MATH2 fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style TIP2 fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style NCHART fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style ZTAB fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style HOOK fill:#0f172a,stroke:#0f172a,color:#e2e8f0
+                  style NDC2 fill:#f0fdf4,stroke:#166534
+              </pre>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">ZTable alone is 564 lines — a full module inlined inside another module. NormalChart is 250 lines with its own memoized data pipeline. FormattedStep has its own KaTeX parsing logic. None have seams; all are pinned inside the 1883-line file.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Extract ZTable, NormalChart, and FormattedStep as standalone modules. Extract calculation logic into <code class="file-tag">hooks/useNormalCalculation</code>. The parent composes from these pieces.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li><b>Locality:</b> Z-table bugs fix in ZTable module; chart bugs fix in NormalChart</li>
+            <li><b>Leverage:</b> ZTable reusable from Hypothesis Testing too</li>
+            <li><b>Interface shrinks:</b> parent drops from 1883 to ~400 lines</li>
+            <li>Each extracted module is independently testable</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- CANDIDATE 6 (Bonus): FormulaSheet — hidden monolith           -->
+      <!-- ============================================================ -->
+      <article class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm space-y-6" id="candidate-6">
+        <div>
+          <h2 class="text-xl font-extrabold tracking-tight">6. Deepen: FormulaSheet — the undocumented third monolith</h2>
+          <div class="flex items-center gap-2 mt-2">
+            <span class="badge-speculative text-xs font-bold px-2.5 py-0.5 rounded-full">Speculative</span>
+            <span class="text-xs font-medium text-slate-400 px-2 py-0.5 rounded-full border border-slate-200">in-process</span>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-1.5">
+          <span class="file-tag">FormulaSheet.tsx — 103 KB (undocumented in CONTEXT.md as monolith)</span>
+        </div>
+
+        <!-- Mass diagram -->
+        <div class="grid grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <div class="before-label">Before — static dump, no searchability</div>
+            <div class="p-4 border border-slate-200 rounded-lg flex items-center justify-center" style="min-height: 200px;">
+              <div class="mod-shallow w-full max-w-xs">
+                <div class="text-xs font-mono font-bold text-slate-500 mb-2">FormulaSheet.tsx</div>
+                <div class="iface-bar" style="height: 30px;">INTERFACE: FormulaSheet({theme})</div>
+                <div class="impl-bar" style="height: 120px; flex-direction: column; gap: 2px;">
+                  <span>~2600 lines of hardcoded KaTeX blocks</span>
+                  <span>No search, no filtering, no categories</span>
+                  <span>Scrolling through everything</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="space-y-2">
+            <div class="after-label">After — data-driven, searchable</div>
+            <div class="p-4 border border-slate-200 rounded-lg flex items-center justify-center" style="min-height: 200px;">
+              <div class="mod-deep w-full max-w-xs">
+                <div class="text-xs font-mono font-bold text-emerald-300 mb-2">FormulaSheet.tsx</div>
+                <div class="iface-bar">INTERFACE: FormulaSheet({query?, category?})</div>
+                <div class="impl-bar" style="height: 80px;">
+                  <span>Formula data → formulas.ts</span>
+                  <span>Search + filter UI</span>
+                  <span>Context-aware inline blocks</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Problem</h3>
+          <p class="text-sm text-slate-700">103 KB of static KaTeX markup with no search, no filtering, no context awareness. Students must scroll through everything to find one formula. STRATEGY.md calls for "Context-Aware Lookup" to replace this "monolithic dump."</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Solution</h3>
+          <p class="text-sm text-slate-700">Separate formula data from presentation. Create a structured <code class="file-tag">formulas.ts</code> data file with categories, tags, and LaTeX strings. Build a search/filter UI on top.</p>
+        </div>
+        <div>
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Wins</h3>
+          <ul class="text-sm text-slate-700 space-y-0.5 list-disc list-inside">
+            <li><b>Locality:</b> formula content edits don't touch UI code</li>
+            <li><b>Leverage:</b> search + context-aware inline blocks serve multiple flows</li>
+            <li>Matches STRATEGY.md track: "Formula Sheet → Context-Aware Lookup"</li>
+          </ul>
+        </div>
+      </article>
+
+      <!-- ============================================================ -->
+      <!-- SUMMARY TABLE                                                 -->
+      <!-- ============================================================ -->
+      <section class="bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
+        <h2 class="text-lg font-extrabold tracking-tight mb-4">Summary</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-slate-200 text-left text-xs font-bold uppercase tracking-wider text-slate-400">
+                <th class="py-2 pr-4">#</th>
+                <th class="py-2 pr-4">Candidate</th>
+                <th class="py-2 pr-4">Strength</th>
+                <th class="py-2 pr-4">Lines saved</th>
+                <th class="py-2 pr-4">Key win</th>
+              </tr>
+            </thead>
+            <tbody class="text-slate-700">
+              <tr class="border-b border-slate-100">
+                <td class="py-2 pr-4 font-mono text-xs">1</td>
+                <td class="py-2 pr-4"><a href="#candidate-1" class="text-indigo-600 font-semibold hover:underline">Extract Math module</a></td>
+                <td class="py-2 pr-4"><span class="badge-strong text-xs font-bold px-2 py-0.5 rounded-full">Strong</span></td>
+                <td class="py-2 pr-4 font-mono">~200</td>
+                <td class="py-2 pr-4">Testable pure functions; bug fixes concentrate</td>
+              </tr>
+              <tr class="border-b border-slate-100">
+                <td class="py-2 pr-4 font-mono text-xs">2</td>
+                <td class="py-2 pr-4"><a href="#candidate-2" class="text-indigo-600 font-semibold hover:underline">Collapse duplicate UI modules</a></td>
+                <td class="py-2 pr-4"><span class="badge-strong text-xs font-bold px-2 py-0.5 rounded-full">Strong</span></td>
+                <td class="py-2 pr-4 font-mono">~115</td>
+                <td class="py-2 pr-4">RTL-aware tooltip as foundation primitive</td>
+              </tr>
+              <tr class="border-b border-slate-100">
+                <td class="py-2 pr-4 font-mono text-xs">3</td>
+                <td class="py-2 pr-4"><a href="#candidate-3" class="text-indigo-600 font-semibold hover:underline">Split Hypothesis Testing monolith</a></td>
+                <td class="py-2 pr-4"><span class="badge-strong text-xs font-bold px-2 py-0.5 rounded-full">Strong</span></td>
+                <td class="py-2 pr-4 font-mono">~2800</td>
+                <td class="py-2 pr-4">315KB → <50KB; hooks testable without render</td>
+              </tr>
+              <tr class="border-b border-slate-100">
+                <td class="py-2 pr-4 font-mono text-xs">4</td>
+                <td class="py-2 pr-4"><a href="#candidate-4" class="text-indigo-600 font-semibold hover:underline">Wire signature elements</a></td>
+                <td class="py-2 pr-4"><span class="badge-worth text-xs font-bold px-2 py-0.5 rounded-full">Worth exploring</span></td>
+                <td class="py-2 pr-4 font-mono">0</td>
+                <td class="py-2 pr-4">Design investment stops being dead code</td>
+              </tr>
+              <tr class="border-b border-slate-100">
+                <td class="py-2 pr-4 font-mono text-xs">5</td>
+                <td class="py-2 pr-4"><a href="#candidate-5" class="text-indigo-600 font-semibold hover:underline">Split Normal Distribution monolith</a></td>
+                <td class="py-2 pr-4"><span class="badge-worth text-xs font-bold px-2 py-0.5 rounded-full">Worth exploring</span></td>
+                <td class="py-2 pr-4 font-mono">~1400</td>
+                <td class="py-2 pr-4">ZTable reusable; chart testable alone</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4 font-mono text-xs">6</td>
+                <td class="py-2 pr-4"><a href="#candidate-6" class="text-indigo-600 font-semibold hover:underline">FormulaSheet data extraction</a></td>
+                <td class="py-2 pr-4"><span class="badge-speculative text-xs font-bold px-2 py-0.5 rounded-full">Speculative</span></td>
+                <td class="py-2 pr-4 font-mono">~2000</td>
+                <td class="py-2 pr-4">Data-driven search replaces monolithic dump</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- Additional: P0 Token Violations still live                    -->
+      <!-- ============================================================ -->
+      <section class="bg-amber-50 border border-amber-200 rounded-xl p-8 shadow-sm space-y-4">
+        <h2 class="text-lg font-extrabold tracking-tight text-amber-900">⚠ P0 Token Violations Still Active</h2>
+        <p class="text-sm text-amber-800">The following design system violations remain in the codebase. These are not architecture candidates — they're prerequisite fixes per STRATEGY.md ("P0 remediation blocks all feature work").</p>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-amber-200 text-left text-xs font-bold uppercase tracking-wider text-amber-600">
+                <th class="py-2 pr-4">Violation</th>
+                <th class="py-2 pr-4">Files</th>
+                <th class="py-2 pr-4">Count</th>
+                <th class="py-2 pr-4">Fix</th>
+              </tr>
+            </thead>
+            <tbody class="text-amber-900">
+              <tr class="border-b border-amber-100">
+                <td class="py-2 pr-4 font-mono text-xs">text-[11px]</td>
+                <td class="py-2 pr-4 text-xs">HypothesisTestingCalculator, CustomComponents</td>
+                <td class="py-2 pr-4 font-mono">10+</td>
+                <td class="py-2 pr-4 text-xs">→ text-caption or text-body-xs</td>
+              </tr>
+              <tr class="border-b border-amber-100">
+                <td class="py-2 pr-4 font-mono text-xs">Signature classes unused</td>
+                <td class="py-2 pr-4 text-xs">All components</td>
+                <td class="py-2 pr-4 font-mono">4 classes × 0 refs</td>
+                <td class="py-2 pr-4 text-xs">Wire accent-bar, curve-glow, stagger-in, pulse-brass</td>
+              </tr>
+              <tr class="border-b border-amber-100">
+                <td class="py-2 pr-4 font-mono text-xs">Hardcoded chart colors</td>
+                <td class="py-2 pr-4 text-xs">NormalDistributionCalculator L330-335</td>
+                <td class="py-2 pr-4 font-mono">6</td>
+                <td class="py-2 pr-4 text-xs">→ var(--color-*) or var(--chart-*)</td>
+              </tr>
+              <tr>
+                <td class="py-2 pr-4 font-mono text-xs">slate-800 ✅ Fixed</td>
+                <td class="py-2 pr-4 text-xs">—</td>
+                <td class="py-2 pr-4 font-mono">0</td>
+                <td class="py-2 pr-4 text-xs">Previously fixed</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ============================================================ -->
+      <!-- TOP RECOMMENDATION                                            -->
+      <!-- ============================================================ -->
+      <section id="top-recommendation" class="bg-slate-900 text-white rounded-xl p-8 shadow-lg space-y-4">
+        <h2 class="text-xl font-extrabold tracking-tight">Top Recommendation</h2>
+        <p class="text-base font-medium text-slate-300">
+          Start with <a href="#candidate-1" class="text-emerald-400 font-bold hover:underline">Candidate 1: Extract the Math module</a>.
+        </p>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          It's the only candidate with <b>zero risk</b> — pure functions, no UI, no state, no side effects. It unblocks Candidates 3 and 5 (both monolith splits depend on extracted math). It creates the first testable seam in the codebase (currently 0 tests, 0% coverage). And it deletes ~200 lines of exact duplicates on day one.
+        </p>
+        <p class="text-sm text-slate-400 leading-relaxed">
+          After math extraction, proceed to <a href="#candidate-4" class="text-amber-400 font-bold hover:underline">Candidate 4: Wire signature elements</a> — it's quick (class additions only, no refactoring) and makes the DESIGN.md investment visible immediately.
+        </p>
+      </section>
+
+    </main>
+  </body>
+</html>
