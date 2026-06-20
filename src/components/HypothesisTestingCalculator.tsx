@@ -906,69 +906,79 @@ export default function HypothesisTestingCalculator() {
     const chartLimits = useMemo(() => {
         if (!stats || !isValid) return { xMin: 0, xMax: 100 };
         const { effectH0Mean, effectH1Mean, se } = stats;
-        const minCenter = calculatePower ? Math.min(effectH0Mean, effectH1Mean) : effectH0Mean;
-        const maxCenter = calculatePower ? Math.max(effectH0Mean, effectH1Mean) : effectH0Mean;
+        const minCenter = Math.min(effectH0Mean, effectH1Mean);
+        const maxCenter = Math.max(effectH0Mean, effectH1Mean);
         return {
             xMin: minCenter - 4.2 * se,
             xMax: maxCenter + 4.2 * se,
         };
     }, [stats, isValid, calculatePower]);
 
-    // --- Custom Ticks for X-Axis representing means and standard deviations ---
+    // --- Custom Ticks for X-Axis representing means and grid ---
     const xAxisTicks = useMemo(() => {
         if (!stats || !isValid) return [];
         const { effectH0Mean, effectH1Mean, se } = stats;
 
-        const ticksSet = new Set<string>();
-
-        const addVal = (val: number) => {
-            ticksSet.add(val.toFixed(2));
-        };
-
-        addVal(effectH0Mean);
-        addVal(effectH0Mean - se);
-        addVal(effectH0Mean + se);
-        addVal(effectH0Mean - 2 * se);
-        addVal(effectH0Mean + 2 * se);
-        addVal(effectH0Mean - 3 * se);
-        addVal(effectH0Mean + 3 * se);
-
-        if (calculatePower) {
-            addVal(effectH1Mean);
-            addVal(effectH1Mean - se);
-            addVal(effectH1Mean + se);
-            addVal(effectH1Mean - 2 * se);
-            addVal(effectH1Mean + 2 * se);
-            addVal(effectH1Mean - 3 * se);
-            addVal(effectH1Mean + 3 * se);
+        const minCenter = Math.min(effectH0Mean, effectH1Mean);
+        const maxCenter = Math.max(effectH0Mean, effectH1Mean);
+        const xMin = minCenter - 4.2 * se;
+        const xMax = maxCenter + 4.2 * se;
+        
+        const span = xMax - xMin;
+        const rawStep = span / 8;
+        const mag = Math.pow(10, Math.floor(Math.log10(rawStep)));
+        const norm = rawStep / mag; 
+        let step = mag;
+        if (norm > 7.5) step = 10 * mag;
+        else if (norm > 3.5) step = 5 * mag;
+        else if (norm > 1.5) step = 2 * mag;
+        
+        const ticksSet = new Set<number>();
+        const start = Math.ceil(xMin / step) * step;
+        for (let t = start; t <= xMax; t += step) {
+            ticksSet.add(Number(t.toFixed(1)));
         }
+        
+        ticksSet.add(Number(effectH0Mean.toFixed(1)));
+        ticksSet.add(Number(effectH1Mean.toFixed(1)));
+        
+        let ticks = Array.from(ticksSet).sort((a, b) => a - b);
+        
+        const minSpacing = span * 0.06; // 6% of chart width
+        ticks = ticks.filter(t => {
+            const isH0 = Math.abs(t - effectH0Mean) < 0.06;
+            const isH1 = Math.abs(t - effectH1Mean) < 0.06;
+            if (isH0 || isH1) return true; // always keep the means
+            
+            const distToH0 = Math.abs(t - effectH0Mean);
+            const distToH1 = Math.abs(t - effectH1Mean);
+            
+            if (distToH0 < minSpacing || distToH1 < minSpacing) {
+                return false; // too close to a mean, drop it to avoid overlap
+            }
+            return true;
+        });
 
-        const rawTicks = Array.from(ticksSet).map(Number).sort((a, b) => a - b);
         const finalTicks: number[] = [];
-        const minSpacing = se * 0.45;
-
-        for (const t of rawTicks) {
+        for (const t of ticks) {
             if (finalTicks.length === 0) {
                 finalTicks.push(t);
             } else {
                 const prev = finalTicks[finalTicks.length - 1];
-                if (t - prev >= minSpacing) {
+                if (t - prev >= minSpacing * 0.8) {
                     finalTicks.push(t);
                 } else {
-                    const diffPrevToMean = Math.abs(prev - effectH0Mean);
-                    const diffCurrToMean = Math.abs(t - effectH0Mean);
-                    const diffPrevToMeanH1 = calculatePower ? Math.abs(prev - effectH1Mean) : Infinity;
-                    const diffCurrToMeanH1 = calculatePower ? Math.abs(t - effectH1Mean) : Infinity;
-
-                    const prevIsMean = diffPrevToMean < 0.01 || diffPrevToMeanH1 < 0.01;
-                    const currIsMean = diffCurrToMean < 0.01 || diffCurrToMeanH1 < 0.01;
-
-                    if (currIsMean && !prevIsMean) {
+                    const prevIsMean = Math.abs(prev - effectH0Mean) < 0.06 || Math.abs(prev - effectH1Mean) < 0.06;
+                    const tIsMean = Math.abs(t - effectH0Mean) < 0.06 || Math.abs(t - effectH1Mean) < 0.06;
+                    if (tIsMean && !prevIsMean) {
                         finalTicks[finalTicks.length - 1] = t;
+                    } else if (tIsMean && prevIsMean) {
+                        finalTicks.push(t);
                     }
                 }
             }
         }
+        
         return finalTicks;
     }, [stats, isValid, calculatePower]);
 
@@ -1010,6 +1020,7 @@ export default function HypothesisTestingCalculator() {
 
             pts.push({
                 x: Number(x.toFixed(4)),
+                z: Number(((x - effectH0Mean) / se).toFixed(4)),
                 pdfH0,
                 pdfH1,
                 alphaShade,
@@ -1180,6 +1191,12 @@ export default function HypothesisTestingCalculator() {
                         <span className="font-bold text-[var(--color-accent-cobalt)]">תצפית X:</span>
                         <span className="font-mono font-bold text-[var(--color-accent-cobalt)]" dir="ltr">{dataPt.x.toFixed(2)}</span>
                     </div>
+                    {dataPt.z !== undefined && (
+                        <div className="flex justify-between gap-6 border-b border-[var(--color-border)] pb-2 mb-2">
+                            <span className="font-bold text-[var(--color-text-secondary)]">ציון תקן Z:</span>
+                            <span className="font-mono font-bold text-[var(--color-text-secondary)]" dir="ltr">{dataPt.z.toFixed(2)}</span>
+                        </div>
+                    )}
                     <div className="text-xs font-bold text-[var(--color-text-secondary)] mb-1">צפיפות הסתברות:</div>
                     <div className="flex justify-between gap-6 text-[var(--color-accent-brass)]">
                         <span className="font-semibold">אוכלוסיה (<InlineMath math="H_0" />):</span>
@@ -1629,23 +1646,58 @@ export default function HypothesisTestingCalculator() {
                                                 const val = payload.value;
                                                 let fill = 'var(--chart-axis-label)';
                                                 
-                                                if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
+                                                if (Math.abs(val - stats.effectH0Mean) < 0.06) {
                                                     fill = 'var(--color-accent-brass)';
-                                                } else if (calculatePower && Math.abs(val - stats.effectH1Mean) < 1e-4) {
-                                                    fill = 'var(--color-accent-teal)';
+                                                } else if (Math.abs(val - stats.effectH1Mean) < 0.06) {
+                                                    fill = 'var(--color-accent-cobalt)';
                                                 }
                                                 
                                                 return (
                                                     <g transform={`translate(${x},${y})`}>
                                                         <text x={0} y={0} dy={16} textAnchor="middle" fill={fill} fontSize={15} fontWeight="bold">
-                                                            {val.toFixed(2)}
+                                                            {Number.isInteger(Number(val.toFixed(1))) ? Number(val.toFixed(1)).toString() : val.toFixed(1)}
                                                         </text>
                                                     </g>
                                                 );
                                             }}
                                             axisLine={{ stroke: 'var(--chart-grid)' }}
                                             tickLine={true}
-                                            tickFormatter={(val) => val.toFixed(2)}
+                                            tickFormatter={(val) => Number.isInteger(Number(val.toFixed(1))) ? Number(val.toFixed(1)).toString() : val.toFixed(1)}
+                                        />
+                                        <XAxis
+                                            xAxisId="z"
+                                            dataKey="z"
+                                            type="number"
+                                            orientation="bottom"
+                                            domain={['dataMin', 'dataMax']}
+                                            ticks={[-4, -3, -2, -1, 0, 1, 2, 3]}
+                                            axisLine={false}
+                                            tickLine={false}
+                                            dy={10}
+                                            tick={(props: any) => {
+                                                const { x, y, payload } = props;
+                                                const val = payload.value;
+                                                const isZZero = val === 0;
+
+                                                return (
+                                                    <g transform={`translate(${x},${y})`}>
+                                                        {isZZero ? (
+                                                            <>
+                                                                <text x={0} y={0} dy={16} textAnchor="middle" fill="var(--color-text-secondary)" fontSize={17} fontFamily="Times New Roman, serif" fontStyle="italic">
+                                                                    z = 0
+                                                                </text>
+                                                                <text x={0} y={0} dy={36} textAnchor="middle" fill="var(--color-accent-brass)" fontSize={17} fontWeight="bold" fontFamily="Times New Roman, serif" fontStyle="italic">
+                                                                    μ<tspan dy={4} fontSize={12}>0</tspan>
+                                                                </text>
+                                                            </>
+                                                        ) : (
+                                                            <text x={0} y={0} dy={16} textAnchor="middle" fill="var(--color-text-secondary)" fontSize={17}>
+                                                                {val}
+                                                            </text>
+                                                        )}
+                                                    </g>
+                                                );
+                                            }}
                                         />
                                         <YAxis
                                             tickFormatter={(val) => val.toFixed(2)}
@@ -1733,6 +1785,21 @@ export default function HypothesisTestingCalculator() {
                                                     </div>
                                                 </foreignObject>
                                             ) : undefined}
+                                        />
+
+                                        {/* Vertical Reference Line at Sample Mean (X̄) */}
+                                        <ReferenceLine
+                                            x={stats.effectH1Mean}
+                                            stroke="var(--color-accent-cobalt)"
+                                            strokeWidth={2}
+                                            strokeDasharray="6 3"
+                                            label={({ viewBox }: any) => (
+                                                <foreignObject x={viewBox.x - 40} y={viewBox.y - 25} width={80} height={30} style={{ overflow: 'visible' }}>
+                                                    <div style={{ color: "var(--color-accent-cobalt)", fontSize: 13, fontWeight: "bold", textAlign: "center", direction: "ltr" }}>
+                                                        <InlineMath math={`\\bar{X}: ${stats.effectH1Mean.toFixed(2)}`} />
+                                                    </div>
+                                                </foreignObject>
+                                            )}
                                         />
 
                                         {/* Vertical LINE for SELECTOR: Critical Values */}
