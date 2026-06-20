@@ -105,7 +105,7 @@ export const TableRow: React.FC<TableRowProps> = ({ hover = false, onClick, clas
   </tr>
 );
 
-export interface TableHeaderCellProps extends ThHTMLAttributes<HTMLTableCellElement> {
+export interface TableHeaderCellProps extends Omit<ThHTMLAttributes<HTMLTableCellElement>, 'align'> {
   /** Width hint (e.g., 'w-[20%]', 'w-20'). */
   width?: string;
   /** Text alignment. Default 'center'. */
@@ -153,7 +153,7 @@ export const TableHeaderCell = React.forwardRef<HTMLTableCellElement, TableHeade
 
 TableHeaderCell.displayName = 'TableHeaderCell';
 
-export interface TableCellProps extends TdHTMLAttributes<HTMLTableCellElement> {
+export interface TableCellProps extends Omit<TdHTMLAttributes<HTMLTableCellElement>, 'align'> {
   /** Text alignment. Default 'center'. */
   align?: 'left' | 'center' | 'right' | 'start' | 'end';
   /** When true, adds left border. */

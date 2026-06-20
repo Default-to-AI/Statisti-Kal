@@ -6,6 +6,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Joyride, Step } from 'react-joyride';
 import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
 import HypothesisTestDisplay from './HypothesisTestDisplay';
 import { unifiedDecision } from '../lib/statistics/hypothesis';
@@ -44,6 +45,8 @@ import {
     CartesianGrid,
     Legend
 } from 'recharts';
+
+const JoyrideComponent = Joyride as any;
 
 // --- Probability Math Helpers ---
 
@@ -489,6 +492,47 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
 };
 
 export default function HypothesisTestingCalculator() {
+    // Tour state
+    const [runTour, setRunTour] = useState(false);
+    const tourSteps: Step[] = useMemo(() => [
+        {
+            target: '.tour-step-intro',
+            content: 'ברוכים הבאים למחשבון בדיקת ההשערות! כאן תוכלו לבחון נתונים ולחשב עוצמה בקלות.',
+            disableBeacon: true,
+            placement: 'center',
+        },
+        {
+            target: '.tour-step-inputs',
+            content: 'כאן מזינים את הפרמטרים של אוכלוסיית הבסיס (השערת האפס) ושל המדגם שלכם.',
+            placement: 'right',
+        },
+        {
+            target: '.tour-step-test-type',
+            content: 'בחרו את סוג המבחן והכיוון שלו (חד-צדדי או דו-צדדי).',
+            placement: 'bottom',
+        },
+        {
+            target: '.tour-step-graph',
+            content: 'הגרף יתעדכן בזמן אמת ויציג לכם את התפלגות הדגימה, אזורי הדחייה והעוצמה (1-Beta).',
+            placement: 'left',
+        },
+        {
+            target: '.tour-step-decision',
+            content: 'מטריצת ההחלטה מציגה בצורה ברורה את המסקנה הסטטיסטית של המבחן.',
+            placement: 'top',
+        },
+        {
+            target: '.tour-step-accordion-ht',
+            content: 'בחלק זה מוצגים 6 שלבי הפתרון. בשלב 1 (ניסוח השערות) נקבע צד המבחן וידיעת השונות. בשלב 3 נקבעת רמת המובהקות. שלבים 4, 5 ו-6 מתבצעים אוטומטית עד לקבלת מסקנה.',
+            placement: 'top',
+        },
+        {
+            target: '.tour-step-accordion-ci',
+            content: 'במידת הצורך, כאן תוכלו למצוא גם חישוב מפורט של רווח סמך לתוחלת, ומיד מתחתיו חישוב לעוצמת המבחן (Power).',
+            placement: 'top',
+        }
+    ], []);
+
     // Input states
     const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', true);
     const [calculatePower, setCalculatePower] = useLocalStorageState<boolean>('HT_calculatePower', true);
@@ -1154,14 +1198,53 @@ export default function HypothesisTestingCalculator() {
     };
 
     return (
-        <div className="space-y-8 bg-[var(--color-background)] min-h-screen text-[var(--color-text-primary)] p-4 sm:p-6 md:p-8" dir="rtl">
+        <div className="tour-step-intro space-y-8 bg-[var(--color-background)] min-h-screen text-[var(--color-text-primary)] p-4 sm:p-6 md:p-8" dir="rtl">
+            <JoyrideComponent
+                steps={tourSteps}
+                run={runTour}
+                continuous
+                showSkipButton
+                disableOverlayClose
+                styles={({
+                    options: {
+                        zIndex: 10000,
+                        primaryColor: '#d4a843',
+                        backgroundColor: '#1e1e24',
+                        textColor: '#e0e0e0',
+                        arrowColor: '#1e1e24',
+                        overlayColor: 'rgba(0, 0, 0, 0.65)'
+                    },
+                    tooltip: {
+                        direction: 'rtl',
+                        fontFamily: 'Assistant, sans-serif',
+                        textAlign: 'right',
+                        borderRadius: '8px',
+                        border: '1px solid #3f3f46'
+                    },
+                    buttonNext: { backgroundColor: '#34529e', color: '#fff', borderRadius: '4px', fontWeight: 'bold' },
+                    buttonBack: { color: '#a1a1aa', fontWeight: 'bold' },
+                    buttonSkip: { color: '#ef4444', fontWeight: 'bold' }
+                }) as any}
+                callback={(data) => {
+                    if (data.status === 'finished' || data.status === 'skipped') {
+                        setRunTour(false);
+                    }
+                }}
+                locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
+            />
             {/* Parameters Input Card */}
-            <div className="rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
+            <div className="tour-step-inputs rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
                 <div className="flex items-center gap-2 border-b border-[var(--color-border)] pb-4 mb-5">
                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Sliders size={20} /></div>
                     <h3 className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
                     </h3>
+                    <button 
+                        onClick={() => setRunTour(true)} 
+                        className="mr-auto px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
+                    >
+                        <span>הפעל סיור מודרך</span>
+                    </button>
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -1402,7 +1485,7 @@ export default function HypothesisTestingCalculator() {
 
                     </div>
                     {/* Main Test Parameter Selector */}
-                    <div className="flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
+                    <div className="tour-step-test-type flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
                         <span className="text-sm font-black text-[var(--color-text-primary)] text-right shrink-0">הפרמטר:</span>
                         <div className="grid grid-cols-3 gap-3 w-full">
                             {[
@@ -1434,7 +1517,7 @@ export default function HypothesisTestingCalculator() {
                 <div className="contents">
 
                     {/* Overlapping Curves Chart */}
-                    <div className="rounded-lg p-4 md:p-5 border shadow-md transition-all bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 order-1 lg:order-1">
+                    <div className="tour-step-graph rounded-lg p-4 md:p-5 border shadow-md transition-all bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 order-1 lg:order-1">
                         <div className="flex flex-col md:flex-row md:items-center justify-end gap-4 border-b border-[var(--color-border)] pb-3 mb-3">
                             <div className="flex flex-wrap gap-4 text-xs sm:text-sm">
                                 <span className="flex items-center gap-1.5 font-black text-[var(--color-accent-brass)] select-none">
@@ -1692,7 +1775,7 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Solutions Steps Accordion / Panel */}
                     
-                    <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
+                    <div className="tour-step-accordion-ht rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
                         
                         <div
                             role="button"
@@ -2980,7 +3063,7 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Confidence Interval Section */}
                     {isValid && stats && (
-                        <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
+                        <div className="tour-step-accordion-ci rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
                             <button
                                 onClick={() => setShowCI(!showCI)}
                                 className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
@@ -3346,7 +3429,7 @@ export default function HypothesisTestingCalculator() {
                     <div className="contents">
 
                         {/* Decision Matrix Hero (Moved to side panel) */}
-                        <div className="text-right w-full min-w-0 order-2 lg:order-2">
+                        <div className="tour-step-decision text-right w-full min-w-0 order-2 lg:order-2">
                             <DecisionMatrix isValid={isValid} stats={stats} alpha={alpha} calculatePower={calculatePower} />
                         </div>
 

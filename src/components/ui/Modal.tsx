@@ -18,7 +18,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export type ModalSize = 'sm' | 'md' | 'lg';
 export type ModalVariant = 'default' | 'confirmation' | 'error';
 
-export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+export interface ModalProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onDrag' | 'onDragStart' | 'onDragEnd' | 'onAnimationStart'> {
   /** Controls visibility. */
   isOpen: boolean;
   /** Called when user requests close (button, escape, overlay click). */
@@ -225,6 +225,7 @@ Modal.displayName = 'Modal';
  * ConfirmDialog — single-purpose confirmation modal with default/cancel actions.
  */
 export interface ConfirmDialogProps extends Omit<ModalProps, 'footer' | 'title'> {
+  title?: string;
   /** Confirm button label. */
   confirmLabel?: React.ReactNode;
   /** Cancel button label. */
