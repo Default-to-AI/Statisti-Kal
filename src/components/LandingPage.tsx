@@ -1,7 +1,8 @@
-import type { ReactElement, SVGProps } from 'react';
-import { Calculator, CheckCircle2, FlaskConical, LineChart, Play } from 'lucide-react';
-import { motion } from 'motion/react';
+import { useState, type ReactElement, type SVGProps } from 'react';
+import { Calculator, CheckCircle2, FlaskConical, LineChart, Play, ChevronRight, ChevronLeft } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { InlineMath } from 'react-katex';
+import SiteFooter from './SiteFooter';
 import SiteHeader, { type SitePage } from './SiteHeader';
 import { Badge } from './ui/Badge';
 import { Button } from './ui/Button';
@@ -103,6 +104,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
   return (
     <PageLayout
       header={<SiteHeader activePage="landing" onNavigate={onNavigate} />}
+      footer={<SiteFooter onNavigate={onNavigate} />}
     >
       <section className="grid min-h-[calc(100vh-140px)] grid-cols-1 items-center gap-8 py-6 lg:grid-cols-[0.95fr_1.05fr] lg:py-12">
         <motion.div
@@ -140,7 +142,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
           transition={{ duration: 0.55, ease: 'easeOut', delay: 0.08 }}
           className="curve-glow rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-6"
         >
-          <HeroInstrumentMockup />
+          <FeatureCarousel />
         </motion.div>
       </section>
 
@@ -245,6 +247,102 @@ function SectionHeader({
       </div>
       <h2 className="text-3xl font-black text-[var(--color-text-primary)] sm:text-4xl">{title}</h2>
       <p className="text-body-base font-semibold text-[var(--color-text-secondary)]">{body}</p>
+    </div>
+  );
+}
+
+const CAROUSEL_ITEMS = [
+  {
+    id: 1,
+    title: 'קליטת נתונים מהירה ונוחה',
+    description: (
+      <>
+        לדוגמה: התפלגות ממוצע IQ בעולם מתוך מדגם: 1,212,714 שנלקח לשנת 2025<br />
+        <span className="text-sm opacity-80 mt-1 inline-block">
+          מקור: <a href="https://international-iq-test.com/he/test/IQ_by_country" target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--color-accent-cobalt)]">International IQ Test</a>
+        </span>
+      </>
+    ),
+    image: '/images/carousel-inputs.png',
+  },
+  {
+    id: 2,
+    title: 'גרף אינטראקטיבי והחלטה חזותית',
+    image: '/images/carousel-graph.png',
+  },
+  {
+    id: 3,
+    title: 'מטריצת החלטה 2X2',
+    image: '/images/carousel-matrix.png',
+  },
+  {
+    id: 4,
+    title: 'פירוט 6 שלבי הפתרון הסטטיסטי',
+    image: '/images/carousel-steps.png',
+  }
+];
+
+function FeatureCarousel(): ReactElement {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
+  const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length);
+
+  return (
+    <div className="relative w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-background)]" dir="rtl">
+      <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[var(--color-surface-raised)] flex items-center justify-center overflow-hidden">
+        <AnimatePresence mode="wait">
+          <motion.img
+            key={currentIndex}
+            src={CAROUSEL_ITEMS[currentIndex].image}
+            alt={CAROUSEL_ITEMS[currentIndex].title}
+            className="w-full h-full object-contain"
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -50 }}
+            transition={{ duration: 0.3 }}
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 500"><rect width="800" height="500" fill="%231e1e24"/><text x="50%" y="45%" font-family="sans-serif" font-size="28" fill="%23888" text-anchor="middle">תמונה חסרה</text><text x="50%" y="55%" font-family="sans-serif" font-size="16" fill="%23666" text-anchor="middle">נא להעלות לתיקייה: ' + CAROUSEL_ITEMS[currentIndex].image + '</text></svg>';
+            }}
+          />
+        </AnimatePresence>
+
+        <button 
+          onClick={nextSlide} 
+          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--color-surface)]/80 p-1.5 sm:p-2 text-[var(--color-text-primary)] shadow-md hover:bg-[var(--color-surface)] backdrop-blur-sm transition-colors border border-[var(--color-border)] z-10"
+          aria-label="הבא"
+        >
+          <ChevronRight size={24} />
+        </button>
+        <button 
+          onClick={prevSlide} 
+          className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--color-surface)]/80 p-1.5 sm:p-2 text-[var(--color-text-primary)] shadow-md hover:bg-[var(--color-surface)] backdrop-blur-sm transition-colors border border-[var(--color-border)] z-10"
+          aria-label="הקודם"
+        >
+          <ChevronLeft size={24} />
+        </button>
+
+        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
+          {CAROUSEL_ITEMS.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setCurrentIndex(idx)}
+              className={`h-2.5 w-2.5 rounded-full transition-colors shadow-sm ${idx === currentIndex ? 'bg-[var(--color-accent-cobalt)] scale-110' : 'bg-[var(--color-border)]/80 hover:bg-[var(--color-text-secondary)]'}`}
+              aria-label={`עבור לשקופית ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="p-4 sm:p-5 text-center border-t border-[var(--color-border)] bg-[var(--color-surface)] min-h-[100px] flex flex-col justify-center items-center">
+        <h3 className="font-black text-[var(--color-text-primary)] text-lg sm:text-xl">
+          {CAROUSEL_ITEMS[currentIndex].title}
+        </h3>
+        {CAROUSEL_ITEMS[currentIndex].description && (
+          <p className="mt-2 text-[var(--color-text-secondary)] font-semibold text-sm sm:text-base leading-relaxed">
+            {CAROUSEL_ITEMS[currentIndex].description}
+          </p>
+        )}
+      </div>
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { ArrowUp } from 'lucide-react';
 export interface PageLayoutProps {
   /** The content of the header (title, logo, tabs, etc.) */
   header?: React.ReactNode;
+  /** Optional global footer content */
+  footer?: React.ReactNode;
   /** The main content sections */
   children: React.ReactNode;
   /** Add a specific dir attribute to the layout. Often 'rtl' for Hebrew. */
@@ -14,7 +16,7 @@ export interface PageLayoutProps {
  * A standardized layout container that implements the Layered Dark Mode 
  * aesthetics and global grid alignment across all calculator pages.
  */
-export const PageLayout: React.FC<PageLayoutProps> = ({ header, children, dir = 'rtl' }) => {
+export const PageLayout: React.FC<PageLayoutProps> = ({ header, footer, children, dir = 'rtl' }) => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
@@ -43,6 +45,12 @@ export const PageLayout: React.FC<PageLayoutProps> = ({ header, children, dir = 
       <main className="w-full max-w-[1800px] mx-auto flex flex-col gap-6" dir={dir}>
         {children}
       </main>
+
+      {footer && (
+        <footer className="mt-10 w-full max-w-[1800px] mx-auto border-t border-[var(--color-border)] pt-6" dir={dir}>
+          {footer}
+        </footer>
+      )}
 
       {showScrollTop && (
         <button

@@ -6,6 +6,7 @@
 import { Fragment, useState } from 'react';
 import HypothesisTestingCalculator from './components/HypothesisTestingCalculator';
 import LandingPage from './components/LandingPage';
+import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
 import { PageLayout } from './components/ui/PageLayout';
 import NormalDistributionCalculator, { type CalcMode } from './NormalDistributionCalculator';
@@ -31,6 +32,7 @@ export default function App() {
     return (
       <PageLayout
         header={<SiteHeader activePage="hypothesis" onNavigate={handleNavigate} />}
+        footer={<SiteFooter onNavigate={handleNavigate} />}
       >
         <HypothesisTestingCalculator />
       </PageLayout>

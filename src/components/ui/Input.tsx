@@ -92,6 +92,8 @@ export interface InputProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 
   dir?: 'ltr' | 'rtl';
   /** When true, input takes full width. */
   fullWidth?: boolean;
+  /** Custom class name for the input element. */
+  inputClassName?: string;
 }
 
 const INPUT_SIZE_CLASSES: Record<NonNullable<InputProps['size']>, string> = {

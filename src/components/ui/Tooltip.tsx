@@ -12,7 +12,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 export type TooltipSize = 'sm' | 'md' | 'lg';
 
-export interface TooltipProps extends HTMLAttributes<HTMLDivElement> {
+export interface TooltipProps extends Omit<HTMLAttributes<HTMLDivElement>, 'content'> {
   /** Tooltip content. */
   content: React.ReactNode;
   /** Child element to attach tooltip to. */
@@ -87,8 +87,8 @@ export const Tooltip = forwardRef<HTMLDivElement, TooltipProps>(
       timeoutRef.current = setTimeout(() => setIsVisible(false), 50);
     };
 
-    const childWithProps = React.Children.only(children);
-    const childProps = childWithProps.props as React.HTMLAttributes<HTMLElement>;
+    const childWithProps = React.Children.only(children) as React.ReactElement<any>;
+    const childProps = childWithProps.props;
 
     const mergedChildProps = {
       ...childProps,

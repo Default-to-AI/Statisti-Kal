@@ -11,7 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 export type AccordionSize = 'sm' | 'md' | 'lg';
 export type AccordionVariant = 'default' | 'bordered' | 'card';
 
-export interface AccordionProps extends HTMLAttributes<HTMLDivElement> {
+export interface AccordionProps extends Omit<HTMLAttributes<HTMLDivElement>, 'onChange'> {
   /** Accordion items. */
   items: Array<AccordionItem>;
   /** Allow multiple items open at once. Default false. */

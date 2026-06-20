@@ -35,6 +35,7 @@ import {
 
 import HypothesisTestingCalculator from './components/HypothesisTestingCalculator';
 import FormulaSheet from './components/FormulaSheet';
+import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
 import { PageLayout } from './components/ui';
 
@@ -1659,6 +1660,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
         </>
         )
       }
+      footer={onNavigate ? <SiteFooter onNavigate={onNavigate} /> : undefined}
     >
       <AnimatePresence mode="wait">
           {mode === 'hypothesis' ? (

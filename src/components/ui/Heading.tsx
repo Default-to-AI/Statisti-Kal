@@ -54,11 +54,11 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
     },
     ref,
   ) {
-    const tag = level === 'page' ? 'h1' : level === 'section' ? 'h2' : level === 'subsection' ? 'h3' : 'h4';
+    const Tag = (level === 'page' ? 'h1' : level === 'section' ? 'h2' : level === 'subsection' ? 'h3' : 'h4') as any;
     const defaultAlign = level === 'label' ? 'start' : 'center';
 
     return (
-      <tag
+      <Tag
         ref={ref}
         className={`
           flex items-center gap-3 font-sans
@@ -73,7 +73,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
         {withAccentBar && <span className="accent-bar" aria-hidden="true" />}
         {children}
         {withAccentBar && <span className="accent-bar" aria-hidden="true" />}
-      </tag>
+      </Tag>
     );
   },
 );
