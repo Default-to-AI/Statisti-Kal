@@ -262,36 +262,40 @@ function SectionHeader({
 const CAROUSEL_ITEMS: CarouselItem[] = [
   {
     id: 1,
-    eyebrow: '01 · גרף והשערות',
-    title: 'גרף עם שתי השערות',
+    eyebrow: '01 · פרמטרים והשערות',
+    title: 'הזנת נתונים ומבנה השערות',
     description: (
       <>
-        שקופית פתיחה שמציגה <span dir="ltr"><InlineMath math="H_0" /></span>, <span dir="ltr"><InlineMath math="H_1" /></span>, אזור דחייה וסטטיסטי מבחן יחד.
+        טבלת שלוש-עמודות: השערת האפס, נתוני המדגם, השערת המחקר — עם הפרמטרים <span dir="ltr"><InlineMath math="\\mu_0, \\bar{X}, \\sigma, n" /></span> בזמן אמת.
       </>
     ),
-    visual: <HypothesesGraphSlide />,
+    visual: <ParametersSlide />,
   },
   {
     id: 2,
-    eyebrow: '02 · הזנת נתונים',
-    title: 'קלט שמורכב משתי תמונות',
-    description: 'שתי שכבות קלט חופפות: נתוני תרגיל בצד אחד, בחירת מבחן והשערות בצד השני.',
-    visual: <DataEntrySlide />,
+    eyebrow: '02 · גרף שתי עקומות',
+    title: 'ויזואליזציה של ההתפלגויות',
+    description: (
+      <>
+        שתי עקומות רגילות: <span dir="ltr"><InlineMath math="H_0" /></span> בזהב ו-<span dir="ltr"><InlineMath math="H_1" /></span> בטורקיז, עם ערך קריטי ואזור דחייה אדום.
+      </>
+    ),
+    visual: <ChartSlide />,
   },
   {
     id: 3,
-    eyebrow: '03 · החלטות לפני חישוב',
-    title: 'מטריצת 2X2: סטיית תקן ורמת מובהקות',
-    description: 'שקופית טכנית יותר: ידועה/לא ידועה מול רמת מובהקות וכיוון בדיקה.',
-    visual: <DecisionMatrixSlide />,
+    eyebrow: '03 · שלבי הפתרון',
+    title: 'ניסוח השערות ובחירת מבחן',
+    description: 'שישה שלבי פתרון מפורטים: עץ החלטה לבחירת Z/t, נוסחאות עם ערכים, ופירוש בשפה אנושית.',
+    visual: <StepsSlide />,
   },
   {
     id: 4,
     eyebrow: '04 · מסקנה',
-    title: 'קולאז׳ מסקנות והחלטה',
-    description: 'אזור החלטה גדול, p-value, ניסוח עברי קצר, וחתיכות משנה שמראות למה ההחלטה התקבלה.',
-    visual: <ConclusionCollageSlide />,
-  }
+    title: 'החלטה סטטיסטית ו-p-value',
+    description: 'שלב 6: השוואה בשלוש גישות — סטטיסטי מבחן, אזור דחייה, והסתברות. מסקנה ברורה בעברית.',
+    visual: <ConclusionSlide />,
+  },
 ];
 
 function FeatureCarousel(): ReactElement {
@@ -436,145 +440,54 @@ function RealScreenshotCard({
   );
 }
 
-function HypothesesGraphSlide(): ReactElement {
-  return (
-    <SlideStage>
-      <DraftPanel className="left-[6%] top-[8%] z-20 w-[35%] min-w-[260px]" tone="brass">
-        <div className="space-y-3">
-          <PanelLabel>השערות</PanelLabel>
-          <MiniField label="השערת אפס" value={String.raw`H_0:\mu=100`} />
-          <MiniField label="השערה חלופית" value={String.raw`H_1:\mu>100`} />
-        </div>
-      </DraftPanel>
-      <DraftPanel className="bottom-[9%] right-[4%] z-10 w-[78%] p-5" tone="cobalt">
-        <DecisionCurveSvg className="h-72 w-full" />
-      </DraftPanel>
-      <DraftPanel className="right-[10%] top-[12%] z-30 w-[26%] min-w-[220px]" tone="crimson">
-        <div className="space-y-2">
-          <PanelLabel tone="crimson">אזור דחייה</PanelLabel>
-          <div dir="ltr" className="text-mono-lg font-black text-[var(--color-text-primary)]">
-            <InlineMath math={String.raw`z_\alpha=1.645`} />
-          </div>
-          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">קו החלטה מודגש מעל העקומה.</p>
-        </div>
-      </DraftPanel>
-    </SlideStage>
-  );
-}
-
-function DataEntrySlide(): ReactElement {
+function ParametersSlide(): ReactElement {
   return (
     <SlideStage>
       <RealScreenshotCard
-        src="/images/carousel/hypothesis-inputs-real.png"
-        alt="צילום אמיתי ממסך הזנת הנתונים במחשבון בדיקת השערות"
-        className="left-[5%] top-[7%] z-10 h-[58%] w-[62%] border-[var(--color-accent-cobalt-line)]"
-        imageClassName="object-[center_24%]"
+        src="/images/carousel/ht-parameters.png"
+        alt="מסך הזנת הפרמטרים: טבלת השערת אפס, מדגם, השערת המחקר עם הערכים האמיתיים"
+        className="inset-[4%] z-10"
+        imageClassName="object-top"
       />
+    </SlideStage>
+  );
+}
+
+function ChartSlide(): ReactElement {
+  return (
+    <SlideStage>
       <RealScreenshotCard
-        src="/images/carousel/hypothesis-conclusion-real.png"
-        alt="צילום אמיתי מאזור גרף והחלטת המבחן"
-        className="bottom-[8%] left-[14%] z-30 h-[36%] w-[46%] border-[var(--color-accent-teal)]/50"
-        imageClassName="object-[center_15%]"
+        src="/images/carousel/ht-chart.png"
+        alt="גרף שתי עקומות נורמליות: H0 בזהב, H1 בטורקיז, עם ערך קריטי ואזור דחייה"
+        className="inset-[4%] z-10 border-[var(--color-accent-brass)]/40"
+        imageClassName="object-center"
       />
-      <DraftPanel className="right-[7%] top-[10%] z-20 w-[30%] min-w-[260px]" tone="cobalt">
-        <div className="space-y-3">
-          <PanelLabel tone="cobalt">קלט אמיתי מהמערכת</PanelLabel>
-          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">
-            צילום מהכלי עצמו: מקור נתונים, פרמטרים, השערות, מטריצה וגרף באותה זרימה.
-          </p>
-          <div className="grid grid-cols-2 gap-2">
-            <MiniField label="מדגם" value="n=148" />
-            <MiniField label="תוחלת" value={String.raw`\mu_0=37`} />
-            <MiniField label="ממוצע" value={String.raw`\bar{x}=36.82`} />
-            <MiniField label="תקן" value={String.raw`\sigma=0.41`} />
-          </div>
-        </div>
-      </DraftPanel>
-      <DraftPanel className="bottom-[12%] right-[11%] z-40 w-[28%] min-w-[250px] rotate-[1deg]" tone="brass">
-        <div className="space-y-3">
-          <PanelLabel>בחירות פעילות</PanelLabel>
-          {['ממוצע מדגם', 'חישוב עוצמה פעיל', 'החלטה לפי p-value'].map((item) => (
-            <div key={item} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/70 px-4 py-2.5 text-body-sm font-black text-[var(--color-text-primary)]">
-              {item}
-            </div>
-          ))}
-        </div>
-      </DraftPanel>
-      <DraftPanel className="left-[44%] top-[43%] z-50 w-[24%] rotate-[-2deg]" tone="teal">
-        <div className="space-y-2">
-          <PanelLabel tone="teal">מילוי חלל</PanelLabel>
-          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">שתי תמונות אמיתיות + כרטיסי פירוק, כדי שהשקופית לא תרגיש ריקה.</p>
-        </div>
-      </DraftPanel>
     </SlideStage>
   );
 }
 
-function DecisionMatrixSlide(): ReactElement {
+function StepsSlide(): ReactElement {
   return (
     <SlideStage>
-      <DraftPanel className="inset-x-[7%] top-[9%] z-10 p-5" tone="brass">
-        <div className="grid grid-cols-2 gap-3">
-          {[
-            ['σ ידועה', 'Z-test', 'brass'],
-            ['σ לא ידועה', 't-test', 'cobalt'],
-            ['α = 0.05', 'סף החלטה', 'crimson'],
-            ['α = 0.01', 'בדיקה מחמירה', 'teal'],
-          ].map(([title, body, tone]) => (
-            <div key={title} className={`rounded-lg border ${accentClass[tone as FeatureCard['accent']]} bg-[var(--color-background)]/70 p-5`}>
-              <PanelLabel tone={tone as FeatureCard['accent']}>{title}</PanelLabel>
-              <div className="mt-2 text-heading-section font-black text-[var(--color-text-primary)]">{body}</div>
-            </div>
-          ))}
-        </div>
-      </DraftPanel>
-      <DraftPanel className="bottom-[8%] right-[10%] z-30 w-[34%] min-w-[260px]" tone="crimson">
-        <div className="space-y-3">
-          <PanelLabel tone="crimson">כיוון בדיקה</PanelLabel>
-          <MiniField label="חד צדדי ימני" value={String.raw`H_1:\mu>\mu_0`} />
-          <MiniField label="דו צדדי" value={String.raw`H_1:\mu\ne\mu_0`} />
-        </div>
-      </DraftPanel>
-      <DraftPanel className="bottom-[15%] left-[9%] z-20 w-[30%] min-w-[240px]" tone="teal">
-        <PanelLabel tone="teal">מטרה</PanelLabel>
-        <p className="mt-2 text-body-base font-bold text-[var(--color-text-primary)]">להראות שהבחירות הקריטיות לפני החישוב הן חלק מהזרימה, לא טופס צדדי.</p>
-      </DraftPanel>
+      <RealScreenshotCard
+        src="/images/carousel/ht-steps.png"
+        alt="שלבי הפתרון המפורטים: עץ החלטה לבחירת מבחן Z, ניסוח השערות אינטראקטיבי"
+        className="inset-[4%] z-10 border-[var(--color-accent-cobalt-line)]"
+        imageClassName="object-top"
+      />
     </SlideStage>
   );
 }
 
-function ConclusionCollageSlide(): ReactElement {
+function ConclusionSlide(): ReactElement {
   return (
     <SlideStage>
-      <DraftPanel className="right-[7%] top-[10%] z-30 w-[42%] min-w-[310px]" tone="teal">
-        <div className="space-y-3">
-          <PanelLabel tone="teal">החלטה</PanelLabel>
-          <div className="flex items-center gap-2 text-[var(--color-accent-teal)]">
-            <CheckCircle2 size={24} />
-            <span className="text-display-h3 font-black">דוחים את <span dir="ltr"><InlineMath math="H_0" /></span></span>
-          </div>
-          <p className="text-body-base font-semibold text-[var(--color-text-secondary)]">יש עדות סטטיסטית שהממוצע גבוה מ-100.</p>
-        </div>
-      </DraftPanel>
-      <DraftPanel className="left-[9%] top-[16%] z-10 w-[35%] min-w-[260px]" tone="cobalt">
-        <div dir="ltr" className="text-mono-lg font-black text-[var(--color-text-primary)]">
-          <InlineMath math="z=2.10,\ p=0.018" />
-        </div>
-      </DraftPanel>
-      <DraftPanel className="bottom-[10%] right-[16%] z-20 w-[34%] min-w-[260px]" tone="crimson">
-        <DecisionCurveSvg className="h-44 w-full" compact />
-      </DraftPanel>
-      <DraftPanel className="bottom-[12%] left-[8%] z-30 w-[30%] min-w-[240px]" tone="brass">
-        <div className="space-y-2">
-          <PanelLabel>פירוק מסקנה</PanelLabel>
-          {['סטטיסטי מבחן', 'ערך קריטי', 'p-value', 'פירוש בעברית'].map((item) => (
-            <div key={item} className="rounded-md bg-[var(--color-background)]/70 px-3 py-2 text-body-sm font-black text-[var(--color-text-primary)]">
-              {item}
-            </div>
-          ))}
-        </div>
-      </DraftPanel>
+      <RealScreenshotCard
+        src="/images/carousel/ht-conclusion.png"
+        alt="שלב המסקנה: p-value, סטטיסטי מבחן, ערך קריטי, ורווח סמך"
+        className="inset-[4%] z-10 border-[var(--color-accent-teal)]/40"
+        imageClassName="object-top"
+      />
     </SlideStage>
   );
 }
