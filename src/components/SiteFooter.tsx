@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { BookOpen, Calculator, Github, Mail, Sigma } from 'lucide-react';
+import { Github, GraduationCap, ArrowUpRight } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
 
 interface SiteFooterProps {
@@ -15,69 +15,92 @@ const quickLinks: FooterLink[] = [
   { label: 'בדיקת השערות', page: 'hypothesis' },
   { label: 'חישובי הסתברויות', page: 'forward' },
   { label: 'אחוזונים', page: 'inverse' },
-  { label: 'טבלאות', page: 'table' },
-  { label: 'נוסחאות', page: 'formula-sheet' },
+  { label: 'טבלאות Z ו-T', page: 'table' },
+  { label: 'דף נוסחאות', page: 'formula-sheet' },
 ];
 
 const githubUrl = 'https://github.com/Default-to-AI/statistics';
 
 export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElement {
   return (
-    <div className="grid gap-8 rounded-lg bg-[var(--color-surface)] px-5 py-6 text-right sm:px-6 lg:grid-cols-[1.25fr_1fr_1fr]">
-      <section className="space-y-3">
-        <div className="flex items-center gap-3">
-          <div className="rounded-sm border border-[var(--color-accent-brass)]/45 bg-[var(--color-accent-brass)]/10 p-2 text-[var(--color-accent-brass)]">
-            <Sigma className="h-5 w-5" />
-          </div>
-          <h2 className="text-heading-section font-black text-[var(--color-text-primary)]">אודות</h2>
-        </div>
-        <p className="max-w-xl text-body-sm font-semibold leading-7 text-[var(--color-text-secondary)]">
-          כלי אקדמי בעברית לחישובי התפלגות נורמלית, בדיקת השערות, טבלאות ונוסחאות. נבנה כדי לקצר את הדרך בין נתוני התרגיל, החישוב, וההחלטה הסטטיסטית.
-        </p>
-      </section>
+    <footer className="border-t border-[var(--color-border)]" dir="rtl">
+      <div className="mx-auto px-5 py-10 sm:px-6">
+        {/* Main grid */}
+        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr]">
 
-      <nav className="space-y-3" aria-label="לינקים מהירים">
-        <div className="flex items-center gap-2 text-[var(--color-text-primary)]">
-          <BookOpen className="h-4 w-4 text-[var(--color-accent-cobalt)]" />
-          <h2 className="text-heading-section font-black">לינקים מהירים</h2>
-        </div>
-        <div className="grid grid-cols-2 gap-2">
-          {quickLinks.map((link) => (
-            <button
-              key={link.page}
-              type="button"
-              onClick={() => onNavigate(link.page)}
-              className="rounded-sm border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-right text-body-xs font-black text-[var(--color-text-secondary)] transition hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-text-primary)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-cobalt)]"
+          {/* About column */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2.5">
+              <GraduationCap
+                className="h-5 w-5 text-[var(--color-accent-brass)]"
+                strokeWidth={1.6}
+              />
+              <span className="text-heading-section font-black text-[var(--color-text-primary)]">
+                אודות
+              </span>
+            </div>
+            <p className="max-w-sm text-body-base font-medium leading-7 text-[var(--color-text-secondary)]">
+              כלי אקדמי בעברית לחישובי התפלגות נורמלית, חישובי אחוזונים,
+              בדיקות השערות, וטבלאות אינטראקטיביות. נבנה כדי להציג את הדרך
+              הפורמלית והנכונה לחישובים סטטיסטיים, תוך שימוש בעזרים
+              ויזואליים וטקסט קריא.
+            </p>
+            <p className="text-body-sm font-semibold text-[var(--color-text-tertiary)]">
+              פרויקט לימודי עצמאי — אין להכניס נתונים אישיים או רגישים.
+            </p>
+          </section>
+
+          {/* Quick nav column */}
+          <nav aria-label="ניווט מהיר" className="space-y-4">
+            <h2 className="text-heading-section font-black text-[var(--color-text-primary)]">
+              ניווט
+            </h2>
+            <ul className="space-y-2.5">
+              {quickLinks.map((link) => (
+                <li key={link.page}>
+                  <button
+                    type="button"
+                    onClick={() => onNavigate(link.page)}
+                    className="group flex items-center gap-1.5 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-text-primary)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-cobalt)] focus-visible:ring-offset-2"
+                  >
+                    <span className="inline-block h-px w-3 bg-[var(--color-border)] transition-all duration-200 group-hover:w-4 group-hover:bg-[var(--color-accent-cobalt)]" />
+                    {link.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {/* Source / links column */}
+          <section className="space-y-4">
+            <h2 className="text-heading-section font-black text-[var(--color-text-primary)]">
+              קוד מקור
+            </h2>
+            <a
+              href={githubUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-accent-brass)]"
             >
-              {link.label}
-            </button>
-          ))}
+              <Github className="h-4 w-4 shrink-0" strokeWidth={1.6} />
+              GitHub
+              <ArrowUpRight
+                className="h-3 w-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                strokeWidth={2}
+              />
+            </a>
+            <p className="text-body-sm font-medium leading-6 text-[var(--color-text-tertiary)]">
+              קוד פתוח. הרצת חישובים מתבצעת לחלוטין בדפדפן — ללא שרת, ללא
+              איסוף נתונים.
+            </p>
+          </section>
         </div>
-      </nav>
 
-      <section className="space-y-3">
-        <div className="flex items-center gap-2 text-[var(--color-text-primary)]">
-          <Calculator className="h-4 w-4 text-[var(--color-accent-teal)]" />
-          <h2 className="text-heading-section font-black">מקורות וקוד</h2>
+        {/* Bottom bar */}
+        <div className="mt-10 flex items-center justify-between border-t border-[var(--color-border)] pt-5 text-body-sm font-semibold text-[var(--color-text-tertiary)]">
+          <span>כל הזכויות שמורות לרוברט טייגר | המכללה האקדמית תל אביב 2026</span>
         </div>
-        <a
-          href={githubUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-background)] px-3 py-2 text-body-sm font-black text-[var(--color-text-primary)] transition hover:border-[var(--color-accent-brass)] hover:text-[var(--color-accent-brass)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-accent-brass)]"
-        >
-          <Github className="h-4 w-4" />
-          GitHub
-        </a>
-        <p className="flex items-start gap-2 text-body-xs font-semibold leading-6 text-[var(--color-text-secondary)]">
-          <Mail className="mt-1 h-4 w-4 shrink-0 text-[var(--color-text-tertiary)]" />
-          פרויקט לימודי עצמאי. אין להכניס נתונים אישיים או רגישים לכלי ציבורי.
-        </p>
-      </section>
-
-      <div className="border-t border-[var(--color-border)] pt-4 text-body-xs font-bold text-[var(--color-text-tertiary)] lg:col-span-3">
-        כל הזכויות שמורות לרוברט טייגר | המכללה האקדמית תל אביב 2026.
       </div>
-    </div>
+    </footer>
   );
 }

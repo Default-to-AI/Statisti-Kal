@@ -29,6 +29,14 @@ interface WorkflowStep {
   math: string;
 }
 
+interface CarouselItem {
+  id: number;
+  eyebrow: string;
+  title: string;
+  description?: ReactElement | string;
+  visual: ReactElement;
+}
+
 const featureCards: FeatureCard[] = [
   {
     title: 'הגדרת השערות בלי בלבול',
@@ -106,12 +114,12 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
       header={<SiteHeader activePage="landing" onNavigate={onNavigate} />}
       footer={<SiteFooter onNavigate={onNavigate} />}
     >
-      <section className="grid min-h-[calc(100vh-140px)] grid-cols-1 items-center gap-8 py-6 lg:grid-cols-[0.95fr_1.05fr] lg:py-12">
+      <section className="grid min-h-[calc(100vh-140px)] grid-cols-1 gap-8 py-6 lg:py-12">
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45, ease: 'easeOut' }}
-          className="space-y-7"
+          className="max-w-4xl space-y-7"
         >
           <div className="accent-bar" />
           <div className="space-y-5">
@@ -140,7 +148,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.55, ease: 'easeOut', delay: 0.08 }}
-          className="curve-glow rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-4 sm:p-6"
+          className="curve-glow rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 sm:p-5"
         >
           <FeatureCarousel />
         </motion.div>
@@ -251,34 +259,38 @@ function SectionHeader({
   );
 }
 
-const CAROUSEL_ITEMS = [
+const CAROUSEL_ITEMS: CarouselItem[] = [
   {
     id: 1,
-    title: 'קליטת נתונים מהירה ונוחה',
+    eyebrow: '01 · גרף והשערות',
+    title: 'גרף עם שתי השערות',
     description: (
       <>
-        לדוגמה: התפלגות ממוצע IQ בעולם מתוך מדגם: 1,212,714 שנלקח לשנת 2025<br />
-        <span className="text-sm opacity-80 mt-1 inline-block">
-          מקור: <a href="https://international-iq-test.com/he/test/IQ_by_country" target="_blank" rel="noopener noreferrer" className="underline hover:text-[var(--color-accent-cobalt)]">International IQ Test</a>
-        </span>
+        שקופית פתיחה שמציגה <span dir="ltr"><InlineMath math="H_0" /></span>, <span dir="ltr"><InlineMath math="H_1" /></span>, אזור דחייה וסטטיסטי מבחן יחד.
       </>
     ),
-    image: '/images/carousel-inputs.png',
+    visual: <HypothesesGraphSlide />,
   },
   {
     id: 2,
-    title: 'גרף אינטראקטיבי והחלטה חזותית',
-    image: '/images/carousel-graph.png',
+    eyebrow: '02 · הזנת נתונים',
+    title: 'קלט שמורכב משתי תמונות',
+    description: 'שתי שכבות קלט חופפות: נתוני תרגיל בצד אחד, בחירת מבחן והשערות בצד השני.',
+    visual: <DataEntrySlide />,
   },
   {
     id: 3,
-    title: 'מטריצת החלטה 2X2',
-    image: '/images/carousel-matrix.png',
+    eyebrow: '03 · החלטות לפני חישוב',
+    title: 'מטריצת 2X2: סטיית תקן ורמת מובהקות',
+    description: 'שקופית טכנית יותר: ידועה/לא ידועה מול רמת מובהקות וכיוון בדיקה.',
+    visual: <DecisionMatrixSlide />,
   },
   {
     id: 4,
-    title: 'פירוט 6 שלבי הפתרון הסטטיסטי',
-    image: '/images/carousel-steps.png',
+    eyebrow: '04 · מסקנה',
+    title: 'קולאז׳ מסקנות והחלטה',
+    description: 'אזור החלטה גדול, p-value, ניסוח עברי קצר, וחתיכות משנה שמראות למה ההחלטה התקבלה.',
+    visual: <ConclusionCollageSlide />,
   }
 ];
 
@@ -287,63 +299,283 @@ function FeatureCarousel(): ReactElement {
 
   const nextSlide = () => setCurrentIndex((prev) => (prev + 1) % CAROUSEL_ITEMS.length);
   const prevSlide = () => setCurrentIndex((prev) => (prev - 1 + CAROUSEL_ITEMS.length) % CAROUSEL_ITEMS.length);
+  const currentItem = CAROUSEL_ITEMS[currentIndex];
 
   return (
     <div className="relative w-full overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-background)]" dir="rtl">
-      <div className="relative aspect-[16/10] sm:aspect-[16/9] w-full bg-[var(--color-surface-raised)] flex items-center justify-center overflow-hidden">
+      <div className="grid min-h-[620px] grid-cols-1 overflow-hidden bg-[var(--color-surface-raised)] lg:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="relative min-h-[460px] overflow-hidden">
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={currentIndex}
-            src={CAROUSEL_ITEMS[currentIndex].image}
-            alt={CAROUSEL_ITEMS[currentIndex].title}
-            className="w-full h-full object-contain"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -50 }}
-            transition={{ duration: 0.3 }}
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 500"><rect width="800" height="500" fill="%231e1e24"/><text x="50%" y="45%" font-family="sans-serif" font-size="28" fill="%23888" text-anchor="middle">תמונה חסרה</text><text x="50%" y="55%" font-family="sans-serif" font-size="16" fill="%23666" text-anchor="middle">נא להעלות לתיקייה: ' + CAROUSEL_ITEMS[currentIndex].image + '</text></svg>';
-            }}
-          />
+            className="absolute inset-0"
+            initial={{ opacity: 0, x: 44, scale: 0.99 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -44, scale: 0.99 }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
+          >
+            {currentItem.visual}
+          </motion.div>
         </AnimatePresence>
 
         <button 
           onClick={nextSlide} 
-          className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--color-surface)]/80 p-1.5 sm:p-2 text-[var(--color-text-primary)] shadow-md hover:bg-[var(--color-surface)] backdrop-blur-sm transition-colors border border-[var(--color-border)] z-10"
+          className="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/80 p-2 text-[var(--color-text-primary)] shadow-md backdrop-blur-sm transition-colors hover:bg-[var(--color-surface)] sm:right-4"
           aria-label="הבא"
         >
           <ChevronRight size={24} />
         </button>
         <button 
           onClick={prevSlide} 
-          className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 rounded-full bg-[var(--color-surface)]/80 p-1.5 sm:p-2 text-[var(--color-text-primary)] shadow-md hover:bg-[var(--color-surface)] backdrop-blur-sm transition-colors border border-[var(--color-border)] z-10"
+          className="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/80 p-2 text-[var(--color-text-primary)] shadow-md backdrop-blur-sm transition-colors hover:bg-[var(--color-surface)] sm:left-4"
           aria-label="הקודם"
         >
           <ChevronLeft size={24} />
         </button>
-
-        <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2 z-10">
-          {CAROUSEL_ITEMS.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => setCurrentIndex(idx)}
-              className={`h-2.5 w-2.5 rounded-full transition-colors shadow-sm ${idx === currentIndex ? 'bg-[var(--color-accent-cobalt)] scale-110' : 'bg-[var(--color-border)]/80 hover:bg-[var(--color-text-secondary)]'}`}
-              aria-label={`עבור לשקופית ${idx + 1}`}
-            />
-          ))}
         </div>
+
+        <aside className="flex flex-col justify-between gap-5 border-t border-[var(--color-border)] bg-[var(--color-surface)] p-5 lg:border-r lg:border-t-0">
+          <div className="space-y-4">
+            <Badge variant="brass">{currentItem.eyebrow}</Badge>
+            <div className="space-y-3">
+              <h3 className="text-display-h3 font-black text-[var(--color-text-primary)]">{currentItem.title}</h3>
+              {currentItem.description && (
+                <p className="text-body-base font-semibold text-[var(--color-text-secondary)]">
+                  {currentItem.description}
+                </p>
+              )}
+            </div>
+          </div>
+          <div className="space-y-3">
+            {CAROUSEL_ITEMS.map((item, idx) => (
+              <button
+                key={item.id}
+                onClick={() => setCurrentIndex(idx)}
+                className={`w-full rounded-lg border p-3 text-right transition-colors ${idx === currentIndex ? 'border-[var(--color-accent-cobalt-line)] bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)]' : 'border-[var(--color-border)] bg-[var(--color-background)]/55 text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)]'}`}
+                aria-current={idx === currentIndex ? 'step' : undefined}
+              >
+                <span className="block text-caption font-black text-[var(--color-accent-brass)]">{item.eyebrow}</span>
+                <span className="mt-1 block text-body-sm font-black">{item.title}</span>
+              </button>
+            ))}
+          </div>
+        </aside>
       </div>
-      <div className="p-4 sm:p-5 text-center border-t border-[var(--color-border)] bg-[var(--color-surface)] min-h-[100px] flex flex-col justify-center items-center">
-        <h3 className="font-black text-[var(--color-text-primary)] text-lg sm:text-xl">
-          {CAROUSEL_ITEMS[currentIndex].title}
-        </h3>
-        {CAROUSEL_ITEMS[currentIndex].description && (
-          <p className="mt-2 text-[var(--color-text-secondary)] font-semibold text-sm sm:text-base leading-relaxed">
-            {CAROUSEL_ITEMS[currentIndex].description}
-          </p>
-        )}
+      <div className="pointer-events-none absolute bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface)]/90 px-3 py-2 shadow-lg backdrop-blur-sm">
+        {CAROUSEL_ITEMS.map((item, idx) => (
+          <button
+            key={item.id}
+            onClick={() => setCurrentIndex(idx)}
+            className={`pointer-events-auto h-2.5 rounded-full transition-all ${idx === currentIndex ? 'w-8 bg-[var(--color-accent-brass)]' : 'w-2.5 bg-[var(--color-border)] hover:bg-[var(--color-text-secondary)]'}`}
+            aria-label={`עבור לשקופית ${idx + 1} מתוך ${CAROUSEL_ITEMS.length}`}
+          />
+        ))}
       </div>
     </div>
+  );
+}
+
+function SlideStage({ children }: { children: ReactElement | ReactElement[] }): ReactElement {
+  return (
+    <div className="relative h-full min-h-[460px] overflow-hidden bg-[radial-gradient(circle_at_22%_16%,rgba(250,204,21,0.16),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(46,196,182,0.13),transparent_32%),var(--color-background)] p-5 sm:p-8">
+      <div className="absolute inset-x-10 top-10 h-px bg-[var(--color-border)]" />
+      <div className="absolute inset-y-10 right-10 w-px bg-[var(--color-border)]" />
+      {children}
+    </div>
+  );
+}
+
+function DraftPanel({
+  children,
+  className = '',
+  tone = 'neutral',
+}: {
+  children: ReactElement | ReactElement[] | string;
+  className?: string;
+  tone?: FeatureCard['accent'] | 'neutral';
+}): ReactElement {
+  const toneClass = tone === 'neutral' ? 'border-[var(--color-border)]' : accentClass[tone];
+
+  return (
+    <div className={`absolute rounded-xl border ${toneClass} bg-[var(--color-surface)]/95 p-4 shadow-2xl backdrop-blur-sm ${className}`}>
+      {children}
+    </div>
+  );
+}
+
+function PanelLabel({ children, tone = 'brass' }: { children: string; tone?: FeatureCard['accent'] }): ReactElement {
+  return <div className={`text-heading-label font-black ${accentTextClass[tone]}`}>{children}</div>;
+}
+
+function MiniField({ label, value }: { label: string; value: string }): ReactElement {
+  return (
+    <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/70 p-3">
+      <div className="text-body-xs font-black text-[var(--color-text-secondary)]">{label}</div>
+      <div dir="ltr" className="mt-1 text-mono-sm font-black text-[var(--color-text-primary)]">
+        <InlineMath math={value} />
+      </div>
+    </div>
+  );
+}
+
+function RealScreenshotCard({
+  src,
+  alt,
+  className = '',
+  imageClassName = '',
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  imageClassName?: string;
+}): ReactElement {
+  return (
+    <div className={`absolute overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-background)] shadow-2xl ${className}`}>
+      <img src={src} alt={alt} className={`h-full w-full object-cover ${imageClassName}`} />
+    </div>
+  );
+}
+
+function HypothesesGraphSlide(): ReactElement {
+  return (
+    <SlideStage>
+      <DraftPanel className="left-[6%] top-[8%] z-20 w-[35%] min-w-[260px]" tone="brass">
+        <div className="space-y-3">
+          <PanelLabel>השערות</PanelLabel>
+          <MiniField label="השערת אפס" value={String.raw`H_0:\mu=100`} />
+          <MiniField label="השערה חלופית" value={String.raw`H_1:\mu>100`} />
+        </div>
+      </DraftPanel>
+      <DraftPanel className="bottom-[9%] right-[4%] z-10 w-[78%] p-5" tone="cobalt">
+        <DecisionCurveSvg className="h-72 w-full" />
+      </DraftPanel>
+      <DraftPanel className="right-[10%] top-[12%] z-30 w-[26%] min-w-[220px]" tone="crimson">
+        <div className="space-y-2">
+          <PanelLabel tone="crimson">אזור דחייה</PanelLabel>
+          <div dir="ltr" className="text-mono-lg font-black text-[var(--color-text-primary)]">
+            <InlineMath math={String.raw`z_\alpha=1.645`} />
+          </div>
+          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">קו החלטה מודגש מעל העקומה.</p>
+        </div>
+      </DraftPanel>
+    </SlideStage>
+  );
+}
+
+function DataEntrySlide(): ReactElement {
+  return (
+    <SlideStage>
+      <RealScreenshotCard
+        src="/images/carousel/hypothesis-inputs-real.png"
+        alt="צילום אמיתי ממסך הזנת הנתונים במחשבון בדיקת השערות"
+        className="left-[5%] top-[7%] z-10 h-[58%] w-[62%] border-[var(--color-accent-cobalt-line)]"
+        imageClassName="object-[center_24%]"
+      />
+      <RealScreenshotCard
+        src="/images/carousel/hypothesis-conclusion-real.png"
+        alt="צילום אמיתי מאזור גרף והחלטת המבחן"
+        className="bottom-[8%] left-[14%] z-30 h-[36%] w-[46%] border-[var(--color-accent-teal)]/50"
+        imageClassName="object-[center_15%]"
+      />
+      <DraftPanel className="right-[7%] top-[10%] z-20 w-[30%] min-w-[260px]" tone="cobalt">
+        <div className="space-y-3">
+          <PanelLabel tone="cobalt">קלט אמיתי מהמערכת</PanelLabel>
+          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">
+            צילום מהכלי עצמו: מקור נתונים, פרמטרים, השערות, מטריצה וגרף באותה זרימה.
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <MiniField label="מדגם" value="n=148" />
+            <MiniField label="תוחלת" value={String.raw`\mu_0=37`} />
+            <MiniField label="ממוצע" value={String.raw`\bar{x}=36.82`} />
+            <MiniField label="תקן" value={String.raw`\sigma=0.41`} />
+          </div>
+        </div>
+      </DraftPanel>
+      <DraftPanel className="bottom-[12%] right-[11%] z-40 w-[28%] min-w-[250px] rotate-[1deg]" tone="brass">
+        <div className="space-y-3">
+          <PanelLabel>בחירות פעילות</PanelLabel>
+          {['ממוצע מדגם', 'חישוב עוצמה פעיל', 'החלטה לפי p-value'].map((item) => (
+            <div key={item} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/70 px-4 py-2.5 text-body-sm font-black text-[var(--color-text-primary)]">
+              {item}
+            </div>
+          ))}
+        </div>
+      </DraftPanel>
+      <DraftPanel className="left-[44%] top-[43%] z-50 w-[24%] rotate-[-2deg]" tone="teal">
+        <div className="space-y-2">
+          <PanelLabel tone="teal">מילוי חלל</PanelLabel>
+          <p className="text-body-sm font-semibold text-[var(--color-text-secondary)]">שתי תמונות אמיתיות + כרטיסי פירוק, כדי שהשקופית לא תרגיש ריקה.</p>
+        </div>
+      </DraftPanel>
+    </SlideStage>
+  );
+}
+
+function DecisionMatrixSlide(): ReactElement {
+  return (
+    <SlideStage>
+      <DraftPanel className="inset-x-[7%] top-[9%] z-10 p-5" tone="brass">
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            ['σ ידועה', 'Z-test', 'brass'],
+            ['σ לא ידועה', 't-test', 'cobalt'],
+            ['α = 0.05', 'סף החלטה', 'crimson'],
+            ['α = 0.01', 'בדיקה מחמירה', 'teal'],
+          ].map(([title, body, tone]) => (
+            <div key={title} className={`rounded-lg border ${accentClass[tone as FeatureCard['accent']]} bg-[var(--color-background)]/70 p-5`}>
+              <PanelLabel tone={tone as FeatureCard['accent']}>{title}</PanelLabel>
+              <div className="mt-2 text-heading-section font-black text-[var(--color-text-primary)]">{body}</div>
+            </div>
+          ))}
+        </div>
+      </DraftPanel>
+      <DraftPanel className="bottom-[8%] right-[10%] z-30 w-[34%] min-w-[260px]" tone="crimson">
+        <div className="space-y-3">
+          <PanelLabel tone="crimson">כיוון בדיקה</PanelLabel>
+          <MiniField label="חד צדדי ימני" value={String.raw`H_1:\mu>\mu_0`} />
+          <MiniField label="דו צדדי" value={String.raw`H_1:\mu\ne\mu_0`} />
+        </div>
+      </DraftPanel>
+      <DraftPanel className="bottom-[15%] left-[9%] z-20 w-[30%] min-w-[240px]" tone="teal">
+        <PanelLabel tone="teal">מטרה</PanelLabel>
+        <p className="mt-2 text-body-base font-bold text-[var(--color-text-primary)]">להראות שהבחירות הקריטיות לפני החישוב הן חלק מהזרימה, לא טופס צדדי.</p>
+      </DraftPanel>
+    </SlideStage>
+  );
+}
+
+function ConclusionCollageSlide(): ReactElement {
+  return (
+    <SlideStage>
+      <DraftPanel className="right-[7%] top-[10%] z-30 w-[42%] min-w-[310px]" tone="teal">
+        <div className="space-y-3">
+          <PanelLabel tone="teal">החלטה</PanelLabel>
+          <div className="flex items-center gap-2 text-[var(--color-accent-teal)]">
+            <CheckCircle2 size={24} />
+            <span className="text-display-h3 font-black">דוחים את <span dir="ltr"><InlineMath math="H_0" /></span></span>
+          </div>
+          <p className="text-body-base font-semibold text-[var(--color-text-secondary)]">יש עדות סטטיסטית שהממוצע גבוה מ-100.</p>
+        </div>
+      </DraftPanel>
+      <DraftPanel className="left-[9%] top-[16%] z-10 w-[35%] min-w-[260px]" tone="cobalt">
+        <div dir="ltr" className="text-mono-lg font-black text-[var(--color-text-primary)]">
+          <InlineMath math="z=2.10,\ p=0.018" />
+        </div>
+      </DraftPanel>
+      <DraftPanel className="bottom-[10%] right-[16%] z-20 w-[34%] min-w-[260px]" tone="crimson">
+        <DecisionCurveSvg className="h-44 w-full" compact />
+      </DraftPanel>
+      <DraftPanel className="bottom-[12%] left-[8%] z-30 w-[30%] min-w-[240px]" tone="brass">
+        <div className="space-y-2">
+          <PanelLabel>פירוק מסקנה</PanelLabel>
+          {['סטטיסטי מבחן', 'ערך קריטי', 'p-value', 'פירוש בעברית'].map((item) => (
+            <div key={item} className="rounded-md bg-[var(--color-background)]/70 px-3 py-2 text-body-sm font-black text-[var(--color-text-primary)]">
+              {item}
+            </div>
+          ))}
+        </div>
+      </DraftPanel>
+    </SlideStage>
   );
 }
 

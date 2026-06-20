@@ -537,20 +537,20 @@ export default function HypothesisTestingCalculator() {
     const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', true);
     const [calculatePower, setCalculatePower] = useLocalStorageState<boolean>('HT_calculatePower', true);
 
-    const [mu0, setMu0] = useLocalStorageState<number>('HT_mu0', 100);
-    const [mu0Input, setMu0Input] = useLocalStorageState<string>('HT_mu0Input', '100');
+    const [mu0, setMu0] = useLocalStorageState<number>('HT_mu0', 37);
+    const [mu0Input, setMu0Input] = useLocalStorageState<string>('HT_mu0Input', '37');
 
-    const [mu1, setMu1] = useLocalStorageState<number>('HT_mu1', 105);
-    const [mu1Input, setMu1Input] = useLocalStorageState<string>('HT_mu1Input', '105');
+    const [mu1, setMu1] = useLocalStorageState<number>('HT_mu1', 36.82);
+    const [mu1Input, setMu1Input] = useLocalStorageState<string>('HT_mu1Input', '36.82');
 
-    const [muH1, setMuH1] = useLocalStorageState<number>('HT_muH1', 105);
-    const [muH1Input, setMuH1Input] = useLocalStorageState<string>('HT_muH1Input', '105');
+    const [muH1, setMuH1] = useLocalStorageState<number>('HT_muH1', 36.82);
+    const [muH1Input, setMuH1Input] = useLocalStorageState<string>('HT_muH1Input', '36.82');
 
-    const [sigma, setSigma] = useLocalStorageState<number>('HT_sigma', 15);
-    const [sigmaInput, setSigmaInput] = useLocalStorageState<string>('HT_sigmaInput', '15');
+    const [sigma, setSigma] = useLocalStorageState<number>('HT_sigma', 0.41);
+    const [sigmaInput, setSigmaInput] = useLocalStorageState<string>('HT_sigmaInput', '0.41');
 
-    const [n, setN] = useLocalStorageState<number>('HT_n', 1212714);
-    const [nInput, setNInput] = useLocalStorageState<string>('HT_nInput', '1212714');
+    const [n, setN] = useLocalStorageState<number>('HT_n', 148);
+    const [nInput, setNInput] = useLocalStorageState<string>('HT_nInput', '148');
 
     const [alpha, setAlpha] = useLocalStorageState<number>('HT_alpha', 0.05);
     const [alphaInput, setAlphaInput] = useLocalStorageState<string>('HT_alphaInput', '0.05');
@@ -667,16 +667,16 @@ export default function HypothesisTestingCalculator() {
     const handleReset = () => {
         setVarianceKnown(true);
         setCalculatePower(true);
-        setMu0(100);
-        setMu0Input('100');
-        setMu1(105);
-        setMu1Input('105');
-        setMuH1(105);
-        setMuH1Input('105');
-        setSigma(15);
-        setSigmaInput('15');
-        setN(1212714);
-        setNInput('1212714');
+        setMu0(37);
+        setMu0Input('37');
+        setMu1(36.82);
+        setMu1Input('36.82');
+        setMuH1(36.82);
+        setMuH1Input('36.82');
+        setSigma(0.41);
+        setSigmaInput('0.41');
+        setN(148);
+        setNInput('148');
         setAlpha(0.05);
         setAlphaInput('0.05');
         setTestType('mean');
