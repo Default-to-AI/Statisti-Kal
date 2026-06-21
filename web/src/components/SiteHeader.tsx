@@ -38,10 +38,10 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           </div>
           <div>
             <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
-              מחשבון התפלגות נורמלית
+              סטטיטי-קל
             </h1>
             <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
-              חקירה מקיפה, חישובים מתקדמים ובדיקת השערות לתואר אקדמי
+              סטטיסטיקה בדרך מובנת, פשוטה וברורה
             </p>
           </div>
         </button>
@@ -58,9 +58,8 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
               key={item.id}
               type="button"
               onClick={() => onNavigate(item.id)}
-              className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 text-xs font-black tracking-wide transition sm:py-2 ${
-                isActive ? activeClass : inactiveClass
-              }`}
+              className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 text-xs font-black tracking-wide transition sm:py-2 ${isActive ? activeClass : inactiveClass
+                }`}
             >
               {item.icon}
               <span>{item.label}</span>
@@ -71,9 +70,8 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
         <button
           type="button"
           onClick={() => onNavigate('landing')}
-          className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 transition sm:py-2 ${
-            activePage === 'landing' ? getActiveClass('neutral') : getInactiveClass('neutral')
-          }`}
+          className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 transition sm:py-2 ${activePage === 'landing' ? getActiveClass('neutral') : getInactiveClass('neutral')
+            }`}
           aria-label="דף הבית"
           title="דף הבית"
         >
