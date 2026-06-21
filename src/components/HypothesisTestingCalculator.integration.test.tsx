@@ -101,11 +101,27 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
       HT_tailType: 'left',
     });
 
-    expect(html).toContain('מחקר חום גוף תקין');
+    expect(html).toContain('דוגמה מהמציאות: בדיקת השערות על טמפרטורת גוף (צלזיוס)');
+    expect(html).toContain('רקע והשערות מבחן');
+    expect(html).toContain('נתונים יבשים');
+    expect(html).toContain('מסקנה');
+    expect(html).toContain('קישור למקור');
+    expect(html).toContain('\\text{Reject } H_0');
+    expect(html).toContain('n = 148');
+    expect(html).toContain('H_1: \\mu &lt; 37');
+    expect(html).toContain('\\bar{X} = 36.82^\\circ C');
+    expect(html).toContain('תוחלת של השערת האפס');
+    expect(html).toContain('ממוצע מדגם');
+    expect(html).toContain('סטיית תקן');
+    expect(html).toContain('גודל מדגם');
     expect(html).toContain('Philip A. Mackowiak');
     expect(html).toContain('JAMA, 1992');
     expect(html).toContain('10.1001/jama.1992.03490120092034');
     expect(html).toContain('טען נתוני ברירת מחדל');
+    expect(html).toContain('הפעל סיור מודרך');
+    expect(html).toContain('רמת מובהקות');
+    expect(html).toContain('5%');
+    expect(html).toContain('התוצאה מובהקת מאוד');
     expect(html).toContain('מבחן שמאלי');
     expect(html).not.toContain('נתוני מדגם ה-IQ מ-2025');
   });

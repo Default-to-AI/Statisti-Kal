@@ -32,7 +32,9 @@ import {
     Target,
     Map,
     Percent,
-    BookOpen
+    BookOpen,
+    Globe2,
+    ExternalLink
 } from 'lucide-react';
 import {
     ResponsiveContainer,
@@ -1254,26 +1256,144 @@ export default function HypothesisTestingCalculator() {
                 locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
             />
 
-            {/* Default Study Info Box */}
-            <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg p-4 sm:p-6 mb-8 shadow-sm border-r-4 border-r-[var(--color-accent-cobalt)]">
-                <div className="flex flex-col gap-3">
-                    <div className="font-bold text-[var(--color-text-primary)] text-lg">מחקר חום גוף תקין</div>
-                    <div className="text-[var(--color-text-secondary)] text-sm space-y-1.5">
-                        <div>
-                            <span className="font-bold">מקור:</span> Philip A. Mackowiak, Steven S. Wasserman, Myron M. Levine; JAMA, 1992; DOI: 10.1001/jama.1992.03490120092034.
+            {/* Default Study Accordion */}
+            <AnimatedDetails defaultOpen className="group relative bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg mb-8 shadow-sm border-r-4 border-r-[var(--color-accent-cobalt)] overflow-hidden [&_summary::-webkit-details-marker]:hidden">
+                <summary className="relative z-10 cursor-pointer select-none p-4 sm:p-5 flex flex-col xl:flex-row xl:items-center gap-4 border-b border-[var(--color-border)]/70 overflow-hidden">
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <span className="absolute top-2 left-[18%] -rotate-6 text-2xl sm:text-4xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
+                        <span className="absolute top-7 left-[42%] rotate-3 text-xl sm:text-3xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
+                        <span className="absolute bottom-1 right-[34%] -rotate-2 text-xl sm:text-3xl font-mono font-black text-[var(--color-success)]/10" dir="ltr"><InlineMath math="H_1: \mu < 37" /></span>
+                        <span className="absolute bottom-2 left-[6%] rotate-6 text-xl sm:text-3xl font-mono font-black text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
+                    </div>
+                    <div className="relative z-10 flex items-center gap-3 flex-1 min-w-0">
+                        <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)] shrink-0">
+                            <Globe2 size={20} />
                         </div>
-                        <div>
-                            <span className="font-bold">רקע:</span> Wunderlich קבע ב-1868 את 37.0°C כנקודת ייחוס; Mackowiak בדק מחדש אם זה באמת ממוצע חום הגוף התקין.
-                        </div>
-                        <div>
-                            <span className="font-bold">נתוני המבחן:</span> <InlineMath math="\mu_0 = 37.0" />, <InlineMath math="\bar{X} = 36.82" />, <InlineMath math="\sigma = 0.41" />, <InlineMath math="n = 148" />, מבחן שמאלי.
-                        </div>
-                        <div>
-                            <span className="font-bold">מסקנה:</span> המדגם תומך בכך שממוצע חום הגוף נמוך מ-37.0°C, סביב 36.8°C.
-                        </div>
+                        <h2 className="font-black text-[var(--color-text-primary)] text-base sm:text-lg">
+                            דוגמה מהמציאות: בדיקת השערות על טמפרטורת גוף (צלזיוס)
+                        </h2>
+                    </div>
+                    <div className="relative z-10 flex flex-wrap items-center gap-3 xl:justify-end">
+                        <button
+                            type="button"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                handleReset();
+                            }}
+                            className="px-4 py-1.5 bg-[var(--color-accent-brass)]/10 text-[var(--color-accent-brass)] border border-[var(--color-accent-brass)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-brass)]/20 transition-colors flex items-center gap-2"
+                        >
+                            <RefreshCw size={16} />
+                            <span>טען נתוני ברירת מחדל</span>
+                        </button>
+                        <button
+                            type="button"
+                            onClick={(event) => {
+                                event.preventDefault();
+                                setRunTour(true);
+                            }}
+                            className="px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
+                        >
+                            <span>הפעל סיור מודרך</span>
+                        </button>
+                        <ChevronDown size={22} className="text-[var(--color-text-secondary)] transition-transform duration-300 group-[.is-open]:rotate-180" />
+                    </div>
+                </summary>
+
+                <div className="relative z-10 p-4 sm:p-6 space-y-5">
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <span className="absolute top-4 left-8 -rotate-12 text-5xl sm:text-6xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
+                        <span className="absolute top-24 right-10 rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
+                        <span className="absolute bottom-16 left-12 rotate-3 text-4xl sm:text-6xl font-mono font-black text-[var(--color-success)]/10" dir="ltr"><InlineMath math="\text{Reject } H_0" /></span>
+                        <span className="absolute bottom-3 right-20 -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
+                    </div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 text-sm leading-relaxed">
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Target size={18} className="text-[var(--color-accent-cobalt)]" />
+                                <span>רקע והשערות מבחן</span>
+                            </h3>
+                            <p className="text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">Wunderlich</span> קבע ב-1868 ש-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> היא נקודת הייחוס לחום גוף תקין. Mackowiak בדק מחדש אם ממוצע חום הגוף באוכלוסייה נמוך מהקונצנזוס הזה.
+                            </p>
+                            <p className="mt-3 text-[var(--color-text-secondary)]">
+                                המדגם כלל <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="n = 148" /></span> נבדקים בריאים; ממוצע המדגם <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span> הושווה ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\mu_0 = 37.0^\circ C" /></span> באמצעות מבחן Z לתוחלת.
+                            </p>
+                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
+                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת אפס</div>
+                                    <div className="text-[var(--color-text-primary)] font-black" dir="ltr"><InlineMath math="H_0: \mu = 37.0" /></div>
+                                </div>
+                                <div className="rounded-md border border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 p-3">
+                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת מחקר</div>
+                                    <div className="text-[var(--color-text-primary)] font-black" dir="ltr"><InlineMath math="H_1: \mu < 37.0" /></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Calculator size={18} className="text-[var(--color-accent-brass)]" />
+                                <span>נתונים יבשים</span>
+                            </h3>
+                            <div className="grid grid-cols-2 gap-3">
+                                {[
+                                    ['תוחלת של השערת האפס', '\\mu_0 = 37.0^\\circ C'],
+                                    ['ממוצע מדגם', '\\bar{X} = 36.82^\\circ C'],
+                                    ['סטיית תקן', '\\sigma = 0.41'],
+                                    ['גודל מדגם', 'n = 148'],
+                                ].map(([label, math]) => (
+                                    <div key={label} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
+                                        <div className="text-[var(--color-text-secondary)] text-xs">{label}</div>
+                                        <div className="text-[var(--color-text-primary)] font-black font-mono" dir="ltr"><InlineMath math={math} /></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="mt-3 text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">מבחן שמאלי</span>, רמת מובהקות <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>.
+                            </p>
+                        </section>
+                    </div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5 text-sm leading-relaxed">
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Percent size={18} className="text-[var(--color-accent-brass)]" />
+                                <span>מובהקות</span>
+                            </h3>
+                            <p className="text-[var(--color-text-secondary)]">
+                                ברירת המחדל היא <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>, אבל התוצאה רחוקה מספיק מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> כך שגם רמות מובהקות מחמירות יותר עדיין מובילות לדחיית <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="H_0" /></span>.
+                            </p>
+                        </section>
+
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-success)]/30 rounded-lg p-4 sm:p-5">
+                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <CheckCircle size={18} className="text-[var(--color-success)]" />
+                                <span>מסקנה</span>
+                            </h3>
+                            <p className="text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">התוצאה מובהקת מאוד</span>: המדגם תומך ב-<span className="text-[var(--color-text-primary)] font-bold">דחיית השערת האפס</span> ובהערכה שחום הגוף הממוצע קרוב ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="36.8^\circ C" /></span>. גם רמות מובהקות מחמירות מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="5\%" /></span> עדיין יובילו לדחייה במקרה הזה.
+                            </p>
+                        </section>
+                    </div>
+
+                    <div className="relative bg-[var(--color-surface)]/80 border border-[var(--color-accent-cobalt-line)]/40 rounded-lg p-4 text-sm text-[var(--color-text-secondary)]">
+                        <span className="font-black text-[var(--color-text-primary)] inline-flex items-center gap-2">
+                            <BookOpen size={17} className="text-[var(--color-accent-cobalt)]" />
+                            קישור למקור:
+                        </span>{' '}
+                        <a
+                            href="https://jamanetwork.com/journals/jama/fullarticle/400116"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)]/80 underline decoration-dotted underline-offset-4"
+                        >
+                            Philip A. Mackowiak, Steven S. Wasserman, Myron M. Levine; JAMA, 1992; DOI: 10.1001/jama.1992.03490120092034
+                            <ExternalLink size={14} />
+                        </a>
                     </div>
                 </div>
-            </div>
+            </AnimatedDetails>
 
             {/* Parameters Input Card */}
             <div className="tour-step-inputs rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
@@ -1282,20 +1402,6 @@ export default function HypothesisTestingCalculator() {
                     <h3 className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
                     </h3>
-                    <button
-                        type="button"
-                        onClick={handleReset}
-                        className="mr-auto px-4 py-1.5 bg-[var(--color-accent-brass)]/10 text-[var(--color-accent-brass)] border border-[var(--color-accent-brass)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-brass)]/20 transition-colors flex items-center gap-2"
-                    >
-                        <RefreshCw size={16} />
-                        <span>טען נתוני ברירת מחדל</span>
-                    </button>
-                    <button 
-                        onClick={() => setRunTour(true)} 
-                        className="px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
-                    >
-                        <span>הפעל סיור מודרך</span>
-                    </button>
                 </div>
 
                 <div className="flex flex-col gap-6">
