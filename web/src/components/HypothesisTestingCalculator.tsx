@@ -4,7 +4,8 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, Step } from 'react-joyride';
 import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
@@ -480,7 +481,38 @@ interface InputTooltipProps {
 
 const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, className = "", tooltipClassName = "w-52" }) => {
     const [isVisible, setIsVisible] = useState(false);
-    const timeoutRef = React.useRef<NodeJS.Timeout | null>(null);
+    const [position, setPosition] = useState({ top: 0, left: 0 });
+    const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const triggerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) clearTimeout(timeoutRef.current);
+        };
+    }, []);
+
+    useEffect(() => {
+        if (!isVisible) return;
+
+        const updatePosition = () => {
+            if (!triggerRef.current) return;
+
+            const rect = triggerRef.current.getBoundingClientRect();
+            setPosition({
+                top: rect.top - 8,
+                left: rect.left + rect.width / 2,
+            });
+        };
+
+        updatePosition();
+        window.addEventListener('scroll', updatePosition, true);
+        window.addEventListener('resize', updatePosition);
+
+        return () => {
+            window.removeEventListener('scroll', updatePosition, true);
+            window.removeEventListener('resize', updatePosition);
+        };
+    }, [isVisible]);
 
     const showTooltip = () => {
         if (timeoutRef.current) clearTimeout(timeoutRef.current);
@@ -494,22 +526,37 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
     };
 
     return (
-        <div className={`relative inline-flex items-center gap-1.5 ${className}`} onMouseEnter={showTooltip} onMouseLeave={hideTooltip}>
+        <div
+            ref={triggerRef}
+            className={`relative inline-flex items-center gap-1.5 ${className}`}
+            onMouseEnter={showTooltip}
+            onMouseLeave={hideTooltip}
+            onFocus={showTooltip}
+            onBlur={hideTooltip}
+        >
             {children}
             <Info size={13} className="text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)] cursor-help shrink-0" />
-            <AnimatePresence>
-                {isVisible && (
-                    <motion.div
-                        initial={{ opacity: 0, y: 5, scale: 0.95 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                        className={`absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-2 p-2.5 text-xs rounded-sm shadow-sm pointer-events-none text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans ${tooltipClassName}`}
-                    >
-                        {content}
-                        <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
-                    </motion.div>
-                )}
-            </AnimatePresence>
+            {createPortal(
+                <AnimatePresence>
+                    {isVisible && (
+                        <div
+                            className="pointer-events-none fixed z-[9999]"
+                            style={{ top: position.top, left: position.left, transform: 'translate(-50%, -100%)' }}
+                        >
+                            <motion.div
+                                initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                className={`p-2.5 text-xs rounded-sm shadow-sm text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans ${tooltipClassName}`}
+                            >
+                                {content}
+                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </div>
     );
 };
