@@ -131,4 +131,39 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     expect(renderCalculator({ HT_testType: 'mean' })).toContain('ממוצע מדגם');
     expect(renderCalculator({ HT_testType: 'sum' })).toContain('סכום מדגם');
   });
+
+  it('renders the parameter table in the requested order with editable sigma and math placeholders', () => {
+    const html = renderCalculator({
+      HT_varianceKnown: false,
+      HT_mu0Input: '',
+      HT_mu1Input: '',
+      HT_muH1Input: '',
+      HT_sigmaInput: '',
+      HT_nInput: '',
+    });
+    const tableStart = html.indexOf('<table');
+    const tableEnd = html.indexOf('</table>', tableStart);
+    const tableHtml = html.slice(tableStart, tableEnd);
+
+    expect(tableHtml.indexOf('ממוצע מדגם')).toBeLessThan(tableHtml.indexOf('גודל מדגם'));
+    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('חישוב עוצמה'));
+    expect(tableHtml).toContain('data-testid="parameter-sigma-input"');
+    expect(tableHtml).not.toContain('לא נקבע');
+    expect(tableHtml).toContain('data-cell-watermark="\\mu_0"');
+    expect(tableHtml).toContain('data-cell-watermark="\\sigma"');
+    expect(tableHtml).toContain('data-cell-watermark="\\bar{X}"');
+    expect(tableHtml).toContain('data-cell-watermark="n"');
+    expect(tableHtml).toContain('data-cell-watermark="\\mu_1"');
+    expect(tableHtml).toContain('data-cell-watermark="1-\\beta"');
+    expect(tableHtml.indexOf('data-cell-watermark="\\mu_0"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\bar{X}"'));
+    expect(tableHtml.indexOf('data-cell-watermark="\\bar{X}"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\mu_1"'));
+    expect(tableHtml.indexOf('data-cell-watermark="\\mu_1"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\sigma"'));
+    expect(tableHtml.indexOf('data-cell-watermark="\\sigma"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="n"'));
+    expect(tableHtml.indexOf('data-cell-watermark="n"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="1-\\beta"'));
+    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\sigma</annotation>');
+    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\mu_0</annotation>');
+    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\mu_1</annotation>');
+    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\bar{X}</annotation>');
+    expect(tableHtml).toContain('annotation encoding="application/x-tex">n</annotation>');
+  });
 });
