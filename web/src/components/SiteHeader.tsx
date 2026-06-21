@@ -65,11 +65,11 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           <button
             type="button"
             onClick={() => onNavigate('landing')}
-            className="flex cursor-pointer select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3.5 py-[17px] transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
+            className="flex cursor-pointer select-none items-center gap-1.5 rounded-sm border-2 border-[rgb(240,241,245)] px-[15px] py-[17px] transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
             aria-label="דף הבית"
             title="דף הבית"
           >
-            <Home className="h-6 w-6 text-[#e2e2f0] sm:h-7 sm:w-7" style={{ borderRadius: '24px' }} />
+            <Home className="h-8 w-8 text-[#e2e2f0] rounded-sm sm:h-8 sm:w-8" style={{ borderRadius: '4px' }} />
           </button>
         </button>
       </div>
