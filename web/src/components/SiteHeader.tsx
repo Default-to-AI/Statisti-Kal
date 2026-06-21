@@ -65,9 +65,6 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           className="flex items-center gap-3 text-right"
           aria-label="חזרה לדף הבית"
         >
-          <div className="flex items-center justify-center rounded-sm border border-[var(--color-border)] bg-[var(--color-accent-cobalt-bg-hover)]/25 p-2.5 text-[var(--color-accent-cobalt)]">
-            <Home className="h-6 w-6 sm:h-7 sm:w-7" />
-          </div>
           <div>
             <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
               סטטיטי-קל
@@ -76,6 +73,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
               סטטיסטיקה בדרך מובנת, פשוטה וברורה
             </p>
           </div>
+          <Home className="h-6 w-6 text-[var(--color-accent-cobalt)] sm:h-7 sm:w-7" />
         </button>
       </div>
     </>
