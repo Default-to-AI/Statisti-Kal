@@ -514,6 +514,24 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
     );
 };
 
+interface CellWatermarkProps {
+    math: string;
+    colorClass: string;
+}
+
+const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => {
+    return (
+        <div
+            className={`absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono ${colorClass}`}
+            data-cell-watermark={math}
+            dir="ltr"
+            aria-hidden="true"
+        >
+            <InlineMath math={math} />
+        </div>
+    );
+};
+
 export default function HypothesisTestingCalculator() {
     // Tour state
     const [runTour, setRunTour] = useState(false);
@@ -1440,10 +1458,11 @@ export default function HypothesisTestingCalculator() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {/* Row 1: mu0, n, and power toggle */}
+                                    {/* Row 1: mu0, sample statistic, and H1 value */}
                                     <tr className="border-b border-[var(--color-border)]">
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
+                                            <CellWatermark math="\mu_0" colorClass="text-[var(--color-accent-cobalt)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>תוחלת אוכלוסיית הבסיס (השערת האפס <InlineMath math="H_0" />)</span>}>
                                                     <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
                                                         <span>תוחלת (</span><InlineMath math="\mu_0" /><span>):</span>
@@ -1456,7 +1475,7 @@ export default function HypothesisTestingCalculator() {
                                                         onChange={(e) => handleMu0Change(e.target.value)}
                                                         className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu0Input || errors.mu0) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
                                                             }`}
-                                                        placeholder="ℝ"
+                                                        placeholder=""
                                                         dir="ltr"
                                                     />
                                                     <AnimatePresence>
@@ -1475,8 +1494,116 @@ export default function HypothesisTestingCalculator() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
+                                            <CellWatermark math={statSymbol} colorClass="text-[var(--color-accent-brass)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content={sampleStatisticTooltip}>
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+                                                        <span>{sampleStatisticLabel} (</span><InlineMath math={statSymbol} /><span>):</span>
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={mu1Input}
+                                                        onChange={(e) => handleMu1Change(e.target.value)}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu1Input || errors.mu1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
+                                                            }`}
+                                                        placeholder=""
+                                                        dir="ltr"
+                                                    />
+                                                    <AnimatePresence>
+                                                        {errors.mu1 && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-xs font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.mu1}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
+                                            <CellWatermark math="\mu_1" colorClass="text-[var(--color-accent-teal)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
+                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-primary)]/90'}`}>
+                                                        <span>ממוצע (</span><InlineMath math="\mu_1" /><span>):</span>
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        type="text"
+                                                        value={muH1Input}
+                                                        disabled={!calculatePower}
+                                                        onChange={(e) => handleMuH1Change(e.target.value)}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${!calculatePower ? 'opacity-40 cursor-not-allowed border-transparent' : ''
+                                                            } ${calculatePower && (!muH1Input || errors.muH1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : calculatePower ? 'border-[var(--color-border)]' : ''}`}
+                                                        placeholder=""
+                                                        dir="ltr" />
+                                                    <AnimatePresence>
+                                                        {calculatePower && errors.muH1 && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-xs font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.muH1}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    {/* Row 2: sigma, n, and power toggle */}
+                                    <tr>
+                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)] transition-all">
+                                            <CellWatermark math="\sigma" colorClass="text-[var(--color-accent-cobalt)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                                <InputTooltip content="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)">
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+                                                        <span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span>
+                                                    </span>
+                                                </InputTooltip>
+                                                <div className="w-16 sm:w-20 shrink-0 relative">
+                                                    <input
+                                                        data-testid="parameter-sigma-input"
+                                                        type="text"
+                                                        value={sigmaInput}
+                                                        onChange={(e) => handleSigmaChange(e.target.value)}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!sigmaInput || errors.sigma) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
+                                                            }`}
+                                                        placeholder=""
+                                                        dir="ltr"
+                                                    />
+                                                    <AnimatePresence>
+                                                        {errors.sigma && (
+                                                            <motion.div
+                                                                initial={{ opacity: 0, y: -5 }}
+                                                                animate={{ opacity: 1, y: 0 }}
+                                                                exit={{ opacity: 0, y: -5 }}
+                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-xs font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
+                                                            >
+                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
+                                                                <span className="relative z-10">{errors.sigma}</span>
+                                                            </motion.div>
+                                                        )}
+                                                    </AnimatePresence>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
+                                            <CellWatermark math="n" colorClass="text-[var(--color-accent-brass)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}>
                                                     <span className={`w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${testType === 'single' ? 'opacity-30' : ''}`}>
                                                         <span>גודל מדגם (</span><InlineMath math="n" /><span>):</span>
@@ -1490,7 +1617,7 @@ export default function HypothesisTestingCalculator() {
                                                         onChange={(e) => handleNChange(e.target.value)}
                                                         className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-[var(--color-surface-raised)]/5 border-transparent' : ''
                                                             } ${testType !== 'single' && (!nInput || errors.n) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : testType !== 'single' ? 'border-[var(--color-border)]' : ''}`}
-                                                        placeholder="n > 1"
+                                                        placeholder=""
                                                         dir="ltr"
                                                     />
                                                     <AnimatePresence>
@@ -1509,8 +1636,9 @@ export default function HypothesisTestingCalculator() {
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="p-3 align-middle bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
+                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
+                                            <CellWatermark math="1-\beta" colorClass="text-[var(--color-accent-teal)]" />
+                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <span className="w-36 sm:w-44 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1 whitespace-nowrap">
                                                     <span>חישוב עוצמה (</span><InlineMath math="1-\beta" /><span>)</span>
                                                 </span>
@@ -1531,107 +1659,6 @@ export default function HypothesisTestingCalculator() {
                                                         )}
                                                     </span>
                                                 </button>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {/* Row 2: sigma, xBar(mu1), and muH1 */}
-                                    <tr>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)] transition-all">
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)">
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative flex justify-center items-center h-[38px]">
-                                                    {varianceKnown && sigmaInput && !errors.sigma ? (
-                                                        <span className="font-mono font-bold text-lg text-[var(--color-text-primary)] bg-[var(--color-surface)] border border-[var(--color-border)] w-full py-1 rounded shadow-inner text-center">
-                                                            {sigmaInput}
-                                                        </span>
-                                                    ) : (
-                                                        <a
-                                                            href="#step-2"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                const el = document.getElementById('step-2');
-                                                                if (el) {
-                                                                    el.scrollIntoView({ behavior: 'smooth' });
-                                                                    el.setAttribute('open', '');
-                                                                }
-                                                            }}
-                                                            className="text-sm text-[var(--color-text-secondary)] font-medium underline decoration-dotted underline-offset-4 hover:text-[var(--color-accent-cobalt)] transition-colors whitespace-nowrap"
-                                                        >
-                                                            לא נקבע
-                                                        </a>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={sampleStatisticTooltip}>
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>{sampleStatisticLabel} (</span><InlineMath math={statSymbol} /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={mu1Input}
-                                                        onChange={(e) => handleMu1Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu1Input || errors.mu1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
-                                                            }`}
-                                                        placeholder="ℝ"
-                                                        dir="ltr"
-                                                    />
-                                                    <AnimatePresence>
-                                                        {errors.mu1 && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -5 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -5 }}
-                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-xs font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
-                                                            >
-                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
-                                                                <span className="relative z-10">{errors.mu1}</span>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className={`p-3 align-middle bg-[var(--color-surface-raised)] transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
-                                            <div className="flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
-                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-primary)]/90'}`}>
-                                                        <span>ממוצע (</span><InlineMath math="\mu_1" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={muH1Input}
-                                                        disabled={!calculatePower}
-                                                        onChange={(e) => handleMuH1Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${!calculatePower ? 'opacity-40 cursor-not-allowed border-transparent' : ''
-                                                            } ${calculatePower && (!muH1Input || errors.muH1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : calculatePower ? 'border-[var(--color-border)]' : ''}`}
-                                                        placeholder="ℝ"
-                                                        dir="ltr" />
-                                                    <AnimatePresence>
-                                                        {calculatePower && errors.muH1 && (
-                                                            <motion.div
-                                                                initial={{ opacity: 0, y: -5 }}
-                                                                animate={{ opacity: 1, y: 0 }}
-                                                                exit={{ opacity: 0, y: -5 }}
-                                                                className="absolute top-full left-1/2 -translate-x-1/2 mt-2 px-2.5 py-1 bg-[var(--color-error)] text-white text-xs font-bold rounded shadow-lg flex items-center justify-center whitespace-nowrap z-50 pointer-events-none"
-                                                            >
-                                                                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[var(--color-error)] rotate-45"></div>
-                                                                <span className="relative z-10">{errors.muH1}</span>
-                                                            </motion.div>
-                                                        )}
-                                                    </AnimatePresence>
-                                                </div>
                                             </div>
                                         </td>
                                     </tr>
