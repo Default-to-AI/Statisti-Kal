@@ -86,25 +86,28 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     consoleError.mockRestore();
   });
 
-  it('uses calculator single-observation degrees of freedom for unknown-variance unified decisions', () => {
+  it('renders the Mackowiak body-temperature study as the default example card', () => {
     const html = renderCalculator({
-      HT_varianceKnown: false,
-      HT_testType: 'single',
-      HT_mu0: 100,
-      HT_mu0Input: '100',
-      HT_mu1: 125.4,
-      HT_mu1Input: '125.4',
-      HT_sigma: 15,
-      HT_sigmaInput: '15',
-      HT_n: 36,
-      HT_nInput: '36',
-      HT_alpha: 0.05,
-      HT_alphaInput: '0.05',
-      HT_tailType: 'right',
+      HT_mu0: 37,
+      HT_mu0Input: '37',
+      HT_mu1: 36.82,
+      HT_mu1Input: '36.82',
+      HT_muH1: 36.82,
+      HT_muH1Input: '36.82',
+      HT_sigma: 0.41,
+      HT_sigmaInput: '0.41',
+      HT_n: 148,
+      HT_nInput: '148',
+      HT_tailType: 'left',
     });
 
-    expect(html).toContain('data-decision="fail-to-reject"');
-    expect(html).toContain('אין לדחות את השערת האפס');
+    expect(html).toContain('מחקר חום גוף תקין');
+    expect(html).toContain('Philip A. Mackowiak');
+    expect(html).toContain('JAMA, 1992');
+    expect(html).toContain('10.1001/jama.1992.03490120092034');
+    expect(html).toContain('טען נתוני ברירת מחדל');
+    expect(html).toContain('מבחן שמאלי');
+    expect(html).not.toContain('נתוני מדגם ה-IQ מ-2025');
   });
 
   it('renders a mode-aware sample statistic label for single, mean, and sum modes', () => {

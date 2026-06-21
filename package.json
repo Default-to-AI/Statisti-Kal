@@ -8,6 +8,7 @@
     "build": "vite build",
     "preview": "vite preview",
     "clean": "rm -rf dist",
+    "test": "vitest run",
     "lint": "npm run lint:tsc && npm run lint:colors",
     "lint:tsc": "tsc --noEmit",
     "lint:colors": "node scripts/lint-colors.mjs"
@@ -39,6 +40,7 @@
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "vitest": "^4.1.9"
   }
 }

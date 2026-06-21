@@ -1,4 +1,4 @@
-import { useState, type ReactElement, type SVGProps } from 'react';
+import { useId, useState, type ReactElement, type SVGProps } from 'react';
 import { Calculator, CheckCircle2, FlaskConical, LineChart, Play, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InlineMath } from 'react-katex';
@@ -572,11 +572,12 @@ function ResultCardMockup(): ReactElement {
 function DecisionCurveSvg({ className, compact = false }: SVGProps<SVGSVGElement> & { compact?: boolean }): ReactElement {
   const height = compact ? 160 : 260;
   const viewBox = `0 0 720 ${height}`;
+  const gradientId = useId().replace(/:/g, '');
 
   return (
     <svg className={className} viewBox={viewBox} role="img" aria-label="עקומת בדיקת השערות עם אזור דחייה">
       <defs>
-        <linearGradient id="curveFill" x1="0" x2="1" y1="0" y2="0">
+        <linearGradient id={gradientId} x1="0" x2="1" y1="0" y2="0">
           <stop offset="0%" stopColor="var(--color-accent-cobalt)" stopOpacity="0.05" />
           <stop offset="70%" stopColor="var(--color-accent-teal)" stopOpacity="0.18" />
           <stop offset="100%" stopColor="var(--color-accent-crimson)" stopOpacity="0.28" />
@@ -585,7 +586,7 @@ function DecisionCurveSvg({ className, compact = false }: SVGProps<SVGSVGElement
       <rect width="720" height={height} rx="16" fill="var(--color-background)" opacity="0.7" />
       <path
         d={`M40 ${height - 38} C120 ${height - 36}, 155 ${height - 118}, 225 ${height - 120} C285 ${height - 122}, 300 36, 365 36 C430 36, 445 ${height - 122}, 505 ${height - 120} C575 ${height - 118}, 600 ${height - 36}, 680 ${height - 38} L680 ${height - 28} L40 ${height - 28} Z`}
-        fill="url(#curveFill)"
+        fill={`url(#${gradientId})`}
       />
       <path
         d={`M40 ${height - 38} C120 ${height - 36}, 155 ${height - 118}, 225 ${height - 120} C285 ${height - 122}, 300 36, 365 36 C430 36, 445 ${height - 122}, 505 ${height - 120} C575 ${height - 118}, 600 ${height - 36}, 680 ${height - 38}`}

@@ -218,6 +218,27 @@ function studentTPPF(p: number, df: number): number {
 type TestType = 'single' | 'mean' | 'sum';
 type TailType = 'right' | 'left' | 'two-tailed';
 
+const DEFAULT_BODY_TEMPERATURE_STUDY = {
+    varianceKnown: true,
+    calculatePower: true,
+    mu0: 37,
+    mu0Input: '37',
+    mu1: 36.82,
+    mu1Input: '36.82',
+    muH1: 36.82,
+    muH1Input: '36.82',
+    sigma: 0.41,
+    sigmaInput: '0.41',
+    n: 148,
+    nInput: '148',
+    alpha: 0.05,
+    alphaInput: '0.05',
+    testType: 'mean' as TestType,
+    tailType: 'left' as TailType,
+    ciTailType: 'two-tailed' as TailType,
+    ciAlpha: 0.05,
+};
+
 // No props needed - dark-only theme
 
 // FormulaBlock: Raw/general formula with symbolic variables
@@ -534,32 +555,32 @@ export default function HypothesisTestingCalculator() {
     ], []);
 
     // Input states
-    const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', true);
-    const [calculatePower, setCalculatePower] = useLocalStorageState<boolean>('HT_calculatePower', true);
+    const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
+    const [calculatePower, setCalculatePower] = useLocalStorageState<boolean>('HT_calculatePower', DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
 
-    const [mu0, setMu0] = useLocalStorageState<number>('HT_mu0', 37);
-    const [mu0Input, setMu0Input] = useLocalStorageState<string>('HT_mu0Input', '37');
+    const [mu0, setMu0] = useLocalStorageState<number>('HT_mu0', DEFAULT_BODY_TEMPERATURE_STUDY.mu0);
+    const [mu0Input, setMu0Input] = useLocalStorageState<string>('HT_mu0Input', DEFAULT_BODY_TEMPERATURE_STUDY.mu0Input);
 
-    const [mu1, setMu1] = useLocalStorageState<number>('HT_mu1', 36.82);
-    const [mu1Input, setMu1Input] = useLocalStorageState<string>('HT_mu1Input', '36.82');
+    const [mu1, setMu1] = useLocalStorageState<number>('HT_mu1', DEFAULT_BODY_TEMPERATURE_STUDY.mu1);
+    const [mu1Input, setMu1Input] = useLocalStorageState<string>('HT_mu1Input', DEFAULT_BODY_TEMPERATURE_STUDY.mu1Input);
 
-    const [muH1, setMuH1] = useLocalStorageState<number>('HT_muH1', 36.82);
-    const [muH1Input, setMuH1Input] = useLocalStorageState<string>('HT_muH1Input', '36.82');
+    const [muH1, setMuH1] = useLocalStorageState<number>('HT_muH1', DEFAULT_BODY_TEMPERATURE_STUDY.muH1);
+    const [muH1Input, setMuH1Input] = useLocalStorageState<string>('HT_muH1Input', DEFAULT_BODY_TEMPERATURE_STUDY.muH1Input);
 
-    const [sigma, setSigma] = useLocalStorageState<number>('HT_sigma', 0.41);
-    const [sigmaInput, setSigmaInput] = useLocalStorageState<string>('HT_sigmaInput', '0.41');
+    const [sigma, setSigma] = useLocalStorageState<number>('HT_sigma', DEFAULT_BODY_TEMPERATURE_STUDY.sigma);
+    const [sigmaInput, setSigmaInput] = useLocalStorageState<string>('HT_sigmaInput', DEFAULT_BODY_TEMPERATURE_STUDY.sigmaInput);
 
-    const [n, setN] = useLocalStorageState<number>('HT_n', 148);
-    const [nInput, setNInput] = useLocalStorageState<string>('HT_nInput', '148');
+    const [n, setN] = useLocalStorageState<number>('HT_n', DEFAULT_BODY_TEMPERATURE_STUDY.n);
+    const [nInput, setNInput] = useLocalStorageState<string>('HT_nInput', DEFAULT_BODY_TEMPERATURE_STUDY.nInput);
 
-    const [alpha, setAlpha] = useLocalStorageState<number>('HT_alpha', 0.05);
-    const [alphaInput, setAlphaInput] = useLocalStorageState<string>('HT_alphaInput', '0.05');
+    const [alpha, setAlpha] = useLocalStorageState<number>('HT_alpha', DEFAULT_BODY_TEMPERATURE_STUDY.alpha);
+    const [alphaInput, setAlphaInput] = useLocalStorageState<string>('HT_alphaInput', DEFAULT_BODY_TEMPERATURE_STUDY.alphaInput);
 
-    const [testType, setTestType] = useLocalStorageState<TestType>('HT_testType', 'mean');
-    const [tailType, setTailType] = useLocalStorageState<TailType>('HT_tailType', 'right');
+    const [testType, setTestType] = useLocalStorageState<TestType>('HT_testType', DEFAULT_BODY_TEMPERATURE_STUDY.testType);
+    const [tailType, setTailType] = useLocalStorageState<TailType>('HT_tailType', DEFAULT_BODY_TEMPERATURE_STUDY.tailType);
 
-    const [ciTailType, setCiTailType] = useLocalStorageState<TailType>('HT_ciTailType', 'two-tailed');
-    const [ciAlpha, setCiAlpha] = useLocalStorageState<number>('HT_ciAlpha', 0.05);
+    const [ciTailType, setCiTailType] = useLocalStorageState<TailType>('HT_ciTailType', DEFAULT_BODY_TEMPERATURE_STUDY.ciTailType);
+    const [ciAlpha, setCiAlpha] = useLocalStorageState<number>('HT_ciAlpha', DEFAULT_BODY_TEMPERATURE_STUDY.ciAlpha);
 
     const applyCiAlphaPreset = (preset: number) => {
         setCiAlpha(preset);
@@ -663,26 +684,26 @@ export default function HypothesisTestingCalculator() {
         setAlphaInput(preset.toString());
     };
 
-    // Reset calculator to standard defaults
+    // Reset calculator to the Mackowiak body-temperature study defaults.
     const handleReset = () => {
-        setVarianceKnown(true);
-        setCalculatePower(true);
-        setMu0(37);
-        setMu0Input('37');
-        setMu1(36.82);
-        setMu1Input('36.82');
-        setMuH1(36.82);
-        setMuH1Input('36.82');
-        setSigma(0.41);
-        setSigmaInput('0.41');
-        setN(148);
-        setNInput('148');
-        setAlpha(0.05);
-        setAlphaInput('0.05');
-        setTestType('mean');
-        setTailType('right');
-        setCiTailType('two-tailed');
-        setCiAlpha(0.05);
+        setVarianceKnown(DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
+        setCalculatePower(DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
+        setMu0(DEFAULT_BODY_TEMPERATURE_STUDY.mu0);
+        setMu0Input(DEFAULT_BODY_TEMPERATURE_STUDY.mu0Input);
+        setMu1(DEFAULT_BODY_TEMPERATURE_STUDY.mu1);
+        setMu1Input(DEFAULT_BODY_TEMPERATURE_STUDY.mu1Input);
+        setMuH1(DEFAULT_BODY_TEMPERATURE_STUDY.muH1);
+        setMuH1Input(DEFAULT_BODY_TEMPERATURE_STUDY.muH1Input);
+        setSigma(DEFAULT_BODY_TEMPERATURE_STUDY.sigma);
+        setSigmaInput(DEFAULT_BODY_TEMPERATURE_STUDY.sigmaInput);
+        setN(DEFAULT_BODY_TEMPERATURE_STUDY.n);
+        setNInput(DEFAULT_BODY_TEMPERATURE_STUDY.nInput);
+        setAlpha(DEFAULT_BODY_TEMPERATURE_STUDY.alpha);
+        setAlphaInput(DEFAULT_BODY_TEMPERATURE_STUDY.alphaInput);
+        setTestType(DEFAULT_BODY_TEMPERATURE_STUDY.testType);
+        setTailType(DEFAULT_BODY_TEMPERATURE_STUDY.tailType);
+        setCiTailType(DEFAULT_BODY_TEMPERATURE_STUDY.ciTailType);
+        setCiAlpha(DEFAULT_BODY_TEMPERATURE_STUDY.ciAlpha);
     };
 
     // --- Core Calculations Engine ---
@@ -1233,15 +1254,22 @@ export default function HypothesisTestingCalculator() {
                 locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
             />
 
-            {/* IQ Dataset Info Box */}
+            {/* Default Study Info Box */}
             <div className="bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg p-4 sm:p-6 mb-8 shadow-sm border-r-4 border-r-[var(--color-accent-cobalt)]">
-                <div className="flex flex-col gap-2">
-                    <div className="font-bold text-[var(--color-text-primary)] text-lg">נתוני מדגם ה-IQ מ-2025</div>
-                    <div className="text-[var(--color-text-secondary)] text-sm space-y-1">
-                        <div><span className="font-bold">פורסם על־ידי:</span> International IQ Test</div>
-                        <div><span className="font-bold">עודכן לאחרונה:</span> 1 בינואר 2026</div>
+                <div className="flex flex-col gap-3">
+                    <div className="font-bold text-[var(--color-text-primary)] text-lg">מחקר חום גוף תקין</div>
+                    <div className="text-[var(--color-text-secondary)] text-sm space-y-1.5">
                         <div>
-                            <span className="font-bold">מדגם:</span> 1,212,714 נבדקים שביצעו באתר זה בשנת 2025 את אותו מבחן IQ (ממוצע IQ: 100; סטיית תקן: 15).
+                            <span className="font-bold">מקור:</span> Philip A. Mackowiak, Steven S. Wasserman, Myron M. Levine; JAMA, 1992; DOI: 10.1001/jama.1992.03490120092034.
+                        </div>
+                        <div>
+                            <span className="font-bold">רקע:</span> Wunderlich קבע ב-1868 את 37.0°C כנקודת ייחוס; Mackowiak בדק מחדש אם זה באמת ממוצע חום הגוף התקין.
+                        </div>
+                        <div>
+                            <span className="font-bold">נתוני המבחן:</span> <InlineMath math="\mu_0 = 37.0" />, <InlineMath math="\bar{X} = 36.82" />, <InlineMath math="\sigma = 0.41" />, <InlineMath math="n = 148" />, מבחן שמאלי.
+                        </div>
+                        <div>
+                            <span className="font-bold">מסקנה:</span> המדגם תומך בכך שממוצע חום הגוף נמוך מ-37.0°C, סביב 36.8°C.
                         </div>
                     </div>
                 </div>
@@ -1254,9 +1282,17 @@ export default function HypothesisTestingCalculator() {
                     <h3 className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
                     </h3>
+                    <button
+                        type="button"
+                        onClick={handleReset}
+                        className="mr-auto px-4 py-1.5 bg-[var(--color-accent-brass)]/10 text-[var(--color-accent-brass)] border border-[var(--color-accent-brass)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-brass)]/20 transition-colors flex items-center gap-2"
+                    >
+                        <RefreshCw size={16} />
+                        <span>טען נתוני ברירת מחדל</span>
+                    </button>
                     <button 
                         onClick={() => setRunTour(true)} 
-                        className="mr-auto px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
+                        className="px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
                     >
                         <span>הפעל סיור מודרך</span>
                     </button>
