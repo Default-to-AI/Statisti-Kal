@@ -45,24 +45,13 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
             </button>
           );
         })}
-
-        <button
-          type="button"
-          onClick={() => onNavigate('landing')}
-          className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 transition sm:py-2 ${activePage === 'landing' ? getActiveClass('neutral') : getInactiveClass('neutral')
-            }`}
-          aria-label="דף הבית"
-          title="דף הבית"
-        >
-          <Home className="h-4 w-4" />
-        </button>
       </nav>
 
       <div className="w-full text-right sm:w-auto">
         <button
           type="button"
           onClick={() => onNavigate('landing')}
-          className="flex items-center gap-3 text-right"
+          className="flex items-center gap-4 text-right"
           aria-label="חזרה לדף הבית"
         >
           <div>
@@ -73,7 +62,15 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
               סטטיסטיקה בדרך מובנת, פשוטה וברורה
             </p>
           </div>
-          <Home className="h-6 w-6 text-[var(--color-accent-cobalt)] sm:h-7 sm:w-7" />
+          <button
+            type="button"
+            onClick={() => onNavigate('landing')}
+            className="flex cursor-pointer select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3.5 py-[17px] transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
+            aria-label="דף הבית"
+            title="דף הבית"
+          >
+            <Home className="h-6 w-6 text-[#e2e2f0] sm:h-7 sm:w-7" style={{ borderRadius: '24px' }} />
+          </button>
         </button>
       </div>
     </>
