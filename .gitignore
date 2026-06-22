@@ -19,6 +19,7 @@ STRATEGY.md
 *.patch
 .superpowers/
 .scratch/
+.compound-engineering/*.local.yaml
 
 # Private AI and Project Management folders
 .agents/

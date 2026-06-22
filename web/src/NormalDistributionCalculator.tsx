@@ -1645,64 +1645,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
   }, [calculation]);
 
   return (
-    <PageLayout
-      header={
-        onNavigate ? (
-          <SiteHeader activePage={mode} onNavigate={onNavigate} />
-        ) : (
-        <>
-          <div className="text-right w-full sm:w-auto">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-[var(--color-accent-cobalt-bg-hover)]/25 rounded-sm border border-[var(--color-border)] text-[var(--color-accent-cobalt)]">
-                <Calculator className="w-6 h-6 sm:w-7 sm:h-7" />
-              </div>
-              <div>
-                <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[var(--color-text-primary)] select-none">מחשבון התפלגות נורמלית</h1>
-                <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] font-medium mt-0.5">חקירה מקיפה, חישובים מתקדמים ובדיקת השערות לתואר אקדמי</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Navigation Tabs */}
-          <div className="w-full md:w-auto flex flex-wrap justify-center md:justify-end gap-1.5">
-            {([
-              { id: 'hypothesis', label: 'בדיקת השערות', icon: <Award className="w-4 h-4" />, accent: 'brass' },
-              { id: 'forward', label: 'חישובי הסתברויות (Z)', icon: <Calculator className="w-4 h-4" />, accent: 'cobalt' },
-              { id: 'inverse', label: 'חישוב אחוזונים (Zₓ)', icon: <Sliders className="w-4 h-4" />, accent: 'cobalt' },
-              { id: 'table', label: 'טבלת התפלגות', icon: <BookOpen className="w-4 h-4" />, accent: 'teal' },
-              { id: 'formula-sheet', label: 'נוסחאות', icon: <TrendingUp className="w-4 h-4" />, accent: 'neutral' }
-            ] satisfies NavigationTab[]).map(tab => {
-              const isActive = mode === tab.id;
-              const activeClass = tab.accent === 'brass'
-                ? 'bg-[var(--color-accent-brass)] text-[var(--color-background)] border-[var(--color-accent-brass)] shadow-md shadow-[var(--color-accent-brass)]/20'
-                : tab.accent === 'teal'
-                  ? 'bg-[var(--color-accent-teal)] text-[var(--color-background)] border-[var(--color-accent-teal)] shadow-md shadow-[var(--color-accent-teal)]/15'
-                  : tab.accent === 'neutral'
-                    ? 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-text-secondary)]'
-                    : 'bg-[var(--color-accent-cobalt)] text-white border-[var(--color-accent-cobalt)] shadow-md shadow-[var(--color-accent-cobalt-line)]/10';
-              const inactiveClass = tab.accent === 'brass'
-                ? 'bg-[var(--color-surface)] border-[var(--color-accent-brass)]/45 text-[var(--color-accent-brass)] hover:bg-[var(--color-accent-brass)]/10'
-                : tab.accent === 'neutral'
-                  ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-raised)]'
-                  : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]';
-
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setMode(tab.id)}
-                  className={`px-3.5 py-2.5 sm:py-2 rounded-sm text-xs font-black tracking-wide flex items-center gap-1.5 border transition cursor-pointer select-none ${isActive ? activeClass : inactiveClass}`}
-                >
-                  {tab.icon}
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </div>
-        </>
-        )
-      }
-      footer={onNavigate ? <SiteFooter onNavigate={onNavigate} /> : undefined}
-    >
+    <>
       <AnimatePresence mode="wait">
           {mode === 'hypothesis' ? (
             <motion.div
@@ -1986,6 +1929,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
             </motion.div>
           )}
       </AnimatePresence>
-    </PageLayout>
+    </>
   );
 }

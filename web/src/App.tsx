@@ -54,13 +54,18 @@ export default function App() {
         ) : null}
 
         {activePage === 'normal' ? (
-          <Suspense fallback={<PageLoadingState />}>
-            <NormalDistributionCalculator
-              key={normalMode}
-              initialMode={normalMode}
-              onNavigate={handleNavigate}
-            />
-          </Suspense>
+          <PageLayout
+            header={<SiteHeader activePage={normalMode as SitePage} onNavigate={handleNavigate} />}
+            footer={<SiteFooter onNavigate={handleNavigate} />}
+          >
+            <Suspense fallback={<PageLoadingState />}>
+              <NormalDistributionCalculator
+                key={normalMode}
+                initialMode={normalMode}
+                onNavigate={handleNavigate}
+              />
+            </Suspense>
+          </PageLayout>
         ) : null}
 
         {activePage === 'landing' ? (
