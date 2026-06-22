@@ -26,7 +26,29 @@ const navigationItems: NavigationItem[] = [
 export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps): ReactElement {
   return (
     <>
-      <nav className="flex w-full flex-wrap justify-center gap-1.5 md:w-auto md:justify-start" aria-label="ניווט ראשי">
+      <div className="w-full text-right sm:w-auto">
+        <button
+          type="button"
+          onClick={() => onNavigate('landing')}
+          className="group flex cursor-pointer items-center gap-3 text-right"
+          aria-label="חזרה לדף הבית"
+          title="דף הבית"
+        >
+          <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-2.5 text-[var(--color-text-secondary)] transition-colors group-hover:bg-[var(--color-surface-raised)] group-hover:text-[var(--color-text-primary)]">
+            <Home className="h-6 w-6 sm:h-7 sm:w-7" />
+          </div>
+          <div>
+            <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
+              סטטיטי-קל
+            </h1>
+            <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
+              סטטיסטיקה בדרך מובנת, פשוטה וברורה
+            </p>
+          </div>
+        </button>
+      </div>
+
+      <nav className="flex w-full flex-wrap justify-center gap-1.5 md:w-auto md:justify-end" aria-label="ניווט ראשי">
         {navigationItems.map((item) => {
           const isActive = item.id === activePage;
           const activeClass = getActiveClass(item.accent);

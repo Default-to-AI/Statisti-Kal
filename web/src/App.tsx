@@ -4,6 +4,7 @@
  */
 
 import { Suspense, lazy, useState } from 'react';
+import { ReviewOverlayProvider } from './components/review-overlay';
 import LandingPage from './components/LandingPage';
 import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
@@ -34,36 +35,36 @@ export default function App() {
     setActivePage('normal');
   };
 
-  if (activePage === 'hypothesis') {
-    return (
-      <PageLayout
-        header={<SiteHeader activePage="hypothesis" onNavigate={handleNavigate} />}
-        footer={<SiteFooter onNavigate={handleNavigate} />}
-      >
-        <Suspense fallback={<PageLoadingState />}>
-          <HypothesisTestingCalculator />
-        </Suspense>
-      </PageLayout>
-    );
-  }
-
-  if (activePage === 'normal') {
-    return (
-      <Suspense fallback={<PageLoadingState />}>
-        <NormalDistributionCalculator
-          key={normalMode}
-          initialMode={normalMode}
-          onNavigate={handleNavigate}
-        />
-      </Suspense>
-    );
-  }
-
   return (
-    <LandingPage
-      onNavigate={handleNavigate}
-      onTryHypothesis={() => setActivePage('hypothesis')}
-    />
+    <ReviewOverlayProvider storageKey="statistikal_feedback_v1">
+      {activePage === 'hypothesis' ? (
+        <PageLayout
+          header={<SiteHeader activePage="hypothesis" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <Suspense fallback={<PageLoadingState />}>
+            <HypothesisTestingCalculator />
+          </Suspense>
+        </PageLayout>
+      ) : null}
+
+      {activePage === 'normal' ? (
+        <Suspense fallback={<PageLoadingState />}>
+          <NormalDistributionCalculator
+            key={normalMode}
+            initialMode={normalMode}
+            onNavigate={handleNavigate}
+          />
+        </Suspense>
+      ) : null}
+
+      {activePage === 'landing' ? (
+        <LandingPage
+          onNavigate={handleNavigate}
+          onTryHypothesis={() => setActivePage('hypothesis')}
+        />
+      ) : null}
+    </ReviewOverlayProvider>
   );
 }
 

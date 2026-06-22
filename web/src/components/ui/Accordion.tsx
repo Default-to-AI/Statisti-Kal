@@ -148,7 +148,7 @@ const AccordionItemComponent = React.memo(function AccordionItemComponent({
         onClick={onToggle}
         disabled={item.disabled}
         className={`
-          w-full text-right flex items-center justify-between gap-3
+          w-full text-right flex items-center justify-between gap-3 cursor-pointer
           ${triggerClass}
           font-black transition-all
           ${isOpen ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}
@@ -283,7 +283,7 @@ export const SimpleAccordion: React.FC<SimpleAccordionProps> = ({
         type="button"
         onClick={() => setIsOpen(!isOpen)}
         className={`
-          w-full text-right flex items-center justify-between gap-3
+          w-full text-right flex items-center justify-between gap-3 cursor-pointer
           ${sizes.trigger}
           font-black transition-all
           ${isOpen ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}
