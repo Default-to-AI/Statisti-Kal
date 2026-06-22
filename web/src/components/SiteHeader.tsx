@@ -30,11 +30,12 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
         <button
           type="button"
           onClick={() => onNavigate('landing')}
-          className="flex items-center gap-3 text-right"
+          className="group flex cursor-pointer items-center gap-3 text-right"
           aria-label="חזרה לדף הבית"
+          title="דף הבית"
         >
-          <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-accent-cobalt-bg-hover)]/25 p-2.5 text-[var(--color-accent-cobalt)]">
-            <Calculator className="h-6 w-6 sm:h-7 sm:w-7" />
+          <div className="rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] p-2.5 text-[var(--color-text-secondary)] transition-colors group-hover:bg-[var(--color-surface-raised)] group-hover:text-[var(--color-text-primary)]">
+            <Home className="h-6 w-6 sm:h-7 sm:w-7" />
           </div>
           <div>
             <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
@@ -67,16 +68,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           );
         })}
 
-        <button
-          type="button"
-          onClick={() => onNavigate('landing')}
-          className={`flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3.5 py-2.5 transition sm:py-2 ${activePage === 'landing' ? getActiveClass('neutral') : getInactiveClass('neutral')
-            }`}
-          aria-label="דף הבית"
-          title="דף הבית"
-        >
-          <Home className="h-4 w-4" />
-        </button>
+
       </nav>
     </>
   );

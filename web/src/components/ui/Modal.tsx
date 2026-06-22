@@ -99,6 +99,11 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
       const focusDialog = () => {
         const el = dialogRef.current;
         if (!el) return;
+        const preferredFocus = el.querySelector<HTMLElement>('[data-autofocus="true"]');
+        if (preferredFocus) {
+          preferredFocus.focus();
+          return;
+        }
         const focusableSelector =
           'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
         const focusable = el.querySelectorAll<HTMLElement>(focusableSelector);

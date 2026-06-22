@@ -48,7 +48,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <div className={`min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] font-sans flex flex-col items-center ${outerClassName}`}>
       {header && (
-        <header className={`w-full ${contentWidthClassName} mx-auto mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5`}>
+        <header className={`w-full ${contentWidthClassName} mx-auto mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5`} dir={dir}>
           {header}
         </header>
       )}
@@ -66,7 +66,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       {showScrollTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-6 left-6 z-50 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-accent-cobalt)] hover:text-white hover:bg-[var(--color-accent-cobalt)] rounded-lg shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center"
+          className="fixed bottom-6 left-6 z-50 p-3 bg-[var(--color-surface)] border border-[var(--color-border)] text-[var(--color-accent-cobalt)] hover:text-white hover:bg-[var(--color-accent-cobalt)] rounded-lg shadow-lg transition-all hover:scale-105 active:scale-95 flex items-center justify-center cursor-pointer"
           title="חזרה לראש העמוד"
         >
           <ArrowUp size={24} />
