@@ -1,5 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
-import { Award, BookOpen, Calculator, Home, Sliders, TrendingUp } from 'lucide-react';
+import { Award, BookOpen, Home, Sliders, TrendingUp } from 'lucide-react';
 
 export type SitePage = 'landing' | 'hypothesis' | 'forward' | 'inverse' | 'table' | 'formula-sheet';
 
@@ -17,7 +17,7 @@ interface NavigationItem {
 
 const navigationItems: NavigationItem[] = [
   { id: 'hypothesis', label: 'בדיקת השערות', icon: <Award className="h-4 w-4" />, accent: 'brass' },
-  { id: 'forward', label: 'חישובי הסתברויות (Z)', icon: <Calculator className="h-4 w-4" />, accent: 'cobalt' },
+  { id: 'forward', label: 'חישובי הסתברויות (Z)', icon: <TrendingUp className="h-4 w-4" />, accent: 'cobalt' },
   { id: 'inverse', label: 'חישוב אחוזונים (Quantile)', icon: <Sliders className="h-4 w-4" />, accent: 'cobalt' },
   { id: 'table', label: 'טבלאות התפלגות', icon: <BookOpen className="h-4 w-4" />, accent: 'teal' },
   { id: 'formula-sheet', label: 'נוסחאות', icon: <TrendingUp className="h-4 w-4" />, accent: 'neutral' },
@@ -67,9 +67,34 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
             </button>
           );
         })}
-
-
       </nav>
+
+      <div className="w-full text-right sm:w-auto">
+        <button
+          type="button"
+          onClick={() => onNavigate('landing')}
+          className="flex items-center gap-4 text-right"
+          aria-label="חזרה לדף הבית"
+        >
+          <div>
+            <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
+              סטטיטי-קל
+            </h1>
+            <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
+              סטטיסטיקה בדרך מובנת, פשוטה וברורה
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => onNavigate('landing')}
+            className="flex cursor-pointer select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3.5 py-[17px] transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
+            aria-label="דף הבית"
+            title="דף הבית"
+          >
+            <Home className="h-6 w-6 text-[#e2e2f0] sm:h-7 sm:w-7" style={{ borderRadius: '24px' }} />
+          </button>
+        </button>
+      </div>
     </>
   );
 }

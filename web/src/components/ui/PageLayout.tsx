@@ -48,7 +48,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   return (
     <div className={`min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] font-sans flex flex-col items-center ${outerClassName}`}>
       {header && (
-        <header className={`w-full ${contentWidthClassName} mx-auto mb-6 flex flex-col md:flex-row items-center justify-between gap-4 border-b border-[var(--color-border)] pb-5`} dir={dir}>
+        <header className="w-full max-w-[1800px] mx-auto mb-6 flex flex-col md:flex-row items-center justify-between gap-[27px] border-b border-[var(--color-border)] pb-5">
           {header}
         </header>
       )}
