@@ -545,6 +545,7 @@ export interface AnimatedDetailsProps {
   defaultOpen?: boolean;
   id?: string;
   forceState?: { state: 'open' | 'closed'; timestamp: number };
+  tocId?: string;
 }
 
 export const AnimatedDetails: React.FC<AnimatedDetailsProps> = ({
@@ -553,6 +554,7 @@ export const AnimatedDetails: React.FC<AnimatedDetailsProps> = ({
   defaultOpen = false,
   id,
   forceState,
+  tocId,
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
@@ -572,6 +574,22 @@ export const AnimatedDetails: React.FC<AnimatedDetailsProps> = ({
     window.addEventListener('toggle-all-accordions', handleToggleAll);
     return () => window.removeEventListener('toggle-all-accordions', handleToggleAll);
   }, []);
+
+  useEffect(() => {
+    if (!tocId) {
+      return;
+    }
+
+    const handleOpenPath = (e: Event) => {
+      const customEvent = e as CustomEvent<{ ids?: string[] }>;
+      if (customEvent.detail?.ids?.includes(tocId)) {
+        setIsOpen(true);
+      }
+    };
+
+    window.addEventListener('toc-open-path', handleOpenPath);
+    return () => window.removeEventListener('toc-open-path', handleOpenPath);
+  }, [tocId]);
 
   // separate children into summary and the rest
   const childrenArray = React.Children.toArray(children);

@@ -672,6 +672,28 @@ export default function HypothesisTestingCalculator() {
     const [showCI, setShowCI] = useState<boolean>(false);
     const [showPower, setShowPower] = useState<boolean>(false);
 
+    useEffect(() => {
+        const handleOpenPath = (event: Event) => {
+            const customEvent = event as CustomEvent<{ ids?: string[] }>;
+            const openIds = customEvent.detail?.ids ?? [];
+
+            if (openIds.includes('hypothesis-panel')) {
+                setShowHypothesisTesting(true);
+            }
+
+            if (openIds.includes('confidence-panel')) {
+                setShowCI(true);
+            }
+
+            if (openIds.includes('power-panel')) {
+                setShowPower(true);
+            }
+        };
+
+        window.addEventListener('toc-open-path', handleOpenPath);
+        return () => window.removeEventListener('toc-open-path', handleOpenPath);
+    }, []);
+
     // Error validations
     const errors = useMemo(() => {
         const errList: { [key: string]: string } = {};
@@ -2008,7 +2030,14 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Solutions Steps Accordion / Panel */}
                     
-                    <div className="tour-step-accordion-ht rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
+                    <div id="hypothesis-panel" className="tour-step-accordion-ht rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
+                        <div className="sr-only" aria-hidden="true">
+                            <div data-toc-label="בדיקת השערות" data-toc-level="2" data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" />
+                            <div data-toc-label="קביעת הערכים הקריטיים והגדרת כלל ההחלטה" data-toc-level="3" data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" />
+                            <div data-toc-label="כלל סטטיסטי המבחן" data-toc-level="3" data-toc-target="hypothesis-step-4-test-statistic" data-toc-open="hypothesis-panel,hypothesis-step-4,hypothesis-step-4-test-statistic" />
+                            <div data-toc-label="כלל אזור הדחייה" data-toc-level="3" data-toc-target="hypothesis-step-4-rejection-region" data-toc-open="hypothesis-panel,hypothesis-step-4,hypothesis-step-4-rejection-region" />
+                            <div data-toc-label="כלל מובהקות התוצאה (P-Value)" data-toc-level="3" data-toc-target="hypothesis-step-4-p-value" data-toc-open="hypothesis-panel,hypothesis-step-4,hypothesis-step-4-p-value" />
+                        </div>
                         
                         <div
                             role="button"
@@ -2526,7 +2555,7 @@ export default function HypothesisTestingCalculator() {
                                         {isValid && stats && decisionData ? (
                                             <>
                                                 {/* Step 4: Critical Value derivation & SE */}
-                                                <AnimatedDetails className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
+                                                <AnimatedDetails id="hypothesis-step-4" tocId="hypothesis-step-4" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
@@ -2759,7 +2788,7 @@ export default function HypothesisTestingCalculator() {
 
                                                             <div className="space-y-4 mt-8">
                                                                 {/* Approach 1 */}
-                                                                <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
+                                                                <AnimatedDetails id="hypothesis-step-4-test-statistic" tocId="hypothesis-step-4-test-statistic" className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden">
                                                                     <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                                         <div className="flex-1 flex items-center gap-3">
                                                                             <Target size={20} />
@@ -2835,7 +2864,7 @@ export default function HypothesisTestingCalculator() {
                                                                     const paramSymbol = testType === 'sum' ? '\\sum X' : testType === 'single' ? 'X' : '\\bar{X}';
                                                                     const muSymbol = testType === 'sum' ? 'E(\\sum X)' : '\\mu_0';
                                                                     return (
-                                                                        <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
+                                                                        <AnimatedDetails id="hypothesis-step-4-rejection-region" tocId="hypothesis-step-4-rejection-region" className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
                                                                             <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                                                 <div className="flex-1 flex items-center gap-3">
                                                                                     <Map size={20} />
@@ -2880,7 +2909,7 @@ export default function HypothesisTestingCalculator() {
                                                                 })()}
 
                                                                 {/* Approach 3 */}
-                                                                <AnimatedDetails className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
+                                                                <AnimatedDetails id="hypothesis-step-4-p-value" tocId="hypothesis-step-4-p-value" className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
                                                                     <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                                         <div className="flex-1 flex items-center gap-3">
                                                                             <Percent size={20} />

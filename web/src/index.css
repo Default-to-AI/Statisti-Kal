@@ -328,6 +328,34 @@ body {
   50% { box-shadow: 0 0 16px rgba(232, 93, 93, 0.4), 0 0 32px rgba(232, 93, 93, 0.2); border-color: rgba(232, 93, 93, 0.5); }
 }
 
+.toc-target-flash {
+  animation: toc-target-flash 1.2s ease-out;
+  box-shadow:
+    0 0 0 1px rgba(250, 204, 21, 0.45),
+    0 0 24px rgba(250, 204, 21, 0.24),
+    0 0 56px rgba(46, 196, 182, 0.16);
+  border-radius: var(--rounded-lg);
+}
+
+@keyframes toc-target-flash {
+  0% {
+    box-shadow:
+      0 0 0 0 rgba(250, 204, 21, 0.68),
+      0 0 0 rgba(46, 196, 182, 0);
+  }
+  45% {
+    box-shadow:
+      0 0 0 1px rgba(250, 204, 21, 0.5),
+      0 0 18px rgba(250, 204, 21, 0.28),
+      0 0 42px rgba(46, 196, 182, 0.2);
+  }
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(250, 204, 21, 0),
+      0 0 0 rgba(46, 196, 182, 0);
+  }
+}
+
 /* Respect prefers-reduced-motion — disable all signature animations */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -341,7 +369,7 @@ body {
   .pulse-brass, .pulse-success, .pulse-error {
     animation: none !important;
   }
-  .curve-glow {
+  .curve-glow, .toc-target-flash {
     transition: none !important;
   }
 }
