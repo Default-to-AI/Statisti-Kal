@@ -1,6 +1,7 @@
 import React from 'react';
 import { useScrollPosition } from '../../hooks/useScrollPosition';
 import { ScrollToTopButton } from '../ScrollToTopButton';
+import { TableOfContents } from './TableOfContents';
 
 export interface PageLayoutProps {
   /** The content of the header (title, logo, tabs, etc.) */
@@ -66,6 +67,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         )}
       </div>
 
+      <TableOfContents />
       <ScrollToTopButton visible={showScrollTop} />
     </div>
   );
