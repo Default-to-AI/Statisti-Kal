@@ -1,5 +1,6 @@
 import { type ReactElement, useState, useEffect, useMemo } from 'react';
 import { AreaChart, Calculator, BookOpen, ArrowRight, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { InlineMath } from 'react-katex';
 import SiteFooter from './SiteFooter';
 import SiteHeader, { type SitePage } from './SiteHeader';
 import { Button } from './ui/Button';
@@ -168,18 +169,18 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
                 <Button
                   size="lg"
                   onClick={onTryHypothesis}
-                  className="flex items-center justify-center group transform transition-all duration-300 hover:scale-105 shadow-xl shadow-[var(--color-accent-cobalt-bg)] h-14 px-8 text-lg"
+                  className="group transform transition-all duration-300 hover:scale-105 shadow-xl shadow-[var(--color-accent-cobalt-bg)] h-14 px-8 text-lg whitespace-nowrap"
+                  leftIcon={<Calculator className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />}
                 >
-                  <Calculator className="ml-3 w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />
                   התחל בדיקת השערות
                 </Button>
                 <Button
                   size="lg"
                   variant="secondary"
                   onClick={() => onNavigate('forward')}
-                  className="flex items-center justify-center group transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] h-14 px-8 text-lg bg-[var(--color-surface)]/50 backdrop-blur-sm"
+                  className="group transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] h-14 px-8 text-lg bg-[var(--color-surface)]/50 backdrop-blur-sm whitespace-nowrap"
+                  leftIcon={<AreaChart className="w-6 h-6 text-[var(--color-accent-cobalt)] transition-transform duration-300 group-hover:-translate-y-1" />}
                 >
-                  <AreaChart className="ml-3 w-6 h-6 text-[var(--color-accent-cobalt)] transition-transform duration-300 group-hover:-translate-y-1" />
                   התפלגות נורמלית
                 </Button>
               </div>
@@ -220,7 +221,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">התפלגות נורמלית</h3>
               <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
-                חישוב שטחים (הסתברויות) תחת העקומה הנורמלית. מהיר יותר מטבלת Z, ובלי לטעות בשורה.
+                חישוב שטחים (הסתברויות) תחת העקומה הנורמלית. מהיר יותר מטבלת <InlineMath math="Z" />, ובלי לטעות בשורה.
               </p>
               <Button variant="ghost" className="w-full justify-center group" onClick={() => onNavigate('forward')}>
                 למחשבון <ArrowRight className="ml-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
@@ -252,7 +253,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
                 </div>
                 <div>
                   <h4 className="font-bold text-lg text-[var(--color-text-primary)] mb-2">חישובים אוטומטיים</h4>
-                  <p className="text-[var(--color-text-secondary)] leading-relaxed">הזן נתונים, קבל תוצאות. Z, T, P-Value – הכל מחושב בשבריר שנייה. די עם הטכניקות.</p>
+                  <p className="text-[var(--color-text-secondary)] leading-relaxed">הזן נתונים, קבל תוצאות. <InlineMath math="Z" />, <InlineMath math="T" />, <InlineMath math="P\text{-Value}" /> – הכל מחושב בשבריר שנייה. די עם הטכניקות.</p>
                 </div>
               </div>
               <div className="flex gap-4 items-start bg-[var(--color-surface)] p-6 rounded-[24px] border border-[var(--color-border)] shadow-sm">

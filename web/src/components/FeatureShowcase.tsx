@@ -1,5 +1,6 @@
 import { useState, useEffect, type ReactElement } from 'react';
 import { MousePointerClick, Calculator, LineChart, MessageSquareQuote } from 'lucide-react';
+import { InlineMath } from 'react-katex';
 import { ScrollReveal } from './landing-template/TemplatePrimitives';
 
 const features = [
@@ -14,7 +15,7 @@ const features = [
   {
     id: 1,
     title: "חישובים שמשאירים מקום לנשמה",
-    description: "P-Value, ערכים קריטיים וטבלאות Z או T? הכל מחושב אוטומטית. לכם רק נשאר לשלוט בשפה ולהבין את הרציונל.",
+    description: <><InlineMath math="P\text{-Value}" />, ערכים קריטיים וטבלאות <InlineMath math="Z" /> או <InlineMath math="T" />? הכל מחושב אוטומטית. לכם רק נשאר לשלוט בשפה ולהבין את הרציונל.</>,
     icon: Calculator,
     image: "/images/carousel-matrix.png",
     tone: "cobalt" as const

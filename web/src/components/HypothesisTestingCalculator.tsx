@@ -536,27 +536,29 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
         >
             {children}
             <Info size={13} className="text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)] cursor-help shrink-0" />
-            {createPortal(
-                <AnimatePresence>
-                    {isVisible && (
-                        <div
-                            className="pointer-events-none fixed z-[9999]"
-                            style={{ top: position.top, left: position.left, transform: 'translate(-50%, -100%)' }}
-                        >
-                            <motion.div
-                                initial={{ opacity: 0, y: 5, scale: 0.95 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 5, scale: 0.95 }}
-                                className={`p-2.5 text-xs rounded-sm shadow-sm text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans ${tooltipClassName}`}
+            {typeof document !== 'undefined' && document.body
+                ? createPortal(
+                    <AnimatePresence>
+                        {isVisible && (
+                            <div
+                                className="pointer-events-none fixed z-[9999]"
+                                style={{ top: position.top, left: position.left, transform: 'translate(-50%, -100%)' }}
                             >
-                                {content}
-                                <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
-                            </motion.div>
-                        </div>
-                    )}
-                </AnimatePresence>,
-                document.body
-            )}
+                                <motion.div
+                                    initial={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                                    exit={{ opacity: 0, y: 5, scale: 0.95 }}
+                                    className={`p-2.5 text-xs rounded-sm shadow-sm text-center leading-normal font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)] border border-[var(--color-border)] font-sans ${tooltipClassName}`}
+                                >
+                                    {content}
+                                    <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[var(--color-surface)]" />
+                                </motion.div>
+                            </div>
+                        )}
+                    </AnimatePresence>,
+                    document.body
+                )
+                : null}
         </div>
     );
 };
