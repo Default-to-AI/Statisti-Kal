@@ -32,6 +32,8 @@ export {
 export { PageLayout } from './PageLayout';
 export type { PageLayoutProps } from './PageLayout';
 
+export { TableOfContents } from './TableOfContents';
+
 export { Card, CardHeader, CardBody } from './Card';
 export type { CardProps, CardHeaderProps, CardBodyProps } from './Card';
 
