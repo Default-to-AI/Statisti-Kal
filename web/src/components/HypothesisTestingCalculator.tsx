@@ -2033,6 +2033,8 @@ export default function HypothesisTestingCalculator() {
                     <div id="hypothesis-panel" className="tour-step-accordion-ht rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-3 lg:order-3">
                         <div className="sr-only" aria-hidden="true">
                             <div data-toc-label="בדיקת השערות" data-toc-level="2" data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" />
+                            <div data-toc-label="רווח סמך לתוחלת" data-toc-level="2" data-toc-target="confidence-panel" data-toc-open="confidence-panel" />
+                            <div data-toc-label="עוצמת מבחן" data-toc-level="2" data-toc-target="power-panel" data-toc-open="power-panel" />
                             <div data-toc-label="קביעת הערכים הקריטיים והגדרת כלל ההחלטה" data-toc-level="3" data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" />
                             <div data-toc-label="כלל סטטיסטי המבחן" data-toc-level="3" data-toc-target="hypothesis-step-4-test-statistic" data-toc-open="hypothesis-panel,hypothesis-step-4,hypothesis-step-4-test-statistic" />
                             <div data-toc-label="כלל אזור הדחייה" data-toc-level="3" data-toc-target="hypothesis-step-4-rejection-region" data-toc-open="hypothesis-panel,hypothesis-step-4,hypothesis-step-4-rejection-region" />
@@ -3325,7 +3327,7 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Confidence Interval Section */}
                     {isValid && stats && (
-                        <div className="tour-step-accordion-ci rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
+                        <div id="confidence-panel" className="tour-step-accordion-ci rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
                             <button
                                 onClick={() => setShowCI(!showCI)}
                                 className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
@@ -3513,7 +3515,7 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Power Section */}
                     {isValid && stats && (
-                        <div className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
+                        <div id="power-panel" className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
                             <button
                                 onClick={() => setShowPower(!showPower)}
                                 className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"

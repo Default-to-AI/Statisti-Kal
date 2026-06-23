@@ -369,7 +369,11 @@ body {
   .pulse-brass, .pulse-success, .pulse-error {
     animation: none !important;
   }
-  .curve-glow, .toc-target-flash {
+  .curve-glow {
+    transition: none !important;
+  }
+  .toc-target-flash {
+    animation: none !important;
     transition: none !important;
   }
 }

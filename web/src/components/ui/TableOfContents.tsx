@@ -44,11 +44,17 @@ function collectHeadings(): HeadingData[] {
 
     let id = node.dataset.tocTarget?.trim() || node.id;
     if (!id) {
-      id = slugifyHeading(text, index);
-      node.id = id;
-    }
+      const baseId = slugifyHeading(text, index);
+      let candidateId = baseId;
+      let suffix = 1;
 
-    if (seenIds.has(id)) {
+      while (seenIds.has(candidateId)) {
+        candidateId = `${baseId}-${suffix++}`;
+      }
+
+      id = candidateId;
+      node.id = id;
+    } else if (seenIds.has(id)) {
       return [];
     }
     seenIds.add(id);
@@ -249,7 +255,7 @@ export const TableOfContents: React.FC = () => {
         className={`pointer-events-none fixed inset-x-3 bottom-24 z-50 md:inset-x-auto md:bottom-24 md:right-6 md:w-[22rem] transition-all duration-250 ${asideClassName}`}
         dir="rtl"
         aria-hidden={!isExpanded}
-        {...(!isExpanded ? { inert: '' } : {})}
+        inert={!isExpanded}
       >
         <div className="pointer-events-auto max-h-[min(68vh,38rem)] overflow-hidden rounded-[1.25rem] border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface-raised)_94%,transparent)] shadow-[0_24px_64px_rgba(0,0,0,0.4)] backdrop-blur-xl">
           <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface)]/90 px-4 py-3">
