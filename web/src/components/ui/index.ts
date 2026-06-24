@@ -61,3 +61,6 @@ export type {
   // Disclosure
   DisclosureProps,
 } from './CustomComponents';
+
+export { Tooltip, ChartTooltip, InputHelpTooltip } from './Tooltip';
+export type { TooltipProps, TooltipPlacement, TooltipSize, ChartTooltipProps, ChartTooltipPayload, InputHelpTooltipProps } from './Tooltip';
