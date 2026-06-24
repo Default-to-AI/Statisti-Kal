@@ -231,6 +231,21 @@ const CALCULATOR_MODE_TABS: ReadonlyArray<ModeTab<CalculatorMode>> = [
   },
 ];
 
+const FORWARD_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: 'מצד שמאל', description: 'הסתברות מצטברת עד ערך X נתון.' },
+  { value: 'above', label: 'מצד ימין', description: 'הסתברות מהערך X ומעלה.' },
+  { value: 'between', label: 'בין שני ערכים', description: 'שטח כלוא בין גבול תחתון לגבול עליון.' },
+  { value: 'outside', label: 'מחוץ לתחום', description: 'שני הזנבות יחד מחוץ לשני גבולות.' },
+  { value: 'conditional', label: 'הסתברות מותנית', description: 'חישוב P(A|B) תחת תנאי רקע B.' },
+];
+
+const INVERSE_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: 'אחוזון שמאלי', description: 'מצא את ערך X כך שהשטח משמאל שווה ל-p.' },
+  { value: 'above', label: 'אחוזון ימני', description: 'מצא את ערך X כך שהשטח מימין שווה ל-p.' },
+  { value: 'between', label: 'טווח מרכזי', description: 'מצא שני גבולות כך שהשטח האמצעי שווה ל-p.' },
+  { value: 'outside', label: 'טווח זנבות', description: 'מצא שני גבולות כך שסכום הזנבות שווה ל-p.' },
+];
+
 function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; description: string; badge: string } {
   if (mode === 'forward') {
     return {
@@ -291,13 +306,13 @@ const ParameterInputCell: React.FC<ParameterInputCellProps> = ({
 }) => (
   <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] ${disabled ? 'opacity-55' : ''}`}>
     <CellWatermark math={watermark} colorClass={colorClass} />
-    <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+    <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
       <InputTooltip content={tooltip}>
-        <span className={`w-30 sm:w-36 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]/90'}`}>
+        <span className={`text-center text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]/90'} xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right`}>
           {label}
         </span>
       </InputTooltip>
-      <div className="w-20 sm:w-24 shrink-0 relative">
+      <div className="relative w-full max-w-[10rem] shrink-0 xl:w-24 xl:max-w-none">
         <input
           type="text"
           value={value}
@@ -343,13 +358,13 @@ const ParameterSelectCell: React.FC<ParameterSelectCellProps> = ({
 }) => (
   <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
     <CellWatermark math={watermark} colorClass={colorClass} />
-    <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+    <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
       <InputTooltip content={tooltip}>
-        <span className="w-30 sm:w-36 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+        <span className="text-center text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right">
           {label}
         </span>
       </InputTooltip>
-      <div className="w-36 sm:w-44 shrink-0">
+      <div className="w-full max-w-[13rem] shrink-0 xl:w-48 xl:max-w-none">
         <select
           value={value}
           onChange={(event) => onChange(event.target.value)}
@@ -360,6 +375,69 @@ const ParameterSelectCell: React.FC<ParameterSelectCellProps> = ({
       </div>
     </div>
   </td>
+);
+
+interface VariantOption {
+  value: CalcType;
+  label: string;
+  description: string;
+}
+
+interface CalculationVariantPickerProps {
+  title: string;
+  subtitle: string;
+  value: CalcType;
+  onChange: (value: CalcType) => void;
+  options: readonly VariantOption[];
+}
+
+const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
+  title,
+  subtitle,
+  value,
+  onChange,
+  options,
+}) => (
+  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+    <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
+      <div className="text-right">
+        <h3 className="text-body-base font-black text-[var(--color-text-primary)]">{title}</h3>
+        <p className="text-body-sm text-[var(--color-text-secondary)]">{subtitle}</p>
+      </div>
+      <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
+        <Target size={16} />
+      </div>
+    </div>
+
+    <div className="grid gap-3 sm:grid-cols-2">
+      {options.map((option) => {
+        const isActive = value === option.value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(option.value)}
+            className={`rounded-lg border px-4 py-3 text-right transition-all ${
+              isActive
+                ? 'border-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)]/14 shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                : 'border-[var(--color-border)] bg-[var(--color-surface-raised)] hover:border-[var(--color-accent-cobalt)]/45 hover:bg-[var(--color-accent-cobalt)]/6'
+            }`}
+          >
+            <div className="flex items-center justify-between gap-3">
+              <span className={`text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
+                {option.label}
+              </span>
+              <span className={`h-2.5 w-2.5 rounded-full ${isActive ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
+            </div>
+            <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+              {option.description}
+            </p>
+          </button>
+        );
+      })}
+    </div>
+  </div>
 );
 
 // --- Components ---
@@ -2188,8 +2266,8 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                 </div>
               </section>
 
-              <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 items-start">
-                <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right lg:col-span-4">
+              <div className="grid grid-cols-1 gap-6 xl:grid-cols-12 items-start">
+                <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right xl:col-span-6">
                   <div className="absolute top-0 right-0 h-1 w-full bg-[var(--color-accent-cobalt-bg-hover)]" />
 
                   <div className="relative z-10 space-y-5">
@@ -2356,6 +2434,16 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       </div>
                     </div>
 
+                    <CalculationVariantPicker
+                      title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
+                      subtitle={mode === 'forward'
+                        ? 'כל מצבי ההסתברות מוצגים כאן ישירות: שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
+                        : 'כל מצבי האחוזון מרוכזים כאן: שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
+                      value={mode === 'forward' ? forwardType : inverseType}
+                      onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
+                      options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
+                    />
+
                     {mode === 'forward' && forwardType === 'conditional' ? (
                       <div className="space-y-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-4">
                         <div>
@@ -2423,13 +2511,13 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                   </div>
                 </CalculatorSidebar>
 
-                <div className="space-y-6 lg:col-span-8">
+                <div className="space-y-6 xl:col-span-6">
                   <ChartWrapper
                     title={chartTitle}
                     legend={chartLegend}
                     badge={chartBadge}
                     className="curve-glow"
-                    height={350}
+                    height={240}
                     isEmpty={!isValid}
                     emptyState={(
                       <EmptyState
