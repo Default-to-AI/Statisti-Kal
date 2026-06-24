@@ -2367,106 +2367,124 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       </table>
                     </div>
 
-                    <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                        <div className="flex-1">
-                          <span className="mb-2 block text-sm font-black text-[var(--color-text-primary)] text-right">הזרימה:</span>
-                          <div className="w-full">
-                            <ModeTabs
-                              tabs={CALCULATOR_MODE_TABS}
-                              activeTab={calculatorMode}
-                              onChange={handleCalculatorModeChange}
-                              orientation="horizontal"
-                              ariaLabel="מצבי מחשבון נורמלי"
-                            />
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+                      <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="flex-1">
+                            <span className="mb-2 block text-sm font-black text-[var(--color-text-primary)] text-right">הזרימה:</span>
+                            <div className="w-full scale-[0.94] origin-right">
+                              <ModeTabs
+                                tabs={CALCULATOR_MODE_TABS}
+                                activeTab={calculatorMode}
+                                onChange={handleCalculatorModeChange}
+                                orientation="horizontal"
+                                ariaLabel="מצבי מחשבון נורמלי"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <button
+                              onClick={resetNormalCalculator}
+                              className="inline-flex min-w-44 items-center justify-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
+                            >
+                              <RefreshCw size={14} />
+                              אפס ערכים
+                            </button>
                           </div>
                         </div>
-                        <div className="flex justify-end">
-                          <button
-                            onClick={resetNormalCalculator}
-                            className="inline-flex min-w-52 items-center justify-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
-                          >
-                            <RefreshCw size={14} />
-                            אפס ערכים ל-IQ הסטנדרטי
-                          </button>
-                        </div>
+
+                        <CalculationVariantPicker
+                          title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
+                          subtitle={mode === 'forward'
+                            ? 'שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
+                            : 'שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
+                          value={mode === 'forward' ? forwardType : inverseType}
+                          onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
+                          options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
+                        />
                       </div>
 
-                      <CalculationVariantPicker
-                        title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
-                        subtitle={mode === 'forward'
-                          ? 'כל מצבי ההסתברות מוצגים כאן ישירות: שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
-                          : 'כל מצבי האחוזון מרוכזים כאן: שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
-                        value={mode === 'forward' ? forwardType : inverseType}
-                        onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
-                        options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
-                      />
-                    </div>
-
-                    {mode === 'forward' && forwardType === 'conditional' ? (
-                      <div className="space-y-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-4">
-                        <div>
-                          <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 text-body-sm font-black text-[var(--color-accent-cobalt)]">
-                            הגדרת מאורע B ברקע (התנאי)
-                          </p>
-                        </div>
-                        <div>
-                          <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
-                          <select
-                            value={condType}
-                            onChange={e => setCondType(e.target.value as CondType)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          >
-                            <option value="below">X ≤ b₁</option>
-                            <option value="above">X ≥ b₁</option>
-                            <option value="between">b₁ ≤ X ≤ b₂</option>
-                          </select>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                          <div>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
-                            <input
-                              type="text"
-                              value={condX1Input}
-                              onChange={e => handleCondX1Change(e.target.value)}
-                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                            />
-                            {errors.condX1 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p>}
+                      <div className={`rounded-lg border p-4 transition-all ${
+                        mode === 'forward' && forwardType === 'conditional'
+                          ? 'border-[var(--color-accent-cobalt)]/45 bg-[var(--color-accent-cobalt)]/8 shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                          : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-55 saturate-0'
+                      }`}>
+                        <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
+                          <div className="text-right">
+                            <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-secondary)]'}`}>
+                              הסתברות מותנית
+                            </h3>
+                            <p className="text-body-sm text-[var(--color-text-secondary)]">
+                              חישוב P(A|B) תחת תנאי רקע B.
+                            </p>
                           </div>
-                          {condType === 'between' ? (
+                          <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
+                        </div>
+
+                        <div className="space-y-4">
+                          <div>
+                            <p className="mb-2 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                              הגדרת מאורע B ברקע
+                            </p>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
+                            <select
+                              value={condType}
+                              onChange={e => setCondType(e.target.value as CondType)}
+                              disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              <option value="below">X ≤ b₁</option>
+                              <option value="above">X ≥ b₁</option>
+                              <option value="between">b₁ ≤ X ≤ b₂</option>
+                            </select>
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                             <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₂:</label>
+                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
                               <input
                                 type="text"
-                                value={condX2Input}
-                                onChange={e => handleCondX2Change(e.target.value)}
-                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                                value={condX1Input}
+                                onChange={e => handleCondX1Change(e.target.value)}
+                                disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                               />
-                              {errors.condX2 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p>}
+                              {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
                             </div>
-                          ) : null}
-                        </div>
+                            {condType === 'between' ? (
+                              <div>
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₂:</label>
+                                <input
+                                  type="text"
+                                  value={condX2Input}
+                                  onChange={e => handleCondX2Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX2 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p> : null}
+                              </div>
+                            ) : null}
+                          </div>
 
-                        <div>
-                          <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1 text-body-sm font-black text-[var(--color-accent-crimson)]">
-                            הגדרת מאורע A (ההסתברות מתוך B)
-                          </p>
-                        </div>
-                        <div>
-                          <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
-                          <select
-                            value={condTypeA}
-                            onChange={e => setCondTypeA(e.target.value as CondType)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          >
-                            <option value="below">X ≤ a₁</option>
-                            <option value="above">X ≥ a₁</option>
-                            <option value="between">a₁ ≤ X ≤ a₂</option>
-                          </select>
+                          <div>
+                            <p className="mb-2 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
+                              הגדרת מאורע A
+                            </p>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
+                            <select
+                              value={condTypeA}
+                              onChange={e => setCondTypeA(e.target.value as CondType)}
+                              disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                            >
+                              <option value="below">X ≤ a₁</option>
+                              <option value="above">X ≥ a₁</option>
+                              <option value="between">a₁ ≤ X ≤ a₂</option>
+                            </select>
+                          </div>
                         </div>
                       </div>
-                    ) : null}
+                    </div>
                   </div>
                 </CalculatorSidebar>
 
