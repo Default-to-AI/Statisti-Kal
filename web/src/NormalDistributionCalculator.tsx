@@ -230,21 +230,6 @@ const CALCULATOR_MODE_TABS: ReadonlyArray<ModeTab<CalculatorMode>> = [
   },
 ];
 
-const FORWARD_VARIANT_OPTIONS: readonly VariantOption[] = [
-  { value: 'below', label: 'מצד שמאל', description: <>הסתברות מצטברת עד <InlineMath math="X" /> נתון.</> },
-  { value: 'above', label: 'מצד ימין', description: <>הסתברות מ־<InlineMath math="X" /> ומעלה.</> },
-  { value: 'between', label: 'בין שני ערכים', description: <>שטח כלוא בין <InlineMath math="X_1" /> לבין <InlineMath math="X_2" />.</> },
-  { value: 'outside', label: 'מחוץ לתחום', description: <>שני הזנבות יחד מחוץ ל־<InlineMath math="X_1, X_2" />.</> },
-  { value: 'conditional', label: 'הסתברות מותנית', description: <>חישוב <InlineMath math="P(A \\mid B)" /> תחת תנאי רקע <InlineMath math="B" />.</> },
-];
-
-const INVERSE_VARIANT_OPTIONS: readonly VariantOption[] = [
-  { value: 'below', label: 'אחוזון שמאלי', description: <>מצא <InlineMath math="X" /> כך שהשטח משמאל שווה ל־<InlineMath math="p" />.</> },
-  { value: 'above', label: 'אחוזון ימני', description: <>מצא <InlineMath math="X" /> כך שהשטח מימין שווה ל־<InlineMath math="p" />.</> },
-  { value: 'between', label: 'טווח מרכזי', description: <>מצא <InlineMath math="X_1, X_2" /> כך שהשטח האמצעי שווה ל־<InlineMath math="p" />.</> },
-  { value: 'outside', label: 'טווח זנבות', description: <>מצא <InlineMath math="X_1, X_2" /> כך שסכום הזנבות שווה ל־<InlineMath math="p" />.</> },
-];
-
 function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; description: string; badge: string } {
   if (mode === 'forward') {
     return {
@@ -414,32 +399,33 @@ interface VariantOption {
   description: React.ReactNode;
 }
 
+const FORWARD_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: <InlineMathToken math="P(X \le x)" />, description: null },
+  { value: 'above', label: <InlineMathToken math="P(X \ge x)" />, description: null },
+  { value: 'between', label: <InlineMathToken math="P(x_1 \le X \le x_2)" />, description: null },
+  { value: 'outside', label: <InlineMathToken math="P(X \le x_1 \;\cup\; X \ge x_2)" />, description: null },
+  { value: 'conditional', label: <InlineMathToken math="P(A \mid B)=\frac{P(A \cap B)}{P(B)}" />, description: null },
+];
+
+const INVERSE_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: <InlineMathToken math="P(X \le x)=p" />, description: null },
+  { value: 'above', label: <InlineMathToken math="P(X \ge x)=p" />, description: null },
+  { value: 'between', label: <InlineMathToken math="P(x_1 \le X \le x_2)=p" />, description: null },
+  { value: 'outside', label: <InlineMathToken math="P(X \le x_1 \;\cup\; X \ge x_2)=p" />, description: null },
+];
+
 interface CalculationVariantPickerProps {
-  title: string;
-  subtitle: string;
   value: CalcType;
   onChange: (value: CalcType) => void;
   options: readonly VariantOption[];
 }
 
 const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
-  title,
-  subtitle,
   value,
   onChange,
   options,
 }) => (
   <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-    <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
-      <div className="text-right">
-        <h3 className="text-body-base font-black text-[var(--color-text-primary)]">{title}</h3>
-        <p className="max-w-xl text-body-sm leading-relaxed text-[var(--color-text-secondary)]">{subtitle}</p>
-      </div>
-      <div className="rounded-full border border-[var(--color-accent-cobalt)]/20 bg-[var(--color-accent-cobalt)]/10 px-2.5 py-1 text-caption font-black tracking-[0.08em] text-[var(--color-accent-cobalt)]">
-        FLOW
-      </div>
-    </div>
-
     <div className="grid gap-3 sm:grid-cols-2">
       {options.map((option) => {
         const isActive = value === option.value;
@@ -460,9 +446,11 @@ const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
                 <span className={`block text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
                   {option.label}
                 </span>
-                <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
-                  {option.description}
-                </p>
+                {option.description ? (
+                  <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+                    {option.description}
+                  </p>
+                ) : null}
               </div>
               <span className={`mt-1 h-2.5 w-2.5 rounded-full transition-colors ${isActive ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)] group-hover:bg-[var(--color-accent-cobalt)]/60'}`} />
             </div>
@@ -2163,11 +2151,11 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
   const secondaryInputLabel =
     mode === 'forward'
       ? forwardType === 'conditional'
-        ? 'ערך מאורע a₂:'
-        : 'גבול תחום עליון (X₂):'
+        ? 'ערך מאורע:'
+        : 'גבול תחום עליון:'
       : inverseType === 'between'
-        ? 'גבול עליון יעד (X₂):'
-        : 'גבול זנב עליון (X₂):';
+        ? 'גבול עליון יעד:'
+        : 'גבול זנב עליון:';
   const secondaryInputValue =
     mode === 'forward'
       ? x2Input
@@ -2337,6 +2325,37 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                     </div>
 
                     <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-start">
+                      <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                          <div className="flex-1">
+                            <div className="w-full scale-[0.94] origin-right">
+                              <ModeTabs
+                                tabs={CALCULATOR_MODE_TABS}
+                                activeTab={calculatorMode}
+                                onChange={handleCalculatorModeChange}
+                                orientation="horizontal"
+                                ariaLabel="מצבי מחשבון נורמלי"
+                              />
+                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <button
+                              onClick={resetNormalCalculator}
+                              className="inline-flex min-w-44 items-center justify-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
+                            >
+                              <RefreshCw size={14} />
+                              אפס ערכים
+                            </button>
+                          </div>
+                        </div>
+
+                        <CalculationVariantPicker
+                          value={mode === 'forward' ? forwardType : inverseType}
+                          onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
+                          options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
+                        />
+                      </div>
+
                       <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
                         <table className="w-full border-collapse border-spacing-0">
                           <thead>
@@ -2417,42 +2436,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             </tr>
                           </tbody>
                         </table>
-                      </div>
-
-                      <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-                          <div className="flex-1">
-                            <span className="mb-2 block text-sm font-black text-[var(--color-text-primary)] text-right">הזרימה:</span>
-                            <div className="w-full scale-[0.94] origin-right">
-                              <ModeTabs
-                                tabs={CALCULATOR_MODE_TABS}
-                                activeTab={calculatorMode}
-                                onChange={handleCalculatorModeChange}
-                                orientation="horizontal"
-                                ariaLabel="מצבי מחשבון נורמלי"
-                              />
-                            </div>
-                          </div>
-                          <div className="flex justify-end">
-                            <button
-                              onClick={resetNormalCalculator}
-                              className="inline-flex min-w-44 items-center justify-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
-                            >
-                              <RefreshCw size={14} />
-                              אפס ערכים
-                            </button>
-                          </div>
-                        </div>
-
-                        <CalculationVariantPicker
-                          title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
-                          subtitle={mode === 'forward'
-                            ? 'שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
-                            : 'שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
-                          value={mode === 'forward' ? forwardType : inverseType}
-                          onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
-                          options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
-                        />
                       </div>
                     </div>
 
