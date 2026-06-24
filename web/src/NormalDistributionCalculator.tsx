@@ -276,6 +276,15 @@ const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => (
   </div>
 );
 
+const InlineMathToken: React.FC<{ math: string; className?: string }> = ({ math, className = '' }) => (
+  <span
+    dir="ltr"
+    className={`inline-flex items-center whitespace-nowrap align-middle [unicode-bidi:isolate] ${className}`.trim()}
+  >
+    <InlineMath math={math} />
+  </span>
+);
+
 interface ParameterInputCellProps {
   watermark: string;
   colorClass: string;
@@ -2391,13 +2400,13 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                           <div className="text-right">
                             <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
-                              <span className="inline-flex items-center gap-2">
+                              <span className="inline-flex items-center gap-2 whitespace-nowrap">
                                 <span>הסתברות מותנית</span>
-                                <span dir="ltr"><InlineMath math="P(A \\mid B)" /></span>
+                                <InlineMathToken math="P(A \\mid B)" />
                               </span>
                             </h3>
                             <p className="max-w-md text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
-                              חישוב <InlineMath math="P(A \\mid B)" /> כאשר מאורע <InlineMath math="A" /> נבחן רק בתוך מסגרת <InlineMath math="B" />.
+                              חישוב <InlineMathToken math="P(A \\mid B)" className="mx-1" /> כאשר מאורע <InlineMathToken math="A" className="mx-1" /> נבחן רק בתוך מסגרת <InlineMathToken math="B" className="mx-1" />.
                             </p>
                           </div>
                           <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
@@ -2406,9 +2415,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="space-y-4">
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
                             <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
-                              הגדרת מאורע <InlineMath math="B" />
+                              הגדרת מאורע <InlineMathToken math="B" className="mr-1" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMath math="B" />:</label>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMathToken math="B" className="mr-1" />:</label>
                             <select
                               value={condType}
                               onChange={e => setCondType(e.target.value as CondType)}
@@ -2423,7 +2432,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                             <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMath math="b_1" />:</label>
+                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
                               <input
                                 type="text"
                                 value={condX1Input}
@@ -2435,7 +2444,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             </div>
                             {condType === 'between' ? (
                               <div>
-                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMath math="b_2" />:</label>
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_2" className="mr-1" />:</label>
                                 <input
                                   type="text"
                                   value={condX2Input}
@@ -2450,9 +2459,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
                             <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
-                              הגדרת מאורע <InlineMath math="A" />
+                              הגדרת מאורע <InlineMathToken math="A" className="mr-1" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMath math="A" />:</label>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMathToken math="A" className="mr-1" />:</label>
                             <select
                               value={condTypeA}
                               onChange={e => setCondTypeA(e.target.value as CondType)}
