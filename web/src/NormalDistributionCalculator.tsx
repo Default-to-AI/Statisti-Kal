@@ -285,6 +285,69 @@ const InlineMathToken: React.FC<{ math: string; className?: string }> = ({ math,
   </span>
 );
 
+const CONDITIONAL_EVENT_OPTIONS: ReadonlyArray<{
+  value: CondType;
+  math: string;
+  note: string;
+}> = [
+  { value: 'below', math: 'X \\le v_1', note: 'זנב שמאלי' },
+  { value: 'above', math: 'X \\ge v_1', note: 'זנב ימני' },
+  { value: 'between', math: 'v_1 \\le X \\le v_2', note: 'תחום כלוא' },
+];
+
+function getConditionalEventMath(type: CondType, variablePrefix: 'a' | 'b'): string {
+  if (type === 'below') return `X \\le ${variablePrefix}_1`;
+  if (type === 'above') return `X \\ge ${variablePrefix}_1`;
+  return `${variablePrefix}_1 \\le X \\le ${variablePrefix}_2`;
+}
+
+const ConditionalEventPicker: React.FC<{
+  value: CondType;
+  onChange: (value: CondType) => void;
+  disabled?: boolean;
+  accentClass: string;
+  accentColor: string;
+  variablePrefix: 'a' | 'b';
+}> = ({
+  value,
+  onChange,
+  disabled = false,
+  accentClass,
+  accentColor,
+  variablePrefix,
+}) => (
+  <div className="grid gap-2 sm:grid-cols-3">
+    {CONDITIONAL_EVENT_OPTIONS.map((option) => {
+      const isActive = value === option.value;
+      const math = option.math.replaceAll('v', variablePrefix);
+
+      return (
+        <button
+          key={`${variablePrefix}-${option.value}`}
+          type="button"
+          onClick={() => onChange(option.value)}
+          disabled={disabled}
+          className={`rounded-lg border px-3 py-3 text-center transition-all ${
+            isActive
+              ? `${accentClass} shadow-[0_0_0_1px_currentColor]`
+              : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)]'
+          } ${disabled ? 'cursor-not-allowed opacity-60 grayscale-[0.15]' : ''}`}
+        >
+          <span className="block text-lg font-black">
+            <InlineMathToken math={math} />
+          </span>
+          <span
+            className="mt-1 block text-caption font-bold"
+            style={{ color: isActive ? accentColor : 'var(--color-text-secondary)' }}
+          >
+            {option.note}
+          </span>
+        </button>
+      );
+    })}
+  </div>
+);
+
 interface ParameterInputCellProps {
   watermark: string;
   colorClass: string;
@@ -2397,6 +2460,39 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                           ? 'border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
                           : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-60 grayscale-[0.15]'
                       }`}>
+                        <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/78 p-4">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <p className="text-body-sm font-black text-[var(--color-text-primary)]">נוסחת יסוד</p>
+                            <div className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-1 text-[var(--color-text-secondary)]">
+                              <InlineMathToken math="P(A \mid B)=\frac{P(A \cap B)}{P(B)}" />
+                            </div>
+                          </div>
+
+                          <div className="mt-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-3 text-center">
+                            <BlockMath math={'P(\\textcolor{#5C5CFF}{A}\\mid\\textcolor{#3FE0D0}{B})=\\frac{P(\\textcolor{#5C5CFF}{A}\\cap\\textcolor{#3FE0D0}{B})}{P(\\textcolor{#3FE0D0}{B})}'} />
+                          </div>
+
+                          <div className="mt-3 grid gap-3 md:grid-cols-2">
+                            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                              <p className="text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                                מונה: <InlineMathToken math="P(A \cap B)" className="mr-1" />
+                              </p>
+                              <p className="mt-1 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                                השטח המשותף שבו <InlineMathToken math="A" className="mx-1 text-[var(--color-accent-cobalt)]" /> וגם <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" /> מתקיימים יחד.
+                              </p>
+                            </div>
+
+                            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                              <p className="text-body-sm font-black text-[var(--color-accent-teal)]">
+                                מכנה: <InlineMathToken math="P(B)" className="mr-1" />
+                              </p>
+                              <p className="mt-1 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                                זהו עולם התנאי החדש: מחשבים הכול רק בתוך המסגרת של <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" />.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+
                         <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                           <div className="text-right">
                             <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
@@ -2414,36 +2510,36 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                         <div className="space-y-4">
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
-                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-teal)]">
                               הגדרת מאורע <InlineMathToken math="B" className="mr-1" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMathToken math="B" className="mr-1" />:</label>
-                            <select
+                            <label className="mb-2 block text-heading-label text-[var(--color-text-secondary)]">צורת המאורע <InlineMathToken math="B" className="mr-1" />:</label>
+                            <ConditionalEventPicker
                               value={condType}
-                              onChange={e => setCondType(e.target.value as CondType)}
+                              onChange={setCondType}
                               disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-                            >
-                              <option value="below">X ≤ b₁</option>
-                              <option value="above">X ≥ b₁</option>
-                              <option value="between">b₁ ≤ X ≤ b₂</option>
-                            </select>
+                              accentClass="border-[var(--color-accent-teal)]/60 bg-[linear-gradient(135deg,rgba(63,224,208,0.16),rgba(63,224,208,0.05))] text-[var(--color-accent-teal)]"
+                              accentColor="var(--color-accent-teal)"
+                              variablePrefix="b"
+                            />
                           </div>
 
-                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-                            <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
-                              <input
-                                type="text"
-                                value={condX1Input}
-                                onChange={e => handleCondX1Change(e.target.value)}
-                                disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-                              />
-                              {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
-                            </div>
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:[direction:ltr]">
                             {condType === 'between' ? (
-                              <div>
+                              <div dir="rtl">
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
+                                <input
+                                  type="text"
+                                  value={condX1Input}
+                                  onChange={e => handleCondX1Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
+                              </div>
+                            ) : null}
+                            {condType === 'between' ? (
+                              <div dir="rtl">
                                 <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_2" className="mr-1" />:</label>
                                 <input
                                   type="text"
@@ -2454,24 +2550,52 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                                 />
                                 {mode === 'forward' && forwardType === 'conditional' && errors.condX2 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p> : null}
                               </div>
-                            ) : null}
+                            ) : (
+                              <div dir="rtl" className="md:col-span-2">
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
+                                <input
+                                  type="text"
+                                  value={condX1Input}
+                                  onChange={e => handleCondX1Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
+                              </div>
+                            )}
                           </div>
 
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
-                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
                               הגדרת מאורע <InlineMathToken math="A" className="mr-1" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMathToken math="A" className="mr-1" />:</label>
-                            <select
+                            <label className="mb-2 block text-heading-label text-[var(--color-text-secondary)]">צורת המאורע <InlineMathToken math="A" className="mr-1" />:</label>
+                            <ConditionalEventPicker
                               value={condTypeA}
-                              onChange={e => setCondTypeA(e.target.value as CondType)}
+                              onChange={setCondTypeA}
                               disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
-                            >
-                              <option value="below">X ≤ a₁</option>
-                              <option value="above">X ≥ a₁</option>
-                              <option value="between">a₁ ≤ X ≤ a₂</option>
-                            </select>
+                              accentClass="border-[var(--color-accent-cobalt)]/60 bg-[linear-gradient(135deg,rgba(92,92,255,0.16),rgba(92,92,255,0.05))] text-[var(--color-accent-cobalt)]"
+                              accentColor="var(--color-accent-cobalt)"
+                              variablePrefix="a"
+                            />
+                          </div>
+
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                            <p className="text-body-sm font-black text-[var(--color-text-primary)]">
+                              מאורע פעיל:
+                              <span className="mr-2 text-[var(--color-accent-cobalt)]">
+                                <InlineMathToken math={`A = \\left\\{${getConditionalEventMath(condTypeA, 'a')}\\right\\}`} />
+                              </span>
+                            </p>
+                            <p className="mt-1 text-body-sm font-black text-[var(--color-text-primary)]">
+                              תנאי רקע:
+                              <span className="mr-2 text-[var(--color-accent-teal)]">
+                                <InlineMathToken math={`B = \\left\\{${getConditionalEventMath(condType, 'b')}\\right\\}`} />
+                              </span>
+                            </p>
+                            <p className="mt-2 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                              לכן מחשבים קודם את <InlineMathToken math="A \cap B" className="mx-1 text-[var(--color-accent-cobalt)]" /> בתוך התחום של <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" />, ואז מחלקים ב־<InlineMathToken math="P(B)" className="mx-1 text-[var(--color-accent-teal)]" />.
+                            </p>
                           </div>
                         </div>
                       </div>
