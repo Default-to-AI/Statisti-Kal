@@ -2266,8 +2266,8 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                 </div>
               </section>
 
-              <div className="grid grid-cols-1 gap-6 xl:grid-cols-12 items-start">
-                <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right xl:col-span-6">
+              <div className="space-y-6">
+                <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right">
                   <div className="absolute top-0 right-0 h-1 w-full bg-[var(--color-accent-cobalt-bg-hover)]" />
 
                   <div className="relative z-10 space-y-5">
@@ -2280,7 +2280,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                           הגדרות ופרמטרי ההתפלגות
                         </h2>
                         <p className="text-body-sm text-[var(--color-text-secondary)]">
-                          אותה מעטפת מודרנית של דף ההשערות, עבור קלטים, תחומים ואחוזונים.
+                          קלט נקי יותר: בלי עמודת הגדרת חישוב מיותרת, ועם אזור פרמטרים שמפנה מקום למה שבאמת צריך.
                         </p>
                       </div>
                     </div>
@@ -2289,7 +2289,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       <table className="w-full border-collapse border-spacing-0">
                         <thead>
                           <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                            <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                            <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
                               <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
                                 <InlineMath math="N" />
                               </div>
@@ -2297,20 +2297,12 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                                 <span>פרמטרי ההתפלגות</span>
                               </div>
                             </th>
-                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
                               <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
                                 <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
                               </div>
                               <div className="relative z-10">
                                 {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
-                              </div>
-                            </th>
-                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
-                                <InlineMath math={mode === 'forward' ? '\\Phi' : 'Z_x'} />
-                              </div>
-                              <div className="relative z-10">
-                                {mode === 'forward' ? 'הגדרת חישוב' : 'הגדרת התאמה'}
                               </div>
                             </th>
                           </tr>
@@ -2340,35 +2332,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               error={mode === 'forward' ? errors.x1 : errors.inverseProb}
                               placeholder={mode === 'inverse' ? '0.95' : ''}
                             />
-                            <ParameterSelectCell
-                              watermark={mode === 'forward' ? '\\Phi' : 'Z'}
-                              colorClass="text-[var(--color-accent-teal)]"
-                              label={mode === 'forward'
-                                ? <><span>סוג חישוב (</span><InlineMath math="\Phi" /><span>):</span></>
-                                : <><span>סוג התאמה (</span><InlineMath math="Z_x" /><span>):</span></>}
-                              tooltip={mode === 'forward'
-                                ? 'בחר אם מחפשים שטח משמאל, מימין, בין שני גבולות, מחוץ לשני גבולות, או הסתברות מותנית'
-                                : 'בחר אם האחוזון מתורגם לגבול שמאלי, לגבול ימני, לטווח מרכזי או לשני זנבות'}
-                              value={mode === 'forward' ? forwardType : inverseType}
-                              onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue as CalcType) : setInverseType(nextValue as CalcType)}
-                            >
-                              {mode === 'forward' ? (
-                                <>
-                                  <option value="below">מתחת לערך (הסתברות מצטברת משמאל)</option>
-                                  <option value="above">מעל לערך (הסתברות מצטברת מימין)</option>
-                                  <option value="between">בין שני ערכים כלואים</option>
-                                  <option value="outside">מחוץ לשני ערכים (בשני הזנבות)</option>
-                                  <option value="conditional">הסתברות מותנית P(A|B)</option>
-                                </>
-                              ) : (
-                                <>
-                                  <option value="below">שטח מצטבר משמאל (גבול עליון X)</option>
-                                  <option value="above">שטח מצטבר מימין (גבול תחתון X)</option>
-                                  <option value="between">שטח כלוא סימטרי במרכז</option>
-                                  <option value="outside">שטח מפוצל סימטרי בשני הזנבות</option>
-                                </>
-                              )}
-                            </ParameterSelectCell>
                           </tr>
                           <tr>
                             <ParameterInputCell
@@ -2399,50 +2362,46 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               readOnly={!(hasSecondaryBoundInput && mode === 'forward')}
                               statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
                             />
-                            <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
-                              <CellWatermark math="\\circlearrowleft" colorClass="text-[var(--color-accent-teal)]" />
-                              <div className="relative z-10 flex items-center justify-center gap-3 w-full">
-                                <span className="w-30 sm:w-36 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1">
-                                  איפוס ערכים:
-                                </span>
-                                <button
-                                  onClick={resetNormalCalculator}
-                                  className="w-36 sm:w-44 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-raised)]"
-                                >
-                                  <span className="inline-flex items-center justify-center gap-2">
-                                    <RefreshCw size={14} />
-                                    אפס ערכים ל-IQ הסטנדרטי
-                                  </span>
-                                </button>
-                              </div>
-                            </td>
                           </tr>
                         </tbody>
                       </table>
                     </div>
 
-                    <div className="tour-step-test-type flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
-                      <span className="text-sm font-black text-[var(--color-text-primary)] text-right shrink-0">הזרימה:</span>
-                      <div className="w-full">
-                        <ModeTabs
-                          tabs={CALCULATOR_MODE_TABS}
-                          activeTab={calculatorMode}
-                          onChange={handleCalculatorModeChange}
-                          orientation="horizontal"
-                          ariaLabel="מצבי מחשבון נורמלי"
-                        />
+                    <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                      <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+                        <div className="flex-1">
+                          <span className="mb-2 block text-sm font-black text-[var(--color-text-primary)] text-right">הזרימה:</span>
+                          <div className="w-full">
+                            <ModeTabs
+                              tabs={CALCULATOR_MODE_TABS}
+                              activeTab={calculatorMode}
+                              onChange={handleCalculatorModeChange}
+                              orientation="horizontal"
+                              ariaLabel="מצבי מחשבון נורמלי"
+                            />
+                          </div>
+                        </div>
+                        <div className="flex justify-end">
+                          <button
+                            onClick={resetNormalCalculator}
+                            className="inline-flex min-w-52 items-center justify-center gap-2 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
+                          >
+                            <RefreshCw size={14} />
+                            אפס ערכים ל-IQ הסטנדרטי
+                          </button>
+                        </div>
                       </div>
-                    </div>
 
-                    <CalculationVariantPicker
-                      title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
-                      subtitle={mode === 'forward'
-                        ? 'כל מצבי ההסתברות מוצגים כאן ישירות: שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
-                        : 'כל מצבי האחוזון מרוכזים כאן: שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
-                      value={mode === 'forward' ? forwardType : inverseType}
-                      onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
-                      options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
-                    />
+                      <CalculationVariantPicker
+                        title={mode === 'forward' ? 'אפשרויות חישוב הסתברות' : 'אפשרויות התאמת אחוזון'}
+                        subtitle={mode === 'forward'
+                          ? 'כל מצבי ההסתברות מוצגים כאן ישירות: שמאל, ימין, בין ערכים, מחוץ לתחום והסתברות מותנית.'
+                          : 'כל מצבי האחוזון מרוכזים כאן: שמאלי, ימני, טווח מרכזי וטווח זנבות.'}
+                        value={mode === 'forward' ? forwardType : inverseType}
+                        onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
+                        options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
+                      />
+                    </div>
 
                     {mode === 'forward' && forwardType === 'conditional' ? (
                       <div className="space-y-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-4">
@@ -2464,7 +2423,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                           </select>
                         </div>
 
-                        <div className="grid grid-cols-2 gap-3">
+                        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                           <div>
                             <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
                             <input
@@ -2511,38 +2470,40 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                   </div>
                 </CalculatorSidebar>
 
-                <div className="space-y-6 xl:col-span-6">
-                  <ChartWrapper
-                    title={chartTitle}
-                    legend={chartLegend}
-                    badge={chartBadge}
-                    className="curve-glow"
-                    height={240}
-                    isEmpty={!isValid}
-                    emptyState={(
-                      <EmptyState
-                        icon={<AlertCircle className="h-8 w-8" />}
-                        tone="error"
-                        title="אין גרף להצגה"
-                        message="הזן פרמטרים תקינים כדי לצייר מחדש את עקומת הפעמון של גאוס."
+                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 xl:[direction:ltr]">
+                  <div dir="rtl">
+                    <ChartWrapper
+                      title={chartTitle}
+                      legend={chartLegend}
+                      badge={chartBadge}
+                      className="curve-glow"
+                      height={300}
+                      isEmpty={!isValid}
+                      emptyState={(
+                        <EmptyState
+                          icon={<AlertCircle className="h-8 w-8" />}
+                          tone="error"
+                          title="אין גרף להצגה"
+                          message="הזן פרמטרים תקינים כדי לצייר מחדש את עקומת הפעמון של גאוס."
+                        />
+                      )}
+                    >
+                      <NormalChart
+                        mean={mean}
+                        stdDev={stdDev}
+                        type={mode === 'forward' ? forwardType : inverseType}
+                        x1={chartX1}
+                        x2={chartX2}
+                        condType={condType}
+                        condTypeA={condTypeA}
+                        condX1={condX1}
+                        condX2={condX2}
+                        mode={mode}
                       />
-                    )}
-                  >
-                    <NormalChart
-                      mean={mean}
-                      stdDev={stdDev}
-                      type={mode === 'forward' ? forwardType : inverseType}
-                      x1={chartX1}
-                      x2={chartX2}
-                      condType={condType}
-                      condTypeA={condTypeA}
-                      condX1={condX1}
-                      condX2={condX2}
-                      mode={mode}
-                    />
-                  </ChartWrapper>
+                    </ChartWrapper>
+                  </div>
 
-                  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6 text-right shadow-md">
+                  <div dir="rtl" className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6 text-right shadow-md">
                     <SectionHeader
                       title="דרך נוסחתית ואופן פתרון הדרגתי"
                       description="אותו מסלול הסבר אקדמי, עם דגש על סדר שלבים, נוסחאות ותוצאה סופית ברורה."
