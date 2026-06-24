@@ -47,6 +47,7 @@ import {
   ChartWrapper,
   EmptyState,
   Heading,
+  InputTooltip,
   ModeTabs,
   SectionHeader,
   type ModeTab,
@@ -245,6 +246,121 @@ function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; descripti
     badge: 'Percentile Flow',
   };
 }
+
+interface CellWatermarkProps {
+  math: string;
+  colorClass: string;
+}
+
+const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => (
+  <div
+    className={`absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono ${colorClass}`}
+    dir="ltr"
+    aria-hidden="true"
+  >
+    <InlineMath math={math} />
+  </div>
+);
+
+interface ParameterInputCellProps {
+  watermark: string;
+  colorClass: string;
+  label: React.ReactNode;
+  tooltip: React.ReactNode;
+  value: string;
+  onChange?: (value: string) => void;
+  error?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  placeholder?: string;
+  statusText?: string;
+}
+
+const ParameterInputCell: React.FC<ParameterInputCellProps> = ({
+  watermark,
+  colorClass,
+  label,
+  tooltip,
+  value,
+  onChange,
+  error,
+  disabled = false,
+  readOnly = false,
+  placeholder = '',
+  statusText,
+}) => (
+  <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] ${disabled ? 'opacity-55' : ''}`}>
+    <CellWatermark math={watermark} colorClass={colorClass} />
+    <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+      <InputTooltip content={tooltip}>
+        <span className={`w-30 sm:w-36 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]/90'}`}>
+          {label}
+        </span>
+      </InputTooltip>
+      <div className="w-20 sm:w-24 shrink-0 relative">
+        <input
+          type="text"
+          value={value}
+          onChange={onChange ? (event) => onChange(event.target.value) : undefined}
+          disabled={disabled}
+          readOnly={readOnly}
+          placeholder={placeholder}
+          className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${disabled ? 'cursor-not-allowed opacity-50 border-transparent bg-[var(--color-surface-raised)]/5' : ''} ${readOnly ? 'cursor-default' : ''} ${!disabled && error ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : !disabled ? 'border-[var(--color-border)]' : ''}`}
+          dir="ltr"
+        />
+        {error ? (
+          <div className="absolute top-full left-1/2 z-50 mt-2 flex -translate-x-1/2 items-center justify-center whitespace-nowrap rounded bg-[var(--color-error)] px-2.5 py-1 text-xs font-bold text-white shadow-lg pointer-events-none">
+            <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-[var(--color-error)]" />
+            <span className="relative z-10">{error}</span>
+          </div>
+        ) : null}
+        {!error && statusText ? (
+          <p className="mt-1 text-center text-caption font-bold text-[var(--color-text-secondary)]">{statusText}</p>
+        ) : null}
+      </div>
+    </div>
+  </td>
+);
+
+interface ParameterSelectCellProps {
+  watermark: string;
+  colorClass: string;
+  label: React.ReactNode;
+  tooltip: React.ReactNode;
+  value: string;
+  onChange: (value: string) => void;
+  children: React.ReactNode;
+}
+
+const ParameterSelectCell: React.FC<ParameterSelectCellProps> = ({
+  watermark,
+  colorClass,
+  label,
+  tooltip,
+  value,
+  onChange,
+  children,
+}) => (
+  <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
+    <CellWatermark math={watermark} colorClass={colorClass} />
+    <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+      <InputTooltip content={tooltip}>
+        <span className="w-30 sm:w-36 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
+          {label}
+        </span>
+      </InputTooltip>
+      <div className="w-36 sm:w-44 shrink-0">
+        <select
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 text-sm font-bold text-[var(--color-text-primary)] outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20"
+        >
+          {children}
+        </select>
+      </div>
+    </div>
+  </td>
+);
 
 // --- Components ---
 
@@ -674,37 +790,111 @@ const NormalChart: React.FC<{
 
 const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
   const isResult = text.startsWith('תוצאה סופית:');
-  const parts = text.split(/\[MATH\](.*?)\[\/MATH\]/g);
+  const stepMatch = text.match(/^שלב\s+(\d+):\s*(.*)$/);
+  const isStepTitle = Boolean(stepMatch);
+  const stepNumber = stepMatch?.[1] ?? null;
+  const normalizedText = stepMatch?.[2] ?? text;
+  const isPureMath = /^\[MATH\].*\[\/MATH\]$/.test(normalizedText.trim());
+  const parts = normalizedText.split(/\[MATH\](.*?)\[\/MATH\]/g);
+  const blockTone = isResult
+    ? 'result'
+    : isPureMath
+      ? 'calculation'
+      : isStepTitle
+        ? 'formula'
+        : 'note';
+  const shellClass = blockTone === 'result'
+    ? 'border-[var(--color-accent-brass)]/45 bg-[var(--color-accent-brass)]/10'
+    : blockTone === 'calculation'
+      ? 'border-[var(--color-accent-cobalt)]/35 bg-[var(--color-accent-cobalt)]/8'
+      : blockTone === 'formula'
+        ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-surface)]'
+        : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]';
+  const railClass = blockTone === 'result'
+    ? 'bg-[var(--color-accent-brass)]'
+    : blockTone === 'calculation'
+      ? 'bg-[var(--color-accent-cobalt)]'
+      : blockTone === 'formula'
+        ? 'bg-[var(--color-accent-teal)]'
+        : 'bg-[var(--color-border)]';
+  const iconColorClass = blockTone === 'result'
+    ? 'text-[var(--color-accent-brass)]/65'
+    : blockTone === 'calculation'
+      ? 'text-[var(--color-accent-cobalt)]/65'
+      : blockTone === 'formula'
+        ? 'text-[var(--color-accent-teal)]/65'
+        : 'text-[var(--color-text-secondary)]/65';
 
   return (
-    <div className={`text-sm md:text-base leading-relaxed w-full transition-all p-4 sm:p-5 rounded-lg border shadow-sm ${isResult
-        ? 'font-bold text-[var(--color-accent-brass)] bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]'
-        : 'text-[var(--color-text-primary)] bg-[var(--color-surface-raised)] border-[var(--color-border)]'
-      }`}>
-      {parts.map((part, i) => {
-        if (i % 2 === 1) {
-          const isOnlyMath = parts.length === 3 && parts[0] === "" && parts[2] === "";
-          const hasFraction = part.includes('\\frac');
-          const hasPercentage = part.includes('%') || part.includes('\\%');
-          const hasEquals = part.includes('=');
-          const shouldBeBlockPoint = (hasFraction || (isOnlyMath && hasEquals)) && !hasPercentage;
+    <div className={`overflow-hidden rounded-lg border shadow-sm ${shellClass}`}>
+      <div className="flex items-stretch">
+        <div className={`w-1 shrink-0 ${railClass}`} aria-hidden="true" />
+        <div className="flex w-full items-start gap-4 p-4 sm:p-5">
+          <div className={`hidden shrink-0 pt-1 sm:flex ${iconColorClass}`}>
+            {blockTone === 'result' ? (
+              <Award size={30} strokeWidth={1.4} />
+            ) : blockTone === 'calculation' ? (
+              <Calculator size={30} strokeWidth={1.4} />
+            ) : (
+              <BookOpen size={30} strokeWidth={1.4} />
+            )}
+          </div>
 
-          if (shouldBeBlockPoint) {
-            return (
-              <div
-                key={i}
-                className="my-3 text-center py-3 px-2 rounded-lg border shadow-sm overflow-x-auto bg-[var(--color-surface-raised)] border-[var(--color-border)]"
-                dir="ltr"
-              >
-                <BlockMath math={part} />
+          <div className="min-w-0 flex-1 space-y-3 text-[var(--color-text-primary)]">
+            {isStepTitle ? (
+              <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border)]/80 pb-2">
+                <span className="inline-flex min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 py-1 text-caption font-black text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
+                  {stepNumber}
+                </span>
+                <span className="text-body-base font-black text-[var(--color-text-primary)]">
+                  שלב {stepNumber}
+                </span>
               </div>
-            );
-          }
-          return <span key={i} dir="ltr" className="inline-block mx-1 font-bold whitespace-nowrap"><InlineMath math={part} /></span>;
-        }
-        if (!part && parts.length > 1) return null;
-        return <span key={i} className="align-middle font-sans font-medium">{part}</span>;
-      })}
+            ) : null}
+
+            <div className={`space-y-3 text-sm md:text-base leading-relaxed ${isResult ? 'font-bold text-[var(--color-accent-brass)]' : 'text-[var(--color-text-primary)]'}`}>
+              {parts.map((part, i) => {
+                if (i % 2 === 1) {
+                  const isOnlyMath = parts.length === 3 && parts[0] === '' && parts[2] === '';
+                  const hasFraction = part.includes('\\frac');
+                  const hasPercentage = part.includes('%') || part.includes('\\%');
+                  const hasEquals = part.includes('=');
+                  const shouldBeBlockPoint = (hasFraction || (isOnlyMath && hasEquals)) && !hasPercentage;
+
+                  if (shouldBeBlockPoint) {
+                    return (
+                      <div
+                        key={i}
+                        className={`my-2 overflow-x-auto rounded-lg border px-4 py-4 text-center shadow-sm ${blockTone === 'result'
+                          ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-accent-brass)]/8'
+                          : 'border-[var(--color-accent-cobalt)]/30 bg-[var(--color-accent-cobalt)]/6'
+                        }`}
+                        dir="ltr"
+                      >
+                        <BlockMath math={part} />
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <span key={i} dir="ltr" className="mx-1 inline-block whitespace-nowrap font-bold">
+                      <InlineMath math={part} />
+                    </span>
+                  );
+                }
+
+                if (!part && parts.length > 1) return null;
+
+                return (
+                  <span key={i} className={`align-middle font-sans ${isResult ? 'font-bold' : 'font-medium'}`}>
+                    {part}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -1792,6 +1982,45 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
   const calculatorMode = mode === 'inverse' ? 'inverse' : 'forward';
   const heroCopy = getCalculatorHeroCopy(calculatorMode);
+  const hasSecondaryBoundInput =
+    mode === 'forward'
+      ? forwardType === 'between' || forwardType === 'outside' || (forwardType === 'conditional' && condTypeA === 'between')
+      : inverseType === 'between' || inverseType === 'outside';
+  const secondaryInputLabel =
+    mode === 'forward'
+      ? forwardType === 'conditional'
+        ? 'ערך מאורע a₂:'
+        : 'גבול תחום עליון (X₂):'
+      : inverseType === 'between'
+        ? 'גבול עליון יעד (X₂):'
+        : 'גבול זנב עליון (X₂):';
+  const secondaryInputValue =
+    mode === 'forward'
+      ? x2Input
+      : calculation && calculation.z2 !== undefined
+        ? (mean + calculation.z2 * stdDev).toFixed(2)
+        : '';
+
+  const resetNormalCalculator = () => {
+    setMean(100);
+    setMeanInput('100');
+    setStdDev(15);
+    setStdDevInput('15');
+    setX1(115);
+    setX1Input('115');
+    setX2(125);
+    setX2Input('125');
+    setInverseProb(0.95);
+    setInverseProbInput('0.95');
+    setForwardType('below');
+    setInverseType('below');
+    setCondType('above');
+    setCondTypeA('below');
+    setCondX1(110);
+    setCondX1Input('110');
+    setCondX2(120);
+    setCondX2Input('120');
+  };
 
   const handleCalculatorModeChange = (nextMode: CalculatorMode) => {
     if (onNavigate) {
@@ -1956,15 +2185,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                     </div>
                   </div>
 
-                  <div className="max-w-xl">
-                    <ModeTabs
-                      tabs={CALCULATOR_MODE_TABS}
-                      activeTab={calculatorMode}
-                      onChange={handleCalculatorModeChange}
-                      orientation="horizontal"
-                      ariaLabel="מצבי מחשבון נורמלי"
-                    />
-                  </div>
                 </div>
               </section>
 
@@ -1987,200 +2207,219 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       </div>
                     </div>
 
-                    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-                      <div>
-                        <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">תוחלת המבוקשת (μ):</label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            value={meanInput}
-                            onChange={e => handleMeanChange(e.target.value)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          />
-                          {errors.mean && <p className="mt-1 text-caption font-bold text-[var(--color-error)]">{errors.mean}</p>}
-                        </div>
-                      </div>
+                    <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
+                      <table className="w-full border-collapse border-spacing-0">
+                        <thead>
+                          <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+                            <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
+                                <InlineMath math="N" />
+                              </div>
+                              <div className="relative z-10 flex items-center justify-center gap-1.5">
+                                <span>פרמטרי ההתפלגות</span>
+                              </div>
+                            </th>
+                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
+                                <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
+                              </div>
+                              <div className="relative z-10">
+                                {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
+                              </div>
+                            </th>
+                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
+                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
+                                <InlineMath math={mode === 'forward' ? '\\Phi' : 'Z_x'} />
+                              </div>
+                              <div className="relative z-10">
+                                {mode === 'forward' ? 'הגדרת חישוב' : 'הגדרת התאמה'}
+                              </div>
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr className="border-b border-[var(--color-border)]">
+                            <ParameterInputCell
+                              watermark="\mu"
+                              colorClass="text-[var(--color-accent-cobalt)]"
+                              label={<><span>תוחלת (</span><InlineMath math="\mu" /><span>):</span></>}
+                              tooltip="תוחלת ההתפלגות הנורמלית שממנה מתחילים את כל החישובים"
+                              value={meanInput}
+                              onChange={handleMeanChange}
+                              error={errors.mean}
+                            />
+                            <ParameterInputCell
+                              watermark={mode === 'forward' ? 'X_1' : 'p'}
+                              colorClass="text-[var(--color-accent-brass)]"
+                              label={mode === 'forward'
+                                ? <><span>{forwardType === 'conditional' ? 'ערך מאורע a₁' : forwardType === 'between' || forwardType === 'outside' ? 'גבול תחתון' : 'ערך חיתוך'} (</span><InlineMath math="X_1" /><span>):</span></>
+                                : <><span>הסתברות יעד (</span><InlineMath math="p" /><span>):</span></>}
+                              tooltip={mode === 'forward'
+                                ? 'הערך המרכזי שמגדיר את נקודת החיתוך או את תחילת התחום המבוקש'
+                                : 'השטח המצטבר המבוקש שעל פיו יימצא ערך X או טווח הערכים המתאים'}
+                              value={mode === 'forward' ? x1Input : inverseProbInput}
+                              onChange={mode === 'forward' ? handleX1Change : handleInverseProbChange}
+                              error={mode === 'forward' ? errors.x1 : errors.inverseProb}
+                              placeholder={mode === 'inverse' ? '0.95' : ''}
+                            />
+                            <ParameterSelectCell
+                              watermark={mode === 'forward' ? '\\Phi' : 'Z'}
+                              colorClass="text-[var(--color-accent-teal)]"
+                              label={mode === 'forward'
+                                ? <><span>סוג חישוב (</span><InlineMath math="\Phi" /><span>):</span></>
+                                : <><span>סוג התאמה (</span><InlineMath math="Z_x" /><span>):</span></>}
+                              tooltip={mode === 'forward'
+                                ? 'בחר אם מחפשים שטח משמאל, מימין, בין שני גבולות, מחוץ לשני גבולות, או הסתברות מותנית'
+                                : 'בחר אם האחוזון מתורגם לגבול שמאלי, לגבול ימני, לטווח מרכזי או לשני זנבות'}
+                              value={mode === 'forward' ? forwardType : inverseType}
+                              onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue as CalcType) : setInverseType(nextValue as CalcType)}
+                            >
+                              {mode === 'forward' ? (
+                                <>
+                                  <option value="below">מתחת לערך (הסתברות מצטברת משמאל)</option>
+                                  <option value="above">מעל לערך (הסתברות מצטברת מימין)</option>
+                                  <option value="between">בין שני ערכים כלואים</option>
+                                  <option value="outside">מחוץ לשני ערכים (בשני הזנבות)</option>
+                                  <option value="conditional">הסתברות מותנית P(A|B)</option>
+                                </>
+                              ) : (
+                                <>
+                                  <option value="below">שטח מצטבר משמאל (גבול עליון X)</option>
+                                  <option value="above">שטח מצטבר מימין (גבול תחתון X)</option>
+                                  <option value="between">שטח כלוא סימטרי במרכז</option>
+                                  <option value="outside">שטח מפוצל סימטרי בשני הזנבות</option>
+                                </>
+                              )}
+                            </ParameterSelectCell>
+                          </tr>
+                          <tr>
+                            <ParameterInputCell
+                              watermark="\sigma"
+                              colorClass="text-[var(--color-accent-cobalt)]"
+                              label={<><span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span></>}
+                              tooltip="סטיית התקן של ההתפלגות הנורמלית, שקובעת את רוחב עקומת הפעמון"
+                              value={stdDevInput}
+                              onChange={handleStdDevChange}
+                              error={errors.stdDev}
+                            />
+                            <ParameterInputCell
+                              watermark={hasSecondaryBoundInput ? 'X_2' : mode === 'forward' ? 'Z_1' : 'X'}
+                              colorClass="text-[var(--color-accent-brass)]"
+                              label={hasSecondaryBoundInput
+                                ? <><span>{secondaryInputLabel.replace(':', '')} (</span><InlineMath math="X_2" /><span>):</span></>
+                                : mode === 'forward'
+                                  ? <><span>ציון תקן נגזר (</span><InlineMath math="Z_1" /><span>):</span></>
+                                  : <><span>ערך יעד נוכחי (</span><InlineMath math="X" /><span>):</span></>}
+                              tooltip={hasSecondaryBoundInput
+                                ? 'כאשר יש שני גבולות, כאן מזינים או מציגים את הגבול השני של התחום'
+                                : mode === 'forward'
+                                  ? 'במצבים חד-גבוליים מוצג כאן ציון התקן הנגזר מהקלט הנוכחי'
+                                  : 'במצבי אחוזון חד-גבוליים זהו ערך X המחושב עבור ההסתברות שנבחרה'}
+                              value={hasSecondaryBoundInput ? secondaryInputValue : mode === 'forward' ? (isValid ? ((x1 - mean) / stdDev).toFixed(2) : '') : (calculation?.calculatedX?.toFixed(2) ?? '')}
+                              onChange={hasSecondaryBoundInput && mode === 'forward' ? handleX2Change : undefined}
+                              error={hasSecondaryBoundInput && mode === 'forward' ? errors.x2 : undefined}
+                              readOnly={!(hasSecondaryBoundInput && mode === 'forward')}
+                              statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
+                            />
+                            <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
+                              <CellWatermark math="\\circlearrowleft" colorClass="text-[var(--color-accent-teal)]" />
+                              <div className="relative z-10 flex items-center justify-center gap-3 w-full">
+                                <span className="w-30 sm:w-36 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1">
+                                  איפוס ערכים:
+                                </span>
+                                <button
+                                  onClick={resetNormalCalculator}
+                                  className="w-36 sm:w-44 rounded-sm border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface-raised)]"
+                                >
+                                  <span className="inline-flex items-center justify-center gap-2">
+                                    <RefreshCw size={14} />
+                                    אפס ערכים ל-IQ הסטנדרטי
+                                  </span>
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
 
-                      <div>
-                        <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">סטיית תקן (σ):</label>
-                        <div className="relative">
-                          <input
-                            type="text"
-                            value={stdDevInput}
-                            onChange={e => handleStdDevChange(e.target.value)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          />
-                          {errors.stdDev && <p className="mt-1 text-caption font-bold text-[var(--color-error)]">{errors.stdDev}</p>}
-                        </div>
+                    <div className="tour-step-test-type flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
+                      <span className="text-sm font-black text-[var(--color-text-primary)] text-right shrink-0">הזרימה:</span>
+                      <div className="w-full">
+                        <ModeTabs
+                          tabs={CALCULATOR_MODE_TABS}
+                          activeTab={calculatorMode}
+                          onChange={handleCalculatorModeChange}
+                          orientation="horizontal"
+                          ariaLabel="מצבי מחשבון נורמלי"
+                        />
                       </div>
                     </div>
 
-                    {mode === 'forward' ? (
-                      <div className="space-y-4 border-t border-[var(--color-border)] pt-4">
+                    {mode === 'forward' && forwardType === 'conditional' ? (
+                      <div className="space-y-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-4">
                         <div>
-                          <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">סוג חישוב השטח:</label>
+                          <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                            הגדרת מאורע B ברקע (התנאי)
+                          </p>
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
                           <select
-                            value={forwardType}
-                            onChange={e => setForwardType(e.target.value as CalcType)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-bold text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                            value={condType}
+                            onChange={e => setCondType(e.target.value as CondType)}
+                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                           >
-                            <option value="below">מתחת לערך (הסתברות מצטברת משמאל)</option>
-                            <option value="above">מעל לערך (הסתברות מצטברת מימין)</option>
-                            <option value="between">בין שני ערכים כלואים</option>
-                            <option value="outside">מחוץ לשני ערכים (בשני הזנבות)</option>
-                            <option value="conditional">הסתברות מותנית P(A|B)</option>
+                            <option value="below">X ≤ b₁</option>
+                            <option value="above">X ≥ b₁</option>
+                            <option value="between">b₁ ≤ X ≤ b₂</option>
                           </select>
                         </div>
 
-                        {forwardType === 'conditional' ? (
-                          <div className="space-y-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-4">
-                            <div>
-                              <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 text-body-sm font-black text-[var(--color-accent-cobalt)]">
-                                הגדרת מאורע B ברקע (התנאי)
-                              </p>
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
-                              <select
-                                value={condType}
-                                onChange={e => setCondType(e.target.value as CondType)}
-                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                              >
-                                <option value="below">X ≤ b₁</option>
-                                <option value="above">X ≥ b₁</option>
-                                <option value="between">b₁ ≤ X ≤ b₂</option>
-                              </select>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-3">
-                              <div>
-                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
-                                <input
-                                  type="text"
-                                  value={condX1Input}
-                                  onChange={e => handleCondX1Change(e.target.value)}
-                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                                />
-                                {errors.condX1 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p>}
-                              </div>
-                              {condType === 'between' && (
-                                <div>
-                                  <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₂:</label>
-                                  <input
-                                    type="text"
-                                    value={condX2Input}
-                                    onChange={e => handleCondX2Change(e.target.value)}
-                                    className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                                  />
-                                  {errors.condX2 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p>}
-                                </div>
-                              )}
-                            </div>
-
-                            <div>
-                              <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1 text-body-sm font-black text-[var(--color-accent-crimson)]">
-                                הגדרת מאורע A (ההסתברות מתוך B)
-                              </p>
-                            </div>
-                            <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
-                              <select
-                                value={condTypeA}
-                                onChange={e => setCondTypeA(e.target.value as CondType)}
-                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                              >
-                                <option value="below">X ≤ a₁</option>
-                                <option value="above">X ≥ a₁</option>
-                                <option value="between">a₁ ≤ X ≤ a₂</option>
-                              </select>
-                            </div>
-                          </div>
-                        ) : null}
-
-                        <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">
-                              {forwardType === 'between' || forwardType === 'outside'
-                                ? 'גבול תחום תחתון (X₁):'
-                                : forwardType === 'conditional'
-                                  ? 'ערך מאורע a₁:'
-                                  : 'ערך נקודת החיתוך (X):'}
-                            </label>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
                             <input
                               type="text"
-                              value={x1Input}
-                              onChange={e => handleX1Change(e.target.value)}
-                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                              value={condX1Input}
+                              onChange={e => handleCondX1Change(e.target.value)}
+                              className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                             />
-                            {errors.x1 && <p className="mt-1 text-caption font-bold text-[var(--color-error)]">{errors.x1}</p>}
+                            {errors.condX1 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p>}
                           </div>
-
-                          {(forwardType === 'between' || forwardType === 'outside' || (forwardType === 'conditional' && condTypeA === 'between')) && (
+                          {condType === 'between' ? (
                             <div>
-                              <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">
-                                {forwardType === 'conditional' ? 'ערך מאורע a₂:' : 'גבול תחום עליון (X₂):'}
-                              </label>
+                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₂:</label>
                               <input
                                 type="text"
-                                value={x2Input}
-                                onChange={e => handleX2Change(e.target.value)}
-                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                                value={condX2Input}
+                                onChange={e => handleCondX2Change(e.target.value)}
+                                className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                               />
-                              {errors.x2 && <p className="mt-1 text-caption font-bold text-[var(--color-error)]">{errors.x2}</p>}
+                              {errors.condX2 && <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p>}
                             </div>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="space-y-4 border-t border-[var(--color-border)] pt-4">
-                        <div>
-                          <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">הסתברות מצטברת נתונה (p):</label>
-                          <input
-                            type="text"
-                            value={inverseProbInput}
-                            onChange={e => handleInverseProbChange(e.target.value)}
-                            placeholder="לדוגמה: 0.95"
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          />
-                          {errors.inverseProb && <p className="mt-1 text-caption font-bold text-[var(--color-error)]">{errors.inverseProb}</p>}
+                          ) : null}
                         </div>
 
                         <div>
-                          <label className="mb-1 block text-xs font-black text-[var(--color-text-primary)]">סוג התאמת השטח:</label>
+                          <p className="border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1 text-body-sm font-black text-[var(--color-accent-crimson)]">
+                            הגדרת מאורע A (ההסתברות מתוך B)
+                          </p>
+                        </div>
+                        <div>
+                          <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
                           <select
-                            value={inverseType}
-                            onChange={e => setInverseType(e.target.value as CalcType)}
-                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-sm font-bold text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                            value={condTypeA}
+                            onChange={e => setCondTypeA(e.target.value as CondType)}
+                            className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
                           >
-                            <option value="below">שטח מצטבר משמאל (גבול עליון X)</option>
-                            <option value="above">שטח מצטבר מימין (גבול תחתון X)</option>
-                            <option value="between">שטח כלוא סימטרי במרכז</option>
-                            <option value="outside">שטח מפוצל סימטרי בשני הזנבות</option>
+                            <option value="below">X ≤ a₁</option>
+                            <option value="above">X ≥ a₁</option>
+                            <option value="between">a₁ ≤ X ≤ a₂</option>
                           </select>
                         </div>
                       </div>
-                    )}
-
-                    <div className="pt-2">
-                      <button
-                        onClick={() => {
-                          setMean(100);
-                          setMeanInput('100');
-                          setStdDev(15);
-                          setStdDevInput('15');
-                          setX1(115);
-                          setX1Input('115');
-                          setX2(125);
-                          setX2Input('125');
-                          setInverseProb(0.95);
-                          setInverseProbInput('0.95');
-                        }}
-                        className="flex w-full items-center justify-center gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-2.5 text-xs font-black text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)] hover:text-white"
-                      >
-                        <RefreshCw size={14} />
-                        אפס ערכים ל-IQ הסטנדרטי
-                      </button>
-                    </div>
+                    ) : null}
                   </div>
                 </CalculatorSidebar>
 
