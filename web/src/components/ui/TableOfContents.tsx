@@ -319,7 +319,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
                 אין סעיפים זמינים בעמוד זה
               </p>
             ) : (
-              <ul className="m-0 list-none space-y-1 p-0 text-[13px]">
+              <ul className="m-0 list-none space-y-1 p-0 text-body-xs">
                 {headings.map((heading) => {
                   const isActive = activeId === heading.id;
                   const isNested = heading.level >= 4;

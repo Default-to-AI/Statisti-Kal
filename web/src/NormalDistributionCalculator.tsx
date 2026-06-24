@@ -21,8 +21,11 @@ import {
   Sliders,
   X,
   Award,
-  TrendingUp,
-  Star
+  Star,
+  Percent,
+  Sigma,
+  Target,
+  Sparkles
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -37,9 +40,15 @@ import {
 
 import HypothesisTestingCalculator from './components/HypothesisTestingCalculator';
 import FormulaSheet from './components/FormulaSheet';
-import SiteFooter from './components/SiteFooter';
-import SiteHeader, { type SitePage } from './components/SiteHeader';
-import { PageLayout } from './components/ui';
+import { type SitePage } from './components/SiteHeader';
+import {
+  CalculatorSidebar,
+  ChartWrapper,
+  EmptyState,
+  Heading,
+  InputTooltip,
+  SectionHeader,
+} from './components/ui';
 
 // --- Math Utilities ---
 
@@ -204,6 +213,277 @@ interface NavigationTab {
   accent: NavAccent;
 }
 
+type CalculatorMode = Extract<CalcMode, 'forward' | 'inverse'>;
+
+function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; badge: string } {
+  if (mode === 'forward') {
+    return {
+      title: 'מחשבון הסתברות בהתפלגות נורמלית',
+      badge: 'Probability Flow',
+    };
+  }
+
+  return {
+    title: 'מחשבון אחוזונים וערכים קריטיים',
+    badge: 'Percentile Flow',
+  };
+}
+
+interface CellWatermarkProps {
+  math: string;
+  colorClass: string;
+}
+
+const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => (
+  <div
+    className={`absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono ${colorClass}`}
+    dir="ltr"
+    aria-hidden="true"
+  >
+    <InlineMath math={math} />
+  </div>
+);
+
+const InlineMathToken: React.FC<{ math: string; className?: string }> = ({ math, className = '' }) => (
+  <span
+    dir="ltr"
+    className={`inline-flex items-center whitespace-nowrap align-middle [unicode-bidi:isolate] ${className}`.trim()}
+  >
+    <InlineMath math={math} />
+  </span>
+);
+
+const CONDITIONAL_EVENT_OPTIONS: ReadonlyArray<{
+  value: CondType;
+  math: string;
+  note: string;
+}> = [
+  { value: 'below', math: 'X \\le v_1', note: 'זנב שמאלי' },
+  { value: 'above', math: 'X \\ge v_1', note: 'זנב ימני' },
+  { value: 'between', math: 'v_1 \\le X \\le v_2', note: 'תחום כלוא' },
+];
+
+function getConditionalEventMath(type: CondType, variablePrefix: 'a' | 'b'): string {
+  if (type === 'below') return `X \\le ${variablePrefix}_1`;
+  if (type === 'above') return `X \\ge ${variablePrefix}_1`;
+  return `${variablePrefix}_1 \\le X \\le ${variablePrefix}_2`;
+}
+
+const ConditionalEventPicker: React.FC<{
+  value: CondType;
+  onChange: (value: CondType) => void;
+  disabled?: boolean;
+  accentClass: string;
+  accentColor: string;
+  variablePrefix: 'a' | 'b';
+}> = ({
+  value,
+  onChange,
+  disabled = false,
+  accentClass,
+  accentColor,
+  variablePrefix,
+}) => (
+  <div className="grid gap-2 sm:grid-cols-3">
+    {CONDITIONAL_EVENT_OPTIONS.map((option) => {
+      const isActive = value === option.value;
+      const math = option.math.replaceAll('v', variablePrefix);
+
+      return (
+        <button
+          key={`${variablePrefix}-${option.value}`}
+          type="button"
+          onClick={() => onChange(option.value)}
+          disabled={disabled}
+          className={`rounded-lg border px-3 py-3 text-center transition-all ${
+            isActive
+              ? `${accentClass} shadow-[0_0_0_1px_currentColor]`
+              : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)]'
+          } ${disabled ? 'cursor-not-allowed opacity-60 grayscale-[0.15]' : ''}`}
+        >
+          <span className="block text-lg font-black">
+            <InlineMathToken math={math} />
+          </span>
+          <span
+            className="mt-1 block text-caption font-bold"
+            style={{ color: isActive ? accentColor : 'var(--color-text-secondary)' }}
+          >
+            {option.note}
+          </span>
+        </button>
+      );
+    })}
+  </div>
+);
+
+interface ParameterInputCellProps {
+  watermark: string;
+  colorClass: string;
+  label: React.ReactNode;
+  tooltip: React.ReactNode;
+  value: string;
+  onChange?: (value: string) => void;
+  error?: string;
+  disabled?: boolean;
+  readOnly?: boolean;
+  placeholder?: string;
+  statusText?: string;
+}
+
+const ParameterInputCell: React.FC<ParameterInputCellProps> = ({
+  watermark,
+  colorClass,
+  label,
+  tooltip,
+  value,
+  onChange,
+  error,
+  disabled = false,
+  readOnly = false,
+  placeholder = '',
+  statusText,
+}) => (
+  <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] ${disabled ? 'opacity-55' : ''}`}>
+    <CellWatermark math={watermark} colorClass={colorClass} />
+    <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
+      <InputTooltip content={tooltip}>
+        <span className={`text-center text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]/90'} xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right`}>
+          {label}
+        </span>
+      </InputTooltip>
+      <div className="relative w-full max-w-[10rem] shrink-0 xl:w-24 xl:max-w-none">
+        <input
+          type="text"
+          value={value}
+          onChange={onChange ? (event) => onChange(event.target.value) : undefined}
+          disabled={disabled}
+          readOnly={readOnly}
+          placeholder={placeholder}
+          className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${disabled ? 'cursor-not-allowed opacity-50 border-transparent bg-[var(--color-surface-raised)]/5' : ''} ${readOnly ? 'cursor-default' : ''} ${!disabled && error ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : !disabled ? 'border-[var(--color-border)]' : ''}`}
+          dir="ltr"
+        />
+        {error ? (
+          <div className="absolute top-full left-1/2 z-50 mt-2 flex -translate-x-1/2 items-center justify-center whitespace-nowrap rounded bg-[var(--color-error)] px-2.5 py-1 text-xs font-bold text-white shadow-lg pointer-events-none">
+            <div className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rotate-45 bg-[var(--color-error)]" />
+            <span className="relative z-10">{error}</span>
+          </div>
+        ) : null}
+        {!error && statusText ? (
+          <p className="mt-1 text-center text-caption font-bold text-[var(--color-text-secondary)]">{statusText}</p>
+        ) : null}
+      </div>
+    </div>
+  </td>
+);
+
+interface VariantOption {
+  value: CalcType;
+  label: React.ReactNode;
+  description: React.ReactNode;
+}
+
+const FORWARD_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: 'שטח מצד שמאל', description: <InlineMathToken math="P(X \le x)" /> },
+  { value: 'above', label: 'שטח מצד ימין', description: <InlineMathToken math="P(X \ge x)" /> },
+  { value: 'between', label: 'בין שני ערכים', description: <InlineMathToken math="P(x_1 \le X \le x_2)" /> },
+  { value: 'outside', label: 'מחוץ לתחום', description: <InlineMathToken math="P(X \le x_1 \;\cup\; X \ge x_2)" /> },
+  { value: 'conditional', label: 'הסתברות מותנית', description: <InlineMathToken math="P(A \mid B)=\frac{P(A \cap B)}{P(B)}" /> },
+];
+
+const INVERSE_VARIANT_OPTIONS: readonly VariantOption[] = [
+  { value: 'below', label: 'אחוזון שמאלי', description: <InlineMathToken math="P(X \le x)=p" /> },
+  { value: 'above', label: 'אחוזון ימני', description: <InlineMathToken math="P(X \ge x)=p" /> },
+  { value: 'between', label: 'טווח מרכזי', description: <InlineMathToken math="P(x_1 \le X \le x_2)=p" /> },
+  { value: 'outside', label: 'טווח זנבות', description: <InlineMathToken math="P(X \le x_1 \;\cup\; X \ge x_2)=p" /> },
+];
+
+interface CalculationVariantPickerProps {
+  value: CalcType;
+  onChange: (value: CalcType) => void;
+  options: readonly VariantOption[];
+}
+
+const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
+  value,
+  onChange,
+  options,
+}) => (
+  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+    <div className="grid gap-3 sm:grid-cols-2">
+      {options.map((option) => {
+        const isActive = value === option.value;
+
+        return (
+          <button
+            key={option.value}
+            type="button"
+            onClick={() => onChange(option.value)}
+            className={`group rounded-lg border px-4 py-3 text-right transition-all ${
+              isActive
+                ? 'border-[var(--color-accent-cobalt)]/70 bg-[linear-gradient(135deg,rgba(92,92,255,0.16),rgba(92,92,255,0.06))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent-cobalt)]/35 hover:bg-[var(--color-accent-cobalt)]/5'
+            }`}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className={`block text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
+                  {option.label}
+                </span>
+                {option.description ? (
+                  <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+                    {option.description}
+                  </p>
+                ) : null}
+              </div>
+              <span className={`mt-1 h-2.5 w-2.5 rounded-full transition-colors ${isActive ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)] group-hover:bg-[var(--color-accent-cobalt)]/60'}`} />
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+);
+
+const CalculatorModeSwitch: React.FC<{
+  value: CalculatorMode;
+  onChange: (value: CalculatorMode) => void;
+}> = ({ value, onChange }) => {
+  const isInverse = value === 'inverse';
+
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isInverse}
+      aria-label={`מצב מחשבון: ${isInverse ? 'אחוזון' : 'הסתברות'}`}
+      title={isInverse ? 'עכשיו: אחוזון. לחיצה תעביר להסתברות.' : 'עכשיו: הסתברות. לחיצה תעביר לאחוזון.'}
+      onClick={() => onChange(isInverse ? 'forward' : 'inverse')}
+      className="grid w-full cursor-pointer grid-cols-2 gap-2 rounded-lg border border-[rgba(36,209,199,0.38)] bg-[var(--color-surface-raised)] p-1 transition-all hover:border-[rgba(36,209,199,0.62)]"
+    >
+      <span
+        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-black transition-all ${
+          !isInverse
+            ? 'bg-[linear-gradient(135deg,#24D1C7,#1C9EDE)] text-[#08131A] shadow-[0_0_0_1px_rgba(36,209,199,0.72)]'
+            : 'bg-transparent text-[var(--color-text-secondary)]'
+        }`}
+      >
+        <Percent size={14} />
+        <span>הסתברות</span>
+      </span>
+      <span
+        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-black transition-all ${
+          isInverse
+            ? 'bg-[linear-gradient(135deg,#F6D04D,#E9A91A)] text-[#18140A] shadow-[0_0_0_1px_rgba(246,208,77,0.72)]'
+            : 'bg-transparent text-[var(--color-text-secondary)]'
+        }`}
+      >
+        <Target size={14} />
+        <span>אחוזון</span>
+      </span>
+    </button>
+  );
+};
+
 // --- Components ---
 
 const Tooltip: React.FC<{ content: string; children: React.ReactNode }> = ({ content, children }) => {
@@ -294,9 +574,8 @@ const NormalChart: React.FC<{
   condTypeA?: CondType;
   condX1?: number;
   condX2?: number;
-  probability: number;
   mode?: CalcMode;
-}> = ({ mean, stdDev, type, x1, x2, condType, condTypeA, condX1, condX2, probability, mode }) => {
+}> = ({ mean, stdDev, type, x1, x2, condType, condTypeA, condX1, condX2, mode }) => {
 
   const chartData = useMemo(() => {
     if (stdDev <= 0) return [];
@@ -383,7 +662,6 @@ const NormalChart: React.FC<{
   const curveColor = 'var(--color-accent-brass)';
   const secondaryCurveColor = 'var(--color-accent-teal)';
   const zLineColor = 'var(--color-accent-cobalt)';
-  const boundaryLineColor = 'var(--color-accent-crimson)';
   const mainGridColor = 'var(--chart-grid)';
   const axisLabelColor = 'var(--chart-axis-label)';
   const shadedColor = 'var(--color-accent-cobalt)';
@@ -392,6 +670,81 @@ const NormalChart: React.FC<{
 
   const minStandardX = Math.min(x1, x2);
   const maxStandardX = Math.max(x1, x2);
+
+  const xDomain = [mean - 4.2 * stdDev, mean + 4.2 * stdDev] as const;
+  const xMarkers = useMemo(() => {
+    const markers: Array<{ value: number; math: string; color: string }> = [
+      { value: mean, math: '\\mu', color: 'var(--color-accent-brass)' },
+    ];
+
+    if (type === 'conditional' && mode === 'forward') {
+      markers.push({ value: x1, math: 'a_1', color: 'var(--color-accent-cobalt)' });
+      if (condTypeA === 'between') {
+        markers.push({ value: x2, math: 'a_2', color: 'var(--color-accent-cobalt)' });
+      }
+      if (typeof condX1 === 'number') {
+        markers.push({ value: condX1, math: 'b_1', color: 'var(--color-accent-teal)' });
+      }
+      if (condType === 'between' && typeof condX2 === 'number') {
+        markers.push({ value: condX2, math: 'b_2', color: 'var(--color-accent-teal)' });
+      }
+    } else if (mode === 'inverse') {
+      markers.push({ value: x1, math: 'X', color: 'var(--color-accent-cobalt)' });
+      if (type === 'between' || type === 'outside') {
+        markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
+      }
+    } else if (type === 'between' || type === 'outside') {
+      markers.push({ value: x1, math: 'X_1', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
+    } else {
+      markers.push({ value: x1, math: 'X', color: 'var(--color-accent-cobalt)' });
+    }
+
+    return markers;
+  }, [mean, mode, type, x1, x2, condType, condTypeA, condX1, condX2]);
+
+  const xAxisTicks = useMemo(() => {
+    const baseTicks = [
+      xDomain[0],
+      mean - 2 * stdDev,
+      mean,
+      mean + 2 * stdDev,
+      xDomain[1],
+      ...xMarkers.map((marker) => marker.value),
+    ];
+
+    const uniqueTicks = Array.from(new Set(baseTicks.map((tick) => Number(tick.toFixed(2))))).sort((a, b) => a - b);
+    const finalTicks: number[] = [];
+    const minSpacing = stdDev * 0.35;
+
+    for (const tick of uniqueTicks) {
+      if (finalTicks.length === 0 || tick - finalTicks[finalTicks.length - 1] >= minSpacing) {
+        finalTicks.push(tick);
+      }
+    }
+
+    return finalTicks;
+  }, [mean, stdDev, xDomain, xMarkers]);
+
+  const legendChips = useMemo(() => {
+    const chips: Array<{ math: string; color: string; style: 'line' | 'area' }> = [
+      { math: '\\mu', color: curveColor, style: 'line' },
+    ];
+
+    if (type === 'conditional' && mode === 'forward') {
+      chips.push({ math: 'A / a_1, a_2', color: zLineColor, style: 'line' });
+      chips.push({ math: 'B / b_1, b_2', color: secondaryCurveColor, style: 'area' });
+    } else {
+      chips.push({ math: type === 'between' || type === 'outside' ? 'X_1' : 'X', color: zLineColor, style: 'line' });
+      if (mode === 'inverse' && (type === 'between' || type === 'outside')) {
+        chips.push({ math: 'X_2', color: secondaryCurveColor, style: 'line' });
+      } else if (type === 'between' || type === 'outside') {
+        chips.push({ math: 'X_2', color: secondaryCurveColor, style: 'line' });
+      }
+    }
+
+    return chips;
+  }, [curveColor, mode, secondaryCurveColor, type, zLineColor]);
 
   // Customized tooltip
   const CustomTooltipInner = ({ active, payload }: any) => {
@@ -410,36 +763,56 @@ const NormalChart: React.FC<{
     return null;
   };
 
-  return (
-    <div className="w-full rounded-lg p-5 border transition-colors bg-[var(--color-surface)] border-[var(--color-border)] shadow-md curve-glow">
-      <div className="mb-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-b pb-4 border-[var(--color-border)]">
-        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-sm font-black" dir="ltr">
-          <span className="flex items-center gap-1.5 text-[var(--color-accent-cobalt)] select-none">
-            <span className="w-3 h-3 rounded-none bg-[var(--color-accent-cobalt)]/40 border border-[var(--color-accent-cobalt)] inline-block" />
-            <InlineMath math="Z" />
-          </span>
-          <span className="flex items-center gap-1.5 text-[var(--color-accent-brass)] select-none">
-            <span className="w-0.5 h-3 bg-[var(--color-accent-brass)] inline-block" />
-            <InlineMath math="\mu" />
-          </span>
-          {type === 'conditional' && (
-            <span className="flex items-center gap-1.5 text-[var(--color-accent-teal)] select-none">
-              <span className="w-3 h-3 rounded-none bg-[var(--color-accent-teal)]/30 border border-[var(--color-accent-teal)] inline-block" />
-              <InlineMath math="B" />
-            </span>
-          )}
-        </div>
-        <h3 className="text-base font-bold text-[var(--color-text-primary)]">
-          {type === 'conditional' ? <>גרף התפלגות מותנית <InlineMath math="P(A|B)" /></> : 'עקומת פעמון ושטחים מחושבים'}
-        </h3>
-        <span className="px-3 py-1 rounded-full text-xs font-black tracking-wide shrink-0 bg-[var(--color-accent-brass)] text-[var(--color-background)]">
-          {type === 'conditional' ? <><InlineMath math={`P(A|B) = ${probability.toFixed(4)}`} /></> : `שטח מחושב: ${(probability * 100).toFixed(2)}%`}
-        </span>
-      </div>
+  const renderXAxisTick = (props: { x?: number | string; y?: number | string; payload?: { value?: number | string } }) => {
+    const x = typeof props.x === 'number' ? props.x : Number(props.x ?? 0);
+    const y = typeof props.y === 'number' ? props.y : Number(props.y ?? 0);
+    const tickValue = typeof props.payload?.value === 'number' ? props.payload.value : Number(props.payload?.value ?? 0);
+    const marker = xMarkers.find((item) => Math.abs(item.value - tickValue) < 0.01);
+    if (!marker) {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text x={0} y={12} textAnchor="middle" fill={axisLabelColor} fontSize={15} fontWeight="bold">
+            {tickValue.toFixed(0)}
+          </text>
+        </g>
+      );
+    }
 
-      <div className="h-[350px] w-full" dir="ltr">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <foreignObject x={-36} y={2} width={72} height={44} style={{ overflow: 'visible' }}>
+          <div
+            className="flex flex-col items-center justify-start leading-none"
+            style={{ color: marker.color }}
+          >
+            <span className="text-[1.125rem] font-black">
+              <InlineMath math={tickValue.toFixed(2)} />
+            </span>
+            <span className="mt-1 text-[1rem] font-black">
+              <InlineMath math={marker.math} />
+            </span>
+          </div>
+        </foreignObject>
+      </g>
+    );
+  };
+
+  return (
+    <div className="h-[400px] w-full" dir="ltr">
+      <div className="mb-3 flex flex-wrap items-center gap-4 border-b border-[var(--color-border)] pb-3">
+        {legendChips.map((chip) => (
+          <div key={chip.math} className="flex items-center gap-1.5 font-black text-sm select-none" style={{ color: chip.color }}>
+            {chip.style === 'line' ? (
+              <span className="inline-block h-3 w-0.5" style={{ backgroundColor: chip.color }} />
+            ) : (
+              <span className="inline-block h-3 w-3 border" style={{ backgroundColor: `${chip.color}33`, borderColor: chip.color }} />
+            )}
+            <span dir="ltr"><InlineMath math={chip.math} /></span>
+          </div>
+        ))}
+      </div>
+      <ResponsiveContainer width="100%" height="100%">
+        <AreaChart data={chartData} margin={{ top: 8, right: 10, left: -25, bottom: 76 }}>
             <defs>
               <linearGradient id="mainColor" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={curveColor} stopOpacity={0.1} />
@@ -451,8 +824,9 @@ const NormalChart: React.FC<{
             <XAxis
               dataKey="x"
               type="number"
-              domain={[mean - 4.2 * stdDev, mean + 4.2 * stdDev]}
-              tick={{ fill: axisLabelColor, fontSize: 15, fontWeight: 'bold' }}
+              domain={xDomain}
+              ticks={xAxisTicks}
+              tick={renderXAxisTick}
               axisLine={{ stroke: mainGridColor }}
               tickLine={true}
             />
@@ -531,22 +905,13 @@ const NormalChart: React.FC<{
               />
             )}
 
-            {/* Reference Line for Mean */}
             <ReferenceLine
               x={mean}
               stroke={curveColor}
               strokeWidth={1.5}
               strokeDasharray="10 4"
-              label={{
-                value: `μ: ${mean.toFixed(2)}`,
-                position: 'top',
-                fill: curveColor,
-                fontSize: 14,
-                fontWeight: 'bold'
-              }}
             />
 
-            {/* Reference Lines for Inputs */}
             {type === 'conditional' ? (
               <>
                 {condX1 !== undefined && (condType === 'below' || condType === 'above' || condType === 'between') && (
@@ -555,13 +920,6 @@ const NormalChart: React.FC<{
                     stroke={secondaryCurveColor}
                     strokeWidth={1.5}
                     strokeDasharray="10 4"
-                    label={{
-                      value: condType === 'between' ? 'B: x1' : 'B',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {condX2 !== undefined && condType === 'between' && (
@@ -570,41 +928,20 @@ const NormalChart: React.FC<{
                     stroke={secondaryCurveColor}
                     strokeWidth={1.5}
                     strokeDasharray="10 4"
-                    label={{
-                      value: 'B: x2',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {(condTypeA === 'below' || condTypeA === 'above' || condTypeA === 'between') && (
                   <ReferenceLine
                     x={x1}
-                    stroke={boundaryLineColor}
+                    stroke={zLineColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: condTypeA === 'between' ? 'A: x1' : 'A',
-                      position: 'top',
-                      fill: boundaryLineColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {condTypeA === 'between' && (
                   <ReferenceLine
                     x={x2}
-                    stroke={boundaryLineColor}
+                    stroke={zLineColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: 'A: x2',
-                      position: 'top',
-                      fill: boundaryLineColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
               </>
@@ -613,13 +950,6 @@ const NormalChart: React.FC<{
                 x={x1}
                 stroke={zLineColor}
                 strokeWidth={2.5}
-                label={{
-                  value: `Zx: ${x1.toFixed(2)}`,
-                  position: 'top',
-                  fill: zLineColor,
-                  fontSize: 14,
-                  fontWeight: 'bold'
-                }}
               />
             ) : (
               <>
@@ -627,70 +957,129 @@ const NormalChart: React.FC<{
                   x={x1}
                   stroke={zLineColor}
                   strokeWidth={2.5}
-                  label={{
-                    value: type === 'between' || type === 'outside' ? 'X₁' : 'X',
-                    position: 'top',
-                    fill: zLineColor,
-                    fontSize: 14,
-                    fontWeight: 'bold'
-                  }}
                 />
                 {(type === 'between' || type === 'outside') && (
                   <ReferenceLine
                     x={x2}
                     stroke={secondaryCurveColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: 'X₂',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 14,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
               </>
             )}
-          </AreaChart>
-        </ResponsiveContainer>
-      </div>
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 };
 
 const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
   const isResult = text.startsWith('תוצאה סופית:');
-  const parts = text.split(/\[MATH\](.*?)\[\/MATH\]/g);
+  const stepMatch = text.match(/^שלב\s+(\d+):\s*(.*)$/);
+  const isStepTitle = Boolean(stepMatch);
+  const stepNumber = stepMatch?.[1] ?? null;
+  const normalizedText = stepMatch?.[2] ?? text;
+  const isPureMath = /^\[MATH\].*\[\/MATH\]$/.test(normalizedText.trim());
+  const parts = normalizedText.split(/\[MATH\](.*?)\[\/MATH\]/g);
+  const blockTone = isResult
+    ? 'result'
+    : isPureMath
+      ? 'calculation'
+      : isStepTitle
+        ? 'formula'
+        : 'note';
+  const shellClass = blockTone === 'result'
+    ? 'border-[var(--color-accent-brass)]/45 bg-[var(--color-accent-brass)]/10'
+    : blockTone === 'calculation'
+      ? 'border-[var(--color-accent-cobalt)]/35 bg-[var(--color-accent-cobalt)]/8'
+      : blockTone === 'formula'
+        ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-surface)]'
+        : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]';
+  const railClass = blockTone === 'result'
+    ? 'bg-[var(--color-accent-brass)]'
+    : blockTone === 'calculation'
+      ? 'bg-[var(--color-accent-cobalt)]'
+      : blockTone === 'formula'
+        ? 'bg-[var(--color-accent-teal)]'
+        : 'bg-[var(--color-border)]';
+  const iconColorClass = blockTone === 'result'
+    ? 'text-[var(--color-accent-brass)]/65'
+    : blockTone === 'calculation'
+      ? 'text-[var(--color-accent-cobalt)]/65'
+      : blockTone === 'formula'
+        ? 'text-[var(--color-accent-teal)]/65'
+        : 'text-[var(--color-text-secondary)]/65';
 
   return (
-    <div className={`text-sm md:text-base leading-relaxed w-full transition-all p-4 sm:p-5 rounded-lg border shadow-sm ${isResult
-        ? 'font-bold text-[var(--color-accent-brass)] bg-[var(--color-surface)] border-[var(--color-accent-cobalt-line)]'
-        : 'text-[var(--color-text-primary)] bg-[var(--color-surface-raised)] border-[var(--color-border)]'
-      }`}>
-      {parts.map((part, i) => {
-        if (i % 2 === 1) {
-          const isOnlyMath = parts.length === 3 && parts[0] === "" && parts[2] === "";
-          const hasFraction = part.includes('\\frac');
-          const hasPercentage = part.includes('%') || part.includes('\\%');
-          const hasEquals = part.includes('=');
-          const shouldBeBlockPoint = (hasFraction || (isOnlyMath && hasEquals)) && !hasPercentage;
+    <div className={`overflow-hidden rounded-lg border shadow-sm ${shellClass}`}>
+      <div className="flex items-stretch">
+        <div className={`w-1 shrink-0 ${railClass}`} aria-hidden="true" />
+        <div className="flex w-full items-start gap-4 p-4 sm:p-5">
+          <div className={`hidden shrink-0 pt-1 sm:flex ${iconColorClass}`}>
+            {blockTone === 'result' ? (
+              <Award size={30} strokeWidth={1.4} />
+            ) : blockTone === 'calculation' ? (
+              <Calculator size={30} strokeWidth={1.4} />
+            ) : (
+              <BookOpen size={30} strokeWidth={1.4} />
+            )}
+          </div>
 
-          if (shouldBeBlockPoint) {
-            return (
-              <div
-                key={i}
-                className="my-3 text-center py-3 px-2 rounded-lg border shadow-sm overflow-x-auto bg-[var(--color-surface-raised)] border-[var(--color-border)]"
-                dir="ltr"
-              >
-                <BlockMath math={part} />
+          <div className="min-w-0 flex-1 space-y-3 text-[var(--color-text-primary)]">
+            {isStepTitle ? (
+              <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border)]/80 pb-2">
+                <span className="inline-flex min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 py-1 text-caption font-black text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
+                  {stepNumber}
+                </span>
+                <span className="text-body-base font-black text-[var(--color-text-primary)]">
+                  שלב {stepNumber}
+                </span>
               </div>
-            );
-          }
-          return <span key={i} dir="ltr" className="inline-block mx-1 font-bold whitespace-nowrap"><InlineMath math={part} /></span>;
-        }
-        if (!part && parts.length > 1) return null;
-        return <span key={i} className="align-middle font-sans font-medium">{part}</span>;
-      })}
+            ) : null}
+
+            <div className={`space-y-3 text-sm md:text-base leading-relaxed ${isResult ? 'font-bold text-[var(--color-accent-brass)]' : 'text-[var(--color-text-primary)]'}`}>
+              {parts.map((part, i) => {
+                if (i % 2 === 1) {
+                  const isOnlyMath = parts.length === 3 && parts[0] === '' && parts[2] === '';
+                  const hasFraction = part.includes('\\frac');
+                  const hasPercentage = part.includes('%') || part.includes('\\%');
+                  const hasEquals = part.includes('=');
+                  const shouldBeBlockPoint = (hasFraction || (isOnlyMath && hasEquals)) && !hasPercentage;
+
+                  if (shouldBeBlockPoint) {
+                    return (
+                      <div
+                        key={i}
+                        className={`my-2 overflow-x-auto rounded-lg border px-4 py-4 text-center shadow-sm ${blockTone === 'result'
+                          ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-accent-brass)]/8'
+                          : 'border-[var(--color-accent-cobalt)]/30 bg-[var(--color-accent-cobalt)]/6'
+                        }`}
+                        dir="ltr"
+                      >
+                        <BlockMath math={part} />
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <span key={i} dir="ltr" className="mx-1 inline-block whitespace-nowrap font-bold">
+                      <InlineMath math={part} />
+                    </span>
+                  );
+                }
+
+                if (!part && parts.length > 1) return null;
+
+                return (
+                  <span key={i} className={`align-middle font-sans ${isResult ? 'font-bold' : 'font-medium'}`}>
+                    {part}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
@@ -1776,6 +2165,57 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
     return calculation ? calculation.probability : 0;
   }, [calculation]);
 
+  const calculatorMode = mode === 'inverse' ? 'inverse' : 'forward';
+  const heroCopy = getCalculatorHeroCopy(calculatorMode);
+  const hasSecondaryBoundInput =
+    mode === 'forward'
+      ? forwardType === 'between' || forwardType === 'outside' || (forwardType === 'conditional' && condTypeA === 'between')
+      : inverseType === 'between' || inverseType === 'outside';
+  const secondaryInputLabel =
+    mode === 'forward'
+      ? forwardType === 'conditional'
+        ? 'ערך מאורע:'
+        : 'גבול תחום עליון:'
+      : inverseType === 'between'
+        ? 'גבול עליון יעד:'
+        : 'גבול זנב עליון:';
+  const secondaryInputValue =
+    mode === 'forward'
+      ? x2Input
+      : calculation && calculation.z2 !== undefined
+        ? (mean + calculation.z2 * stdDev).toFixed(2)
+        : '';
+
+  const resetNormalCalculator = () => {
+    setMean(100);
+    setMeanInput('100');
+    setStdDev(15);
+    setStdDevInput('15');
+    setX1(115);
+    setX1Input('115');
+    setX2(125);
+    setX2Input('125');
+    setInverseProb(0.95);
+    setInverseProbInput('0.95');
+    setForwardType('below');
+    setInverseType('below');
+    setCondType('above');
+    setCondTypeA('below');
+    setCondX1(110);
+    setCondX1Input('110');
+    setCondX2(120);
+    setCondX2Input('120');
+  };
+
+  const handleCalculatorModeChange = (nextMode: CalculatorMode) => {
+    if (onNavigate) {
+      onNavigate(nextMode);
+      return;
+    }
+
+    setMode(nextMode);
+  };
+
   return (
     <>
       <AnimatePresence mode="wait">
@@ -1816,246 +2256,403 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -15 }}
               transition={{ duration: 0.25 }}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start"
+              className="space-y-8"
             >
-              {/* Sidebar Inputs Form */}
-              <div className="lg:col-span-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-5 rounded-lg space-y-5 text-right relative overflow-hidden shadow-sm">
-                <div className="absolute top-0 right-0 w-full h-1 bg-[var(--color-accent-cobalt-bg-hover)]" />
-
-                <h2 data-toc id="normal-distribution-controls" className="text-base sm:text-lg font-black text-white flex items-center gap-2 border-b border-[var(--color-border)] pb-2">
-                  <Sliders className="text-[var(--color-accent-cobalt)] w-5 h-5" />
-                  הגדרות ופרמטרי ההתפלגות
-                </h2>
-
-                {/* Parameters block */}
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">תוחלת המבוקשת (μ):</label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={meanInput}
-                        onChange={e => handleMeanChange(e.target.value)}
-                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                      />
-                      {errors.mean && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.mean}</p>}
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">סטיית תקן (σ):</label>
-                    <div className="relative">
-                      <input
-                        type="text"
-                        value={stdDevInput}
-                        onChange={e => handleStdDevChange(e.target.value)}
-                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                      />
-                      {errors.stdDev && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.stdDev}</p>}
-                    </div>
-                  </div>
+              <section className="relative overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] shadow-md">
+                <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                  <span className="absolute left-6 top-6 -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr">
+                    <InlineMath math={mode === 'forward' ? '\\Phi(z)' : '\\Phi^{-1}(p)'} />
+                  </span>
+                  <span className="absolute left-1/3 top-14 rotate-6 text-3xl sm:text-4xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr">
+                    <InlineMath math={`\\mu = ${mean}`} />
+                  </span>
+                  <span className="absolute bottom-8 right-[12%] -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-teal)]/10" dir="ltr">
+                    <InlineMath math={`\\sigma = ${stdDev}`} />
+                  </span>
                 </div>
 
-                {/* Mode Options Block */}
-                {mode === 'forward' ? (
-                  <div className="space-y-4 pt-3 border-t border-[var(--color-border)]">
-                    <div>
-                      <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">סוג חישוב השטח:</label>
-                      <select
-                        value={forwardType}
-                        onChange={e => setForwardType(e.target.value as any)}
-                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-bold focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                      >
-                        <option value="below">מתחת לערך (הסתברות מצטברת משמאל)</option>
-                        <option value="above">מעל לערך (הסתברות מצטברת מימין)</option>
-                        <option value="between">בין שני ערכים כלואים</option>
-                        <option value="outside">מחוץ לשני ערכים (בשני הזנבות)</option>
-                        <option value="conditional">הסתברות מותנית P(A|B)</option>
-                      </select>
+                <div className="relative z-10 space-y-6 p-5 sm:p-6 md:p-8">
+                  <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+                    <div className="max-w-3xl space-y-4 text-right">
+                      <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-accent-brass)]/40 bg-[var(--color-accent-brass)]/12 px-3 py-1 text-caption font-black tracking-[0.08em] text-[var(--color-accent-brass)]">
+                        <Sparkles size={14} />
+                        {heroCopy.badge}
+                      </span>
+                      <div className="space-y-3">
+                        <div className="accent-bar" />
+                        <Heading
+                          level="page"
+                          align="start"
+                          className="justify-start text-[var(--text-display-h2)] leading-[var(--text-display-h2--line-height)] tracking-[var(--text-display-h2--letter-spacing)]"
+                        >
+                          {heroCopy.title}
+                        </Heading>
+                      </div>
                     </div>
 
-                    {forwardType === 'conditional' ? (
-                      <div className="space-y-4 bg-[var(--color-surface-raised)] p-3.5 rounded-lg border border-[var(--color-border)]">
-                        <span className="text-body-sm font-black leading-relaxed block text-[var(--color-accent-cobalt)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5">הגדרת מאורע B ברקע (התנאי):</span>
-                        <div>
-                          <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">סוג המאורע B:</label>
-                          <select
-                            value={condType}
-                            onChange={e => setCondType(e.target.value as any)}
-                            className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)]"
-                          >
-                            <option value="below">X ≤ b₁</option>
-                            <option value="above">X ≥ b₁</option>
-                            <option value="between">b₁ ≤ X ≤ b₂</option>
-                          </select>
+                    <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[26rem]">
+                      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-4 text-right">
+                        <div className="mb-2 flex items-center gap-2 text-[var(--color-accent-brass)]">
+                          <Calculator size={16} />
+                          <span className="text-caption font-black tracking-[0.08em]">CENTER</span>
                         </div>
-
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">ערך b₁:</label>
-                            <input
-                              type="text"
-                              value={condX1Input}
-                              onChange={e => handleCondX1Change(e.target.value)}
-                              className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)] font-mono"
-                            />
-                            {errors.condX1 && <p className="text-[var(--color-error)] text-caption mt-0.5">{errors.condX1}</p>}
-                          </div>
-                          {condType === 'between' && (
-                            <div>
-                              <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">ערך b₂:</label>
-                              <input
-                                type="text"
-                                value={condX2Input}
-                                onChange={e => handleCondX2Change(e.target.value)}
-                                className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)] font-mono"
-                              />
-                              {errors.condX2 && <p className="text-[var(--color-error)] text-caption mt-0.5">{errors.condX2}</p>}
-                            </div>
-                          )}
-                        </div>
-
-                        <span className="text-body-sm font-black leading-relaxed block text-[var(--color-accent-crimson)] border-b border-[var(--color-accent-cobalt-line)] pb-1.5 pt-1.5">הגדרת מאורע A (ההסתברות מתוך B):</span>
-                        <div>
-                          <label className="block text-heading-label text-[var(--color-text-secondary)] mb-1">סוג המאורע A:</label>
-                          <select
-                            value={condTypeA}
-                            onChange={e => setCondTypeA(e.target.value as any)}
-                            className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-2.5 py-1.5 text-xs text-[var(--color-text-primary)]"
-                          >
-                            <option value="below">X ≤ a₁</option>
-                            <option value="above">X ≥ a₁</option>
-                            <option value="between">a₁ ≤ X ≤ a₂</option>
-                          </select>
-                        </div>
+                        <div className="font-mono text-mono-lg text-[var(--color-text-primary)]" dir="ltr">{mean.toFixed(2)}</div>
+                        <p className="text-body-sm text-[var(--color-text-secondary)]">תוחלת נוכחית</p>
                       </div>
-                    ) : null}
+                      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-4 text-right">
+                        <div className="mb-2 flex items-center gap-2 text-[var(--color-accent-cobalt)]">
+                          <Sigma size={16} />
+                          <span className="text-caption font-black tracking-[0.08em]">SPREAD</span>
+                        </div>
+                        <div className="font-mono text-mono-lg text-[var(--color-text-primary)]" dir="ltr">{stdDev.toFixed(2)}</div>
+                        <p className="text-body-sm text-[var(--color-text-secondary)]">סטיית תקן פעילה</p>
+                      </div>
+                      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-4 text-right">
+                        <div className="mb-2 flex items-center gap-2 text-[var(--color-accent-teal)]">
+                          <Target size={16} />
+                          <span className="text-caption font-black tracking-[0.08em]">OUTPUT</span>
+                        </div>
+                        <div className="font-mono text-mono-lg text-[var(--color-text-primary)]" dir="ltr">
+                          {mode === 'forward' ? `${(chartProb * 100).toFixed(2)}%` : chartProb.toFixed(4)}
+                        </div>
+                        <p className="text-body-sm text-[var(--color-text-secondary)]">
+                          {mode === 'forward' ? 'שטח מחושב' : 'אחוזון יעד'}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-                    <div className="space-y-4">
-                      <div>
-                        <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">
-                          {forwardType === 'between' || forwardType === 'outside' ? 'גבול תחום תחתון (X₁):' : forwardType === 'conditional' ? 'ערך מאורע a₁:' : 'ערך נקודת החיתוך (X):'}
-                        </label>
-                        <input
-                          type="text"
-                          value={x1Input}
-                          onChange={e => handleX1Change(e.target.value)}
-                          className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
+                </div>
+              </section>
+
+              <div className="space-y-6">
+                <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right">
+                  <div className="absolute top-0 right-0 h-1 w-full bg-[var(--color-accent-cobalt-bg-hover)]" />
+
+                  <div className="relative z-10 space-y-5">
+                    <div className="flex flex-col gap-3 border-b border-[var(--color-border)] pb-4 sm:flex-row sm:items-center">
+                      <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
+                        <Sliders size={20} />
+                      </div>
+                      <div className="flex-1 text-right">
+                        <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
+                          הגדרות ופרמטרי ההתפלגות
+                        </h2>
+                      </div>
+                      <div className="flex w-full flex-col gap-3 sm:max-w-[28rem] sm:flex-row sm:items-center">
+                        <button
+                          type="button"
+                          onClick={resetNormalCalculator}
+                          aria-label="איפוס ערכים"
+                          title="איפוס ערכים"
+                          className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-black text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
+                        >
+                          <RefreshCw size={15} />
+                          <span>איפוס ערכים</span>
+                        </button>
+                        <CalculatorModeSwitch
+                          value={calculatorMode}
+                          onChange={handleCalculatorModeChange}
                         />
-                        {errors.x1 && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.x1}</p>}
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-start">
+                      <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+                        <CalculationVariantPicker
+                          value={mode === 'forward' ? forwardType : inverseType}
+                          onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
+                          options={mode === 'forward' ? FORWARD_VARIANT_OPTIONS : INVERSE_VARIANT_OPTIONS}
+                        />
                       </div>
 
-                      {(forwardType === 'between' || forwardType === 'outside' || (forwardType === 'conditional' && condTypeA === 'between')) && (
-                        <div>
-                          <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">
-                            {forwardType === 'conditional' ? 'ערך מאורע a₂:' : 'גבול תחום עליון (X₂):'}
-                          </label>
-                          <input
-                            type="text"
-                            value={x2Input}
-                            onChange={e => handleX2Change(e.target.value)}
-                            className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                          />
-                          {errors.x2 && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.x2}</p>}
+                      <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
+                        <table className="w-full border-collapse border-spacing-0">
+                          <thead>
+                            <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
+                              <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
+                                <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
+                                  <InlineMath math="N" />
+                                </div>
+                                <div className="relative z-10 flex items-center justify-center gap-1.5">
+                                  <span>פרמטרי ההתפלגות</span>
+                                </div>
+                              </th>
+                              <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
+                                <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
+                                  <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
+                                </div>
+                                <div className="relative z-10">
+                                  {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
+                                </div>
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr className="border-b border-[var(--color-border)]">
+                              <ParameterInputCell
+                                watermark="\mu"
+                                colorClass="text-[var(--color-accent-cobalt)]"
+                                label={<><span>תוחלת (</span><InlineMath math="\mu" /><span>):</span></>}
+                                tooltip="תוחלת ההתפלגות הנורמלית שממנה מתחילים את כל החישובים"
+                                value={meanInput}
+                                onChange={handleMeanChange}
+                                error={errors.mean}
+                              />
+                              <ParameterInputCell
+                                watermark={mode === 'forward' ? 'X_1' : 'p'}
+                                colorClass="text-[var(--color-accent-brass)]"
+                                label={mode === 'forward'
+                                  ? <><span>{forwardType === 'conditional' ? 'ערך מאורע a₁' : forwardType === 'between' || forwardType === 'outside' ? 'גבול תחתון' : 'ערך חיתוך'} (</span><InlineMath math="X_1" /><span>):</span></>
+                                  : <><span>הסתברות יעד (</span><InlineMath math="p" /><span>):</span></>}
+                                tooltip={mode === 'forward'
+                                  ? 'הערך המרכזי שמגדיר את נקודת החיתוך או את תחילת התחום המבוקש'
+                                  : 'השטח המצטבר המבוקש שעל פיו יימצא ערך X או טווח הערכים המתאים'}
+                                value={mode === 'forward' ? x1Input : inverseProbInput}
+                                onChange={mode === 'forward' ? handleX1Change : handleInverseProbChange}
+                                error={mode === 'forward' ? errors.x1 : errors.inverseProb}
+                                placeholder={mode === 'inverse' ? '0.95' : ''}
+                              />
+                            </tr>
+                            <tr>
+                              <ParameterInputCell
+                                watermark="\sigma"
+                                colorClass="text-[var(--color-accent-cobalt)]"
+                                label={<><span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span></>}
+                                tooltip="סטיית התקן של ההתפלגות הנורמלית, שקובעת את רוחב עקומת הפעמון"
+                                value={stdDevInput}
+                                onChange={handleStdDevChange}
+                                error={errors.stdDev}
+                              />
+                              <ParameterInputCell
+                                watermark={hasSecondaryBoundInput ? 'X_2' : mode === 'forward' ? 'Z_1' : 'X'}
+                                colorClass="text-[var(--color-accent-brass)]"
+                                label={hasSecondaryBoundInput
+                                  ? <><span>{secondaryInputLabel.replace(':', '')} (</span><InlineMath math="X_2" /><span>):</span></>
+                                  : mode === 'forward'
+                                    ? <><span>ציון תקן נגזר (</span><InlineMath math="Z_1" /><span>):</span></>
+                                    : <><span>ערך יעד נוכחי (</span><InlineMath math="X" /><span>):</span></>}
+                                tooltip={hasSecondaryBoundInput
+                                  ? 'כאשר יש שני גבולות, כאן מזינים או מציגים את הגבול השני של התחום'
+                                  : mode === 'forward'
+                                    ? 'במצבים חד-גבוליים מוצג כאן ציון התקן הנגזר מהקלט הנוכחי'
+                                    : 'במצבי אחוזון חד-גבוליים זהו ערך X המחושב עבור ההסתברות שנבחרה'}
+                                value={hasSecondaryBoundInput ? secondaryInputValue : mode === 'forward' ? (isValid ? ((x1 - mean) / stdDev).toFixed(2) : '') : (calculation?.calculatedX?.toFixed(2) ?? '')}
+                                onChange={hasSecondaryBoundInput && mode === 'forward' ? handleX2Change : undefined}
+                                error={hasSecondaryBoundInput && mode === 'forward' ? errors.x2 : undefined}
+                                readOnly={!(hasSecondaryBoundInput && mode === 'forward')}
+                                statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
+                              />
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    <div className={`rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all ${
+                        mode === 'forward' && forwardType === 'conditional'
+                          ? 'border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                          : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-60 grayscale-[0.15]'
+                      }`}>
+                        <div className="mb-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/78 p-4">
+                          <div className="flex flex-wrap items-center justify-between gap-3">
+                            <p className="text-body-sm font-black text-[var(--color-text-primary)]">נוסחת יסוד</p>
+                            <div className="rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-3 py-1 text-[var(--color-text-secondary)]">
+                              <InlineMathToken math="P(A \mid B)=\frac{P(A \cap B)}{P(B)}" />
+                            </div>
+                          </div>
+
+                          <div className="mt-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/70 p-3 text-center">
+                            <BlockMath math={'P(\\textcolor{#5C5CFF}{A}\\mid\\textcolor{#3FE0D0}{B})=\\frac{P(\\textcolor{#5C5CFF}{A}\\cap\\textcolor{#3FE0D0}{B})}{P(\\textcolor{#3FE0D0}{B})}'} />
+                          </div>
+
+                          <div className="mt-3 grid gap-3 md:grid-cols-2">
+                            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                              <p className="text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                                מונה: <InlineMathToken math="P(A \cap B)" className="mr-1" />
+                              </p>
+                              <p className="mt-1 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                                השטח המשותף שבו <InlineMathToken math="A" className="mx-1 text-[var(--color-accent-cobalt)]" /> וגם <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" /> מתקיימים יחד.
+                              </p>
+                            </div>
+
+                            <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                              <p className="text-body-sm font-black text-[var(--color-accent-teal)]">
+                                מכנה: <InlineMathToken math="P(B)" className="mr-1" />
+                              </p>
+                              <p className="mt-1 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                                זהו עולם התנאי החדש: מחשבים הכול רק בתוך המסגרת של <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" />.
+                              </p>
+                            </div>
+                          </div>
                         </div>
+
+                        <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
+                          <div className="text-right">
+                            <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
+                              <span className="inline-flex items-center gap-2 whitespace-nowrap">
+                                <span>הסתברות מותנית</span>
+                                <InlineMathToken math="P(A \\mid B)" />
+                              </span>
+                            </h3>
+                            <p className="max-w-md text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+                              חישוב <InlineMathToken math="P(A \\mid B)" className="mx-1" /> כאשר מאורע <InlineMathToken math="A" className="mx-1" /> נבחן רק בתוך מסגרת <InlineMathToken math="B" className="mx-1" />.
+                            </p>
+                          </div>
+                          <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
+                        </div>
+
+                        <div className="space-y-4">
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-teal)]">
+                              הגדרת מאורע <InlineMathToken math="B" className="mr-1" />
+                            </p>
+                            <label className="mb-2 block text-heading-label text-[var(--color-text-secondary)]">צורת המאורע <InlineMathToken math="B" className="mr-1" />:</label>
+                            <ConditionalEventPicker
+                              value={condType}
+                              onChange={setCondType}
+                              disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                              accentClass="border-[var(--color-accent-teal)]/60 bg-[linear-gradient(135deg,rgba(63,224,208,0.16),rgba(63,224,208,0.05))] text-[var(--color-accent-teal)]"
+                              accentColor="var(--color-accent-teal)"
+                              variablePrefix="b"
+                            />
+                          </div>
+
+                          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:[direction:ltr]">
+                            {condType === 'between' ? (
+                              <div dir="rtl">
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
+                                <input
+                                  type="text"
+                                  value={condX1Input}
+                                  onChange={e => handleCondX1Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
+                              </div>
+                            ) : null}
+                            {condType === 'between' ? (
+                              <div dir="rtl">
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_2" className="mr-1" />:</label>
+                                <input
+                                  type="text"
+                                  value={condX2Input}
+                                  onChange={e => handleCondX2Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX2 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX2}</p> : null}
+                              </div>
+                            ) : (
+                              <div dir="rtl" className="md:col-span-2">
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMathToken math="b_1" className="mr-1" />:</label>
+                                <input
+                                  type="text"
+                                  value={condX1Input}
+                                  onChange={e => handleCondX1Change(e.target.value)}
+                                  disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                                  className="w-full rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] px-3 py-2 text-sm font-mono text-[var(--color-text-primary)] focus:border-[var(--color-accent-cobalt-line)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                                />
+                                {mode === 'forward' && forwardType === 'conditional' && errors.condX1 ? <p className="mt-1 text-caption text-[var(--color-error)]">{errors.condX1}</p> : null}
+                              </div>
+                            )}
+                          </div>
+
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                              הגדרת מאורע <InlineMathToken math="A" className="mr-1" />
+                            </p>
+                            <label className="mb-2 block text-heading-label text-[var(--color-text-secondary)]">צורת המאורע <InlineMathToken math="A" className="mr-1" />:</label>
+                            <ConditionalEventPicker
+                              value={condTypeA}
+                              onChange={setCondTypeA}
+                              disabled={!(mode === 'forward' && forwardType === 'conditional')}
+                              accentClass="border-[var(--color-accent-cobalt)]/60 bg-[linear-gradient(135deg,rgba(92,92,255,0.16),rgba(92,92,255,0.05))] text-[var(--color-accent-cobalt)]"
+                              accentColor="var(--color-accent-cobalt)"
+                              variablePrefix="a"
+                            />
+                          </div>
+
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-3 text-right">
+                            <p className="text-body-sm font-black text-[var(--color-text-primary)]">
+                              מאורע פעיל:
+                              <span className="mr-2 text-[var(--color-accent-cobalt)]">
+                                <InlineMathToken math={`A = \\left\\{${getConditionalEventMath(condTypeA, 'a')}\\right\\}`} />
+                              </span>
+                            </p>
+                            <p className="mt-1 text-body-sm font-black text-[var(--color-text-primary)]">
+                              תנאי רקע:
+                              <span className="mr-2 text-[var(--color-accent-teal)]">
+                                <InlineMathToken math={`B = \\left\\{${getConditionalEventMath(condType, 'b')}\\right\\}`} />
+                              </span>
+                            </p>
+                            <p className="mt-2 text-caption leading-relaxed text-[var(--color-text-secondary)]">
+                              לכן מחשבים קודם את <InlineMathToken math="A \cap B" className="mx-1 text-[var(--color-accent-cobalt)]" /> בתוך התחום של <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" />, ואז מחלקים ב־<InlineMathToken math="P(B)" className="mx-1 text-[var(--color-accent-teal)]" />.
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                  </div>
+                </CalculatorSidebar>
+
+                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 xl:[direction:ltr]">
+                  <div dir="rtl">
+                    <ChartWrapper
+                      className="curve-glow"
+                      height={380}
+                      isEmpty={!isValid}
+                      emptyState={(
+                        <EmptyState
+                          icon={<AlertCircle className="h-8 w-8" />}
+                          tone="error"
+                          title="אין גרף להצגה"
+                          message="הזן פרמטרים תקינים כדי לצייר מחדש את עקומת הפעמון של גאוס."
+                        />
+                      )}
+                    >
+                      <NormalChart
+                        mean={mean}
+                        stdDev={stdDev}
+                        type={mode === 'forward' ? forwardType : inverseType}
+                        x1={chartX1}
+                        x2={chartX2}
+                        condType={condType}
+                        condTypeA={condTypeA}
+                        condX1={condX1}
+                        condX2={condX2}
+                        mode={mode}
+                      />
+                    </ChartWrapper>
+                  </div>
+
+                  <div dir="rtl" className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-5 sm:p-6 text-right shadow-md">
+                    <SectionHeader
+                      title="דרך נוסחתית ואופן פתרון הדרגתי"
+                      description="אותו מסלול הסבר אקדמי, עם דגש על סדר שלבים, נוסחאות ותוצאה סופית ברורה."
+                      level="section"
+                      accent="brass"
+                      withAccentBar={false}
+                      className="items-start mb-4 text-right"
+                    />
+
+                    <div className="border-t border-[var(--color-border)] pt-4">
+                      {isValid && calculation ? (
+                        <div className="space-y-4">
+                          {calculation.steps.map((st, sIdx) => (
+                            <FormattedStep key={sIdx} text={st} />
+                          ))}
+                        </div>
+                      ) : (
+                        <EmptyState
+                          tone="muted"
+                          icon={<Info className="h-6 w-6" />}
+                          title="אין מסלול חישוב"
+                          message="לא ניתן להציג דרך פתרון עקב שגיאות או ערכי קלט חסרים."
+                        />
                       )}
                     </div>
                   </div>
-                ) : (
-                  <div className="space-y-4 pt-3 border-t border-[var(--color-border)]">
-                    <div>
-                      <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">הסתברות מצטברת נתונה (p):</label>
-                      <input
-                        type="text"
-                        value={inverseProbInput}
-                        onChange={e => handleInverseProbChange(e.target.value)}
-                        placeholder="לדוגמה: 0.95"
-                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-mono focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                      />
-                      {errors.inverseProb && <p className="text-[var(--color-error)] text-caption font-bold mt-1">{errors.inverseProb}</p>}
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-black text-[var(--color-text-primary)] mb-1">סוג התאמת השטח:</label>
-                      <select
-                        value={inverseType}
-                        onChange={e => setInverseType(e.target.value as any)}
-                        className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] rounded-sm px-3 py-2 text-sm text-[var(--color-text-primary)] font-bold focus:border-[var(--color-accent-cobalt-line)] focus:outline-none"
-                      >
-                        <option value="below">שטח מצטבר משמאל (גבול עליון X)</option>
-                        <option value="above">שטח מצטבר מימין (גבול תחתון X)</option>
-                        <option value="between">שטח כלוא סימטרי במרכז</option>
-                        <option value="outside">שטח מפוצל סימטרי בשני הזנבות</option>
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {/* Reset to standard preset */}
-                <div className="pt-2">
-                  <button
-                    onClick={() => {
-                      setMean(100);
-                      setMeanInput('100');
-                      setStdDev(15);
-                      setStdDevInput('15');
-                      setX1(115);
-                      setX1Input('115');
-                      setX2(125);
-                      setX2Input('125');
-                      setInverseProb(0.95);
-                      setInverseProbInput('0.95');
-                    }}
-                    className="w-full flex items-center justify-center gap-1.5 py-2 px-3 border border-[var(--color-border)] rounded-sm text-xs font-black bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] hover:text-white transition select-none cursor-pointer"
-                  >
-                    <RefreshCw size={13} />
-                    אפס ערכים ל-IQ הסטנדרטי
-                  </button>
-                </div>
-              </div>
-
-              {/* Main Graph & Explanations Block */}
-              <div className="lg:col-span-8 space-y-6">
-                {/* Normal Curve Canvas Wrapper */}
-                {isValid ? (
-                  <NormalChart
-                    mean={mean}
-                    stdDev={stdDev}
-                    type={mode === 'forward' ? forwardType : inverseType}
-                    x1={chartX1}
-                    x2={chartX2}
-                    condType={condType}
-                    condTypeA={condTypeA}
-                    condX1={condX1}
-                    condX2={condX2}
-                    probability={chartProb}
-                    mode={mode}
-                  />
-                ) : (
-                  <div className="flex h-56 items-center justify-center rounded-lg border border-dashed border-[var(--color-accent-crimson)] bg-[var(--color-surface)] text-[var(--color-error)] font-bold px-4 text-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <AlertCircle className="w-8 h-8" />
-                      <p className="font-extrabold text-sm sm:text-base">הזן פרמטרים תקינים כדי לצייר מחדש את עקומת הפעמון של גאוס.</p>
-                    </div>
-                  </div>
-                )}
-
-                {/* Step by Step calculations panel */}
-                <div className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg p-5 sm:p-6 text-right space-y-4">
-                  <h3 data-toc id="normal-distribution-academic-path" className="text-sm sm:text-base font-black text-[var(--color-text-primary)] flex items-center gap-2 border-b border-[var(--color-border)] pb-2">
-                    <Info size={16} className="text-[var(--color-accent-brass)]" />
-                    דרך נוסחתית ואופן פתרון הדרגתי (Academic Path)
-                  </h3>
-
-                  {isValid && calculation ? (
-                    <div className="space-y-4">
-                      {calculation.steps.map((st, sIdx) => (
-                        <FormattedStep key={sIdx} text={st} />
-                      ))}
-                    </div>
-                  ) : (
-                    <p className="text-[var(--color-text-primary)]0 text-sm font-bold">לא ניתן להציג דרך פתרון עקב שגיאות או ערכי קלט חסרים.</p>
-                  )}
                 </div>
               </div>
             </motion.div>

@@ -36,6 +36,8 @@ export { TableOfContents } from './TableOfContents';
 
 export { Card, CardHeader, CardBody } from './Card';
 export type { CardProps, CardHeaderProps, CardBodyProps } from './Card';
+export { Heading, SectionHeader } from './Heading';
+export type { HeadingProps, HeadingLevel, SectionHeaderProps } from './Heading';
 
 export type {
   // InputGroup
@@ -59,4 +61,3 @@ export type {
   // Disclosure
   DisclosureProps,
 } from './CustomComponents';
-
