@@ -231,18 +231,18 @@ const CALCULATOR_MODE_TABS: ReadonlyArray<ModeTab<CalculatorMode>> = [
 ];
 
 const FORWARD_VARIANT_OPTIONS: readonly VariantOption[] = [
-  { value: 'below', label: 'מצד שמאל', description: 'הסתברות מצטברת עד ערך X נתון.' },
-  { value: 'above', label: 'מצד ימין', description: 'הסתברות מהערך X ומעלה.' },
-  { value: 'between', label: 'בין שני ערכים', description: 'שטח כלוא בין גבול תחתון לגבול עליון.' },
-  { value: 'outside', label: 'מחוץ לתחום', description: 'שני הזנבות יחד מחוץ לשני גבולות.' },
-  { value: 'conditional', label: 'הסתברות מותנית', description: 'חישוב P(A|B) תחת תנאי רקע B.' },
+  { value: 'below', label: 'מצד שמאל', description: <>הסתברות מצטברת עד <InlineMath math="X" /> נתון.</> },
+  { value: 'above', label: 'מצד ימין', description: <>הסתברות מ־<InlineMath math="X" /> ומעלה.</> },
+  { value: 'between', label: 'בין שני ערכים', description: <>שטח כלוא בין <InlineMath math="X_1" /> לבין <InlineMath math="X_2" />.</> },
+  { value: 'outside', label: 'מחוץ לתחום', description: <>שני הזנבות יחד מחוץ ל־<InlineMath math="X_1, X_2" />.</> },
+  { value: 'conditional', label: 'הסתברות מותנית', description: <>חישוב <InlineMath math="P(A \\mid B)" /> תחת תנאי רקע <InlineMath math="B" />.</> },
 ];
 
 const INVERSE_VARIANT_OPTIONS: readonly VariantOption[] = [
-  { value: 'below', label: 'אחוזון שמאלי', description: 'מצא את ערך X כך שהשטח משמאל שווה ל-p.' },
-  { value: 'above', label: 'אחוזון ימני', description: 'מצא את ערך X כך שהשטח מימין שווה ל-p.' },
-  { value: 'between', label: 'טווח מרכזי', description: 'מצא שני גבולות כך שהשטח האמצעי שווה ל-p.' },
-  { value: 'outside', label: 'טווח זנבות', description: 'מצא שני גבולות כך שסכום הזנבות שווה ל-p.' },
+  { value: 'below', label: 'אחוזון שמאלי', description: <>מצא <InlineMath math="X" /> כך שהשטח משמאל שווה ל־<InlineMath math="p" />.</> },
+  { value: 'above', label: 'אחוזון ימני', description: <>מצא <InlineMath math="X" /> כך שהשטח מימין שווה ל־<InlineMath math="p" />.</> },
+  { value: 'between', label: 'טווח מרכזי', description: <>מצא <InlineMath math="X_1, X_2" /> כך שהשטח האמצעי שווה ל־<InlineMath math="p" />.</> },
+  { value: 'outside', label: 'טווח זנבות', description: <>מצא <InlineMath math="X_1, X_2" /> כך שסכום הזנבות שווה ל־<InlineMath math="p" />.</> },
 ];
 
 function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; description: string; badge: string } {
@@ -336,50 +336,10 @@ const ParameterInputCell: React.FC<ParameterInputCellProps> = ({
   </td>
 );
 
-interface ParameterSelectCellProps {
-  watermark: string;
-  colorClass: string;
-  label: React.ReactNode;
-  tooltip: React.ReactNode;
-  value: string;
-  onChange: (value: string) => void;
-  children: React.ReactNode;
-}
-
-const ParameterSelectCell: React.FC<ParameterSelectCellProps> = ({
-  watermark,
-  colorClass,
-  label,
-  tooltip,
-  value,
-  onChange,
-  children,
-}) => (
-  <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
-    <CellWatermark math={watermark} colorClass={colorClass} />
-    <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
-      <InputTooltip content={tooltip}>
-        <span className="text-center text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right">
-          {label}
-        </span>
-      </InputTooltip>
-      <div className="w-full max-w-[13rem] shrink-0 xl:w-48 xl:max-w-none">
-        <select
-          value={value}
-          onChange={(event) => onChange(event.target.value)}
-          className="w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-3 py-2 text-sm font-bold text-[var(--color-text-primary)] outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20"
-        >
-          {children}
-        </select>
-      </div>
-    </div>
-  </td>
-);
-
 interface VariantOption {
   value: CalcType;
-  label: string;
-  description: string;
+  label: React.ReactNode;
+  description: React.ReactNode;
 }
 
 interface CalculationVariantPickerProps {
@@ -630,31 +590,31 @@ const NormalChart: React.FC<{
 
   const xDomain = [mean - 4.2 * stdDev, mean + 4.2 * stdDev] as const;
   const xMarkers = useMemo(() => {
-    const markers: Array<{ value: number; label: string; color: string }> = [
-      { value: mean, label: 'μ', color: 'var(--color-accent-brass)' },
+    const markers: Array<{ value: number; math: string; color: string }> = [
+      { value: mean, math: '\\mu', color: 'var(--color-accent-brass)' },
     ];
 
     if (type === 'conditional' && mode === 'forward') {
-      markers.push({ value: x1, label: 'a₁', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x1, math: 'a_1', color: 'var(--color-accent-cobalt)' });
       if (condTypeA === 'between') {
-        markers.push({ value: x2, label: 'a₂', color: 'var(--color-accent-cobalt)' });
+        markers.push({ value: x2, math: 'a_2', color: 'var(--color-accent-cobalt)' });
       }
       if (typeof condX1 === 'number') {
-        markers.push({ value: condX1, label: 'b₁', color: 'var(--color-accent-teal)' });
+        markers.push({ value: condX1, math: 'b_1', color: 'var(--color-accent-teal)' });
       }
       if (condType === 'between' && typeof condX2 === 'number') {
-        markers.push({ value: condX2, label: 'b₂', color: 'var(--color-accent-teal)' });
+        markers.push({ value: condX2, math: 'b_2', color: 'var(--color-accent-teal)' });
       }
     } else if (mode === 'inverse') {
-      markers.push({ value: x1, label: 'X', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x1, math: 'X', color: 'var(--color-accent-cobalt)' });
       if (type === 'between' || type === 'outside') {
-        markers.push({ value: x2, label: 'X₂', color: 'var(--color-accent-teal)' });
+        markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
       }
     } else if (type === 'between' || type === 'outside') {
-      markers.push({ value: x1, label: 'X₁', color: 'var(--color-accent-cobalt)' });
-      markers.push({ value: x2, label: 'X₂', color: 'var(--color-accent-teal)' });
+      markers.push({ value: x1, math: 'X_1', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
     } else {
-      markers.push({ value: x1, label: 'X', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x1, math: 'X', color: 'var(--color-accent-cobalt)' });
     }
 
     return markers;
@@ -684,19 +644,19 @@ const NormalChart: React.FC<{
   }, [mean, stdDev, xDomain, xMarkers]);
 
   const legendChips = useMemo(() => {
-    const chips: Array<{ label: string; color: string; style: 'line' | 'area' }> = [
-      { label: 'μ', color: curveColor, style: 'line' },
+    const chips: Array<{ math: string; color: string; style: 'line' | 'area' }> = [
+      { math: '\\mu', color: curveColor, style: 'line' },
     ];
 
     if (type === 'conditional' && mode === 'forward') {
-      chips.push({ label: 'A / a₁,a₂', color: zLineColor, style: 'line' });
-      chips.push({ label: 'B / b₁,b₂', color: secondaryCurveColor, style: 'area' });
+      chips.push({ math: 'A / a_1, a_2', color: zLineColor, style: 'line' });
+      chips.push({ math: 'B / b_1, b_2', color: secondaryCurveColor, style: 'area' });
     } else {
-      chips.push({ label: type === 'between' || type === 'outside' ? 'X₁' : 'X', color: zLineColor, style: 'line' });
+      chips.push({ math: type === 'between' || type === 'outside' ? 'X_1' : 'X', color: zLineColor, style: 'line' });
       if (mode === 'inverse' && (type === 'between' || type === 'outside')) {
-        chips.push({ label: 'X₂', color: secondaryCurveColor, style: 'line' });
+        chips.push({ math: 'X_2', color: secondaryCurveColor, style: 'line' });
       } else if (type === 'between' || type === 'outside') {
-        chips.push({ label: 'X₂', color: secondaryCurveColor, style: 'line' });
+        chips.push({ math: 'X_2', color: secondaryCurveColor, style: 'line' });
       }
     }
 
@@ -737,12 +697,19 @@ const NormalChart: React.FC<{
 
     return (
       <g transform={`translate(${x},${y})`}>
-        <text x={0} y={12} textAnchor="middle" fill={marker.color} fontSize={18} fontWeight="bold">
-          {tickValue.toFixed(2)}
-        </text>
-        <text x={0} y={34} textAnchor="middle" fill={marker.color} fontSize={16} fontWeight="bold">
-          {marker.label}
-        </text>
+        <foreignObject x={-36} y={2} width={72} height={44} style={{ overflow: 'visible' }}>
+          <div
+            className="flex flex-col items-center justify-start leading-none"
+            style={{ color: marker.color }}
+          >
+            <span className="text-[1.125rem] font-black">
+              <InlineMath math={tickValue.toFixed(2)} />
+            </span>
+            <span className="mt-1 text-[1rem] font-black">
+              <InlineMath math={marker.math} />
+            </span>
+          </div>
+        </foreignObject>
       </g>
     );
   };
@@ -751,13 +718,13 @@ const NormalChart: React.FC<{
     <div className="h-[350px] w-full" dir="ltr">
       <div className="mb-3 flex flex-wrap items-center gap-4 border-b border-[var(--color-border)] pb-3">
         {legendChips.map((chip) => (
-          <div key={chip.label} className="flex items-center gap-1.5 font-black text-sm select-none" style={{ color: chip.color }}>
+          <div key={chip.math} className="flex items-center gap-1.5 font-black text-sm select-none" style={{ color: chip.color }}>
             {chip.style === 'line' ? (
               <span className="inline-block h-3 w-0.5" style={{ backgroundColor: chip.color }} />
             ) : (
               <span className="inline-block h-3 w-3 border" style={{ backgroundColor: `${chip.color}33`, borderColor: chip.color }} />
             )}
-            <span dir="ltr">{chip.label}</span>
+            <span dir="ltr"><InlineMath math={chip.math} /></span>
           </div>
         ))}
       </div>
@@ -2424,10 +2391,13 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                           <div className="text-right">
                             <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
-                              הסתברות מותנית
+                              <span className="inline-flex items-center gap-2">
+                                <span>הסתברות מותנית</span>
+                                <span dir="ltr"><InlineMath math="P(A \\mid B)" /></span>
+                              </span>
                             </h3>
                             <p className="max-w-md text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
-                              אותו flow עיצובי, אבל עבור חישוב מותנה שבו מאורע A נבחן רק בתוך מסגרת B.
+                              חישוב <InlineMath math="P(A \\mid B)" /> כאשר מאורע <InlineMath math="A" /> נבחן רק בתוך מסגרת <InlineMath math="B" />.
                             </p>
                           </div>
                           <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
@@ -2436,9 +2406,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="space-y-4">
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
                             <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
-                              הגדרת מאורע B ברקע
+                              הגדרת מאורע <InlineMath math="B" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMath math="B" />:</label>
                             <select
                               value={condType}
                               onChange={e => setCondType(e.target.value as CondType)}
@@ -2453,7 +2423,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                             <div>
-                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₁:</label>
+                              <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMath math="b_1" />:</label>
                               <input
                                 type="text"
                                 value={condX1Input}
@@ -2465,7 +2435,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             </div>
                             {condType === 'between' ? (
                               <div>
-                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך b₂:</label>
+                                <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">ערך <InlineMath math="b_2" />:</label>
                                 <input
                                   type="text"
                                   value={condX2Input}
@@ -2480,9 +2450,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                           <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
                             <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
-                              הגדרת מאורע A
+                              הגדרת מאורע <InlineMath math="A" />
                             </p>
-                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
+                            <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע <InlineMath math="A" />:</label>
                             <select
                               value={condTypeA}
                               onChange={e => setCondTypeA(e.target.value as CondType)}
