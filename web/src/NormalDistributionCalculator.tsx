@@ -215,18 +215,16 @@ interface NavigationTab {
 
 type CalculatorMode = Extract<CalcMode, 'forward' | 'inverse'>;
 
-function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; description: string; badge: string } {
+function getCalculatorHeroCopy(mode: CalculatorMode): { title: string; badge: string } {
   if (mode === 'forward') {
     return {
       title: 'מחשבון הסתברות בהתפלגות נורמלית',
-      description: 'אותה שפת עיצוב של דף בדיקת ההשערות, מותאמת לחישובי שטח, אחוזים ואירועים מותנים על עקומת גאוס.',
       badge: 'Probability Flow',
     };
   }
 
   return {
     title: 'מחשבון אחוזונים וערכים קריטיים',
-    description: 'אותו קצב עבודה מודרני של דף ההשערות, עבור התאמת אחוזון נתון לגבול X או לטווח סימטרי סביב התוחלת.',
     badge: 'Percentile Flow',
   };
 }
@@ -449,38 +447,42 @@ const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
 const CalculatorModeSwitch: React.FC<{
   value: CalculatorMode;
   onChange: (value: CalculatorMode) => void;
-}> = ({ value, onChange }) => (
-  <div
-    className="grid grid-cols-2 gap-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-1"
-    role="tablist"
-    aria-label="בחירת מצב מחשבון"
-  >
-    {[
-      { id: 'forward' as const, label: 'הסתברות', icon: <Percent size={14} /> },
-      { id: 'inverse' as const, label: 'אחוזון', icon: <Target size={14} /> },
-    ].map((item) => {
-      const isActive = value === item.id;
+}> = ({ value, onChange }) => {
+  const isInverse = value === 'inverse';
 
-      return (
-        <button
-          key={item.id}
-          type="button"
-          role="tab"
-          aria-selected={isActive}
-          onClick={() => onChange(item.id)}
-          className={`inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-black transition-all ${
-            isActive
-              ? 'bg-[linear-gradient(135deg,#24D1C7,#1C9EDE)] text-[#08131A] shadow-[0_0_0_1px_rgba(36,209,199,0.65)]'
-              : 'bg-transparent text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] hover:text-[var(--color-text-primary)]'
-          }`}
-        >
-          {item.icon}
-          <span>{item.label}</span>
-        </button>
-      );
-    })}
-  </div>
-);
+  return (
+    <button
+      type="button"
+      role="switch"
+      aria-checked={isInverse}
+      aria-label={`מצב מחשבון: ${isInverse ? 'אחוזון' : 'הסתברות'}`}
+      title={isInverse ? 'עכשיו: אחוזון. לחיצה תעביר להסתברות.' : 'עכשיו: הסתברות. לחיצה תעביר לאחוזון.'}
+      onClick={() => onChange(isInverse ? 'forward' : 'inverse')}
+      className="grid w-full cursor-pointer grid-cols-2 gap-2 rounded-lg border border-[rgba(36,209,199,0.38)] bg-[var(--color-surface-raised)] p-1 transition-all hover:border-[rgba(36,209,199,0.62)]"
+    >
+      <span
+        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-black transition-all ${
+          !isInverse
+            ? 'bg-[linear-gradient(135deg,#24D1C7,#1C9EDE)] text-[#08131A] shadow-[0_0_0_1px_rgba(36,209,199,0.72)]'
+            : 'bg-transparent text-[var(--color-text-secondary)]'
+        }`}
+      >
+        <Percent size={14} />
+        <span>הסתברות</span>
+      </span>
+      <span
+        className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-black transition-all ${
+          isInverse
+            ? 'bg-[linear-gradient(135deg,#F6D04D,#E9A91A)] text-[#18140A] shadow-[0_0_0_1px_rgba(246,208,77,0.72)]'
+            : 'bg-transparent text-[var(--color-text-secondary)]'
+        }`}
+      >
+        <Target size={14} />
+        <span>אחוזון</span>
+      </span>
+    </button>
+  );
+};
 
 // --- Components ---
 
@@ -2285,9 +2287,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         >
                           {heroCopy.title}
                         </Heading>
-                        <p className="max-w-2xl text-body-base text-[var(--color-text-secondary)]">
-                          {heroCopy.description}
-                        </p>
                       </div>
                     </div>
 
@@ -2331,7 +2330,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                   <div className="absolute top-0 right-0 h-1 w-full bg-[var(--color-accent-cobalt-bg-hover)]" />
 
                   <div className="relative z-10 space-y-5">
-                    <div className="flex items-center gap-3 border-b border-[var(--color-border)] pb-4">
+                    <div className="flex flex-col gap-3 border-b border-[var(--color-border)] pb-4 sm:flex-row sm:items-center">
                       <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
                         <Sliders size={20} />
                       </div>
@@ -2339,11 +2338,18 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
                           הגדרות ופרמטרי ההתפלגות
                         </h2>
-                        <p className="text-body-sm text-[var(--color-text-secondary)]">
-                          קלט נקי יותר: בלי עמודת הגדרת חישוב מיותרת, ועם אזור פרמטרים שמפנה מקום למה שבאמת צריך.
-                        </p>
                       </div>
-                      <div className="w-full max-w-[20rem]">
+                      <div className="flex w-full flex-col gap-3 sm:max-w-[28rem] sm:flex-row sm:items-center">
+                        <button
+                          type="button"
+                          onClick={resetNormalCalculator}
+                          aria-label="איפוס ערכים"
+                          title="איפוס ערכים"
+                          className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-black text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
+                        >
+                          <RefreshCw size={15} />
+                          <span>איפוס ערכים</span>
+                        </button>
                         <CalculatorModeSwitch
                           value={calculatorMode}
                           onChange={handleCalculatorModeChange}
@@ -2353,17 +2359,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                     <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-start">
                       <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-                        <div className="flex justify-end">
-                          <button
-                            onClick={resetNormalCalculator}
-                            aria-label="אפס ערכים"
-                            title="אפס ערכים"
-                            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] transition hover:bg-[var(--color-surface)]"
-                          >
-                            <RefreshCw size={15} />
-                          </button>
-                        </div>
-
                         <CalculationVariantPicker
                           value={mode === 'forward' ? forwardType : inverseType}
                           onChange={(nextValue) => mode === 'forward' ? setForwardType(nextValue) : setInverseType(nextValue)}
