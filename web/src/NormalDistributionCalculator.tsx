@@ -21,7 +21,6 @@ import {
   Sliders,
   X,
   Award,
-  TrendingUp,
   Star,
   Percent,
   Sigma,
@@ -398,14 +397,14 @@ const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
   onChange,
   options,
 }) => (
-  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
     <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
       <div className="text-right">
         <h3 className="text-body-base font-black text-[var(--color-text-primary)]">{title}</h3>
-        <p className="text-body-sm text-[var(--color-text-secondary)]">{subtitle}</p>
+        <p className="max-w-xl text-body-sm leading-relaxed text-[var(--color-text-secondary)]">{subtitle}</p>
       </div>
-      <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
-        <Target size={16} />
+      <div className="rounded-full border border-[var(--color-accent-cobalt)]/20 bg-[var(--color-accent-cobalt)]/10 px-2.5 py-1 text-caption font-black tracking-[0.08em] text-[var(--color-accent-cobalt)]">
+        FLOW
       </div>
     </div>
 
@@ -418,21 +417,23 @@ const CalculationVariantPicker: React.FC<CalculationVariantPickerProps> = ({
             key={option.value}
             type="button"
             onClick={() => onChange(option.value)}
-            className={`rounded-lg border px-4 py-3 text-right transition-all ${
+            className={`group rounded-lg border px-4 py-3 text-right transition-all ${
               isActive
-                ? 'border-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)]/14 shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
-                : 'border-[var(--color-border)] bg-[var(--color-surface-raised)] hover:border-[var(--color-accent-cobalt)]/45 hover:bg-[var(--color-accent-cobalt)]/6'
+                ? 'border-[var(--color-accent-cobalt)]/70 bg-[linear-gradient(135deg,rgba(92,92,255,0.16),rgba(92,92,255,0.06))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent-cobalt)]/35 hover:bg-[var(--color-accent-cobalt)]/5'
             }`}
           >
-            <div className="flex items-center justify-between gap-3">
-              <span className={`text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
-                {option.label}
-              </span>
-              <span className={`h-2.5 w-2.5 rounded-full ${isActive ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <span className={`block text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
+                  {option.label}
+                </span>
+                <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+                  {option.description}
+                </p>
+              </div>
+              <span className={`mt-1 h-2.5 w-2.5 rounded-full transition-colors ${isActive ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)] group-hover:bg-[var(--color-accent-cobalt)]/60'}`} />
             </div>
-            <p className="mt-2 text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
-              {option.description}
-            </p>
           </button>
         );
       })}
@@ -628,6 +629,50 @@ const NormalChart: React.FC<{
   const minStandardX = Math.min(x1, x2);
   const maxStandardX = Math.max(x1, x2);
 
+  const xDomain = [mean - 4.2 * stdDev, mean + 4.2 * stdDev] as const;
+  const xMarkers = useMemo(() => {
+    const markers: Array<{ value: number; label: string; color: string }> = [
+      { value: mean, label: 'μ', color: 'var(--color-accent-brass)' },
+    ];
+
+    if (mode === 'inverse') {
+      markers.push({ value: x1, label: 'X', color: 'var(--color-accent-cobalt)' });
+      if (type === 'between' || type === 'outside') {
+        markers.push({ value: x2, label: 'X₂', color: 'var(--color-accent-teal)' });
+      }
+    } else if (type === 'between' || type === 'outside') {
+      markers.push({ value: x1, label: 'X₁', color: 'var(--color-accent-cobalt)' });
+      markers.push({ value: x2, label: 'X₂', color: 'var(--color-accent-teal)' });
+    } else {
+      markers.push({ value: x1, label: 'X', color: 'var(--color-accent-cobalt)' });
+    }
+
+    return markers;
+  }, [mean, mode, type, x1, x2]);
+
+  const xAxisTicks = useMemo(() => {
+    const baseTicks = [
+      xDomain[0],
+      mean - 2 * stdDev,
+      mean,
+      mean + 2 * stdDev,
+      xDomain[1],
+      ...xMarkers.map((marker) => marker.value),
+    ];
+
+    const uniqueTicks = Array.from(new Set(baseTicks.map((tick) => Number(tick.toFixed(2))))).sort((a, b) => a - b);
+    const finalTicks: number[] = [];
+    const minSpacing = stdDev * 0.35;
+
+    for (const tick of uniqueTicks) {
+      if (finalTicks.length === 0 || tick - finalTicks[finalTicks.length - 1] >= minSpacing) {
+        finalTicks.push(tick);
+      }
+    }
+
+    return finalTicks;
+  }, [mean, stdDev, xDomain, xMarkers]);
+
   // Customized tooltip
   const CustomTooltipInner = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
@@ -645,10 +690,37 @@ const NormalChart: React.FC<{
     return null;
   };
 
+  const renderXAxisTick = (props: { x?: number | string; y?: number | string; payload?: { value?: number | string } }) => {
+    const x = typeof props.x === 'number' ? props.x : Number(props.x ?? 0);
+    const y = typeof props.y === 'number' ? props.y : Number(props.y ?? 0);
+    const tickValue = typeof props.payload?.value === 'number' ? props.payload.value : Number(props.payload?.value ?? 0);
+    const marker = xMarkers.find((item) => Math.abs(item.value - tickValue) < 0.01);
+    if (!marker) {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text x={0} y={12} textAnchor="middle" fill={axisLabelColor} fontSize={15} fontWeight="bold">
+            {tickValue.toFixed(0)}
+          </text>
+        </g>
+      );
+    }
+
+    return (
+      <g transform={`translate(${x},${y})`}>
+        <text x={0} y={12} textAnchor="middle" fill={marker.color} fontSize={18} fontWeight="bold">
+          {tickValue.toFixed(2)}
+        </text>
+        <text x={0} y={34} textAnchor="middle" fill={marker.color} fontSize={16} fontWeight="bold">
+          {marker.label}
+        </text>
+      </g>
+    );
+  };
+
   return (
     <div className="h-[350px] w-full" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 48 }}>
             <defs>
               <linearGradient id="mainColor" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={curveColor} stopOpacity={0.1} />
@@ -660,8 +732,9 @@ const NormalChart: React.FC<{
             <XAxis
               dataKey="x"
               type="number"
-              domain={[mean - 4.2 * stdDev, mean + 4.2 * stdDev]}
-              tick={{ fill: axisLabelColor, fontSize: 15, fontWeight: 'bold' }}
+              domain={xDomain}
+              ticks={xAxisTicks}
+              tick={renderXAxisTick}
               axisLine={{ stroke: mainGridColor }}
               tickLine={true}
             />
@@ -740,22 +813,13 @@ const NormalChart: React.FC<{
               />
             )}
 
-            {/* Reference Line for Mean */}
             <ReferenceLine
               x={mean}
               stroke={curveColor}
               strokeWidth={1.5}
               strokeDasharray="10 4"
-              label={{
-                value: `μ: ${mean.toFixed(2)}`,
-                position: 'top',
-                fill: curveColor,
-                fontSize: 14,
-                fontWeight: 'bold'
-              }}
             />
 
-            {/* Reference Lines for Inputs */}
             {type === 'conditional' ? (
               <>
                 {condX1 !== undefined && (condType === 'below' || condType === 'above' || condType === 'between') && (
@@ -764,13 +828,6 @@ const NormalChart: React.FC<{
                     stroke={secondaryCurveColor}
                     strokeWidth={1.5}
                     strokeDasharray="10 4"
-                    label={{
-                      value: condType === 'between' ? 'B: x1' : 'B',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {condX2 !== undefined && condType === 'between' && (
@@ -779,13 +836,6 @@ const NormalChart: React.FC<{
                     stroke={secondaryCurveColor}
                     strokeWidth={1.5}
                     strokeDasharray="10 4"
-                    label={{
-                      value: 'B: x2',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {(condTypeA === 'below' || condTypeA === 'above' || condTypeA === 'between') && (
@@ -793,13 +843,6 @@ const NormalChart: React.FC<{
                     x={x1}
                     stroke={boundaryLineColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: condTypeA === 'between' ? 'A: x1' : 'A',
-                      position: 'top',
-                      fill: boundaryLineColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
                 {condTypeA === 'between' && (
@@ -807,13 +850,6 @@ const NormalChart: React.FC<{
                     x={x2}
                     stroke={boundaryLineColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: 'A: x2',
-                      position: 'top',
-                      fill: boundaryLineColor,
-                      fontSize: 13,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
               </>
@@ -822,13 +858,6 @@ const NormalChart: React.FC<{
                 x={x1}
                 stroke={zLineColor}
                 strokeWidth={2.5}
-                label={{
-                  value: `Zx: ${x1.toFixed(2)}`,
-                  position: 'top',
-                  fill: zLineColor,
-                  fontSize: 14,
-                  fontWeight: 'bold'
-                }}
               />
             ) : (
               <>
@@ -836,26 +865,12 @@ const NormalChart: React.FC<{
                   x={x1}
                   stroke={zLineColor}
                   strokeWidth={2.5}
-                  label={{
-                    value: type === 'between' || type === 'outside' ? 'X₁' : 'X',
-                    position: 'top',
-                    fill: zLineColor,
-                    fontSize: 14,
-                    fontWeight: 'bold'
-                  }}
                 />
                 {(type === 'between' || type === 'outside') && (
                   <ReferenceLine
                     x={x2}
                     stroke={secondaryCurveColor}
                     strokeWidth={2.5}
-                    label={{
-                      value: 'X₂',
-                      position: 'top',
-                      fill: secondaryCurveColor,
-                      fontSize: 14,
-                      fontWeight: 'bold'
-                    }}
                   />
                 )}
               </>
@@ -2109,51 +2124,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
     setMode(nextMode);
   };
 
-  const chartLegend = (
-    <>
-      <span className="flex items-center gap-1.5 font-black text-[var(--color-accent-brass)] select-none" dir="ltr">
-        <span className="h-3 w-0.5 bg-[var(--color-accent-brass)] inline-block" />
-        <InlineMath math="\mu" />
-      </span>
-      <span className="flex items-center gap-1.5 font-black text-[var(--color-accent-cobalt)] select-none" dir="ltr">
-        <span className="w-3 h-3 rounded-none bg-[var(--color-accent-cobalt)]/40 border border-[var(--color-accent-cobalt)] inline-block" />
-        <InlineMath math="Z / X_1" />
-      </span>
-      {((mode === 'inverse' && (inverseType === 'between' || inverseType === 'outside')) || forwardType === 'between' || forwardType === 'outside' || forwardType === 'conditional') && (
-        <span className="flex items-center gap-1.5 font-black text-[var(--color-accent-teal)] select-none" dir="ltr">
-          <span className="w-3 h-3 rounded-none bg-[var(--color-accent-teal)]/30 border border-[var(--color-accent-teal)] inline-block" />
-          <InlineMath math={forwardType === 'conditional' ? 'B / X_2' : 'X_2'} />
-        </span>
-      )}
-    </>
-  );
-
-  const chartTitle = (
-    <div className="flex items-center gap-3">
-      <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
-        <TrendingUp size={18} />
-      </div>
-      <div className="text-right">
-        <p className="text-base sm:text-lg font-black text-[var(--color-text-primary)]">
-          {forwardType === 'conditional' && mode === 'forward' ? 'גרף הסתברות מותנית' : 'עקומת גאוס ושטחים מחושבים'}
-        </p>
-        <p className="text-body-sm text-[var(--color-text-secondary)]">
-          {mode === 'forward' ? 'אותו טיפול ויזואלי של דף ההשערות, עבור חישובי שטח בזמן אמת.' : 'אותו מבט גרפי עבור התאמת אחוזון וערך X.'}
-        </p>
-      </div>
-    </div>
-  );
-
-  const chartBadge = (
-    <span className="inline-flex items-center gap-2 rounded-full border border-[var(--color-accent-brass)]/40 bg-[var(--color-accent-brass)]/12 px-3 py-1 text-xs font-black tracking-wide text-[var(--color-accent-brass)]" dir="ltr">
-      {forwardType === 'conditional' && mode === 'forward'
-        ? <InlineMath math={`P(A|B) = ${chartProb.toFixed(4)}`} />
-        : mode === 'forward'
-          ? `Area ${ (chartProb * 100).toFixed(2)}%`
-          : `p = ${chartProb.toFixed(4)}`}
-    </span>
-  );
-
   return (
     <>
       <AnimatePresence mode="wait">
@@ -2404,26 +2374,26 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         />
                       </div>
 
-                      <div className={`rounded-lg border p-4 transition-all ${
+                      <div className={`rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all ${
                         mode === 'forward' && forwardType === 'conditional'
-                          ? 'border-[var(--color-accent-cobalt)]/45 bg-[var(--color-accent-cobalt)]/8 shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
-                          : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-55 saturate-0'
+                          ? 'border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                          : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-60 grayscale-[0.15]'
                       }`}>
                         <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                           <div className="text-right">
-                            <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-secondary)]'}`}>
+                            <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
                               הסתברות מותנית
                             </h3>
-                            <p className="text-body-sm text-[var(--color-text-secondary)]">
-                              חישוב P(A|B) תחת תנאי רקע B.
+                            <p className="max-w-md text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
+                              אותו flow עיצובי, אבל עבור חישוב מותנה שבו מאורע A נבחן רק בתוך מסגרת B.
                             </p>
                           </div>
                           <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
                         </div>
 
                         <div className="space-y-4">
-                          <div>
-                            <p className="mb-2 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-cobalt)]">
                               הגדרת מאורע B ברקע
                             </p>
                             <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע B:</label>
@@ -2466,8 +2436,8 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             ) : null}
                           </div>
 
-                          <div>
-                            <p className="mb-2 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
+                          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3">
+                            <p className="mb-3 border-b border-[var(--color-border)] pb-2 text-body-sm font-black text-[var(--color-accent-crimson)]">
                               הגדרת מאורע A
                             </p>
                             <label className="mb-1 block text-heading-label text-[var(--color-text-secondary)]">סוג המאורע A:</label>
@@ -2491,9 +2461,6 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                 <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 xl:[direction:ltr]">
                   <div dir="rtl">
                     <ChartWrapper
-                      title={chartTitle}
-                      legend={chartLegend}
-                      badge={chartBadge}
                       className="curve-glow"
                       height={300}
                       isEmpty={!isValid}
