@@ -2459,14 +2459,19 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       </div>
                     </div>
 
-                    <div className={`rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] transition-all ${
-                        mode === 'forward' && forwardType === 'conditional'
-                          ? 'border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
-                          : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]/55 opacity-60 grayscale-[0.15]'
-                      }`}>
+                    <AnimatePresence>
+                      {mode === 'forward' && forwardType === 'conditional' && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]">
                         <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                           <div className="text-right">
-                            <h3 className={`text-body-base font-black ${mode === 'forward' && forwardType === 'conditional' ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]/75'}`}>
+                            <h3 className="text-body-base font-black text-[var(--color-accent-cobalt)]">
                               <span className="inline-flex items-center gap-2 whitespace-nowrap">
                                 <span>הסתברות מותנית</span>
                                 <InlineMathToken math="P(A \mid B)" />
@@ -2476,7 +2481,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               פותרים בסדר קבוע: מגדירים קודם את עולם התנאי <InlineMathToken math="B" className="mx-1" />, אחר כך את המאורע המבוקש <InlineMathToken math="A" className="mx-1" />, ואז מחשבים <InlineMathToken math="P(A \cap B)" className="mx-1" /> ומחלקים ב־<InlineMathToken math="P(B)" className="mx-1" />.
                             </p>
                           </div>
-                          <div className={`h-3 w-3 rounded-full ${mode === 'forward' && forwardType === 'conditional' ? 'bg-[var(--color-accent-cobalt)]' : 'bg-[var(--color-border-strong)]'}`} />
+                          <div className="h-3 w-3 rounded-full bg-[var(--color-accent-cobalt)]" />
                         </div>
 
                         <div className="mb-4 grid gap-2 lg:grid-cols-3">
@@ -2621,7 +2626,10 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             הקריאה הרשמית היא: קודם <InlineMathToken math="P(B)" className="mx-1 text-[var(--color-accent-teal)]" />, אחר כך <InlineMathToken math="P(A \cap B)" className="mx-1 text-[var(--color-accent-cobalt)]" />, ולבסוף היחס ביניהן.
                           </p>
                         </div>
-                      </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </CalculatorSidebar>
 
