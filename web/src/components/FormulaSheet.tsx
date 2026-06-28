@@ -23,6 +23,7 @@ import {
   Sliders,
   Award,
   Sparkles
+  , Thermometer, Clock, Scale, PieChart
 } from 'lucide-react';
 import StatisticalHelperModal from './StatisticalHelperModal';
 
@@ -39,8 +40,24 @@ interface Section {
   id: string;
   title: string;
   icon: React.ReactNode;
+  watermarks?: React.ReactNode[];
   subsections: SubSection[];
 }
+
+
+const SectionWatermarks = ({ items }: { items: React.ReactNode[] }) => {
+  if (!items || items.length === 0) return null;
+  const repeatedItems = [...items, ...items, ...items, ...items];
+  return (
+    <div className="absolute inset-0 pointer-events-none select-none opacity-[0.02] dark:opacity-[0.03] text-[var(--color-text-primary)] z-0 flex flex-wrap justify-around items-center content-around gap-12 md:gap-24 p-8 overflow-hidden">
+      {repeatedItems.map((item, i) => (
+        <div key={i} className="text-5xl sm:text-7xl md:text-[8rem] font-black font-mono flex items-center justify-center" style={{ transform: `rotate(${[15, -10, 5, -20, 25, -5, 10, -15][i % 8]}deg)` }}>
+          {item}
+        </div>
+      ))}
+    </div>
+  );
+};
 
 export default function FormulaSheet({ theme }: FormulaSheetProps) {
   const [activeSection, setActiveSection] = useState<string>('c1');
@@ -190,6 +207,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
   const sections: Section[] = [
     {
       id: 'c1',
+      watermarks: [<InlineMath math="P(A)" />, <InlineMath math="n!" />, <InlineMath math="\binom{n}{k}" />, <InlineMath math="A \cap B" />, <InlineMath math="A \cup B" />],
       title: 'הסתברות וקומבינטוריקה',
       icon: <Layers className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -355,6 +373,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c2',
+      watermarks: [<InlineMath math="P(X=x)" />, <InlineMath math="\mathbb{E}[X]" />, <InlineMath math="\sigma^2" />, <InlineMath math="\mu" />, <InlineMath math="Var(X)" />],
       title: 'משתנים מקריים בדידים',
       icon: <BookOpen className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -484,6 +503,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c3',
+      watermarks: [<InlineMath math="f(x)" />, <Thermometer className="w-24 h-24 sm:w-32 sm:h-32" strokeWidth={1} />, <Clock className="w-24 h-24 sm:w-32 sm:h-32" strokeWidth={1} />, <Scale className="w-24 h-24 sm:w-32 sm:h-32" strokeWidth={1} />, <InlineMath math="\int f(x)dx=1" />],
       title: 'משתנים מקריים רציפים',
       icon: <TrendingUp className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -555,6 +575,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c4',
+      watermarks: [<InlineMath math="X \sim Bin(n, p)" />, <InlineMath math="X \sim N(\mu, \sigma^2)" />, <InlineMath math="X \sim U(a, b)" />, <InlineMath math="\lambda" />],
       title: 'התפלגויות מיוחדות',
       icon: <Sigma className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -729,6 +750,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c5',
+      watermarks: [<InlineMath math="Cov(X, Y)" />, <InlineMath math="\rho_{X,Y}" />, <InlineMath math="P(X, Y)" />, <InlineMath math="\mathbb{E}[XY]" />],
       title: 'משתנה מקרי דו-מימדי',
       icon: <Percent className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -829,6 +851,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c6',
+      watermarks: [<InlineMath math="\bar{X}" />, <InlineMath math="S^2" />, <PieChart className="w-24 h-24 sm:w-32 sm:h-32" strokeWidth={1} />, <BarChart2 className="w-24 h-24 sm:w-32 sm:h-32" strokeWidth={1} />],
       title: 'סטטיסטיקה תיאורית',
       icon: <BarChart2 className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -933,6 +956,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c7',
+      watermarks: [<InlineMath math="\hat{\theta}" />, <InlineMath math="MSE(\hat{\theta})" />, <InlineMath math="1-\alpha" />, <InlineMath math="Z_{1-\alpha/2}" />],
       title: 'אמידה ורווחי סמך',
       icon: <UserCheck className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -1074,6 +1098,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
     },
     {
       id: 'c8',
+      watermarks: [<InlineMath math="H_0" />, <InlineMath math="H_1" />, <InlineMath math="\alpha" />, <InlineMath math="\beta" />, <span className="font-sans tracking-tighter">P-Value</span>],
       title: 'פרוטוקול שלבי פתרון בבדיקת השערות',
       icon: <Award className="w-5 h-5 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]" />,
       subsections: [
@@ -1384,10 +1409,13 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
               key={section.id} 
               ref={sectionRefs[section.id as keyof typeof sectionRefs]}
               id={section.id}
-              className={`rounded-lg border p-5 md:p-6 transition-all scroll-mt-24 shadow-sm ${
+              className={`relative overflow-hidden rounded-lg border p-5 md:p-6 transition-all scroll-mt-24 shadow-sm ${
                 theme === 'dark' ? 'bg-[var(--color-surface)] border-[var(--color-border)]' : 'bg-white border-[var(--color-border)]'
               }`}
             >
+              {/* Section Watermarks */}
+              <SectionWatermarks items={section.watermarks || []} />
+
               {/* Section Header */}
               <div className="flex items-center gap-3 border-b border-[var(--color-border)] dark:border-[var(--color-border)] pb-3 mb-4">
                 <div className="p-2 bg-[var(--color-surface-raised)]/60 dark:bg-[var(--color-surface-raised)] rounded-lg">
