@@ -218,7 +218,6 @@ function studentTPPF(p: number, df: number): number {
 }
 
 // --- Types ---
-type TestType = 'single' | 'mean' | 'sum';
 type TailType = 'right' | 'left' | 'two-tailed';
 
 const DEFAULT_BODY_TEMPERATURE_STUDY = {
@@ -236,7 +235,6 @@ const DEFAULT_BODY_TEMPERATURE_STUDY = {
     nInput: '148',
     alpha: 0.05,
     alphaInput: '0.05',
-    testType: 'mean' as TestType,
     tailType: 'left' as TailType,
     ciTailType: 'two-tailed' as TailType,
     ciAlpha: 0.05,
@@ -645,7 +643,6 @@ export default function HypothesisTestingCalculator() {
     const [alpha, setAlpha] = useLocalStorageState<number>('HT_alpha', DEFAULT_BODY_TEMPERATURE_STUDY.alpha);
     const [alphaInput, setAlphaInput] = useLocalStorageState<string>('HT_alphaInput', DEFAULT_BODY_TEMPERATURE_STUDY.alphaInput);
 
-    const [testType, setTestType] = useLocalStorageState<TestType>('HT_testType', DEFAULT_BODY_TEMPERATURE_STUDY.testType);
     const [tailType, setTailType] = useLocalStorageState<TailType>('HT_tailType', DEFAULT_BODY_TEMPERATURE_STUDY.tailType);
 
     const [ciTailType, setCiTailType] = useLocalStorageState<TailType>('HT_ciTailType', DEFAULT_BODY_TEMPERATURE_STUDY.ciTailType);
@@ -655,15 +652,11 @@ export default function HypothesisTestingCalculator() {
         setCiAlpha(preset);
     };
 
-    const statSymbol = testType === 'single' ? 'X' : testType === 'sum' ? '\\sum X' : '\\bar{X}';
-    const statName = testType === 'single' ? 'הערך הבודד' : testType === 'sum' ? 'סכום המדגם' : 'ממוצע המדגם';
-    const statNamePlural = testType === 'single' ? 'ערכים בודדים' : testType === 'sum' ? 'סכומי מדגם' : 'ממוצעי מדגם';
-    const sampleStatisticLabel = testType === 'single' ? 'ערך בודד' : testType === 'sum' ? 'סכום מדגם' : 'ממוצע מדגם';
-    const sampleStatisticTooltip = testType === 'single'
-        ? 'הערך הבודד בפועל שנבדק מול השערת האפס'
-        : testType === 'sum'
-            ? 'סכום המדגם בפועל שנבדק מול השערת האפס'
-            : 'ממוצע המדגם בפועל שנבדק מול השערת האפס';
+    const statSymbol = '\\bar{X}';
+    const statName = 'ממוצע המדגם';
+    const statNamePlural = 'ממוצעי מדגם';
+    const sampleStatisticLabel = 'ממוצע מדגם';
+    const sampleStatisticTooltip = 'ממוצע המדגם בפועל שנבדק מול השערת האפס';
 
 
 
@@ -791,7 +784,6 @@ export default function HypothesisTestingCalculator() {
         setNInput(DEFAULT_BODY_TEMPERATURE_STUDY.nInput);
         setAlpha(DEFAULT_BODY_TEMPERATURE_STUDY.alpha);
         setAlphaInput(DEFAULT_BODY_TEMPERATURE_STUDY.alphaInput);
-        setTestType(DEFAULT_BODY_TEMPERATURE_STUDY.testType);
         setTailType(DEFAULT_BODY_TEMPERATURE_STUDY.tailType);
         setCiTailType(DEFAULT_BODY_TEMPERATURE_STUDY.ciTailType);
         setCiAlpha(DEFAULT_BODY_TEMPERATURE_STUDY.ciAlpha);
@@ -801,27 +793,11 @@ export default function HypothesisTestingCalculator() {
     const stats = useMemo(() => {
         if (!isValid) return null;
 
-        // 1. Calculate Standard Error (SE) based on Test Type and CLT
-        let se = sigma;
-        let effectH0Mean = mu0;
-        let effectH1Mean = muH1;
-
-        if (testType === 'mean') {
-            se = sigma / Math.sqrt(n);
-            effectH0Mean = mu0;
-            effectH1Mean = muH1;
-        } else if (testType === 'sum') {
-            se = sigma * Math.sqrt(n);
-            effectH0Mean = mu0 * n;
-            effectH1Mean = muH1 * n;
-        } else {
-            // Single item
-            se = sigma;
-            effectH0Mean = mu0;
-            effectH1Mean = muH1;
-        }
-
-        const df = testType === 'single' ? 1 : Math.max(1, n - 1);
+        // Mean-only hypothesis testing: standard error is based on the sampling distribution of X-bar.
+        const se = sigma / Math.sqrt(n);
+        const effectH0Mean = mu0;
+        const effectH1Mean = muH1;
+        const df = Math.max(1, n - 1);
 
         // Non-Centrality Parameter calculation
         const ncp = (effectH1Mean - effectH0Mean) / se;
@@ -907,7 +883,7 @@ export default function HypothesisTestingCalculator() {
             ncp,
             varianceKnown
         };
-    }, [mu0, mu1, muH1, sigma, n, alpha, testType, tailType, isValid, varianceKnown, calculatePower]);
+    }, [mu0, mu1, muH1, sigma, n, alpha, tailType, isValid, varianceKnown, calculatePower]);
 
     // --- Dynamic Decision Data Logic ---
     const decisionData = useMemo(() => {
@@ -1000,19 +976,17 @@ export default function HypothesisTestingCalculator() {
     const unifiedDecisionResult = useMemo(() => {
         if (!stats || !decisionData || !isValid) return null;
 
-        const decisionSampleSize = testType === 'single' ? 1 : n;
-
         return unifiedDecision({
             sample: decisionData.xBar,
             nullMean: stats.effectH0Mean,
-            stdDev: stats.se * Math.sqrt(decisionSampleSize),
-            n: decisionSampleSize,
+            stdDev: stats.se * Math.sqrt(n),
+            n,
             alpha,
             tail: tailType,
             varianceKnown: stats.varianceKnown,
             alternativeMean: stats.effectH1Mean,
         });
-    }, [stats, decisionData, isValid, testType, n, alpha, tailType]);
+    }, [stats, decisionData, isValid, n, alpha, tailType]);
 
     // --- Chart Limits for X-axis & Gradient Calculations ---
     const chartLimits = useMemo(() => {
@@ -1265,7 +1239,7 @@ export default function HypothesisTestingCalculator() {
             return (
                 <div className="p-3 border rounded-sm shadow-sm text-sm font-sans space-y-2 backdrop-blur-md bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-primary)] min-w-[160px]" dir="rtl">
                     <div className="flex justify-between gap-6 border-b border-[var(--color-border)] pb-2 mb-2">
-                        <span className="font-bold text-[var(--color-accent-cobalt)]">תצפית X:</span>
+                        <span className="font-bold text-[var(--color-accent-cobalt)]">ממוצע <InlineMath math="\bar{X}" />:</span>
                         <span className="font-mono font-bold text-[var(--color-accent-cobalt)]" dir="ltr">{dataPt.x.toFixed(2)}</span>
                     </div>
                     <div className="text-xs font-bold text-[var(--color-text-secondary)] mb-1">צפיפות הסתברות:</div>
@@ -1289,7 +1263,7 @@ export default function HypothesisTestingCalculator() {
             return (
                 <div className="p-3 border rounded-sm shadow-sm text-sm font-sans space-y-2 backdrop-blur-md bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-primary)] min-w-[160px]" dir="rtl">
                     <div className="flex justify-between gap-6 border-b border-[var(--color-border)] pb-2 mb-2">
-                        <span className="font-bold text-[var(--color-accent-cobalt)]">תצפית X:</span>
+                        <span className="font-bold text-[var(--color-accent-cobalt)]">ממוצע <InlineMath math="\bar{X}" />:</span>
                         <span className="font-mono font-bold text-[var(--color-accent-cobalt)]" dir="ltr">{dataPt.x.toFixed(2)}</span>
                     </div>
                     <div className="text-xs font-bold text-[var(--color-text-secondary)] mb-1">צפיפות הסתברות:</div>
@@ -1676,23 +1650,21 @@ export default function HypothesisTestingCalculator() {
                                             <CellWatermark math="n" colorClass="text-[var(--color-accent-brass)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}>
-                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${testType === 'single' ? 'opacity-30' : ''}`}>
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
                                                         <span>גודל מדגם (</span><InlineMath math="n" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
                                                     <input
                                                         type="text"
-                                                        value={testType === 'single' ? '1' : nInput}
-                                                        disabled={testType === 'single'}
+                                                        value={nInput}
                                                         onChange={(e) => handleNChange(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${testType === 'single' ? 'opacity-40 cursor-not-allowed bg-[var(--color-surface-raised)]/5 border-transparent' : ''
-                                                            } ${testType !== 'single' && (!nInput || errors.n) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : testType !== 'single' ? 'border-[var(--color-border)]' : ''}`}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!nInput || errors.n) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'}`}
                                                         placeholder=""
                                                         dir="ltr"
                                                     />
                                                     <AnimatePresence>
-                                                        {errors.n && testType !== 'single' && (
+                                                        {errors.n && (
                                                             <motion.div
                                                                 initial={{ opacity: 0, y: -5 }}
                                                                 animate={{ opacity: 1, y: 0 }}
@@ -1742,24 +1714,10 @@ export default function HypothesisTestingCalculator() {
                     {/* Main Test Parameter Selector */}
                     <div className="tour-step-test-type flex flex-col sm:flex-row items-center gap-4 bg-[var(--color-surface)] border border-[var(--color-border)] p-4 rounded-lg">
                         <span className="text-sm font-black text-[var(--color-text-primary)] text-right shrink-0">הפרמטר:</span>
-                        <div className="grid grid-cols-3 gap-3 w-full">
-                            {[
-                                { id: 'single', label: <span>תצפית <InlineMath math="X" /></span> },
-                                { id: 'mean', label: <span>ממוצע <InlineMath math="\bar{X}" /></span> },
-                                { id: 'sum', label: <span>סכום <InlineMath math="\Sigma X" /></span> }
-                            ].map((item) => (
-                                <button
-                                    key={item.id}
-                                    type="button"
-                                    onClick={() => setTestType(item.id as TestType)}
-                                    className={`py-3 px-4 rounded-sm text-xs sm:text-sm font-black transition-all text-center border ${testType === item.id
-                                        ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white border-[var(--color-accent-cobalt-line)] shadow-md scale-[1.02]'
-                                        : 'bg-[var(--color-surface)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:bg-[var(--color-surface)]'
-                                        }`}
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
+                        <div className="grid grid-cols-1 gap-3 w-full">
+                            <div className="py-3 px-4 rounded-sm text-xs sm:text-sm font-black text-center border bg-[var(--color-accent-cobalt-bg-hover)] text-white border-[var(--color-accent-cobalt-line)] shadow-md">
+                                <span>ממוצע <InlineMath math="\bar{X}" /></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2169,22 +2127,9 @@ export default function HypothesisTestingCalculator() {
                                                             לחץ על הסימן הלוגי ( <InlineMath math="<, >, \neq" /> ) במשוואה כדי לשנות את כיוון המבחן.
                                                         </p>
                                                         {(() => {
-                                                            let parameterSymbol = '\\mu';
-                                                            let h0Val = mu0Input;
-                                                            let nullValueSymbol = '\\mu_0';
-
-                                                            if (testType === 'sum') {
-                                                                parameterSymbol = 'E(\\sum X)';
-                                                                nullValueSymbol = 'n \\cdot \\mu_0';
-                                                                const parsedMu0 = parseFloat(mu0Input);
-                                                                const parsedN = parseInt(nInput, 10);
-                                                                if (!isNaN(parsedMu0) && !isNaN(parsedN)) {
-                                                                    h0Val = (parsedN * parsedMu0).toString();
-                                                                } else {
-                                                                    h0Val = 'n \\cdot \\mu_0';
-                                                                }
-                                                            }
-
+                                                            const parameterSymbol = '\\mu';
+                                                            const h0Val = mu0Input;
+                                                            const nullValueSymbol = '\\mu_0';
                                                             let h0Symbol = '=';
                                                             let h1Symbol = '\\neq';
 
@@ -2855,8 +2800,8 @@ export default function HypothesisTestingCalculator() {
                                                                 {/* Approach 2 */}
                                                                 {(() => {
                                                                     if (!stats) return null;
-                                                                    const paramSymbol = testType === 'sum' ? '\\sum X' : testType === 'single' ? 'X' : '\\bar{X}';
-                                                                    const muSymbol = testType === 'sum' ? 'E(\\sum X)' : '\\mu_0';
+                                                                    const paramSymbol = '\\bar{X}';
+                                                                    const muSymbol = '\\mu_0';
                                                                     return (
                                                                         <AnimatedDetails id="hypothesis-step-4-rejection-region" tocId="hypothesis-step-4-rejection-region" className="group rounded-lg bg-[var(--color-surface)] border border-[var(--color-border)] shadow-sm transition-all duration-300 [&_summary::-webkit-details-marker]:hidden" defaultOpen={false}>
                                                                             <summary className="flex items-center gap-3 p-4 sm:p-5 cursor-pointer text-[var(--color-accent-cobalt)] font-bold outline-none select-none hover:bg-[var(--color-surface-raised)] rounded-t-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
@@ -2972,39 +2917,16 @@ export default function HypothesisTestingCalculator() {
 
                                                         <div className="pr-5 py-1 space-y-5">
                                                             <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
-                                                                נחשב את שגיאת התקן (SE) של ההתפלגות שלנו ע"י{' '}
-                                                                {testType === 'single' ? (
-                                                                    <span dir="ltr"><InlineMath math={varianceKnown ? '\\sigma' : 'S'} /></span>
-                                                                ) : testType === 'mean' ? (
-                                                                    <span dir="ltr"><InlineMath math={`\\frac{${varianceKnown ? '\\sigma' : 'S'}}{\\sqrt{n}}`} /></span>
-                                                                ) : (
-                                                                    <span dir="ltr"><InlineMath math={`\\sqrt{n} \\cdot ${varianceKnown ? '\\sigma' : 'S'}`} /></span>
-                                                                )}
+                                                                נחשב את שגיאת התקן (SE) של התפלגות ממוצע המדגם ע"י{' '}
+                                                                <span dir="ltr"><InlineMath math={`\\frac{${varianceKnown ? '\\sigma' : 'S'}}{\\sqrt{n}}`} /></span>
                                                                 :
                                                             </p>
                                                             <div className="py-3 space-y-4 text-xl md:text-2xl">
 
 
                                                                 <CalcBlock>
-                                                                    {testType === 'single' ? (
-                                                                        <BlockMath math={`SMoE = ${varianceKnown ? '\\sigma' : 'S'} = ${sigmaInput}`} />
-                                                                    ) : testType === 'mean' ? (
-                                                                        <BlockMath math={`SE = \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = \\frac{${sigmaInput}}{${Math.sqrt(n).toFixed(4)}} = ${stats.se.toFixed(4)}`} />
-                                                                    ) : (
-                                                                        <BlockMath math={`SE = \\sqrt{${nInput}} \\cdot ${sigmaInput} = ${Math.sqrt(n).toFixed(4)} \\cdot ${sigmaInput} = ${stats.se.toFixed(4)}`} />
-                                                                    )}
+                                                                    <BlockMath math={`SE = \\frac{${sigmaInput}}{\\sqrt{${nInput}}} = \\frac{${sigmaInput}}{${Math.sqrt(n).toFixed(4)}} = ${stats.se.toFixed(4)}`} />
                                                                 </CalcBlock>
-
-                                                                {testType === 'sum' && (
-                                                                    <div className="text-sm sm:text-base font-bold text-[var(--color-text-primary)] mt-2 p-4 bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg">
-                                                                        ממוצעי ההתפלגות החדשים הופכים ל-
-                                                                        <InlineMath math={`n \\cdot \\mu`} />:
-                                                                        <br />
-                                                                        תחת H₀: <InlineMath math={`E(\\sum X) = ${nInput} \\cdot ${mu0Input} = ${stats.effectH0Mean}`} />
-                                                                        <br />
-                                                                        תחת H₁: <InlineMath math={`E(\\sum X) = ${nInput} \\cdot ${mu1Input} = ${stats.effectH1Mean}`} />
-                                                                    </div>
-                                                                )}
                                                             </div>
 
                                                             <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">

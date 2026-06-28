@@ -62,7 +62,6 @@ function renderCalculator(values: StorageValues) {
     HT_nInput: '36',
     HT_alpha: 0.05,
     HT_alphaInput: '0.05',
-    HT_testType: 'mean',
     HT_tailType: 'right',
     ...values,
   });
@@ -126,10 +125,15 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     expect(html).not.toContain('נתוני מדגם ה-IQ מ-2025');
   });
 
-  it('renders a mode-aware sample statistic label for single, mean, and sum modes', () => {
-    expect(renderCalculator({ HT_testType: 'single' })).toContain('ערך בודד');
-    expect(renderCalculator({ HT_testType: 'mean' })).toContain('ממוצע מדגם');
-    expect(renderCalculator({ HT_testType: 'sum' })).toContain('סכום מדגם');
+  it('keeps the hypothesis calculator locked to sample-mean testing', () => {
+    const html = renderCalculator({
+      HT_testType: 'single',
+    });
+
+    expect(html).toContain('ממוצע מדגם');
+    expect(html).toContain('ממוצע המדגם');
+    expect(html).not.toContain('ערך בודד');
+    expect(html).not.toContain('סכום מדגם');
   });
 
   it('renders the parameter table in the requested order with editable sigma and math placeholders', () => {
