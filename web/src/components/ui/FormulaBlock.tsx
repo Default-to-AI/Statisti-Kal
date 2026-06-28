@@ -13,6 +13,7 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
+import { Award } from 'lucide-react';
 
 export type FormulaBlockVariant = 'formula' | 'calculation';
 
@@ -103,3 +104,26 @@ export interface CalcBlockProps extends Omit<FormulaBlockProps, 'variant' | 'lab
 export const CalcBlock: React.FC<CalcBlockProps> = ({ label = 'Calculation', ...rest }) => (
   <FormulaBlock variant="calculation" label={label} {...rest} />
 );
+
+/**
+ * ResultBlock — presentation for final results
+ */
+export interface ResultBlockProps extends HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export const ResultBlock: React.FC<ResultBlockProps> = ({ children, className = '', ...rest }) => (
+  <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} {...rest}>
+    <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-brass)]/60">
+      <Award size={36} strokeWidth={1.2} />
+    </div>
+    <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
+      <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-accent-brass)] rounded-lg bg-[var(--color-accent-brass)]/10 px-6 py-4 text-lg sm:text-xl md:text-2xl flex flex-col justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-accent-brass)] font-bold">
+        <div className="w-full min-w-0 space-y-3 whitespace-normal leading-relaxed">
+          {children}
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
