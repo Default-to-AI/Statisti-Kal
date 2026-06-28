@@ -64,3 +64,7 @@ export type {
 
 export { Tooltip, ChartTooltip, InputHelpTooltip } from './Tooltip';
 export type { TooltipProps, TooltipPlacement, TooltipSize, ChartTooltipProps, ChartTooltipPayload, InputHelpTooltipProps } from './Tooltip';
+
+export { FormulaBlock, CalcBlock, ResultBlock } from './FormulaBlock';
+export type { FormulaBlockProps, FormulaBlockVariant, CalcBlockProps, ResultBlockProps } from './FormulaBlock';
+
