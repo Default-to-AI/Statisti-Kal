@@ -6,9 +6,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { InlineMath, BlockMath } from 'react-katex';
-import { 
-  ChevronDown, 
-  ChevronUp, 
+import {
+  ChevronDown,
+  ChevronUp,
   BookOpen, 
   Layers, 
   TrendingUp, 
@@ -26,6 +26,7 @@ import {
   , Thermometer, Clock, Scale, PieChart
 } from 'lucide-react';
 import StatisticalHelperModal from './StatisticalHelperModal';
+import { FormulaBlock } from './ui';
 
 interface FormulaSheetProps {
   theme: 'light' | 'dark';
@@ -1062,18 +1063,92 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
         {
           title: 'רווח סמך לתוחלת כאשר שונות האוכלוסייה ידועה (Z)',
           content: (
-            <div className="space-y-3">
+            <div className="space-y-4">
               <p className="text-sm">
                 בניית טווח ערכים לתוחלת במונחי רמת סמך <InlineMath math="1-\alpha" />, כאשר סטיית תקן האוכלוסייה ידועה במלואה:
               </p>
-              <div className="p-3.5 bg-[var(--color-surface-raised)]/50 dark:bg-[var(--color-surface)]/40 rounded-lg text-center">
+              <FormulaBlock
+                label="רווח סמך לתוחלת"
+                className="border-[var(--color-border)] bg-[var(--color-surface)]/80"
+              >
                 <BlockMath math="\overline{X} \pm Z_{1 - \alpha/2} \cdot \frac{\sigma}{\sqrt{n}}" />
-              </div>
+              </FormulaBlock>
               <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)]">
-                <strong>אורך רווח הסמך <InlineMath math="(L)" />:</strong> שווה למרחק שבין שני הגבולות, כלומר פעמיים מרחק השגיאה:
+                כאן מרכז הרווח הוא <InlineMath math="\overline{X}" />, ומרחק השגיאה נקבע לפי הערך הקריטי <InlineMath math="Z_{1-\alpha/2}" /> ושגיאת התקן <InlineMath math="\frac{\sigma}{\sqrt{n}}" />.
               </p>
-              <div className="p-2.5 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)] text-center font-mono rounded">
-                <InlineMath math="L = 2 \cdot Z_{1 - \alpha/2} \cdot \frac{\sigma}{\sqrt{n}}" />
+            </div>
+          )
+        },
+        {
+          title: 'ניתוח אורך רווח הסמך וגודל השגיאה (L, d)',
+          content: (
+            <div className="space-y-4">
+              <div className="rounded-xl border border-[var(--color-accent-cobalt-line)] bg-[var(--color-accent-cobalt-bg)]/10 overflow-hidden">
+                <div className="flex items-center gap-2 border-b border-[var(--color-accent-cobalt-line)] bg-[var(--color-accent-cobalt-bg)]/20 px-4 py-2.5">
+                  <span className="inline-flex rounded-full bg-[var(--color-accent-brass)]/20 px-2 py-0.5 text-caption font-extrabold text-[var(--color-accent-brass)]">
+                    L / d
+                  </span>
+                  <h4 className="text-sm sm:text-base font-extrabold text-[var(--color-text-primary)]">
+                    ניתוח אורך רווח הסמך
+                  </h4>
+                </div>
+
+                <div className="space-y-4 p-4 sm:p-5">
+                  <p className="text-sm sm:text-body-sm leading-relaxed text-[var(--color-text-primary)]">
+                    אורך רווח הסמך הוא המרחק בין שני הגבולות של הרווח. מאחר שרווח הסמך לתוחלת סביב
+                    {' '}
+                    <InlineMath math="\bar{X}" />
+                    {' '}
+                    נבנה באופן סימטרי, אורך הרווח שווה לפעמיים מרחק השגיאה.
+                  </p>
+
+                  <FormulaBlock
+                    label="אורך הרווח"
+                    className="border-[var(--color-accent-cobalt-line)] bg-[var(--color-surface-raised)]/80"
+                  >
+                    <BlockMath math="L = 2 \cdot Z_{1 - \alpha/2} \cdot \frac{\sigma}{\sqrt{n}}" />
+                  </FormulaBlock>
+
+                  <div className="space-y-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/60 p-4">
+                    <p className="text-sm sm:text-body-sm leading-relaxed text-[var(--color-text-primary)]">
+                      <strong>הסטייה המקסימלית המותרת <InlineMath math="(d)" />:</strong>
+                      {' '}
+                      מחצית מאורך הרווח, כלומר "פלוס מינוס" סביב האומד:
+                    </p>
+                    <div className="rounded-lg bg-[var(--color-surface-raised)]/70 px-3 py-3 text-center">
+                      <BlockMath math="d = \frac{L}{2} = Z_{1 - \alpha/2} \cdot \frac{\sigma}{\sqrt{n}}" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/45 p-4">
+                    <p className="text-sm sm:text-body-sm font-bold text-[var(--color-text-primary)]">
+                      אורך רווח הסמך תלוי ב-3 גורמים:
+                    </p>
+                    <ol className="space-y-3 pr-5 text-sm sm:text-body-sm text-[var(--color-text-secondary)] marker:font-extrabold marker:text-[var(--color-accent-brass)] list-decimal">
+                      <li>
+                        <strong className="text-[var(--color-text-primary)]">גודל המדגם <InlineMath math="(n)" />:</strong>
+                        {' '}
+                        ככל ש-<InlineMath math="n" /> גדול יותר, המכנה גדל ולכן אורך הרווח
+                        {' '}
+                        <strong className="text-[var(--color-accent-teal)]">יקטן</strong>.
+                      </li>
+                      <li>
+                        <strong className="text-[var(--color-text-primary)]">רמת הסמך <InlineMath math="(1-\alpha)" />:</strong>
+                        {' '}
+                        ככל שנדרשת רמת ביטחון גבוהה יותר, הערך הקריטי <InlineMath math="Z" /> גדול יותר ולכן אורך הרווח
+                        {' '}
+                        <strong className="text-[var(--color-accent-brass)]">יגדל</strong>.
+                      </li>
+                      <li>
+                        <strong className="text-[var(--color-text-primary)]">שונות האוכלוסייה <InlineMath math="(\sigma^2)" />:</strong>
+                        {' '}
+                        פיזור גדול יותר באוכלוסייה מגדיל את <InlineMath math="\sigma" />, ולכן מתקבל רווח סמך
+                        {' '}
+                        <strong className="text-[var(--color-accent-brass)]">ארוך יותר</strong>.
+                      </li>
+                    </ol>
+                  </div>
+                </div>
               </div>
             </div>
           )
