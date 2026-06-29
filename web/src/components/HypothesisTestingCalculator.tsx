@@ -14,9 +14,11 @@ import {
     ChartLegend,
     ChartTooltipShell,
     renderChartMathReferenceLabel,
-    type ChartLegendItem,
-    type ChartTooltipProps,
+    sharedChartMargins,
+    sharedXAxisProps,
+    sharedYAxisProps,
 } from './charts/ChartPrimitives';
+import type { ChartLegendItem, ChartTooltipProps } from './charts/ChartPrimitives';
 import HypothesisTestDisplay from './HypothesisTestDisplay';
 import { unifiedDecision } from '../lib/statistics/hypothesis';
 import {
@@ -1605,7 +1607,7 @@ export default function HypothesisTestingCalculator() {
                         {isValid && stats ? (
                             <div className="h-[305px] w-full mt-2" dir="ltr">
                                 <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
+                                    <AreaChart data={chartData} margin={sharedChartMargins}>
                                         <defs>
                                             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
                                                 <stop offset="5%" stopColor={'var(--color-accent-brass)'} stopOpacity={0.1} />
@@ -1664,8 +1666,7 @@ export default function HypothesisTestingCalculator() {
                                         <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--chart-grid)'} />
 
                                         <XAxis
-                                            dataKey="x"
-                                            type="number"
+                                            {...sharedXAxisProps}
                                             domain={[chartLimits.xMin, chartLimits.xMax]}
                                             ticks={xAxisTicks}
                                             tick={(props: any) => {
@@ -1687,17 +1688,8 @@ export default function HypothesisTestingCalculator() {
                                                     </g>
                                                 );
                                             }}
-                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                            tickLine={true}
-                                            tickFormatter={(val) => val.toFixed(2)}
                                         />
-                                        <YAxis
-                                            tickFormatter={(val) => val.toFixed(2)}
-                                            tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }}
-                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                            tickLine={true}
-                                            width={45}
-                                        />
+                                        <YAxis {...sharedYAxisProps} />
                                         <RechartsTooltip content={<CustomChartTooltip />} />
 
                                         {/* H0 Curve Base Area */}
@@ -2420,14 +2412,8 @@ export default function HypothesisTestingCalculator() {
                                                                                     </linearGradient>
                                                                                 </defs>
                                                                                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--chart-grid)" opacity={0.5} />
-                                                                                <XAxis dataKey="x" type="number" domain={[-3.5, 3.5]} tickFormatter={(val) => val.toFixed(2)} stroke="var(--chart-grid)" tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }} />
-                                                                                <YAxis
-                                                                                    tickFormatter={(val) => val.toFixed(2)}
-                                                                                    tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }}
-                                                                                    axisLine={{ stroke: 'var(--chart-grid)' }}
-                                                                                    tickLine={true}
-                                                                                    width={45}
-                                                                                />
+                                                                                <XAxis {...sharedXAxisProps} domain={[-3.5, 3.5]} tickFormatter={(val: number) => val.toFixed(2)} tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }} />
+                                                                                <YAxis {...sharedYAxisProps} />
                                                                                 <Area type="monotone" dataKey="y" stroke="var(--color-accent-cobalt)" strokeWidth={2.5} fill="url(#miniH0Color)" isAnimationActive={false} />
                                                                                 <Area type="monotone" dataKey="alphaShade" stroke="none" fill="var(--color-accent-crimson)" fillOpacity={0.5} isAnimationActive={false} />
 

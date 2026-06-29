@@ -16,9 +16,11 @@ import {
   ChartLegend,
   ChartTooltipShell,
   renderChartMathReferenceLabel,
-  type ChartLegendItem,
-  type ChartTooltipProps,
+  sharedChartMarginsWithLargeTicks,
+  sharedXAxisProps,
+  sharedYAxisProps,
 } from './ChartPrimitives';
+import type { ChartLegendItem, ChartTooltipProps } from './ChartPrimitives';
 
 interface NormalChartDataPoint {
   x: number;
@@ -278,7 +280,7 @@ export const NormalChart: React.FC<{
         <ChartLegend items={legendChips} />
       </div>
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 24, right: 10, left: -25, bottom: 110 }}>
+        <AreaChart data={chartData} margin={sharedChartMarginsWithLargeTicks}>
           <defs>
             <linearGradient id="mainColor" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={curveColor} stopOpacity={0.1} />
@@ -288,21 +290,12 @@ export const NormalChart: React.FC<{
           <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={mainGridColor} />
 
           <XAxis
-            dataKey="x"
-            type="number"
+            {...sharedXAxisProps}
             domain={xDomain}
             ticks={xAxisTicks}
             tick={renderXAxisTick}
-            axisLine={{ stroke: mainGridColor }}
-            tickLine={true}
           />
-          <YAxis
-            tickFormatter={(val) => val.toFixed(2)}
-            tick={{ fill: axisLabelColor, fontSize: 12, fontWeight: 'bold' }}
-            axisLine={{ stroke: mainGridColor }}
-            tickLine={true}
-            width={45}
-          />
+          <YAxis {...sharedYAxisProps} />
           <RechartsTooltip content={<CustomTooltipInner />} />
 
           {/* Always render standard curve path */}

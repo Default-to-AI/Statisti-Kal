@@ -37,6 +37,8 @@ import {
   Heading,
   SectionHeader,
   Tooltip as UITooltip,
+  CalculatorSectionHeader,
+  ParameterGrid,
 } from './ui';
 import {
   CalculationVariantPicker,
@@ -644,32 +646,30 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                 <div className="absolute top-0 right-0 h-1 w-full bg-[var(--color-accent-cobalt-bg-hover)]" />
 
                 <div className="relative z-10 space-y-5">
-                  <div className="flex flex-col gap-3 border-b border-[var(--color-border)] pb-4 sm:flex-row sm:items-center">
-                    <div className="rounded-lg bg-[var(--color-accent-cobalt-bg)]/20 p-2 text-[var(--color-accent-cobalt)]">
-                      <Sliders size={20} />
-                    </div>
-                    <div className="flex-1 text-right">
-                      <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
-                        הגדרות ופרמטרי ההתפלגות
-                      </h2>
-                    </div>
-                    <div className="flex w-full flex-col gap-3 sm:max-w-[28rem] sm:flex-row sm:items-center">
-                      <button
-                        type="button"
-                        onClick={resetNormalCalculator}
-                        aria-label="איפוס ערכים"
-                        title="איפוס ערכים"
-                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-black text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
-                      >
-                        <RefreshCw size={15} />
-                        <span>איפוס ערכים</span>
-                      </button>
-                      <CalculatorModeSwitch
-                        value={calculatorMode}
-                        onChange={handleCalculatorModeChange}
-                      />
-                    </div>
-                  </div>
+                  <CalculatorSectionHeader
+                    id="normal-distribution-controls"
+                    title="הגדרות ופרמטרי ההתפלגות"
+                    subtitle="Parameters"
+                    icon={<Sliders size={20} />}
+                    actions={
+                      <>
+                        <button
+                          type="button"
+                          onClick={resetNormalCalculator}
+                          aria-label="איפוס ערכים"
+                          title="איפוס ערכים"
+                          className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-black text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
+                        >
+                          <RefreshCw size={15} />
+                          <span>איפוס ערכים</span>
+                        </button>
+                        <CalculatorModeSwitch
+                          value={calculatorMode}
+                          onChange={handleCalculatorModeChange}
+                        />
+                      </>
+                    }
+                  />
 
                   <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 xl:items-start">
                     <div className="flex flex-col gap-4 rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
@@ -680,29 +680,22 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       />
                     </div>
 
-                    <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
-                      <table className="w-full border-collapse border-spacing-0">
-                        <thead>
-                          <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                            <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
-                                <InlineMath math="N" />
-                              </div>
-                              <div className="relative z-10 flex items-center justify-center gap-1.5">
-                                <span>פרמטרי ההתפלגות</span>
-                              </div>
-                            </th>
-                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
-                                <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
-                              </div>
-                              <div className="relative z-10">
-                                {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
-                              </div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
+                    <ParameterGrid
+                      headers={[
+                        <>
+                          <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
+                            <InlineMath math="N" />
+                          </div>
+                          <span>פרמטרי ההתפלגות</span>
+                        </>,
+                        <>
+                          <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
+                            <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
+                          </div>
+                          {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
+                        </>
+                      ]}
+                    >
                           <tr className="border-b border-[var(--color-border)]">
                             <ParameterInputCell
                               watermark="\mu"
@@ -758,9 +751,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
                             />
                           </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    </ParameterGrid>
                   </div>
 
                   <AnimatePresence>

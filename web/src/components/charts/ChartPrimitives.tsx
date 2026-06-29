@@ -142,3 +142,21 @@ export function renderChartMathReferenceLabel(
     </foreignObject>
   );
 }
+
+export const sharedChartMargins = { top: 24, right: 10, left: -25, bottom: 25 };
+export const sharedChartMarginsWithLargeTicks = { top: 24, right: 10, left: -25, bottom: 110 };
+
+export const sharedXAxisProps = {
+  dataKey: 'x',
+  type: 'number' as const,
+  axisLine: { stroke: 'var(--chart-grid)' },
+  tickLine: true,
+};
+
+export const sharedYAxisProps = {
+  tickFormatter: (val: number) => val.toFixed(2),
+  tick: { fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' },
+  axisLine: { stroke: 'var(--chart-grid)' },
+  tickLine: true,
+  width: 45,
+};

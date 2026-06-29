@@ -32,6 +32,8 @@ export {
 export { PageLayout } from './PageLayout';
 export type { PageLayoutProps } from './PageLayout';
 
+export { CalculatorPanel, CalculatorSectionHeader, ParameterGrid } from './CalculatorLayout';
+
 export { TableOfContents } from './TableOfContents';
 
 export { Card, CardHeader, CardBody } from './Card';
