@@ -54,7 +54,7 @@ import {
     ExternalLink
 } from 'lucide-react';
 import { ChartWrapper } from './ui/CustomComponents';
-import { HypothesisChart } from './charts/HypothesisChart';
+import { HypothesisChart, type HypothesisAxisTick } from './charts/HypothesisChart';
 import {
     ResponsiveContainer,
     AreaChart,
@@ -846,77 +846,66 @@ export default function HypothesisTestingCalculator() {
 
     // --- Chart Limits for X-axis & Gradient Calculations ---
     const chartLimits = useMemo(() => {
-        if (!stats || !isValid) return { xMin: 0, xMax: 100 };
-        const { effectH0Mean, effectH1Mean, se } = stats;
-        const minCenter = calculatePower ? Math.min(effectH0Mean, effectH1Mean) : effectH0Mean;
-        const maxCenter = calculatePower ? Math.max(effectH0Mean, effectH1Mean) : effectH0Mean;
+        if (!stats || !decisionData || !isValid) return { xMin: 0, xMax: 100 };
+        const { effectH0Mean, effectH1Mean, se, c1, c2 } = stats;
+        const xBar = decisionData.xBar;
+        const criticalValues = tailType === 'two-tailed' ? [c1, c2] : [c2];
+        const criticalPadding = 0.5 * se;
+
         return {
-            xMin: minCenter - 4.2 * se,
-            xMax: maxCenter + 4.2 * se,
+            xMin: Math.min(
+                effectH0Mean - 4 * se,
+                effectH1Mean - 4 * se,
+                xBar - 0.5 * se,
+                ...criticalValues.map((value) => value - criticalPadding)
+            ),
+            xMax: Math.max(
+                effectH0Mean + 4 * se,
+                effectH1Mean + 4 * se,
+                xBar + 0.5 * se,
+                ...criticalValues.map((value) => value + criticalPadding)
+            ),
         };
-    }, [stats, isValid, calculatePower]);
+    }, [stats, decisionData, isValid, tailType]);
 
     // --- Custom Ticks for X-Axis representing means and standard deviations ---
-    const xAxisTicks = useMemo(() => {
-        if (!stats || !isValid) return [];
-        const { effectH0Mean, effectH1Mean, se, c1, c2 } = stats;
+    const xAxisTicks = useMemo((): HypothesisAxisTick[] => {
+        if (!stats || !decisionData || !isValid) return [];
+        const { effectH0Mean, se, c1, c2 } = stats;
+        const sampleMean = decisionData.xBar;
+        const minDynamicSpacing = se * 0.45;
 
-        const ticksSet = new Set<string>();
+        const dynamicTicks: HypothesisAxisTick[] = [
+            { value: Number(c2.toFixed(6)), role: 'critical' },
+            { value: Number(sampleMean.toFixed(6)), role: 'sample' },
+        ];
 
-        const addVal = (val: number) => {
-            ticksSet.add(val.toFixed(2));
-        };
-
-        addVal(effectH0Mean);
-        addVal(effectH0Mean - se);
-        addVal(effectH0Mean + se);
-        addVal(effectH0Mean - 2 * se);
-        addVal(effectH0Mean + 2 * se);
-        addVal(effectH0Mean - 3 * se);
-        addVal(effectH0Mean + 3 * se);
-
-        if (calculatePower) {
-            addVal(effectH1Mean);
-            addVal(effectH1Mean - se);
-            addVal(effectH1Mean + se);
-            addVal(effectH1Mean - 2 * se);
-            addVal(effectH1Mean + 2 * se);
-            addVal(effectH1Mean - 3 * se);
-            addVal(effectH1Mean + 3 * se);
+        if (tailType === 'two-tailed') {
+            dynamicTicks.push({ value: Number(c1.toFixed(6)), role: 'critical' });
         }
 
-        // Add critical values
-        if (c2 !== undefined && !isNaN(c2)) addVal(c2);
-        if (c1 !== undefined && !isNaN(c1)) addVal(c1);
+        const standardTicks: HypothesisAxisTick[] = Array.from({ length: 9 }, (_, index) => {
+            const k = index - 4;
+            return { value: Number((effectH0Mean + k * se).toFixed(6)), role: 'standard' };
+        });
 
-        const rawTicks = Array.from(ticksSet).map(Number).sort((a, b) => a - b);
-        const finalTicks: number[] = [];
-        const minSpacing = se * 0.45;
+        const visibleStandardTicks = standardTicks.filter((tick) =>
+            dynamicTicks.every((dynamicTick) => Math.abs(tick.value - dynamicTick.value) >= minDynamicSpacing)
+        );
 
-        for (const t of rawTicks) {
-            if (finalTicks.length === 0) {
-                finalTicks.push(t);
-            } else {
-                const prev = finalTicks[finalTicks.length - 1];
-                if (t - prev >= minSpacing) {
-                    finalTicks.push(t);
-                } else {
-                    const diffPrevToMean = Math.abs(prev - effectH0Mean);
-                    const diffCurrToMean = Math.abs(t - effectH0Mean);
-                    const diffPrevToMeanH1 = calculatePower ? Math.abs(prev - effectH1Mean) : Infinity;
-                    const diffCurrToMeanH1 = calculatePower ? Math.abs(t - effectH1Mean) : Infinity;
+        const ticksByValue = new globalThis.Map<number, HypothesisAxisTick>();
 
-                    const prevIsMean = diffPrevToMean < 0.01 || diffPrevToMeanH1 < 0.01;
-                    const currIsMean = diffCurrToMean < 0.01 || diffCurrToMeanH1 < 0.01;
+        [...visibleStandardTicks, ...dynamicTicks].forEach((tick) => {
+            const key = Number(tick.value.toFixed(6));
+            const currentTick = ticksByValue.get(key);
 
-                    if (currIsMean && !prevIsMean) {
-                        finalTicks[finalTicks.length - 1] = t;
-                    }
-                }
+            if (!currentTick || currentTick.role === 'standard') {
+                ticksByValue.set(key, { ...tick, value: key });
             }
-        }
-        return finalTicks;
-    }, [stats, isValid, calculatePower]);
+        });
+
+        return Array.from(ticksByValue.values()).sort((a, b) => a.value - b.value);
+    }, [stats, decisionData, isValid, tailType]);
 
     // --- Dynamic Graph Data Generation ---
     const chartData = useMemo(() => {
@@ -1612,6 +1601,7 @@ export default function HypothesisTestingCalculator() {
                                 tailType={tailType}
                                 calculatePower={calculatePower}
                                 xAxisTicks={xAxisTicks}
+                                sampleMean={decisionData?.xBar ?? null}
                             />
                         </ChartWrapper>
                     </div>

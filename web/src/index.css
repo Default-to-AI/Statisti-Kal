@@ -182,7 +182,7 @@
   /* === Recharts visual tokens (not in DESIGN.md; preserved for chart parity) === */
   --chart-4: var(--color-accent-teal);                        /* H1 reference curve (teal — distinct from H0 brass, per DESIGN.md "power/acceptance" semantic) */
   --chart-grid: #333333;                                       /* Grid line, matches border */
-  --chart-axis-label: #A1A1AA;                                 /* Axis ticks (high contrast zinc-400) */
+  --chart-axis-label: #A1A1AA;                                 /* Axis ticks, high contrast */
   --chart-rejection: rgba(224, 62, 62, 0.25);                  /* Type I error shaded region */
   --chart-acceptance: rgba(78, 205, 196, 0.25);                /* Power (1-β) shaded region */
 

@@ -10,6 +10,13 @@ import {
 } from 'recharts';
 import { renderChartMathReferenceLabel } from './ChartPrimitives';
 
+export type HypothesisAxisTickRole = 'standard' | 'critical' | 'sample';
+
+export interface HypothesisAxisTick {
+  value: number;
+  role: HypothesisAxisTickRole;
+}
+
 export interface HypothesisChartProps {
   chartData: any[];
   stats: {
@@ -17,12 +24,14 @@ export interface HypothesisChartProps {
     effectH1Mean: number;
     c1: number;
     c2: number;
+    se: number;
   };
   isValid: boolean;
   chartLimits: { xMin: number; xMax: number };
   tailType: 'left' | 'right' | 'two-tailed';
   calculatePower: boolean;
-  xAxisTicks: number[];
+  xAxisTicks: HypothesisAxisTick[];
+  sampleMean: number | null;
 }
 
 export const HypothesisChart: React.FC<HypothesisChartProps> = ({
@@ -33,6 +42,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   tailType,
   calculatePower,
   xAxisTicks,
+  sampleMean,
 }) => {
   if (!isValid || !stats || !chartLimits) {
     return (
@@ -44,6 +54,15 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
 
   const { c1, c2 } = stats;
   const { xMin, xMax } = chartLimits;
+  const xAxisTickValues = xAxisTicks.map((tick) => tick.value);
+  const zScoreAxisTicks = Array.from({ length: 9 }, (_, index) => {
+    const zScore = index - 4;
+    return {
+      value: stats.effectH0Mean + zScore * stats.se,
+      label: zScore === 0 ? '0' : `${zScore > 0 ? '+' : ''}${zScore}\u03c3`,
+    };
+  });
+  const zScoreAxisTickValues = zScoreAxisTicks.map((tick) => tick.value);
 
   const pct = (x: number) => {
     const p = ((x - xMin) / (xMax - xMin)) * 100;
@@ -90,7 +109,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 25 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 54 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -108,13 +127,19 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             dataKey="x"
             type="number"
             domain={[chartLimits.xMin, chartLimits.xMax]}
-            ticks={xAxisTicks}
+            ticks={xAxisTickValues}
+            interval={0}
             tick={(props: any) => {
               const { x, y, payload } = props;
               const val = payload.value;
+              const tickRole = xAxisTicks.find((tick) => Math.abs(tick.value - val) < 1e-5)?.role ?? 'standard';
               let fill = 'var(--color-text-secondary)';
 
-              if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
+              if (tickRole === 'critical') {
+                fill = 'var(--color-accent-crimson)';
+              } else if (tickRole === 'sample') {
+                fill = 'var(--color-success)';
+              } else if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
                 fill = 'var(--chart-1)';
               } else if (calculatePower && Math.abs(val - stats.effectH1Mean) < 1e-4) {
                 fill = 'var(--chart-2)';
@@ -122,15 +147,55 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
 
               return (
                 <g transform={`translate(${x},${y})`}>
-                  <text x={0} y={0} dy={16} textAnchor="middle" fill={fill} fontSize={14} className="font-semibold font-sans">
-                    {val.toFixed(2)}
+                  <text
+                    x={0}
+                    y={0}
+                    dy={16}
+                    textAnchor="end"
+                    transform="rotate(-35)"
+                    fill={fill}
+                    fontSize={12}
+                    className="font-semibold font-sans"
+                  >
+                    {val.toFixed(3)}
                   </text>
                 </g>
               );
             }}
             axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={true}
-            tickFormatter={(val) => val.toFixed(2)}
+            tickFormatter={(val) => val.toFixed(3)}
+          />
+          <XAxis
+            xAxisId="zScore"
+            dataKey="x"
+            type="number"
+            domain={[chartLimits.xMin, chartLimits.xMax]}
+            ticks={zScoreAxisTickValues}
+            interval={0}
+            height={28}
+            axisLine={{ stroke: 'var(--color-border)' }}
+            tickLine={{ stroke: 'var(--color-border)' }}
+            tick={(props: any) => {
+              const { x, y, payload } = props;
+              const tick = zScoreAxisTicks.find((candidate) => Math.abs(candidate.value - payload.value) < 1e-5);
+
+              return (
+                <g transform={`translate(${x},${y})`}>
+                  <text
+                    x={0}
+                    y={0}
+                    dy={18}
+                    textAnchor="middle"
+                    fill="var(--color-text-secondary)"
+                    fontSize={12}
+                    className="font-semibold font-sans"
+                  >
+                    {tick?.label ?? ''}
+                  </text>
+                </g>
+              );
+            }}
           />
           <YAxis
             tickFormatter={(val) => val.toFixed(2)}
@@ -273,6 +338,26 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   width: 40,
                   height: 30,
                   xOffset: -20,
+                  yOffset: -25,
+                  className: 'text-sm font-semibold',
+                })
+              }
+            />
+          )}
+
+          {sampleMean !== null && (
+            <ReferenceLine
+              x={sampleMean}
+              stroke="var(--color-success)"
+              strokeWidth={2.5}
+              strokeDasharray="6 4"
+              label={(props) =>
+                renderChartMathReferenceLabel(props, {
+                  math: '\\bar{X}',
+                  color: 'var(--color-success)',
+                  width: 48,
+                  height: 30,
+                  xOffset: -24,
                   yOffset: -25,
                   className: 'text-sm font-semibold',
                 })
