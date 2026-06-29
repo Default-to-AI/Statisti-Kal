@@ -24,6 +24,7 @@ export interface HypothesisChartProps {
     effectH1Mean: number;
     c1: number;
     c2: number;
+    se: number;
   };
   isValid: boolean;
   chartLimits: { xMin: number; xMax: number };
@@ -54,6 +55,14 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   const { c1, c2 } = stats;
   const { xMin, xMax } = chartLimits;
   const xAxisTickValues = xAxisTicks.map((tick) => tick.value);
+  const zScoreAxisTicks = Array.from({ length: 9 }, (_, index) => {
+    const zScore = index - 4;
+    return {
+      value: stats.effectH0Mean + zScore * stats.se,
+      label: zScore === 0 ? '0' : `${zScore > 0 ? '+' : ''}${zScore}\u03c3`,
+    };
+  });
+  const zScoreAxisTickValues = zScoreAxisTicks.map((tick) => tick.value);
 
   const pct = (x: number) => {
     const p = ((x - xMin) / (xMax - xMin)) * 100;
@@ -100,7 +109,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 42 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 54 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -156,6 +165,37 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={true}
             tickFormatter={(val) => val.toFixed(3)}
+          />
+          <XAxis
+            xAxisId="zScore"
+            dataKey="x"
+            type="number"
+            domain={[chartLimits.xMin, chartLimits.xMax]}
+            ticks={zScoreAxisTickValues}
+            interval={0}
+            height={28}
+            axisLine={{ stroke: 'var(--color-border)' }}
+            tickLine={{ stroke: 'var(--color-border)' }}
+            tick={(props: any) => {
+              const { x, y, payload } = props;
+              const tick = zScoreAxisTicks.find((candidate) => Math.abs(candidate.value - payload.value) < 1e-5);
+
+              return (
+                <g transform={`translate(${x},${y})`}>
+                  <text
+                    x={0}
+                    y={0}
+                    dy={18}
+                    textAnchor="middle"
+                    fill="var(--color-text-secondary)"
+                    fontSize={12}
+                    className="font-semibold font-sans"
+                  >
+                    {tick?.label ?? ''}
+                  </text>
+                </g>
+              );
+            }}
           />
           <YAxis
             tickFormatter={(val) => val.toFixed(2)}
