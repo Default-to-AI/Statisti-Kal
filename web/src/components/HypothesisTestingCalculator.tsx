@@ -859,7 +859,7 @@ export default function HypothesisTestingCalculator() {
     // --- Custom Ticks for X-Axis representing means and standard deviations ---
     const xAxisTicks = useMemo(() => {
         if (!stats || !isValid) return [];
-        const { effectH0Mean, effectH1Mean, se } = stats;
+        const { effectH0Mean, effectH1Mean, se, c1, c2 } = stats;
 
         const ticksSet = new Set<string>();
 
@@ -884,6 +884,10 @@ export default function HypothesisTestingCalculator() {
             addVal(effectH1Mean - 3 * se);
             addVal(effectH1Mean + 3 * se);
         }
+
+        // Add critical values
+        if (c2 !== undefined && !isNaN(c2)) addVal(c2);
+        if (c1 !== undefined && !isNaN(c1)) addVal(c1);
 
         const rawTicks = Array.from(ticksSet).map(Number).sort((a, b) => a - b);
         const finalTicks: number[] = [];
@@ -1141,7 +1145,7 @@ export default function HypothesisTestingCalculator() {
 
     const hypothesisLegendItems = useMemo((): ChartLegendItem[] => {
         const items: ChartLegendItem[] = [
-            { math: 'H_0', color: 'var(--color-primary)', style: 'area' },
+            { math: 'H_0', color: 'var(--chart-1)', style: 'area' },
             {
                 math: 'H_1',
                 color: 'var(--chart-2)',
@@ -1592,14 +1596,14 @@ export default function HypothesisTestingCalculator() {
             </div>
 
             {/* Main Grid Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
 
                 {/* RIGHT Column - Dashboard & Visual Analytics */}
                 <div className="contents">
 
                     {/* Overlapping Curves Chart */}
                     <div className="tour-step-graph w-full min-w-0 order-1 lg:order-1">
-                        <ChartWrapper legend={<ChartLegend items={hypothesisLegendItems} />}>
+                        <ChartWrapper legend={<ChartLegend items={hypothesisLegendItems} />} className="flex-1 h-full flex flex-col" height="100%">
                             <HypothesisChart
                                 chartData={chartData}
                                 stats={stats as any}

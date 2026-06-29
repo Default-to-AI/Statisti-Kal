@@ -88,9 +88,9 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   };
 
   return (
-    <div className="h-[305px] w-full" dir="ltr">
+    <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 25 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -201,7 +201,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                 width: 40,
                 height: 30,
                 xOffset: -20,
-                yOffset: (viewBox) => (viewBox.height ?? 0) + 25,
+                yOffset: -25,
                 className: 'text-sm font-semibold',
               })
             }
@@ -220,7 +220,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                 width: 40,
                 height: 30,
                 xOffset: -20,
-                yOffset: (viewBox) => (viewBox.height ?? 0) + 25,
+                yOffset: -25,
                 className: 'text-sm font-semibold',
               }) : undefined}
           />
