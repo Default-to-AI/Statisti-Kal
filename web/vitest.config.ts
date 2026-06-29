@@ -4,5 +4,7 @@ export default defineConfig({
   test: {
     include: ['src/**/*.{test,spec}.{ts,tsx}'],
     exclude: ['node_modules', 'dist', '.worktrees'],
+    environment: 'jsdom',
+    setupFiles: ['./src/test-setup.ts'],
   },
 });
