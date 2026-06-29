@@ -635,6 +635,7 @@ export const AnimatedDetails: React.FC<AnimatedDetailsProps> = ({
         },
         role: "button",
         "aria-expanded": isOpen,
+        className: `${(summary as React.ReactElement<any>).props.className || ''} cursor-pointer`.trim()
       })}
       <AnimatePresence initial={false}>
         {isOpen && (

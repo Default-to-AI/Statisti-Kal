@@ -12,6 +12,14 @@ import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
 import { FormulaBlock as UIFormulaBlock, ResultBlock } from './ui';
 import HypothesisTestDisplay from './HypothesisTestDisplay';
 import { unifiedDecision } from '../lib/statistics/hypothesis';
+import {
+    inverseNormalCDF,
+    normalCDF,
+    normalPDF,
+    studentTCDF,
+    studentTPDF,
+    studentTPPF,
+} from '../lib/statistics/math';
 import { InlineMath, BlockMath } from 'react-katex';
 import {
     Info,
@@ -51,172 +59,6 @@ import {
 } from 'recharts';
 
 const JoyrideComponent = Joyride as any;
-
-// --- Probability Math Helpers ---
-
-/**
- * Standard Normal Cumulative Distribution Function (CDF)
- */
-function normalCDF(x: number, mean: number, stdDev: number): number {
-    if (stdDev <= 0) return 0.5;
-    const z = (x - mean) / stdDev;
-    return 0.5 * (1 + erf(z / Math.sqrt(2)));
-}
-
-/**
- * Error function approximation (A&S formula 7.1.26)
- */
-function erf(x: number): number {
-    const a1 = 0.254829592;
-    const a2 = -0.284496736;
-    const a3 = 1.421413741;
-    const a4 = -1.453152027;
-    const a5 = 1.061405429;
-    const p = 0.3275911;
-
-    const sign = x < 0 ? -1 : 1;
-    const absX = Math.abs(x);
-
-    const t = 1.0 / (1.0 + p * absX);
-    const y = 1.0 - (((((a5 * t + a4) * t) + a3) * t + a2) * t + a1) * t * Math.exp(-absX * absX);
-
-    return sign * y;
-}
-
-/**
- * Normal Probability Density Function (PDF)
- */
-function normalPDF(x: number, mean: number, stdDev: number): number {
-    if (stdDev <= 0) return 0;
-    const exponent = -Math.pow(x - mean, 2) / (2 * Math.pow(stdDev, 2));
-    return (1 / (stdDev * Math.sqrt(2 * Math.PI))) * Math.exp(exponent);
-}
-
-/**
- * Inverse Standard Normal Cumulative Distribution Function Z-score converter
- */
-function inverseNormalCDF(p: number): number {
-    if (p <= 0) return -4.5;
-    if (p >= 1) return 4.5;
-
-    const c = [2.515517, 0.802853, 0.010328];
-    const d = [1.432788, 0.189269, 0.001308];
-
-    const t = p < 0.5 ? Math.sqrt(-2.0 * Math.log(p)) : Math.sqrt(-2.0 * Math.log(1.0 - p));
-    const z = t - ((c[2] * t + c[1]) * t + c[0]) / (((d[2] * t + d[1]) * t + d[0]) * t + 1.0);
-
-    return p < 0.5 ? -z : z;
-}
-
-/**
- * Lanczos approximation for the natural logarithm of the Gamma function ln(Γ(x))
- */
-function lnGamma(x: number): number {
-    if (x < 0.5) {
-        return Math.log(Math.PI) - Math.log(Math.sin(Math.PI * x)) - lnGamma(1 - x);
-    }
-    const cof = [
-        76.18009172947146, -86.50532032941677, 24.01409824083091,
-        -1.231739572450155, 0.001208650973866179, -0.000005395239384953
-    ];
-    let y = x;
-    let tmp = x + 5.5;
-    tmp -= (x + 0.5) * Math.log(tmp);
-    let ser = 1.000000000190015;
-    for (let j = 0; j <= 5; j++) {
-        y += 1;
-        ser += cof[j] / y;
-    }
-    return -tmp + Math.log(2.5066282746310005 * ser / x);
-}
-
-/**
- * Student's t-distribution Probability Density Function (PDF)
- */
-function studentTPDF(t: number, df: number): number {
-    if (df > 250) {
-        return normalPDF(t, 0, 1);
-    }
-    const logC = lnGamma((df + 1) / 2) - 0.5 * Math.log(df * Math.PI) - lnGamma(df / 2);
-    const C = Math.exp(logC);
-    return C * Math.pow(1 + (t * t) / df, -(df + 1) / 2);
-}
-
-/**
- * Student's t-distribution Cumulative Distribution Function (CDF)
- * Accurate closed form/trigonometric series representation for integer df
- */
-function studentTCDF(t: number, df: number): number {
-    if (df > 200) {
-        return normalCDF(t, 0, 1);
-    }
-
-    const theta = Math.atan(t / Math.sqrt(df));
-    const sin = Math.sin(theta);
-    const cos = Math.cos(theta);
-
-    if (df % 2 === 0) {
-        // df is even
-        let sum = 0;
-        let term = 1;
-        for (let r = 1; r <= df / 2 - 1; r++) {
-            term = term * (2 * r - 1) / (2 * r) * cos * cos;
-            sum += term;
-        }
-        return 0.5 + 0.5 * sin * (1 + sum);
-    } else {
-        // df is odd
-        let sum = 0;
-        let term = 1;
-        for (let r = 1; r <= (df - 3) / 2; r++) {
-            term = term * (2 * r) / (2 * r + 1) * cos * cos;
-            sum += term;
-        }
-        const multiplier = df === 1 ? 0 : sin * cos * (1 + sum);
-        return 0.5 + theta / Math.PI + multiplier / Math.PI;
-    }
-}
-
-/**
- * Initial guess of Inverse Student's t CDF using Cornish-Fisher expansion
- */
-function studentTPPFInitial(p: number, df: number): number {
-    const z = inverseNormalCDF(p);
-    if (df > 500) return z;
-
-    const z2 = z * z;
-    const z3 = z2 * z;
-    const z5 = z3 * z2;
-    const z7 = z5 * z2;
-
-    const term1 = z;
-    const term2 = (z3 + z) / (4 * df);
-    const term3 = (5 * z5 + 16 * z3 + 3 * z) / (96 * df * df);
-    const term4 = (3 * z7 + 19 * z5 + 17 * z3 - 15 * z) / (384 * df * df * df);
-
-    return term1 + term2 + term3 + term4;
-}
-
-/**
- * Student's t Percentage Point Function (Inverse CDF)
- * Uses high precision Cornish-Fisher guess refined with Newton-Raphson
- */
-function studentTPPF(p: number, df: number): number {
-    if (p <= 0.00001) return -10.0;
-    if (p >= 0.99999) return 10.0;
-
-    // 1. Initial guess using Cornish-Fisher expansion
-    let t = studentTPPFInitial(p, df);
-
-    // 2. Newton-Raphson refinement (3 steps is extremely stable and converges to ~14 decimal places)
-    for (let i = 0; i < 3; i++) {
-        const error = studentTCDF(t, df) - p;
-        const derivative = studentTPDF(t, df);
-        if (derivative === 0) break;
-        t = t - error / derivative;
-    }
-    return t;
-}
 
 // --- Types ---
 type TailType = 'right' | 'left' | 'two-tailed';
@@ -1991,7 +1833,7 @@ export default function HypothesisTestingCalculator() {
                                     setShowHypothesisTesting(!showHypothesisTesting);
                                 }
                             }}
-                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
+                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                         >
                             <div className="flex justify-end gap-3 lg:col-span-2 order-2 lg:order-2 mb-2">
                                 <button
@@ -2001,7 +1843,7 @@ export default function HypothesisTestingCalculator() {
                                         setShowCI(true);
                                         setShowPower(true);
                                     }}
-                                    className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
                                 >
                                     <ChevronDown size={16} />
                                     הרחב הכל
@@ -2013,14 +1855,14 @@ export default function HypothesisTestingCalculator() {
                                         setShowCI(false);
                                         setShowPower(false);
                                     }}
-                                    className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2"
+                                    className="px-4 py-2 text-sm font-bold bg-[var(--color-surface-raised)] border border-[var(--color-border)] text-[var(--color-text-primary)] rounded-md hover:bg-[var(--color-surface)] transition-colors shadow-sm flex items-center gap-2 cursor-pointer"
                                 >
                                     <ChevronUp size={16} />
                                     צמצם הכל
                                 </button>
                                 <div className="relative z-10 flex items-center self-end sm:self-auto gap-4">
                                     <div className="text-[var(--color-text-secondary)]">
-                                        {showHypothesisTesting ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                                        <ChevronDown size={24} className={`transition-transform duration-200 ${showHypothesisTesting ? 'rotate-180' : ''}`} />
                                     </div>
                                 </div>
                             </div>
@@ -2066,7 +1908,7 @@ export default function HypothesisTestingCalculator() {
                                                     document.getElementById('step-6')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                                 }
                                             }}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base font-black bg-[var(--color-surface)] hover:bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)] hover:text-[var(--color-accent-cobalt)] border border-[var(--color-border)] shadow-md transition-all duration-300 leading-none group"
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base font-black bg-[var(--color-surface)] hover:bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)] hover:text-[var(--color-accent-cobalt)] border border-[var(--color-border)] shadow-md transition-all duration-300 leading-none group cursor-pointer"
                                         >
                                             <span>קפיצה למסקנה</span>
                                             <Target size={18} className="shrink-0 text-[var(--color-accent-cobalt)] group-hover:scale-110 transition-transform" />
@@ -3242,7 +3084,7 @@ export default function HypothesisTestingCalculator() {
                         <div id="confidence-panel" className="tour-step-accordion-ci rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
                             <button
                                 onClick={() => setShowCI(!showCI)}
-                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
+                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                             >
                                 <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" dir="ltr">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
@@ -3276,7 +3118,7 @@ export default function HypothesisTestingCalculator() {
                                 </div>
                                 <div className="relative z-10 flex items-center self-end sm:self-auto gap-4">
                                     <div className="text-[var(--color-text-secondary)]">
-                                        {showCI ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                                        <ChevronDown size={24} className={`transition-transform duration-200 ${showCI ? 'rotate-180' : ''}`} />
                                     </div>
                                 </div>
                             </button>
@@ -3562,7 +3404,7 @@ export default function HypothesisTestingCalculator() {
                         <div id="power-panel" className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
                             <button
                                 onClick={() => setShowPower(!showPower)}
-                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)]"
+                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                             >
                                 <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" dir="ltr">
                                     <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
@@ -3596,7 +3438,7 @@ export default function HypothesisTestingCalculator() {
                                 </div>
                                 <div className="relative z-10 flex items-center self-end sm:self-auto gap-4">
                                     <div className="text-[var(--color-text-secondary)]">
-                                        {showPower ? <ChevronUp size={24} /> : <ChevronDown size={24} />}
+                                        <ChevronDown size={24} className={`transition-transform duration-200 ${showPower ? 'rotate-180' : ''}`} />
                                     </div>
                                 </div>
                             </button>

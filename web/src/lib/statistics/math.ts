@@ -37,8 +37,8 @@ export function normalPDF(x: number, mean: number, stdDev: number): number {
 }
 
 export function inverseNormalCDF(p: number): number {
-  if (p <= 0) return -4.5;
-  if (p >= 1) return 4.5;
+  if (p <= 0) return -5;
+  if (p >= 1) return 5;
 
   const c = [2.515517, 0.802853, 0.010328];
   const d = [1.432788, 0.189269, 0.001308];
@@ -85,7 +85,9 @@ export function studentTPDF(t: number, df: number): number {
 }
 
 export function studentTCDF(t: number, df: number): number {
-  if (df > 200) {
+  if (df <= 0) return 0.5;
+
+  if (df >= 500) {
     return normalCDF(t, 0, 1);
   }
 
@@ -148,4 +150,43 @@ export function studentTPPF(p: number, df: number): number {
     t = t - error / derivative;
   }
   return t;
+}
+
+export function studentTInverseCDF(p: number, df: number): number {
+  if (p <= 0) return -999;
+  if (p >= 1) return 999;
+  if (p === 0.5) return 0;
+
+  if (df === 1) {
+    return Math.tan(Math.PI * (p - 0.5));
+  }
+
+  if (df >= 500) {
+    return inverseNormalCDF(p);
+  }
+
+  const z = inverseNormalCDF(p);
+  let low = z < 0 ? z * 10 - 2 : 0;
+  let high = z < 0 ? 0 : z * 10 + 2;
+
+  if (studentTCDF(high, df) < p) {
+    high *= 5;
+  }
+  if (studentTCDF(low, df) > p) {
+    low *= 5;
+  }
+
+  for (let iter = 0; iter < 100; iter++) {
+    const mid = (low + high) / 2;
+    const val = studentTCDF(mid, df);
+    if (Math.abs(val - p) < 1e-12) {
+      return mid;
+    }
+    if (val < p) {
+      low = mid;
+    } else {
+      high = mid;
+    }
+  }
+  return (low + high) / 2;
 }

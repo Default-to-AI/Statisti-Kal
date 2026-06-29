@@ -9,12 +9,12 @@ import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
 import { PageLayout } from './components/ui/PageLayout';
 import { PageTransition } from './components/PageTransition';
-import type { CalcMode } from './NormalDistributionCalculator';
+import type { CalcMode } from './components/calc-ui';
 
 type ActivePage = 'landing' | 'hypothesis' | 'normal';
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
-const NormalDistributionCalculator = lazy(() => import('./NormalDistributionCalculator'));
+const NormalDistributionCalculator = lazy(() => import('./components/NormalDistributionCalculator'));
 
 export default function App() {
   const [activePage, setActivePage] = useState<ActivePage>('landing');

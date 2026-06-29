@@ -1446,13 +1446,13 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
                         {/* Accordion Trigger */}
                         <button
                           onClick={() => toggleTopic(topicKey)}
-                          className={`w-full text-right p-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 text-xs sm:text-sm font-black transition-all ${
+                          className={`w-full text-right p-4 py-3 sm:py-3.5 flex items-center justify-between gap-3 text-xs sm:text-sm font-black transition-all cursor-pointer ${
                             isExpanded ? 'text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)]'
                           }`}
                         >
                           <span className="text-[var(--color-text-primary)] dark:text-white">{sub.title}</span>
-                          <span className={`${isExpanded ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-secondary)]'}`}>
-                            {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                          <span className={`${isExpanded ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-secondary)]'} transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}>
+                            <ChevronDown size={16} />
                           </span>
                         </button>
 
