@@ -59,7 +59,7 @@ export function FeatureShowcase(): ReactElement {
         <div className="space-y-4 text-center mb-8">
           <div className="flex items-center justify-center gap-3">
             <div className="accent-bar" />
-            <span className="text-heading-label font-black text-[var(--color-accent-brass)]">פחות טכניקה שחורה</span>
+            <span className="text-heading-label font-semibold text-[var(--color-primary)]">פחות טכניקה שחורה</span>
           </div>
           <h2 data-toc id="landing-focus" className="block text-display-h2 text-[var(--color-text-primary)]">
             איך המערכת עוזרת לכם להתמקד בעיקר?
@@ -85,14 +85,14 @@ export function FeatureShowcase(): ReactElement {
             
             if (feature.tone === 'teal') {
               activeBgClass = 'bg-[rgba(46,196,182,0.12)]';
-              activeBorderClass = 'border-[var(--color-accent-teal)]/40';
-              iconBgClass = 'bg-[var(--color-accent-teal)] text-[var(--color-background)] shadow-md shadow-[var(--color-accent-teal)]/20';
-              titleClass = 'text-[var(--color-accent-teal)]';
+              activeBorderClass = 'border-[var(--chart-2)]/40';
+              iconBgClass = 'bg-[var(--chart-2)] text-[var(--color-background)] shadow-md shadow-[var(--chart-2)]/20';
+              titleClass = 'text-[var(--chart-2)]';
             } else if (feature.tone === 'brass') {
               activeBgClass = 'bg-[rgba(212,168,67,0.12)]';
-              activeBorderClass = 'border-[var(--color-accent-brass)]/40';
-              iconBgClass = 'bg-[var(--color-accent-brass)] text-[var(--color-background)] shadow-md shadow-[var(--color-accent-brass)]/20';
-              titleClass = 'text-[var(--color-accent-brass)]';
+              activeBorderClass = 'border-[var(--color-primary)]/40';
+              iconBgClass = 'bg-[var(--color-primary)] text-[var(--color-background)] shadow-md shadow-[var(--color-primary)]/20';
+              titleClass = 'text-[var(--color-primary)]';
             }
 
             return (
@@ -156,8 +156,8 @@ export function FeatureShowcase(): ReactElement {
           {/* Decorative background glow that matches active feature */}
           <div 
             className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-[80px] pointer-events-none transition-colors duration-700 opacity-20 ${
-              features[activeFeature].tone === 'brass' ? 'bg-[var(--color-accent-brass)]' :
-              features[activeFeature].tone === 'teal' ? 'bg-[var(--color-accent-teal)]' :
+              features[activeFeature].tone === 'brass' ? 'bg-[var(--color-primary)]' :
+              features[activeFeature].tone === 'teal' ? 'bg-[var(--chart-2)]' :
               'bg-[var(--color-accent-cobalt)]'
             }`} 
           />

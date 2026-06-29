@@ -191,7 +191,7 @@ export const ChartTooltip: React.FC<ChartTooltipProps> = ({
   if (!active || !payload || !payload.length) return null;
 
   const labelContent = labelFormatter ? labelFormatter(label) : (
-    <div className="text-xs font-black text-[var(--color-text-secondary)] mb-2 pb-2 border-b border-[var(--color-border)]" dir="ltr">
+    <div className="text-xs font-semibold text-[var(--color-text-secondary)] mb-2 pb-2 border-b border-[var(--color-border)]" dir="ltr">
       {label}
     </div>
   );

@@ -593,13 +593,13 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
           >
             <section className="relative overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] shadow-md">
               <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <span className="absolute left-6 top-6 -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr">
+                <span className="absolute left-6 top-6 -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr">
                   <InlineMath math={mode === 'forward' ? '\\Phi(z)' : '\\Phi^{-1}(p)'} />
                 </span>
-                <span className="absolute left-1/3 top-14 rotate-6 text-3xl sm:text-4xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr">
+                <span className="absolute left-1/3 top-14 rotate-6 text-3xl sm:text-4xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr">
                   <InlineMath math={`\\mu = ${mean}`} />
                 </span>
-                <span className="absolute bottom-8 right-[12%] -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-teal)]/10" dir="ltr">
+                <span className="absolute bottom-8 right-[12%] -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--chart-2)]/10" dir="ltr">
                   <InlineMath math={`\\sigma = ${stdDev}`} />
                 </span>
               </div>
@@ -622,7 +622,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       {heroCopy.steps.map((step) => (
                         <div key={step.number} className="relative rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-4 text-right flex flex-col gap-2 transition-colors hover:border-[var(--color-accent-cobalt)]/50">
                           <div className="flex items-center gap-2.5 mb-1">
-                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-cobalt)]/10 text-sm font-black text-[var(--color-accent-cobalt)]">
+                            <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-cobalt)]/10 text-sm font-semibold text-[var(--color-accent-cobalt)]">
                               {step.number}
                             </div>
                             <h3 className="text-body-base font-bold text-[var(--color-text-primary)]">{step.title}</h3>
@@ -649,7 +649,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       <Sliders size={20} />
                     </div>
                     <div className="flex-1 text-right">
-                      <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
+                      <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)]">
                         הגדרות ופרמטרי ההתפלגות
                       </h2>
                     </div>
@@ -659,7 +659,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         onClick={resetNormalCalculator}
                         aria-label="איפוס ערכים"
                         title="איפוס ערכים"
-                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-black text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
+                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-semibold text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
                       >
                         <RefreshCw size={15} />
                         <span>איפוס ערכים</span>
@@ -684,7 +684,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       <table className="w-full border-collapse border-spacing-0">
                         <thead>
                           <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                            <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
+                            <th className="relative overflow-hidden p-3.5 font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
                               <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
                                 <InlineMath math="N" />
                               </div>
@@ -692,8 +692,8 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                                 <span>פרמטרי ההתפלגות</span>
                               </div>
                             </th>
-                            <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-brass)]">
+                            <th className="relative overflow-hidden p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
+                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-primary)]">
                                 <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
                               </div>
                               <div className="relative z-10">
@@ -715,7 +715,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             />
                             <ParameterInputCell
                               watermark={mode === 'forward' ? 'X_1' : 'p'}
-                              colorClass="text-[var(--color-accent-brass)]"
+                              colorClass="text-[var(--color-primary)]"
                               label={mode === 'forward'
                                 ? <><span>{forwardType === 'conditional' ? 'ערך מאורע a₁' : forwardType === 'between' || forwardType === 'outside' ? 'גבול תחתון' : 'ערך חיתוך'} (</span><InlineMath math="X_1" /><span>):</span></>
                                 : <><span>הסתברות יעד (</span><InlineMath math="p" /><span>):</span></>}
@@ -740,7 +740,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             />
                             <ParameterInputCell
                               watermark={hasSecondaryBoundInput ? 'X_2' : mode === 'forward' ? 'Z_1' : 'X'}
-                              colorClass="text-[var(--color-accent-brass)]"
+                              colorClass="text-[var(--color-primary)]"
                               label={hasSecondaryBoundInput
                                 ? <><span>{secondaryInputLabel.replace(':', '')} (</span><InlineMath math="X_2" /><span>):</span></>
                                 : mode === 'forward'
@@ -775,7 +775,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]">
                           <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                             <div className="text-right">
-                              <h3 className="text-body-base font-black text-[var(--color-accent-cobalt)]">
+                              <h3 className="text-body-base font-semibold text-[var(--color-accent-cobalt)]">
                                 <span className="inline-flex items-center gap-2 whitespace-nowrap">
                                   <span>הסתברות מותנית</span>
                                   <InlineMathToken math="P(A \mid B)" />
@@ -790,22 +790,22 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
                           <div className="mb-4 grid gap-2 lg:grid-cols-3">
                             <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/78 p-3 text-right">
-                              <p className="text-caption font-black tracking-[0.12em] text-[var(--color-accent-teal)]">STEP 1</p>
-                              <p className="mt-1 text-body-sm font-black text-[var(--color-text-primary)]">מגדירים תנאי רקע</p>
+                              <p className="text-caption font-semibold tracking-[0.12em] text-[var(--chart-2)]">STEP 1</p>
+                              <p className="mt-1 text-body-sm font-semibold text-[var(--color-text-primary)]">מגדירים תנאי רקע</p>
                               <p className="mt-1 text-caption text-[var(--color-text-secondary)]">
                                 בוחרים את <InlineMathToken math="B" className="mx-1" /> והערכים שמייצרים את עולם החישוב.
                               </p>
                             </div>
                             <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/78 p-3 text-right">
-                              <p className="text-caption font-black tracking-[0.12em] text-[var(--color-accent-amber)]">STEP 2</p>
-                              <p className="mt-1 text-body-sm font-black text-[var(--color-text-primary)]">מגדירים את המאורע המבוקש</p>
+                              <p className="text-caption font-semibold tracking-[0.12em] text-[var(--color-accent-amber)]">STEP 2</p>
+                              <p className="mt-1 text-body-sm font-semibold text-[var(--color-text-primary)]">מגדירים את המאורע המבוקש</p>
                               <p className="mt-1 text-caption text-[var(--color-text-secondary)]">
                                 בוחרים את <InlineMathToken math="A" className="mx-1" /> באותה שפה פורמלית של תחום או זנב.
                               </p>
                             </div>
                             <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/78 p-3 text-right">
-                              <p className="text-caption font-black tracking-[0.12em] text-[var(--color-accent-cobalt)]">STEP 3</p>
-                              <p className="mt-1 text-body-sm font-black text-[var(--color-text-primary)]">מחשבים יחס</p>
+                              <p className="text-caption font-semibold tracking-[0.12em] text-[var(--color-accent-cobalt)]">STEP 3</p>
+                              <p className="mt-1 text-body-sm font-semibold text-[var(--color-text-primary)]">מחשבים יחס</p>
                               <p className="mt-1 text-caption text-[var(--color-text-secondary)]">
                                 <InlineMathToken math="P(A \mid B)=\frac{P(A\ \cap B)}{P(B)}" />
                               </p>
@@ -815,16 +815,16 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                           <div className="grid gap-3 xl:grid-cols-2">
                             <ConditionalEventDefinitionCard
                               stepNumber="STEP 1"
-                              title={<>תנאי הרקע <InlineMathToken math="B" className="mr-1 text-[var(--color-accent-teal)]" /></>}
-                              description={<>בחר קודם את התחום שבתוכו עובדים. כל החישוב הסופי יתבצע רק בתוך <InlineMathToken math="B" className="mx-1 text-[var(--color-accent-teal)]" />.</>}
+                              title={<>תנאי הרקע <InlineMathToken math="B" className="mr-1 text-[var(--chart-2)]" /></>}
+                              description={<>בחר קודם את התחום שבתוכו עובדים. כל החישוב הסופי יתבצע רק בתוך <InlineMathToken math="B" className="mx-1 text-[var(--chart-2)]" />.</>}
                               formula="B"
                               value={condType}
                               onChange={setCondType}
                               disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                              accentClass="border-[var(--color-accent-teal)]/60 bg-[linear-gradient(135deg,rgba(63,224,208,0.16),rgba(63,224,208,0.05))] text-[var(--color-accent-teal)]"
-                              accentColor="var(--color-accent-teal)"
+                              accentClass="border-[var(--chart-2)]/60 bg-[linear-gradient(135deg,rgba(63,224,208,0.16),rgba(63,224,208,0.05))] text-[var(--chart-2)]"
+                              accentColor="var(--chart-2)"
                               variablePrefix="b"
-                              expressionToneClass="border-[var(--color-accent-teal)]/30 bg-[rgba(63,224,208,0.08)] text-[var(--color-accent-teal)]"
+                              expressionToneClass="border-[var(--chart-2)]/30 bg-[rgba(63,224,208,0.08)] text-[var(--chart-2)]"
                               fields={
                                 condType === 'between' ? (
                                   <>
@@ -912,22 +912,22 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             <div className="grid gap-2 lg:grid-cols-[1fr_auto_1fr] lg:items-center">
                               <div>
                                 <p className="text-caption font-bold text-[var(--color-text-secondary)]">תנאי רקע</p>
-                                <p className="mt-1 text-body-sm font-black text-[var(--color-accent-teal)]">
+                                <p className="mt-1 text-body-sm font-semibold text-[var(--chart-2)]">
                                   <InlineMathToken math={`B = \\left\\{${getConditionalEventMath(condType, 'b')}\\right\\}`} />
                                 </p>
                               </div>
-                              <div className="rounded-full border border-[var(--color-border)] px-3 py-1 text-sm font-black text-[var(--color-accent-cobalt)]">
+                              <div className="rounded-full border border-[var(--color-border)] px-3 py-1 text-sm font-semibold text-[var(--color-accent-cobalt)]">
                                 <InlineMathToken math="A \cap B" />
                               </div>
                               <div>
                                 <p className="text-caption font-bold text-[var(--color-text-secondary)]">מאורע מבוקש</p>
-                                <p className="mt-1 text-body-sm font-black text-[var(--color-accent-amber)]">
+                                <p className="mt-1 text-body-sm font-semibold text-[var(--color-accent-amber)]">
                                   <InlineMathToken math={`A = \\left\\{${getConditionalEventMath(condTypeA, 'a')}\\right\\}`} />
                                 </p>
                               </div>
                             </div>
                             <p className="mt-3 text-caption leading-relaxed text-[var(--color-text-secondary)]">
-                              הקריאה הרשמית היא: קודם <InlineMathToken math="P(B)" className="mx-1 text-[var(--color-accent-teal)]" />, אחר כך <InlineMathToken math="P(A \cap B)" className="mx-1 text-[var(--color-accent-cobalt)]" />, ולבסוף היחס ביניהן.
+                              הקריאה הרשמית היא: קודם <InlineMathToken math="P(B)" className="mx-1 text-[var(--chart-2)]" />, אחר כך <InlineMathToken math="P(A \cap B)" className="mx-1 text-[var(--color-accent-cobalt)]" />, ולבסוף היחס ביניהן.
                             </p>
                           </div>
                         </div>

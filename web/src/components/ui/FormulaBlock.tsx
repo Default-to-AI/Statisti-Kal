@@ -34,9 +34,9 @@ export interface FormulaBlockProps extends HTMLAttributes<HTMLDivElement> {
 
 const VARIANT_CLASSES: Record<FormulaBlockVariant, string> = {
   formula:
-    'border-[var(--color-border)] bg-[var(--color-surface-raised)]/40 rounded-[var(--rounded-lg)]',
+    'border-[var(--color-border)] bg-[var(--color-surface)] rounded-[var(--rounded-lg)]',
   calculation:
-    'border-[var(--color-accent-cobalt-line)] bg-[var(--color-accent-cobalt-bg)]/25 rounded-[var(--rounded-md)]',
+    'border-[var(--color-accent-cobalt-line)] bg-[var(--color-surface-raised)] rounded-[var(--rounded-md)]',
 };
 
 export const FormulaBlock = forwardRef<HTMLDivElement, FormulaBlockProps>(
@@ -66,20 +66,20 @@ export const FormulaBlock = forwardRef<HTMLDivElement, FormulaBlockProps>(
         {(label || copyable) && (
           <div className="flex items-center justify-between gap-3 mb-2">
             {label ? (
-              <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-[var(--color-text-secondary)]">
+              <span className="text-xs sm:text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)]">
                 {label}
               </span>
             ) : (
               <span aria-hidden="true" />
             )}
             {copyable ? (
-              <span className="text-xs sm:text-xs font-black uppercase tracking-wider text-[var(--color-text-secondary)] opacity-0 transition-opacity group-hover:opacity-100">
+              <span className="text-xs sm:text-xs font-semibold uppercase tracking-wider text-[var(--color-text-secondary)] opacity-0 transition-opacity group-hover:opacity-100">
                 Copy
               </span>
             ) : null}
           </div>
         )}
-        <div className="text-center">{children}</div>
+        <div className="text-center text-[var(--color-text-primary)]">{children}</div>
         {caption ? (
           <div className="mt-2 text-xs sm:text-xs font-bold text-[var(--color-text-secondary)]">{caption}</div>
         ) : null}
@@ -117,13 +117,13 @@ export interface ResultBlockProps extends HTMLAttributes<HTMLDivElement> {
 export const ResultBlock: React.FC<ResultBlockProps> = ({ children, className = '', ...rest }) => (
   <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr" {...rest}>
       <div className="flex-1 overflow-x-auto scrollbar-thin rounded-[var(--rounded-lg)] shadow-sm">
-          <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-accent-brass)] rounded-[var(--rounded-lg)] bg-[var(--color-accent-brass)]/10 px-6 py-4 text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-accent-brass)]">
+          <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-primary)] rounded-[var(--rounded-lg)] bg-[var(--color-primary)]/10 px-6 py-4 text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-primary)]">
               <div dir="rtl" className="w-full flex flex-col items-center justify-center space-y-3 font-bold text-base md:text-lg leading-relaxed">
                 {children}
               </div>
           </div>
       </div>
-      <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-brass)]/60">
+      <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-primary)]/60">
           <Award size={36} strokeWidth={1.2} />
       </div>
   </div>

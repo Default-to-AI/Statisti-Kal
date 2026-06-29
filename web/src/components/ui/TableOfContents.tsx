@@ -285,7 +285,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
         onClick={() => setIsExpanded((current) => !current)}
         aria-label={isExpanded ? 'סגור ניווט מהיר' : 'פתח ניווט מהיר'}
         aria-expanded={isExpanded}
-        className="fixed bottom-6 right-6 z-50 inline-flex cursor-pointer flex-row-reverse items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-black text-[var(--color-text-primary)] shadow-[0_16px_40px_rgba(0,0,0,0.32)] transition-all hover:-translate-y-0.5 hover:bg-[var(--color-surface)]"
+        className="fixed bottom-6 right-6 z-50 inline-flex cursor-pointer flex-row-reverse items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] shadow-[0_16px_40px_rgba(0,0,0,0.32)] transition-all hover:-translate-y-0.5 hover:bg-[var(--color-surface)]"
       >
         {isExpanded ? <X size={18} /> : <Bolt size={18} />}
         <span>ניווט מהיר</span>
@@ -300,8 +300,8 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
         <div className="pointer-events-auto max-h-[min(68vh,38rem)] overflow-hidden rounded-[1.25rem] border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface-raised)_94%,transparent)] shadow-[0_24px_64px_rgba(0,0,0,0.4)] backdrop-blur-xl">
           <div className="flex items-center justify-between gap-3 border-b border-[var(--color-border)] bg-[var(--color-surface)]/90 px-4 py-3">
             <div className="flex flex-row-reverse items-center gap-2">
-              <Bolt size={18} className="text-[var(--color-accent-brass)]" />
-              <h2 className="m-0 text-sm font-black text-[var(--color-accent-brass)]">ניווט מהיר</h2>
+              <Bolt size={18} className="text-[var(--color-primary)]" />
+              <h2 className="m-0 text-sm font-semibold text-[var(--color-primary)]">ניווט מהיר</h2>
             </div>
             <button
               type="button"
@@ -333,7 +333,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
                         }}
                         className={`relative flex w-full cursor-pointer items-start gap-3 px-3 py-2 text-right transition-all ${
                           isActive
-                            ? 'bg-[var(--color-accent-brass)]/12 text-[var(--color-text-primary)]'
+                            ? 'bg-[var(--color-primary)]/12 text-[var(--color-text-primary)]'
                             : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)]/72 hover:text-[var(--color-text-primary)]'
                         } ${
                           isNested
@@ -350,10 +350,10 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
                         ) : null}
                         <span
                           className={`mt-1 h-2 w-2 shrink-0 rounded-full ${
-                            isActive ? 'bg-[var(--color-accent-brass)]' : 'bg-[var(--color-border)]'
+                            isActive ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-border)]'
                           }`}
                         />
-                        <span className={`flex-1 leading-6 ${isNested ? 'text-[0.95em]' : ''} ${isActive ? 'font-black' : 'font-bold'}`}>{heading.text}</span>
+                        <span className={`flex-1 leading-6 ${isNested ? 'text-[0.95em]' : ''} ${isActive ? 'font-semibold' : 'font-bold'}`}>{heading.text}</span>
                       </button>
                     </li>
                   );

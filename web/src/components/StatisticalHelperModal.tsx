@@ -88,7 +88,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
         <div className="flex border-b border-[var(--color-border)] dark:border-[var(--color-border)] bg-[var(--color-surface-raised)]/30 dark:bg-[var(--color-surface)]/30 p-1.5 gap-1 overflow-x-auto whitespace-nowrap">
           <button
             onClick={() => setActiveTab('sigma-vs-s')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-black transition-all ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'sigma-vs-s'
                 ? 'bg-[var(--color-accent-cobalt-strong)] text-white shadow-md shadow-[var(--color-accent-cobalt-line)]/15'
                 : 'text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] dark:hover:bg-[var(--color-surface-raised)]'
@@ -100,7 +100,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
 
           <button
             onClick={() => setActiveTab('standard-error')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-black transition-all ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'standard-error'
                 ? 'bg-[var(--color-accent-cobalt-strong)] text-white shadow-md shadow-[var(--color-accent-cobalt-line)]/15'
                 : 'text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] dark:hover:bg-[var(--color-surface-raised)]'
@@ -112,7 +112,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
 
           <button
             onClick={() => setActiveTab('sqrt-intuition')}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-black transition-all ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'sqrt-intuition'
                 ? 'bg-[var(--color-accent-cobalt-strong)] text-white shadow-md shadow-[var(--color-accent-cobalt-line)]/15'
                 : 'text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] dark:hover:bg-[var(--color-surface-raised)]'
@@ -130,12 +130,12 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
           {activeTab === 'sigma-vs-s' && (
             <div className="space-y-5 animate-fade-in text-right">
               {/* Intro Banner */}
-              <div className="p-4 rounded-lg bg-[var(--color-accent-brass)]/15 dark:bg-[var(--color-warning)]/5 border border-[var(--color-warning)]/50 dark:border-[var(--color-warning)]/40 flex items-start gap-3">
+              <div className="p-4 rounded-lg bg-[var(--color-primary)]/15 dark:bg-[var(--color-warning)]/5 border border-[var(--color-warning)]/50 dark:border-[var(--color-warning)]/40 flex items-start gap-3">
                 <div className="p-2 rounded-lg bg-[var(--color-warning)]/10 dark:bg-[var(--color-warning)]/20 text-[var(--color-warning)] dark:text-[var(--color-warning)] mt-0.5">
                   <Info className="w-4 h-4" />
                 </div>
                 <div className="flex-1 space-y-1">
-                  <h4 className="font-extrabold text-sm text-[var(--color-warning)] dark:text-[var(--color-accent-brass)]">
+                  <h4 className="font-extrabold text-sm text-[var(--color-warning)] dark:text-[var(--color-primary)]">
                     ההבחנה קריטית: האם אנחנו יודעים על הכל, או רק על דגימה קטנה?
                   </h4>
                   <p className="text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] leading-relaxed">
@@ -149,13 +149,13 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 {/* Population Side */}
                 <div className="p-4 rounded-lg border border-[var(--color-accent-cobalt-line)] dark:border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 dark:bg-[var(--color-accent-cobalt-strong)]/5 hover:border-[var(--color-accent-cobalt-line)] dark:hover:border-[var(--color-accent-cobalt-line)] transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-accent-cobalt-strong)]/30 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] text-caption sm:text-xs font-black">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-accent-cobalt-strong)]/30 text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] text-caption sm:text-xs font-semibold">
                       אוכלוסייה (עולם תיאורטי)
                     </span>
                     <span className="text-xl font-bold text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] font-mono"><InlineMath math="\sigma" /> (Sigma)</span>
                   </div>
                   
-                  <h5 className="font-black text-xs sm:text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-1.5">
+                  <h5 className="font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-1.5">
                     סטיית תקן של האוכלוסייה (Population SD)
                   </h5>
                   <p className="text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] leading-relaxed mb-4">
@@ -169,22 +169,22 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 </div>
 
                 {/* Sample Side */}
-                <div className="p-4 rounded-lg border border-[var(--color-accent-teal)] dark:border-[var(--color-accent-teal)]/40 bg-[var(--color-accent-teal)]/10 dark:bg-[var(--color-accent-teal)]/5 hover:border-[var(--color-accent-teal)] dark:hover:border-[var(--color-accent-teal)] transition-all shadow-sm">
+                <div className="p-4 rounded-lg border border-[var(--chart-2)] dark:border-[var(--chart-2)]/40 bg-[var(--chart-2)]/10 dark:bg-[var(--chart-2)]/5 hover:border-[var(--chart-2)] dark:hover:border-[var(--chart-2)] transition-all shadow-sm">
                   <div className="flex items-center justify-between mb-3">
-                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--color-accent-teal)] dark:bg-[var(--color-accent-teal)]/30 text-[var(--color-success)] dark:text-[var(--color-accent-teal)] text-caption sm:text-xs font-black">
+                    <span className="px-2.5 py-0.5 rounded-full bg-[var(--chart-2)] dark:bg-[var(--chart-2)]/30 text-[var(--color-success)] dark:text-[var(--chart-2)] text-caption sm:text-xs font-semibold">
                       מדגם (עולם מעשי - הנתונים שיש לנו)
                     </span>
                     <span className="text-xl font-bold text-[var(--color-success)] dark:text-[var(--color-success)] font-mono"><InlineMath math="S" /> (Capital S)</span>
                   </div>
                   
-                  <h5 className="font-black text-xs sm:text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-1.5">
+                  <h5 className="font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-1.5">
                     סטיית תקן של המדגם (Sample SD)
                   </h5>
                   <p className="text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] leading-relaxed mb-4">
                     מחושבת ישירות על בסיס הנתונים שאספנו בפועל. היא <strong>סטטיסטי</strong> (אומדן ל-<InlineMath math="\sigma" /> האמיתית) ומשתנה ממדגם למדגם.
                   </p>
 
-                  <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded-lg border border-[var(--color-accent-teal)] dark:border-[var(--color-border)] text-center">
+                  <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded-lg border border-[var(--chart-2)] dark:border-[var(--color-border)] text-center">
                     <span className="block text-body-xs text-[var(--color-text-secondary)] mb-1">נוסחת המדגם המתוקנת (חלוקה ב-n-1):</span>
                     <InlineMath math="S = \sqrt{\frac{\sum_{i=1}^{n}(x_i - \overline{X})^2}{n - 1}}" />
                   </div>
@@ -279,10 +279,10 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                     <p className="text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] leading-relaxed mb-2">
                       שגיאת תקן (Standard Error) היא ההגדרה של <strong>סטיית התקן</strong> של ממוצע המדגם. כדי לחזור משונות לסטיית תקן, חובה עלינו לקחת את <strong>השורש הריבועי</strong> של השונות שקיבלנו בשלב הקודם:
                     </p>
-                    <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded border border-[var(--color-border)] dark:border-[var(--color-border)] text-center font-mono text-base font-black text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] flex items-center justify-center gap-2">
+                    <div className="bg-white dark:bg-[var(--color-surface)] p-2.5 rounded border border-[var(--color-border)] dark:border-[var(--color-border)] text-center font-mono text-base font-semibold text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] flex items-center justify-center gap-2">
                       <span><InlineMath math="SE = \sqrt{Var(\overline{X})} = \sqrt{\frac{\sigma^2}{n}} = \frac{\sigma}{\sqrt{n}}" /></span>
                     </div>
-                    <p className="text-caption text-[var(--color-success)] dark:text-[var(--color-success)] leading-relaxed font-black mt-2">
+                    <p className="text-caption text-[var(--color-success)] dark:text-[var(--color-success)] leading-relaxed font-semibold mt-2">
                       🏆 הנה זה! השורש של ה-n נובע לגמרי מתוך חוקי השונות והשורש הריבועי ההיפוכי. זהו אכן פשוט סטיית התקן חלקי שורש המדגם!
                     </p>
                   </div>
@@ -308,10 +308,10 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 {/* Population Sigma (StDev) */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="font-black text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] flex items-center gap-1.5">
+                    <span className="font-semibold text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] flex items-center gap-1.5">
                       סטיית תקן אוכלוסייה <InlineMath math="(\sigma)" />:
                     </span>
-                    <span className="font-mono bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-surface-raised)] text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] px-2 py-0.5 rounded font-black text-xs">
+                    <span className="font-mono bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-surface-raised)] text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] px-2 py-0.5 rounded font-semibold text-xs">
                       {popSigma}
                     </span>
                   </div>
@@ -332,10 +332,10 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 {/* Sample Size (n) */}
                 <div className="space-y-2">
                   <div className="flex items-center justify-between text-xs sm:text-sm">
-                    <span className="font-black text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)]">
+                    <span className="font-semibold text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)]">
                       גודל מדגם פוטנציאלי <InlineMath math="(n)" />:
                     </span>
-                    <span className="font-mono bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-surface-raised)] text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] px-2 py-0.5 rounded font-black text-xs">
+                    <span className="font-mono bg-[var(--color-accent-cobalt-bg)] dark:bg-[var(--color-surface-raised)] text-[var(--color-accent-cobalt)] dark:text-[var(--color-accent-cobalt)] px-2 py-0.5 rounded font-semibold text-xs">
                       {sampleSize} דגימות
                     </span>
                   </div>
@@ -371,7 +371,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
                 </div>
                 <div className="space-y-1">
                   <span className="block text-body-xs text-[var(--color-success)]">שגיאת התקן של הממוצע (עם שורש n):</span>
-                  <span className="font-mono text-base font-black text-[var(--color-success)] dark:text-[var(--color-success)] block bg-[var(--color-accent-teal)] dark:bg-[var(--color-accent-teal)]/20 px-3 py-1 rounded inline-block">
+                  <span className="font-mono text-base font-semibold text-[var(--color-success)] dark:text-[var(--color-success)] block bg-[var(--chart-2)] dark:bg-[var(--chart-2)]/20 px-3 py-1 rounded inline-block">
                     <InlineMath math={`SE = \\frac{\\sigma}{\\sqrt{n}} = \\frac{${popSigma}}{\\sqrt{${sampleSize}}} = ${standardError.toFixed(3)}`} />
                   </span>
                 </div>
@@ -437,7 +437,7 @@ export default function StatisticalHelperModal({ isOpen, onClose, initialTab = '
           </p>
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-4 py-2 bg-[var(--color-accent-cobalt-strong)] text-white font-black rounded-lg hover:bg-[var(--color-accent-cobalt-strong)] shadow shadow-[var(--color-accent-cobalt-line)]/10 hover:shadow-lg transition-all"
+            className="w-full sm:w-auto px-4 py-2 bg-[var(--color-accent-cobalt-strong)] text-white font-semibold rounded-lg hover:bg-[var(--color-accent-cobalt-strong)] shadow shadow-[var(--color-accent-cobalt-line)]/10 hover:shadow-lg transition-all"
           >
             אישור, הבנתי!
           </button>

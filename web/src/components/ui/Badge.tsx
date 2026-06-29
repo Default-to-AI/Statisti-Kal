@@ -29,14 +29,14 @@ export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const VARIANT_CLASSES: Record<BadgeVariant, { bg: string; text: string; border: string }> = {
   brass: {
-    bg: 'bg-[var(--color-accent-brass)]/15',
-    text: 'text-[var(--color-accent-brass)]',
-    border: 'border-[var(--color-accent-brass)]',
+    bg: 'bg-[var(--color-primary)]/15',
+    text: 'text-[var(--color-primary)]',
+    border: 'border-[var(--color-primary)]',
   },
   teal: {
-    bg: 'bg-[var(--color-accent-teal)]/15',
-    text: 'text-[var(--color-accent-teal)]',
-    border: 'border-[var(--color-accent-teal)]',
+    bg: 'bg-[var(--chart-2)]/15',
+    text: 'text-[var(--chart-2)]',
+    border: 'border-[var(--chart-2)]',
   },
   crimson: {
     bg: 'bg-[var(--color-accent-crimson)]/15',
@@ -88,7 +88,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         <span
           ref={ref}
           className={`
-            inline-flex items-center gap-1.5 font-black
+            inline-flex items-center gap-1.5 font-semibold
             ${SIZE_CLASSES[size]}
             ${className}
           `}
@@ -112,7 +112,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
       <span
         ref={ref}
         className={`
-          inline-flex items-center font-black rounded-full border
+          inline-flex items-center font-semibold rounded-full border
           whitespace-nowrap
           ${v.bg}
           ${v.text}
@@ -169,7 +169,7 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({
     >
       <span
         className={`
-          font-black ${isStacked ? 'text-base sm:text-lg' : 'text-sm sm:text-base'}
+          font-semibold ${isStacked ? 'text-base sm:text-lg' : 'text-sm sm:text-base'}
           ${v.text}
         `}
       >

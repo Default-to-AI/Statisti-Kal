@@ -93,7 +93,7 @@ export default function HypothesisTestDisplay({
             <DecisionIcon size={24} aria-hidden="true" />
           </div>
           <div>
-            <h3 id="hypothesis-unified-decision-title" className="m-0 text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">
+            <h3 id="hypothesis-unified-decision-title" className="m-0 text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
               החלטה מאוחדת
             </h3>
             <p className="mt-1 text-sm font-bold text-[var(--color-text-secondary)]">
@@ -104,7 +104,7 @@ export default function HypothesisTestDisplay({
 
         <div
           data-decision={result.decisionLabel}
-          className={`inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm sm:text-base font-black ${isReject ? 'border-[var(--color-success)]/50 bg-[var(--color-success)]/10 text-[var(--color-success)]' : 'border-[var(--color-error)]/50 bg-[var(--color-error)]/10 text-[var(--color-error)]'}`}
+          className={`inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm sm:text-base font-semibold ${isReject ? 'border-[var(--color-success)]/50 bg-[var(--color-success)]/10 text-[var(--color-success)]' : 'border-[var(--color-error)]/50 bg-[var(--color-error)]/10 text-[var(--color-error)]'}`}
         >
           {decisionText}
         </div>
@@ -112,7 +112,7 @@ export default function HypothesisTestDisplay({
 
       <div className="grid gap-4 p-5 lg:grid-cols-3">
         <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          <div className="mb-3 flex items-center gap-2 font-black text-[var(--color-accent-cobalt)]">
+          <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--color-accent-cobalt)]">
             <Target size={18} aria-hidden="true" />
             <span>סטטיסטי המבחן</span>
           </div>
@@ -130,7 +130,7 @@ export default function HypothesisTestDisplay({
         </article>
 
         <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          <div className="mb-3 flex items-center gap-2 font-black text-[var(--color-accent-brass)]">
+          <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--color-primary)]">
             <Scale size={18} aria-hidden="true" />
             <span>כלל הערך הקריטי</span>
           </div>
@@ -142,7 +142,7 @@ export default function HypothesisTestDisplay({
         </article>
 
         <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
-          <div className="mb-3 flex items-center gap-2 font-black text-[var(--color-accent-teal)]">
+          <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--chart-2)]">
             <CheckCircle size={18} aria-hidden="true" />
             <span>כלל P-value</span>
           </div>

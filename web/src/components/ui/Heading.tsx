@@ -21,15 +21,15 @@ export interface HeadingProps extends HTMLAttributes<HTMLHeadingElement> {
 }
 
 const LEVEL_CLASSES: Record<HeadingLevel, string> = {
-  page: 'text-[var(--text-heading-page)] font-black leading-[var(--text-heading-page--line-height)] tracking-[var(--text-heading-page--letter-spacing)]',
+  page: 'text-[var(--text-heading-page)] font-semibold leading-[var(--text-heading-page--line-height)] tracking-[var(--text-heading-page--letter-spacing)]',
   section: 'text-[var(--text-heading-section)] font-bold leading-[var(--text-heading-section--line-height)] tracking-[var(--text-heading-section--letter-spacing)]',
   subsection: 'text-[var(--text-heading-subsection)] font-bold leading-[var(--text-heading-subsection--line-height)] tracking-[var(--text-heading-subsection--letter-spacing)]',
-  label: 'text-[var(--text-heading-label)] font-black leading-[var(--text-heading-label--line-height)] tracking-[var(--text-heading-label--letter-spacing)] uppercase',
+  label: 'text-[var(--text-heading-label)] font-semibold leading-[var(--text-heading-label--line-height)] tracking-[var(--text-heading-label--letter-spacing)] uppercase',
 };
 
 const ACCENT_CLASSES: Record<NonNullable<HeadingProps['accent']>, string> = {
-  brass: 'text-[var(--color-accent-brass)]',
-  teal: 'text-[var(--color-accent-teal)]',
+  brass: 'text-[var(--color-primary)]',
+  teal: 'text-[var(--chart-2)]',
   crimson: 'text-[var(--color-accent-crimson)]',
   cobalt: 'text-[var(--color-accent-cobalt)]',
   none: 'text-[var(--color-text-primary)]',

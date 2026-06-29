@@ -22,25 +22,25 @@ export const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
         ? 'formula'
         : 'note';
   const shellClass = blockTone === 'result'
-    ? 'border-[var(--color-accent-brass)]/45 bg-[var(--color-accent-brass)]/10'
+    ? 'border-[var(--color-primary)]/45 bg-[var(--color-primary)]/10'
     : blockTone === 'calculation'
       ? 'border-[var(--color-accent-cobalt)]/35 bg-[var(--color-accent-cobalt)]/8'
       : blockTone === 'formula'
-        ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-surface)]'
+        ? 'border-[var(--color-primary)]/35 bg-[var(--color-surface)]'
         : 'border-[var(--color-border)] bg-[var(--color-surface-raised)]';
   const railClass = blockTone === 'result'
-    ? 'bg-[var(--color-accent-brass)]'
+    ? 'bg-[var(--color-primary)]'
     : blockTone === 'calculation'
       ? 'bg-[var(--color-accent-cobalt)]'
       : blockTone === 'formula'
-        ? 'bg-[var(--color-accent-teal)]'
+        ? 'bg-[var(--chart-2)]'
         : 'bg-[var(--color-border)]';
   const iconColorClass = blockTone === 'result'
-    ? 'text-[var(--color-accent-brass)]/65'
+    ? 'text-[var(--color-primary)]/65'
     : blockTone === 'calculation'
       ? 'text-[var(--color-accent-cobalt)]/65'
       : blockTone === 'formula'
-        ? 'text-[var(--color-accent-teal)]/65'
+        ? 'text-[var(--chart-2)]/65'
         : 'text-[var(--color-text-secondary)]/65';
 
   return (
@@ -61,16 +61,16 @@ export const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
           <div className="min-w-0 flex-1 space-y-3 text-[var(--color-text-primary)]">
             {isStepTitle ? (
               <div className="flex flex-wrap items-center gap-2 border-b border-[var(--color-border)]/80 pb-2">
-                <span className="inline-flex min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 py-1 text-caption font-black text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
+                <span className="inline-flex min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 py-1 text-caption font-semibold text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
                   {stepNumber}
                 </span>
-                <span className="text-body-base font-black text-[var(--color-text-primary)]">
+                <span className="text-body-base font-semibold text-[var(--color-text-primary)]">
                   {stepTitle ? stepTitle.trim() : `שלב ${stepNumber}`}
                 </span>
               </div>
             ) : null}
 
-            <div className={`space-y-3 text-sm md:text-base leading-relaxed ${isResult ? 'font-bold text-[var(--color-accent-brass)]' : 'text-[var(--color-text-primary)]'}`}>
+            <div className={`space-y-3 text-sm md:text-base leading-relaxed ${isResult ? 'font-bold text-[var(--color-primary)]' : 'text-[var(--color-text-primary)]'}`}>
               {parts.map((part, i) => {
                 if (i % 2 === 1) {
                   const isOnlyMath = parts.length === 3 && parts[0] === '' && parts[2] === '';
@@ -84,7 +84,7 @@ export const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
                       <div
                         key={i}
                         className={`my-2 overflow-x-auto rounded-lg border px-4 py-4 text-center shadow-sm ${blockTone === 'result'
-                          ? 'border-[var(--color-accent-brass)]/35 bg-[var(--color-accent-brass)]/8'
+                          ? 'border-[var(--color-primary)]/35 bg-[var(--color-primary)]/8'
                           : 'border-[var(--color-accent-cobalt)]/30 bg-[var(--color-accent-cobalt)]/6'
                           }`}
                         dir="ltr"

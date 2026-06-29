@@ -67,7 +67,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={isDisabled}
         className={`
-          inline-flex items-center justify-center font-black rounded-md border transition-all duration-200
+          inline-flex items-center justify-center font-semibold rounded-md border transition-all duration-200
           select-none cursor-pointer
           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:transform-none
           ${VARIANT_CLASSES[variant]}
@@ -155,7 +155,7 @@ export const SegmentedButton = forwardRef<HTMLButtonElement, SegmentedButtonProp
         ref={ref}
         disabled={disabled}
         className={`
-          inline-flex items-center justify-center font-black rounded-md border transition-all duration-200
+          inline-flex items-center justify-center font-semibold rounded-md border transition-all duration-200
           select-none cursor-pointer
           disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:transform-none
           ${SIZE_CLASSES[size]}

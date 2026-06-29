@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Assistant:wght@400;500;600;700&family=Gveret+Levin&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700&display=swap');
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
 
@@ -9,10 +9,10 @@
  * ============================================================================ */
 @theme {
   /* === Font families === */
-  --font-sans: "Assistant", "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", "Assistant", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-handwriting: "Gveret Levin", cursive;
+  --font-sans: "Inter", "Assistant", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
 
   /* === Display scale (Space Grotesk) === */
   --text-display-hero: 3.5rem;
@@ -103,40 +103,44 @@
  * Consumed via var(--color-*), var(--spacing-*), var(--rounded-*) in className
  * ============================================================================ */
 :root {
-  /* === Base layer === */
-  --color-background: #0D0F14;        /* Deep void */
-  --color-surface: #14171F;           /* Elevated panel surface */
-  --color-surface-raised: #1A1D24;    /* Interactive / hover elevation */
-  --color-border: #2A2F3E;            /* Structural lines */
+  /* === Base layer (Precision Brass) === */
+  --color-background: #000000;        /* Pure Black */
+  --color-surface: #121212;           /* Material Dark */
+  --color-surface-raised: #1E1E1E;    /* Elevated */
+  --color-border: #333333;            /* Solid crisp border */
 
   /* === Text layer === */
-  --color-text-primary: #F0F1F5;      /* High-contrast off-white */
-  --color-text-secondary: #8A93A6;    /* Muted gray */
+  --color-text-primary: #FFFFFF;      /* Pure White (Math & Headers) */
+  --color-text-secondary: #A1A1AA;    /* Zinc 400 */
 
   /* === Primary === */
-  --color-primary: #FACC15;           /* Hero gold */
+  --color-primary: #FFFFFF;           /* White for generic primary actions */
 
-  /* === Accent layer (semantic) === */
-  --color-accent-brass: #FACC15;      /* H₀ reference, critical values */
-  --color-accent-teal: #2EC4B6;       /* Power, acceptance regions */
-  --color-accent-crimson: #E85D5D;    /* Type I error, rejection */
-  --color-accent-cobalt: #6366F1;     /* Z-scores, standard normal, primary interactive elements (Indigo 500) */
+  /* === Accent layer (Academic Precision) === */
+  --color-accent-brass: #D4A843;      /* Brass (H0, primary reference) */
+  --color-accent-teal: #4ECDC4;       /* Patina/Teal (H1, secondary/power) */
+  --color-accent-crimson: #E03E3E;    /* Crimson (Type I error, rejections) */
+  --color-accent-cobalt: #D4A843;     /* Mapped to Brass for active/selected states */
 
-  /* === Accent variants for backgrounds, borders, and active states ===
-     These provide translucent and darker shades for use in composite
-     components (badges, active tabs, hover surfaces) without falling back
-     to generic Tailwind colors like indigo-/slate-/. */
-  --color-accent-cobalt-bg: rgba(99, 102, 241, 0.15);          /* Soft indigo surface (badges) */
-  --color-accent-cobalt-bg-hover: rgba(99, 102, 241, 0.30);    /* Stronger indigo surface (tooltips, hover) */
-  --color-accent-cobalt-line: rgba(99, 102, 241, 0.40);        /* Indigo border */
-  --color-accent-cobalt-strong: #4F46E5;                       /* Active button background (Z-scores, active tabs) - Indigo 600 */
-  --color-accent-cobalt-dark: #4338CA;                         /* Active button border (darker indigo) - Indigo 700 */
+  /* === Accent variants === */
+  --color-accent-cobalt-bg: rgba(212, 168, 67, 0.1);  /* Brass light bg */
+  --color-accent-cobalt-bg-hover: rgba(212, 168, 67, 0.2);
+  --color-accent-cobalt-line: rgba(212, 168, 67, 0.4);
+  --color-accent-cobalt-strong: #B88B2D;
+  --color-accent-cobalt-dark: #966F1C;
+
+  /* === Chart Colors === */
+  --chart-1: #D4A843;   /* Brass */
+  --chart-2: #4ECDC4;   /* Patina */
+  --chart-3: #FFFFFF;   /* White */
+  --chart-4: #4ECDC4;   /* Patina */
+  --chart-5: #E03E3E;   /* Crimson */
 
   /* === Semantic aliases === */
-  --color-success: #3BA98D;
-  --color-error: #D95B5B;
-  --color-warning: #F4A261;
-  --color-info: #6366F1;
+  --color-success: #4ECDC4;
+  --color-error: #E03E3E;
+  --color-warning: #D4A843;
+  --color-info: #C5C6C7;
 
   /* === Spacing scale (4px base unit) — var()-only consumption ===
      These are NOT in @theme because the design intent (per handoff) is direct
@@ -177,25 +181,43 @@
 
   /* === Recharts visual tokens (not in DESIGN.md; preserved for chart parity) === */
   --chart-4: var(--color-accent-teal);                        /* H1 reference curve (teal — distinct from H0 brass, per DESIGN.md "power/acceptance" semantic) */
-  --chart-grid: #2A2F3E;                                       /* Grid line, matches border */
-  --chart-axis-label: #8A93A6;                                 /* Axis ticks */
-  --chart-rejection: rgba(217, 91, 91, 0.45);                  /* Type I error shaded region */
-  --chart-acceptance: rgba(59, 169, 141, 0.45);                /* Power (1-β) shaded region */
+  --chart-grid: #333333;                                       /* Grid line, matches border */
+  --chart-axis-label: #A1A1AA;                                 /* Axis ticks (high contrast zinc-400) */
+  --chart-rejection: rgba(224, 62, 62, 0.25);                  /* Type I error shaded region */
+  --chart-acceptance: rgba(78, 205, 196, 0.25);                /* Power (1-β) shaded region */
 
 }
 
 /* ============================================================================
- * Light mode — intentional inversion (per DESIGN.md)
- * Accents stay identical; only base/text/border invert.
+ * Light mode — intentional inversion
  * ============================================================================ */
 @media (prefers-color-scheme: light) {
   :root {
-    --color-background: #F7F5F2;
+    --color-background: #F3F4F6;
     --color-surface: #FFFFFF;
-    --color-surface-raised: #F0EEEB;
-    --color-border: #D4D0CB;
-    --color-text-primary: #1A1C1E;
-    --color-text-secondary: #5C636A;
+    --color-surface-raised: #F9FAFB;
+    --color-border: #E5E7EB;
+    --color-text-primary: #111827;
+    --color-text-secondary: #4B5563;
+    
+    --color-primary: #111827;
+    
+    --color-accent-brass: #B88B2D;
+    --color-accent-teal: #14B8A6;
+    --color-accent-crimson: #DC2626;
+    --color-accent-cobalt: #E5E7EB;
+
+    --color-accent-cobalt-bg: rgba(184, 139, 45, 0.1);
+    --color-accent-cobalt-bg-hover: rgba(184, 139, 45, 0.15);
+    --color-accent-cobalt-line: rgba(184, 139, 45, 0.3);
+    --color-accent-cobalt-strong: #966F1C;
+    --color-accent-cobalt-dark: #7A5712;
+
+    --chart-1: #B88B2D;
+    --chart-2: #14B8A6;
+    --chart-3: #111827;
+    --chart-4: #14B8A6;
+    --chart-5: #DC2626;
   }
 }
 

@@ -273,7 +273,7 @@ describe('TableOfContents', () => {
     // resolveActiveHeadingId reads window.scrollY directly and runs in a RAF callback;
     // with our sync RAF stub the update happens immediately.
     const items = getNavItems();
-    expect(items[1]?.className).toContain('bg-[var(--color-accent-brass)]/12');
+    expect(items[1]?.className).toContain('bg-[var(--color-primary)]/12');
   });
 
   // ── Nested heading indentation ────────────────────────────────────────

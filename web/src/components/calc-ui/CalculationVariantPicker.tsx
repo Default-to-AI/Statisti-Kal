@@ -46,13 +46,13 @@ export function CalculationVariantPicker({
               type="button"
               onClick={() => onChange(option.value)}
               className={`group rounded-lg border px-4 py-3 text-right transition-all ${isActive
-                ? 'border-[var(--color-accent-cobalt)]/70 bg-[linear-gradient(135deg,rgba(92,92,255,0.16),rgba(92,92,255,0.06))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
+                ? 'border-[var(--color-accent-cobalt)]/70 bg-[var(--color-accent-cobalt-bg-hover)] shadow-[0_0_0_1px_var(--color-accent-cobalt)]'
                 : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-accent-cobalt)]/35 hover:bg-[var(--color-accent-cobalt)]/5'
                 }`}
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <span className={`block text-body-base font-black ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
+                  <span className={`block text-body-base font-semibold ${isActive ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}`}>
                     {option.label}
                   </span>
                   {option.description ? (

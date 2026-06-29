@@ -150,7 +150,7 @@ const AccordionItemComponent = React.memo(function AccordionItemComponent({
         className={`
           w-full text-right flex items-center justify-between gap-3 cursor-pointer
           ${triggerClass}
-          font-black transition-all
+          font-semibold transition-all
           ${isOpen ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}
           ${item.disabled ? 'cursor-not-allowed' : 'hover:bg-[var(--color-surface-raised)]/50'}
         `}
@@ -285,7 +285,7 @@ export const SimpleAccordion: React.FC<SimpleAccordionProps> = ({
         className={`
           w-full text-right flex items-center justify-between gap-3 cursor-pointer
           ${sizes.trigger}
-          font-black transition-all
+          font-semibold transition-all
           ${isOpen ? 'text-[var(--color-accent-cobalt)]' : 'text-[var(--color-text-primary)]'}
           hover:bg-[var(--color-surface-raised)]/50
         `}

@@ -385,7 +385,7 @@ export function ProgressStrip({
 
   return (
     <div className="space-y-2">
-      <div className="flex items-center justify-between text-body-xs font-black text-[var(--color-text-secondary)]">
+      <div className="flex items-center justify-between text-body-xs font-semibold text-[var(--color-text-secondary)]">
         <span>{label}</span>
         <span>{value}%</span>
       </div>
@@ -430,7 +430,7 @@ export function HoverImageCard({
           transition={{ duration: 0.4 }}
         />
         <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(13,15,20,0.9))] p-4">
-          <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[rgba(20,23,31,0.9)] px-3 py-1 text-caption font-black text-[var(--color-accent-brass)]">
+          <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[rgba(20,23,31,0.9)] px-3 py-1 text-caption font-semibold text-[var(--color-accent-brass)]">
             {badge}
           </span>
         </div>
@@ -454,10 +454,10 @@ export function PlaceholderCard({
 }): ReactElement {
   return (
     <div className="rounded-[24px] border border-dashed border-[var(--color-border)] bg-[var(--color-surface)]/55 p-5">
-      <span className="inline-flex rounded-full border border-[var(--color-accent-crimson)]/40 bg-[var(--color-accent-crimson)]/10 px-3 py-1 text-caption font-black text-[var(--color-accent-crimson)]">
+      <span className="inline-flex rounded-full border border-[var(--color-accent-crimson)]/40 bg-[var(--color-accent-crimson)]/10 px-3 py-1 text-caption font-semibold text-[var(--color-accent-crimson)]">
         {label}
       </span>
-      <h3 className="mt-4 text-heading-section font-black text-[var(--color-text-primary)]">{title}</h3>
+      <h3 className="mt-4 text-heading-section font-semibold text-[var(--color-text-primary)]">{title}</h3>
       <p className="mt-2 text-body-sm font-semibold text-[var(--color-text-secondary)]">{body}</p>
     </div>
   );
@@ -480,7 +480,7 @@ export function SimpleTabs({
           type="button"
           onClick={() => onChange(tab.id)}
           className={cx(
-            'rounded-full px-4 py-2 text-body-xs font-black transition-all',
+            'rounded-full px-4 py-2 text-body-xs font-semibold transition-all',
             active === tab.id
               ? 'bg-[linear-gradient(90deg,var(--color-accent-cobalt),var(--color-accent-teal))] text-white'
               : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-surface-raised)] hover:text-[var(--color-text-primary)]',

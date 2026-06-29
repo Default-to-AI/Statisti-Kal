@@ -30,11 +30,11 @@ export function ParameterInputCell({
   statusText,
 }: ParameterInputCellProps) {
   return (
-    <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] ${disabled ? 'opacity-55' : ''}`}>
+    <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface)] border-b border-[var(--color-border)] ${disabled ? 'opacity-55' : ''}`}>
       <CellWatermark math={watermark} colorClass={colorClass} />
       <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
         <InputTooltip content={tooltip}>
-          <span className={`text-center text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]/90'} xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right`}>
+          <span className={`text-center text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]'} xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right`}>
             {label}
           </span>
         </InputTooltip>
@@ -46,7 +46,7 @@ export function ParameterInputCell({
             disabled={disabled}
             readOnly={readOnly}
             placeholder={placeholder}
-            className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${disabled ? 'cursor-not-allowed opacity-50 border-transparent bg-[var(--color-surface-raised)]/5' : ''} ${readOnly ? 'cursor-default' : ''} ${!disabled && error ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : !disabled ? 'border-[var(--color-border)]' : ''}`}
+            className={`w-full bg-[var(--color-background)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${disabled ? 'cursor-not-allowed opacity-50 border-transparent bg-transparent' : ''} ${readOnly ? 'cursor-default' : ''} ${!disabled && error ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : !disabled ? 'border-[var(--color-border)]' : ''}`}
             dir="ltr"
           />
           {error ? (

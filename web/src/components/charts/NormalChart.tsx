@@ -125,13 +125,13 @@ export const NormalChart: React.FC<{
     );
   }
 
-  const curveColor = 'var(--color-accent-brass)';
-  const secondaryCurveColor = 'var(--color-accent-teal)';
+  const curveColor = 'var(--color-primary)';
+  const secondaryCurveColor = 'var(--chart-2)';
   const zLineColor = 'var(--color-accent-cobalt)';
   const mainGridColor = 'var(--chart-grid)';
   const axisLabelColor = 'var(--chart-axis-label)';
   const shadedColor = 'var(--color-accent-cobalt)';
-  const bShadedColor = 'var(--color-accent-teal)';
+  const bShadedColor = 'var(--chart-2)';
   const intersectShadedColor = 'var(--color-accent-cobalt)';
 
   const minStandardX = Math.min(x1, x2);
@@ -140,7 +140,7 @@ export const NormalChart: React.FC<{
   const xDomain = [mean - 4.2 * stdDev, mean + 4.2 * stdDev] as const;
   const xMarkers = useMemo(() => {
     const markers: Array<{ value: number; math: string; color: string }> = [
-      { value: mean, math: '\\mu', color: 'var(--color-accent-brass)' },
+      { value: mean, math: '\\mu', color: 'var(--color-primary)' },
     ];
 
     if (type === 'conditional' && mode === 'forward') {
@@ -149,19 +149,19 @@ export const NormalChart: React.FC<{
         markers.push({ value: x2, math: 'a_2', color: 'var(--color-accent-cobalt)' });
       }
       if (typeof condX1 === 'number') {
-        markers.push({ value: condX1, math: 'b_1', color: 'var(--color-accent-teal)' });
+        markers.push({ value: condX1, math: 'b_1', color: 'var(--chart-2)' });
       }
       if (condType === 'between' && typeof condX2 === 'number') {
-        markers.push({ value: condX2, math: 'b_2', color: 'var(--color-accent-teal)' });
+        markers.push({ value: condX2, math: 'b_2', color: 'var(--chart-2)' });
       }
     } else if (mode === 'inverse') {
       markers.push({ value: x1, math: type === 'between' || type === 'outside' ? 'X_1' : 'X', color: 'var(--color-accent-cobalt)' });
       if (type === 'between' || type === 'outside') {
-        markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
+        markers.push({ value: x2, math: 'X_2', color: 'var(--chart-2)' });
       }
     } else if (type === 'between' || type === 'outside') {
       markers.push({ value: x1, math: 'X_1', color: 'var(--color-accent-cobalt)' });
-      markers.push({ value: x2, math: 'X_2', color: 'var(--color-accent-teal)' });
+      markers.push({ value: x2, math: 'X_2', color: 'var(--chart-2)' });
     } else {
       markers.push({ value: x1, math: 'X', color: 'var(--color-accent-cobalt)' });
     }
@@ -215,7 +215,7 @@ export const NormalChart: React.FC<{
       const zVal = (dataPt.x - mean) / stdDev;
       return (
         <ChartTooltipShell className="text-xs text-right space-y-1">
-          <p className="font-bold text-sm text-[var(--color-accent-brass)]">נקודה על העקומה</p>
+          <p className="font-bold text-sm text-[var(--color-primary)]">נקודה על העקומה</p>
           <p className="flex justify-between gap-4"><span>ערך <InlineMath math="X" />:</span> <span className="font-mono font-bold">{dataPt.x.toFixed(2)}</span></p>
           <p className="flex justify-between gap-4"><span>ציון תקן <InlineMath math="Z" />:</span> <span className="font-mono font-bold">{zVal.toFixed(2)}</span></p>
           <p className="flex justify-between gap-4"><span>צפיפות PDF:</span> <span className="font-mono font-bold">{dataPt.pdf.toFixed(4)}</span></p>
@@ -257,7 +257,7 @@ export const NormalChart: React.FC<{
             className="flex flex-col items-center justify-start leading-none"
             style={{ color: marker.color }}
           >
-            <span className="text-[1.25rem] font-black">
+            <span className="text-[1.25rem] font-semibold">
               <InlineMath math={tickValue.toFixed(2)} />
             </span>
             <span className="mt-1 text-[0.85rem] font-bold opacity-80" style={{ color: axisLabelColor }}>

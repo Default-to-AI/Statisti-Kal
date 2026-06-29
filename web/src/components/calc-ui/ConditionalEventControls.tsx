@@ -52,7 +52,7 @@ export function ConditionalEventPicker({
               : 'border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)]'
               } ${disabled ? 'cursor-not-allowed opacity-60 grayscale-[0.15]' : ''}`}
           >
-            <span className="block text-base font-black sm:text-lg">
+            <span className="block text-base font-semibold sm:text-lg">
               <InlineMathToken math={math} />
             </span>
             <span
@@ -87,7 +87,7 @@ export function ConditionalValueField({
 }: ConditionalValueFieldProps) {
   return (
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/88 p-2.5">
-      <label className="mb-1 block text-heading-label font-black text-[var(--color-text-primary)]">
+      <label className="mb-1 block text-heading-label font-semibold text-[var(--color-text-primary)]">
         {label}
       </label>
       <p className="mb-2 text-caption text-[var(--color-text-secondary)]">{helper}</p>
@@ -137,13 +137,13 @@ export function ConditionalEventDefinitionCard({
     <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/72 p-3.5">
       <div className="mb-3 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
         <div className="text-right">
-          <p className="text-caption font-black tracking-[0.12em] text-[var(--color-text-secondary)]">
+          <p className="text-caption font-semibold tracking-[0.12em] text-[var(--color-text-secondary)]">
             {stepNumber}
           </p>
-          <h4 className="mt-1 text-body-base font-black text-[var(--color-text-primary)]">{title}</h4>
+          <h4 className="mt-1 text-body-base font-semibold text-[var(--color-text-primary)]">{title}</h4>
           <p className="mt-1 text-caption leading-relaxed text-[var(--color-text-secondary)]">{description}</p>
         </div>
-        <div className={`rounded-full border px-2.5 py-1 text-sm font-black ${expressionToneClass}`}>
+        <div className={`rounded-full border px-2.5 py-1 text-sm font-semibold ${expressionToneClass}`}>
           <InlineMathToken math={formula} />
         </div>
       </div>
@@ -159,7 +159,7 @@ export function ConditionalEventDefinitionCard({
 
       <div className={`mt-3 rounded-lg border px-3 py-2 text-right ${expressionToneClass}`}>
         <p className="text-caption font-bold text-[var(--color-text-secondary)]">ניסוח פורמלי</p>
-        <p className="mt-1 text-body-sm font-black">
+        <p className="mt-1 text-body-sm font-semibold">
           <InlineMathToken math={`${variablePrefix === 'a' ? 'A' : 'B'} = \\left\\{${getConditionalEventMath(value, variablePrefix)}\\right\\}`} />
         </p>
       </div>

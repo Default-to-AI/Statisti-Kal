@@ -169,7 +169,7 @@ export const Modal = forwardRef<HTMLDivElement, ModalProps>(
                 {/* Header */}
                 <div className="flex items-start justify-between gap-3 border-b border-[var(--color-border)] p-4 sm:p-5">
                   <div className="flex flex-col gap-1">
-                    <h2 className="text-base sm:text-lg font-black text-[var(--color-text-primary)]">
+                    <h2 className="text-base sm:text-lg font-semibold text-[var(--color-text-primary)]">
                       {title}
                     </h2>
                     {description && (
@@ -278,7 +278,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
             disabled={confirming}
             className={`
               inline-flex items-center justify-center px-4 py-2 rounded-md border
-              font-black transition-colors
+              font-semibold transition-colors
               disabled:opacity-40 disabled:cursor-not-allowed
               ${severity === 'danger'
                 ? 'bg-[var(--color-error)] text-white border-[var(--color-error)] hover:bg-[var(--color-error)]/90'

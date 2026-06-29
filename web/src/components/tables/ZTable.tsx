@@ -170,7 +170,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead className="sticky top-0 z-30 shadow-sm">
           <tr className="bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]">
-            <th className="sticky left-0 p-2.5 border border-[var(--color-border)] text-[var(--color-accent-brass)] font-extrabold text-center text-sm w-14 bg-[var(--color-surface-raised)] z-40">Z</th>
+            <th className="sticky left-0 p-2.5 border border-[var(--color-border)] text-[var(--color-primary)] font-extrabold text-center text-sm w-14 bg-[var(--color-surface-raised)] z-40">Z</th>
             {cols.map(c => {
               const isColActive = lookupZ !== null && Math.abs(c - colVal!) < 0.001;
               return (
@@ -195,7 +195,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                 ? 'bg-[var(--color-surface-raised)]'
                 : 'hover:bg-[var(--color-surface)]'
                 }`}>
-                <td className={`sticky left-0 p-2.5 border border-[var(--color-border)] font-black text-center text-sm transition-colors duration-300 z-20 ${isRowActive
+                <td className={`sticky left-0 p-2.5 border border-[var(--color-border)] font-semibold text-center text-sm transition-colors duration-300 z-20 ${isRowActive
                   ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
                   : 'text-[var(--color-text-primary)] bg-[var(--color-surface-raised)]'
                   }`}>
@@ -214,7 +214,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                       className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-mono-sm sm:text-mono-base ${isActive
                         ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
                         : isRowActive
-                          ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-accent-brass)] font-semibold'
+                          ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-primary)] font-semibold'
                           : isColActive
                             ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-accent-cobalt)] font-semibold'
                             : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] font-medium'
@@ -237,7 +237,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead className="sticky top-0 z-30 shadow-sm">
           <tr className="bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]">
-            <th rowSpan={2} className="sticky right-0 p-3 border border-[var(--color-border)] text-[var(--color-accent-cobalt)] font-black text-center text-xs sm:text-sm w-16 bg-[var(--color-surface-raised)] z-40">
+            <th rowSpan={2} className="sticky right-0 p-3 border border-[var(--color-border)] text-[var(--color-accent-cobalt)] font-semibold text-center text-xs sm:text-sm w-16 bg-[var(--color-surface-raised)] z-40">
               דרגות חופש <br /> (df)
             </th>
             <th colSpan={6} className="p-1.5 border-b border-[var(--color-border)] font-extrabold text-center text-xs bg-[var(--color-surface-raised)]">
@@ -270,7 +270,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                 ? 'bg-[var(--color-surface-raised)]'
                 : 'hover:bg-[var(--color-surface)]'
                 }`}>
-                <td className={`sticky right-0 p-2.5 border border-[var(--color-border)] font-black text-center text-xs sm:text-sm transition-colors duration-300 z-20 ${isRowActive
+                <td className={`sticky right-0 p-2.5 border border-[var(--color-border)] font-semibold text-center text-xs sm:text-sm transition-colors duration-300 z-20 ${isRowActive
                   ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
                   : 'text-[var(--color-text-primary)] bg-[var(--color-surface)]'
                   }`}>
@@ -461,11 +461,11 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                               <>
                                 עבור ציון תקן <span dir="ltr" className="font-bold"><InlineMath math={`Z = ${actualZ.toFixed(2)}`} /></span>,<br />
                                 השטח המצטבר (ההסתברות) הוא <span dir="ltr" className="font-bold"><InlineMath math={`\\Phi(Z) = ${normalCDF(actualZ, 0, 1).toFixed(4)}`} /></span>
-                                <span className="text-[var(--color-accent-brass)] mx-2 text-xl font-bold">(<InlineMath math={`${(normalCDF(actualZ, 0, 1) * 100).toFixed(2)}\\%`} />)</span>.
+                                <span className="text-[var(--color-primary)] mx-2 text-xl font-bold">(<InlineMath math={`${(normalCDF(actualZ, 0, 1) * 100).toFixed(2)}\\%`} />)</span>.
                               </>
                             ) : (
                               <>
-                                עבור הסתברות מצטברת של <span className="text-[var(--color-accent-brass)] mx-1 text-xl font-bold"><InlineMath math={`${(parseFloat(phiSearchVal || "0") * 100).toFixed(1)}\\%`} /></span>,<br />
+                                עבור הסתברות מצטברת של <span className="text-[var(--color-primary)] mx-1 text-xl font-bold"><InlineMath math={`${(parseFloat(phiSearchVal || "0") * 100).toFixed(1)}\\%`} /></span>,<br />
                                 ציון התקן המתאים הוא <span dir="ltr" className="font-bold"><InlineMath math={`Z \\approx ${actualZ.toFixed(2)}`} /></span>.
                               </>
                             )}
@@ -590,7 +590,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                   <div className="mb-4 bg-[var(--color-surface-raised)] p-4 rounded-lg border border-[var(--color-border)]">
                     <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
                       <div className="md:col-span-2 flex flex-col justify-end relative">
-                        <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">דרגות חופש (<InlineMath math="df" />):</label>
+                        <label className="block text-xs font-semibold text-[var(--color-text-primary)] mb-2 font-sans">דרגות חופש (<InlineMath math="df" />):</label>
                         <div className="relative w-full">
                           <input
                             type="number"
@@ -620,7 +620,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                         </div>
                       </div>
                       <div className="md:col-span-4 lg:col-span-3 flex flex-col justify-end">
-                        <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">סוג המבחן:</label>
+                        <label className="block text-xs font-semibold text-[var(--color-text-primary)] mb-2 font-sans">סוג המבחן:</label>
                         <div className="flex bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)]/50 p-1 shadow-sm w-full relative">
                           {['two', 'one'].map(side => (
                             <button
@@ -641,7 +641,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                         </div>
                       </div>
                       <div className="md:col-span-6 lg:col-span-7 flex flex-col justify-end">
-                        <label className="block text-xs font-black text-[var(--color-text-primary)] mb-2 font-sans">אלפא (מובהקות):</label>
+                        <label className="block text-xs font-semibold text-[var(--color-text-primary)] mb-2 font-sans">אלפא (מובהקות):</label>
                         <div className="flex flex-wrap sm:flex-nowrap bg-[var(--color-surface)] rounded-lg border border-[var(--color-border)]/50 p-1 shadow-sm w-full gap-1 relative">
                           {[0.20, 0.10, 0.05, 0.02, 0.01, 0.001].map(a => (
                             <button
@@ -665,7 +665,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                   </div>
 
                   {computedTCritical !== null && (
-                    <div className="mb-4 text-sm font-black text-[var(--color-text-primary)]">
+                    <div className="mb-4 text-sm font-semibold text-[var(--color-text-primary)]">
                       עבור df = {tDf === 500 ? '∞ (Z)' : tDf}, אלפא = {tAlpha}, מבחן {tSide === 'two' ? 'דו-צדדי' : 'חד-צדדי'}:
                       ערך קריטי <InlineMath math="t_{crit}" /> = <span className="text-[var(--color-accent-cobalt)] font-mono text-base ml-1">{computedTCritical.toFixed(4)}</span>
                     </div>

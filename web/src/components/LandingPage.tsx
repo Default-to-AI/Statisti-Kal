@@ -46,13 +46,13 @@ function TypewriterEffect({ words }: { words: string[] }): ReactElement {
       style={{ minWidth: `${maxWord.length * 0.5 + 0.4}em` }}
     >
       <span
-        className="absolute bottom-0 right-0 left-0 border-b-2 border-[var(--color-accent-brass)]/50"
+        className="absolute bottom-0 right-0 left-0 border-b-2 border-[var(--color-primary)]/50"
         aria-hidden="true"
       />
-      <span className="font-['Times_New_Roman'] font-bold text-[var(--color-accent-brass)] drop-shadow-sm">
+      <span className="font-['Times_New_Roman'] font-bold text-[var(--color-primary)] drop-shadow-sm">
         {text}
       </span>
-      <span className="animate-pulse text-[var(--color-accent-brass)]/70">|</span>
+      <span className="animate-pulse text-[var(--color-primary)]/70">|</span>
     </span>
   );
 }
@@ -111,8 +111,8 @@ function ScatteredImages(): ReactElement {
             
             <div className="h-6 bg-[var(--color-surface-raised)] border-b border-[var(--color-border)] flex items-center gap-1.5 px-3">
                <div className="w-2 h-2 rounded-full bg-[var(--color-accent-crimson)] opacity-80"></div>
-               <div className="w-2 h-2 rounded-full bg-[var(--color-accent-brass)] opacity-80"></div>
-               <div className="w-2 h-2 rounded-full bg-[var(--color-accent-teal)] opacity-80"></div>
+               <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] opacity-80"></div>
+               <div className="w-2 h-2 rounded-full bg-[var(--chart-2)] opacity-80"></div>
             </div>
             
             <img 
@@ -141,7 +141,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
           <div className="absolute inset-0 -z-20 h-full w-full bg-[var(--color-background)] bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30"></div>
 
           <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none" aria-hidden="true">
-            <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[var(--color-accent-cobalt)] to-[var(--color-accent-teal)] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
+            <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[var(--color-accent-cobalt)] to-[var(--chart-2)] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
           </div>
 
           <div className="max-w-[90rem] mx-auto flex flex-col lg:flex-row items-center gap-8 relative z-10">
@@ -154,7 +154,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-8">
                 <span className="block mb-2 font-display">סטטיסטי-קל</span>
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent-cobalt)] to-[var(--color-accent-teal)] pb-2 font-display">
+                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent-cobalt)] to-[var(--chart-2)] pb-2 font-display">
                   הקץ לטכניקה.
                 </span>
               </h1>
@@ -193,7 +193,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
           </div>
 
           <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)] pointer-events-none" aria-hidden="true">
-            <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[var(--color-accent-teal)] to-[var(--color-accent-cobalt)] opacity-15 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" />
+            <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[var(--chart-2)] to-[var(--color-accent-cobalt)] opacity-15 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" />
           </div>
         </div>
 
@@ -215,8 +215,8 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
               </Button>
             </Card>
 
-            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-accent-teal)]/40 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-[var(--color-accent-teal)]/10 text-[var(--color-accent-teal)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-accent-teal)]/30">
+            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--chart-2)]/40 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-[var(--chart-2)]/10 text-[var(--chart-2)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--chart-2)]/30">
                 <AreaChart className="w-8 h-8" />
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">התפלגות נורמלית</h3>
@@ -228,8 +228,8 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
               </Button>
             </Card>
 
-            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-accent-brass)]/40 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-[var(--color-accent-brass)]/10 text-[var(--color-accent-brass)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-accent-brass)]/30">
+            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-primary)]/40 hover:-translate-y-1">
+              <div className="w-16 h-16 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-primary)]/30">
                 <BookOpen className="w-8 h-8" />
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">דף נוסחאות</h3>
@@ -257,7 +257,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis }: LandingPage
                 </div>
               </div>
               <div className="flex gap-4 items-start bg-[var(--color-surface)] p-6 rounded-[24px] border border-[var(--color-border)] shadow-sm">
-                <div className="shrink-0 mt-1 bg-[var(--color-accent-teal)]/10 p-3 rounded-xl border border-[var(--color-accent-teal)]/30 text-[var(--color-accent-teal)] shadow-inner">
+                <div className="shrink-0 mt-1 bg-[var(--chart-2)]/10 p-3 rounded-xl border border-[var(--chart-2)]/30 text-[var(--chart-2)] shadow-inner">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <div>

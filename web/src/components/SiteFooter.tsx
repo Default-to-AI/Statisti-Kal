@@ -32,10 +32,10 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
           <section className="space-y-4">
             <div className="flex items-center gap-2.5">
               <GraduationCap
-                className="h-5 w-5 text-[var(--color-accent-brass)]"
+                className="h-5 w-5 text-[var(--color-primary)]"
                 strokeWidth={1.6}
               />
-              <span className="text-heading-section font-black text-[var(--color-text-primary)]">
+              <span className="text-heading-section font-semibold text-[var(--color-text-primary)]">
                 אודות
               </span>
             </div>
@@ -52,7 +52,7 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
 
           {/* Quick nav column */}
           <nav aria-label="ניווט מהיר" className="space-y-4">
-            <h2 className="text-heading-section font-black text-[var(--color-text-primary)]">
+            <h2 className="text-heading-section font-semibold text-[var(--color-text-primary)]">
               ניווט
             </h2>
             <ul className="space-y-2.5">
@@ -73,14 +73,14 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
 
           {/* Source / links column */}
           <section className="space-y-4">
-            <h2 className="text-heading-section font-black text-[var(--color-text-primary)]">
+            <h2 className="text-heading-section font-semibold text-[var(--color-text-primary)]">
               קוד מקור
             </h2>
             <a
               href={githubUrl}
               target="_blank"
               rel="noreferrer"
-              className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-accent-brass)]"
+              className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-primary)]"
             >
               <Github className="h-4 w-4 shrink-0" strokeWidth={1.6} />
               GitHub

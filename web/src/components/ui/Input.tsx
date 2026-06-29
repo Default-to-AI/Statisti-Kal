@@ -45,7 +45,7 @@ export const Label = forwardRef<HTMLLabelElement, LabelProps>(
         ref={ref}
         dir={dir}
         className={`
-          block font-black text-[var(--color-text-primary)]
+          block font-semibold text-[var(--color-text-primary)]
           ${LABEL_SIZE_CLASSES[size]}
           mb-1
           ${className}

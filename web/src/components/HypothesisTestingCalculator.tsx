@@ -53,13 +53,14 @@ import {
     Globe2,
     ExternalLink
 } from 'lucide-react';
+import { ChartWrapper } from './ui/CustomComponents';
+import { HypothesisChart } from './charts/HypothesisChart';
 import {
     ResponsiveContainer,
     AreaChart,
     Area,
     XAxis,
     YAxis,
-    Tooltip as RechartsTooltip,
     ReferenceLine,
     CartesianGrid,
 } from 'recharts';
@@ -114,7 +115,7 @@ function FormulaBlock({
     return (
         <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
             <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm relative group">
-                <UIFormulaBlock className="relative border-l-4 border-dashed border-l-[var(--color-accent-brass)]/70 bg-[var(--color-accent-brass)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
+                <UIFormulaBlock className="relative border-l-4 border-dashed border-l-[var(--color-primary)]/70 bg-[var(--color-primary)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
                     {formulaName && translation && (
                         <div className="absolute top-2.5 left-2.5 z-10 transition-opacity opacity-60 hover:opacity-100">
                             <FormulaTranslation formulaName={formulaName} translation={translation} />
@@ -123,7 +124,7 @@ function FormulaBlock({
                     {children}
                 </UIFormulaBlock>
             </div>
-            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-brass)]/60">
+            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-primary)]/60">
                 <BookOpen size={36} strokeWidth={1.2} />
             </div>
         </div>
@@ -1098,7 +1099,7 @@ export default function HypothesisTestingCalculator() {
                         <span className="font-mono font-bold text-[var(--color-accent-cobalt)]" dir="ltr">{dataPt.x.toFixed(2)}</span>
                     </div>
                     <div className="text-xs font-bold text-[var(--color-text-secondary)] mb-1">צפיפות הסתברות:</div>
-                    <div className="flex justify-between gap-6" style={{ color: 'var(--color-accent-brass)' }}>
+                    <div className="flex justify-between gap-6" style={{ color: 'var(--color-primary)' }}>
                         <span className="font-semibold">אוכלוסיה:</span>
                         <span className="font-mono font-bold" dir="ltr">{dataPt.pdfPop.toFixed(2)}</span>
                     </div>
@@ -1122,12 +1123,12 @@ export default function HypothesisTestingCalculator() {
                         <span className="font-mono font-bold text-[var(--color-accent-cobalt)]" dir="ltr">{dataPt.x.toFixed(2)}</span>
                     </div>
                     <div className="text-xs font-bold text-[var(--color-text-secondary)] mb-1">צפיפות הסתברות:</div>
-                    <div className="flex justify-between gap-6 text-[var(--color-accent-brass)]">
+                    <div className="flex justify-between gap-6 text-[var(--color-primary)]">
                         <span className="font-semibold">אוכלוסיה (<InlineMath math="H_0" />):</span>
                         <span className="font-mono font-bold" dir="ltr">{dataPt.pdfH0.toFixed(2)}</span>
                     </div>
                     {dataPt.pdfH1 !== undefined && (
-                        <div className="flex justify-between gap-6 text-[var(--color-accent-teal)]">
+                        <div className="flex justify-between gap-6 text-[var(--chart-2)]">
                             <span className="font-semibold">מדגם (<InlineMath math="H_1" />):</span>
                             <span className="font-mono font-bold" dir="ltr">{dataPt.pdfH1.toFixed(2)}</span>
                         </div>
@@ -1140,10 +1141,10 @@ export default function HypothesisTestingCalculator() {
 
     const hypothesisLegendItems = useMemo((): ChartLegendItem[] => {
         const items: ChartLegendItem[] = [
-            { math: 'H_0', color: 'var(--color-accent-brass)', style: 'area' },
+            { math: 'H_0', color: 'var(--color-primary)', style: 'area' },
             {
                 math: 'H_1',
-                color: 'var(--color-accent-teal)',
+                color: 'var(--chart-2)',
                 style: 'area',
                 onClick: () => setCalculatePower(!calculatePower),
                 muted: !calculatePower,
@@ -1153,7 +1154,7 @@ export default function HypothesisTestingCalculator() {
         ];
 
         if (calculatePower) {
-            items.push({ math: '1-\\beta', color: 'var(--color-accent-teal)', style: 'area' });
+            items.push({ math: '1-\\beta', color: 'var(--chart-2)', style: 'area' });
         }
 
         return items;
@@ -1199,16 +1200,16 @@ export default function HypothesisTestingCalculator() {
             <AnimatedDetails id="hypothesis-study-example" tocId="hypothesis-study-example" defaultOpen className="group relative bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg mb-8 shadow-sm border-r-4 border-r-[var(--color-accent-cobalt)] overflow-hidden [&_summary::-webkit-details-marker]:hidden">
                 <summary className="relative z-10 cursor-pointer select-none p-4 sm:p-5 flex flex-col xl:flex-row xl:items-center gap-4 border-b border-[var(--color-border)]/70 overflow-hidden">
                     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                        <span className="absolute top-2 left-[18%] -rotate-6 text-2xl sm:text-4xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
-                        <span className="absolute top-7 left-[42%] rotate-3 text-xl sm:text-3xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
-                        <span className="absolute bottom-1 right-[34%] -rotate-2 text-xl sm:text-3xl font-mono font-black text-[var(--color-success)]/10" dir="ltr"><InlineMath math="H_1: \mu < 37" /></span>
-                        <span className="absolute bottom-2 left-[6%] rotate-6 text-xl sm:text-3xl font-mono font-black text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
+                        <span className="absolute top-2 left-[18%] -rotate-6 text-2xl sm:text-4xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
+                        <span className="absolute top-7 left-[42%] rotate-3 text-xl sm:text-3xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
+                        <span className="absolute bottom-1 right-[34%] -rotate-2 text-xl sm:text-3xl font-mono font-semibold text-[var(--color-success)]/10" dir="ltr"><InlineMath math="H_1: \mu < 37" /></span>
+                        <span className="absolute bottom-2 left-[6%] rotate-6 text-xl sm:text-3xl font-mono font-semibold text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
                     </div>
                     <div className="relative z-10 flex items-center gap-3 flex-1 min-w-0">
                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)] shrink-0">
                             <Globe2 size={20} />
                         </div>
-                        <h2 data-toc data-toc-target="hypothesis-study-example" data-toc-open="hypothesis-study-example" className="font-black text-[var(--color-text-primary)] text-base sm:text-lg">
+                        <h2 data-toc data-toc-target="hypothesis-study-example" data-toc-open="hypothesis-study-example" className="font-semibold text-[var(--color-text-primary)] text-base sm:text-lg">
                             דוגמה מהמציאות: בדיקת השערות על טמפרטורת גוף (צלזיוס)
                         </h2>
                     </div>
@@ -1219,7 +1220,7 @@ export default function HypothesisTestingCalculator() {
                                 event.preventDefault();
                                 handleReset();
                             }}
-                            className="px-4 py-1.5 bg-[var(--color-accent-brass)]/10 text-[var(--color-accent-brass)] border border-[var(--color-accent-brass)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-brass)]/20 transition-colors flex items-center gap-2"
+                            className="px-4 py-1.5 bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-primary)]/20 transition-colors flex items-center gap-2"
                         >
                             <RefreshCw size={16} />
                             <span>טען נתוני ברירת מחדל</span>
@@ -1240,15 +1241,15 @@ export default function HypothesisTestingCalculator() {
 
                 <div className="relative z-10 p-4 sm:p-6 space-y-5">
                     <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                        <span className="absolute top-4 left-8 -rotate-12 text-5xl sm:text-6xl font-mono font-black text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
-                        <span className="absolute top-24 right-10 rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-brass)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
-                        <span className="absolute bottom-16 left-12 rotate-3 text-4xl sm:text-6xl font-mono font-black text-[var(--color-success)]/10" dir="ltr"><InlineMath math="\text{Reject } H_0" /></span>
-                        <span className="absolute bottom-3 right-20 -rotate-6 text-4xl sm:text-5xl font-mono font-black text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
+                        <span className="absolute top-4 left-8 -rotate-12 text-5xl sm:text-6xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
+                        <span className="absolute top-24 right-10 rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
+                        <span className="absolute bottom-16 left-12 rotate-3 text-4xl sm:text-6xl font-mono font-semibold text-[var(--color-success)]/10" dir="ltr"><InlineMath math="\text{Reject } H_0" /></span>
+                        <span className="absolute bottom-3 right-20 -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
                     </div>
 
                     <div className="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 text-sm leading-relaxed">
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <Target size={18} className="text-[var(--color-accent-cobalt)]" />
                                 <span>רקע והשערות מבחן</span>
                             </h3>
@@ -1261,18 +1262,18 @@ export default function HypothesisTestingCalculator() {
                             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
                                 <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
                                     <div className="text-[var(--color-text-secondary)] mb-1">השערת אפס</div>
-                                    <div className="text-[var(--color-text-primary)] font-black" dir="ltr"><InlineMath math="H_0: \mu = 37.0" /></div>
+                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_0: \mu = 37.0" /></div>
                                 </div>
                                 <div className="rounded-md border border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 p-3">
                                     <div className="text-[var(--color-text-secondary)] mb-1">השערת מחקר</div>
-                                    <div className="text-[var(--color-text-primary)] font-black" dir="ltr"><InlineMath math="H_1: \mu < 37.0" /></div>
+                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_1: \mu < 37.0" /></div>
                                 </div>
                             </div>
                         </section>
 
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <Calculator size={18} className="text-[var(--color-accent-brass)]" />
+                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Calculator size={18} className="text-[var(--color-primary)]" />
                                 <span>נתונים יבשים</span>
                             </h3>
                             <div className="grid grid-cols-2 gap-3">
@@ -1284,7 +1285,7 @@ export default function HypothesisTestingCalculator() {
                                 ].map(([label, math]) => (
                                     <div key={label} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
                                         <div className="text-[var(--color-text-secondary)] text-xs">{label}</div>
-                                        <div className="text-[var(--color-text-primary)] font-black font-mono" dir="ltr"><InlineMath math={math} /></div>
+                                        <div className="text-[var(--color-text-primary)] font-semibold font-mono" dir="ltr"><InlineMath math={math} /></div>
                                     </div>
                                 ))}
                             </div>
@@ -1296,8 +1297,8 @@ export default function HypothesisTestingCalculator() {
 
                     <div className="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5 text-sm leading-relaxed">
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <Percent size={18} className="text-[var(--color-accent-brass)]" />
+                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Percent size={18} className="text-[var(--color-primary)]" />
                                 <span>מובהקות</span>
                             </h3>
                             <p className="text-[var(--color-text-secondary)]">
@@ -1306,7 +1307,7 @@ export default function HypothesisTestingCalculator() {
                         </section>
 
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-success)]/30 rounded-lg p-4 sm:p-5">
-                            <h3 className="font-black text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <CheckCircle size={18} className="text-[var(--color-success)]" />
                                 <span>מסקנה</span>
                             </h3>
@@ -1317,7 +1318,7 @@ export default function HypothesisTestingCalculator() {
                     </div>
 
                     <div className="relative bg-[var(--color-surface)]/80 border border-[var(--color-accent-cobalt-line)]/40 rounded-lg p-4 text-sm text-[var(--color-text-secondary)]">
-                        <span className="font-black text-[var(--color-text-primary)] inline-flex items-center gap-2">
+                        <span className="font-semibold text-[var(--color-text-primary)] inline-flex items-center gap-2">
                             <BookOpen size={17} className="text-[var(--color-accent-cobalt)]" />
                             קישור למקור:
                         </span>{' '}
@@ -1338,7 +1339,7 @@ export default function HypothesisTestingCalculator() {
             <div className="tour-step-inputs rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
                 <div className="flex items-center gap-2 border-b border-[var(--color-border)] pb-4 mb-5">
                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Sliders size={20} /></div>
-                    <h2 data-toc id="hypothesis-parameters" className="text-lg sm:text-xl font-black text-[var(--color-text-primary)]">
+                    <h2 data-toc id="hypothesis-parameters" className="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
                     </h2>
                 </div>
@@ -1350,7 +1351,7 @@ export default function HypothesisTestingCalculator() {
                             <table className="w-full border-collapse border-spacing-0">
                                 <thead>
                                     <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                                        <th className="relative overflow-hidden p-3.5 font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                        <th className="relative overflow-hidden p-3.5 font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
                                             {/* Watermark */}
                                             <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
                                                 <InlineMath math="H_0" />
@@ -1362,12 +1363,12 @@ export default function HypothesisTestingCalculator() {
                                                 {/* varianceKnown toggle removed from here */}
                                             </div>
                                         </th>
-                                        <th className="p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
+                                        <th className="p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
                                             מדגם
                                         </th>
-                                        <th className="relative overflow-hidden p-3.5 text-center font-black text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
+                                        <th className="relative overflow-hidden p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
                                             {/* Watermark */}
-                                            <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
+                                            <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
                                                 <InlineMath math="H_1" />
                                             </div>
                                             <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
@@ -1416,7 +1417,7 @@ export default function HypothesisTestingCalculator() {
                                             </div>
                                         </td>
                                         <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math={statSymbol} colorClass="text-[var(--color-accent-brass)]" />
+                                            <CellWatermark math={statSymbol} colorClass="text-[var(--color-primary)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={sampleStatisticTooltip}>
                                                     <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
@@ -1450,7 +1451,7 @@ export default function HypothesisTestingCalculator() {
                                             </div>
                                         </td>
                                         <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
-                                            <CellWatermark math="\mu_1" colorClass="text-[var(--color-accent-teal)]" />
+                                            <CellWatermark math="\mu_1" colorClass="text-[var(--chart-2)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
                                                     <span className={`w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-primary)]/90'}`}>
@@ -1523,7 +1524,7 @@ export default function HypothesisTestingCalculator() {
                                             </div>
                                         </td>
                                         <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math="n" colorClass="text-[var(--color-accent-brass)]" />
+                                            <CellWatermark math="n" colorClass="text-[var(--color-primary)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}>
                                                     <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
@@ -1556,7 +1557,7 @@ export default function HypothesisTestingCalculator() {
                                             </div>
                                         </td>
                                         <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math="1-\beta" colorClass="text-[var(--color-accent-teal)]" />
+                                            <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <span className="w-36 sm:w-44 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1 whitespace-nowrap">
                                                     <span>חישוב עוצמה (</span><InlineMath math="1-\beta" /><span>)</span>
@@ -1597,258 +1598,18 @@ export default function HypothesisTestingCalculator() {
                 <div className="contents">
 
                     {/* Overlapping Curves Chart */}
-                    <div className="tour-step-graph rounded-lg p-4 md:p-5 border shadow-md transition-all bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 order-1 lg:order-1">
-                        <div className="flex flex-col md:flex-row md:items-center justify-end gap-4 border-b border-[var(--color-border)] pb-3 mb-3">
-                            <ChartLegend items={hypothesisLegendItems} />
-                        </div>
-
-                        {isValid && stats ? (
-                            <div className="h-[305px] w-full mt-2" dir="ltr">
-                                <ResponsiveContainer width="100%" height="100%">
-                                    <AreaChart data={chartData} margin={{ top: 20, right: 10, left: -25, bottom: 25 }}>
-                                        <defs>
-                                            <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor={'var(--color-accent-brass)'} stopOpacity={0.1} />
-                                                <stop offset="95%" stopColor={'var(--color-accent-brass)'} stopOpacity={0} />
-                                            </linearGradient>
-                                            <linearGradient id="h1Color" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="var(--color-accent-teal)" stopOpacity={0.1} />
-                                                <stop offset="95%" stopColor="var(--color-accent-teal)" stopOpacity={0} />
-                                            </linearGradient>
-                                            {(() => {
-                                                if (!stats || !isValid || !chartLimits) return null;
-                                                const { c1, c2 } = stats;
-                                                const { xMin, xMax } = chartLimits;
-
-                                                const pct = (x: number) => {
-                                                    const p = ((x - xMin) / (xMax - xMin)) * 100;
-                                                    return Math.max(0, Math.min(100, p));
-                                                };
-
-                                                if (tailType === 'right') {
-                                                    const c2Pct = pct(c2);
-                                                    return (
-                                                        <linearGradient id="rejectionGradient" x1="0" y1="0" x2="1" y2="0">
-                                                            <stop offset="0%" stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                            <stop offset={c2Pct + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                            <stop offset={(c2Pct + 0.001) + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset="100%" stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                        </linearGradient>
-                                                    );
-                                                } else if (tailType === 'left') {
-                                                    const c2Pct = pct(c2);
-                                                    return (
-                                                        <linearGradient id="rejectionGradient" x1="0" y1="0" x2="1" y2="0">
-                                                            <stop offset="0%" stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset={c2Pct + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset={(c2Pct + 0.001) + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                            <stop offset="100%" stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                        </linearGradient>
-                                                    );
-                                                } else { // two-tailed
-                                                    const c1Pct = pct(c1);
-                                                    const c2Pct = pct(c2);
-                                                    return (
-                                                        <linearGradient id="rejectionGradient" x1="0" y1="0" x2="1" y2="0">
-                                                            <stop offset="0%" stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset={c1Pct + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset={(c1Pct + 0.001) + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                            <stop offset={c2Pct + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0} />
-                                                            <stop offset={(c2Pct + 0.001) + "%"} stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                            <stop offset="100%" stopColor="var(--color-accent-crimson)" stopOpacity={0.95} />
-                                                        </linearGradient>
-                                                    );
-                                                }
-                                            })()}
-                                        </defs>
-                                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--chart-grid)'} />
-
-                                        <XAxis
-                                            dataKey="x"
-                                            type="number"
-                                            domain={[chartLimits.xMin, chartLimits.xMax]}
-                                            ticks={xAxisTicks}
-                                            tick={(props: any) => {
-                                                const { x, y, payload } = props;
-                                                const val = payload.value;
-                                                let fill = 'var(--chart-axis-label)';
-
-                                                if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
-                                                    fill = 'var(--color-accent-brass)';
-                                                } else if (calculatePower && Math.abs(val - stats.effectH1Mean) < 1e-4) {
-                                                    fill = 'var(--color-accent-teal)';
-                                                }
-
-                                                return (
-                                                    <g transform={`translate(${x},${y})`}>
-                                                        <text x={0} y={0} dy={16} textAnchor="middle" fill={fill} fontSize={15} fontWeight="bold">
-                                                            {val.toFixed(2)}
-                                                        </text>
-                                                    </g>
-                                                );
-                                            }}
-                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                            tickLine={true}
-                                            tickFormatter={(val) => val.toFixed(2)}
-                                        />
-                                        <YAxis
-                                            tickFormatter={(val) => val.toFixed(2)}
-                                            tick={{ fill: 'var(--chart-axis-label)', fontSize: 12, fontWeight: 'bold' }}
-                                            axisLine={{ stroke: 'var(--chart-grid)' }}
-                                            tickLine={true}
-                                            width={45}
-                                        />
-                                        <RechartsTooltip content={<CustomChartTooltip />} />
-
-                                        {/* H0 Curve Base Area */}
-                                        <Area
-                                            type="monotone"
-                                            dataKey="pdfH0"
-                                            stroke={'var(--color-accent-brass)'}
-                                            strokeWidth={2}
-                                            fill="url(#h0Color)"
-                                            dot={false}
-                                            isAnimationActive={true}
-                                        />
-
-                                        {/* H1 Curve Base Area */}
-                                        {calculatePower && (
-                                            <Area
-                                                type="monotone"
-                                                dataKey="pdfH1"
-                                                stroke="var(--color-accent-teal)"
-                                                strokeWidth={2}
-                                                fill="url(#h1Color)"
-                                                dot={false}
-                                                isAnimationActive={true}
-                                            />
-                                        )}
-
-                                        {/* Shaded Emerald Layer for Power Area */}
-                                        {calculatePower && (
-                                            <Area
-                                                type="monotone"
-                                                dataKey="powerShade"
-                                                stroke="none"
-                                                fill={'var(--color-accent-teal)'}
-                                                fillOpacity={0.35}
-                                                dot={false}
-                                                isAnimationActive={false}
-                                            />
-                                        )}
-
-                                        {/* Shaded Red Layer for Alpha Area (Type I) */}
-                                        <Area
-                                            type="monotone"
-                                            dataKey="alphaShade"
-                                            stroke="none"
-                                            fill="url(#rejectionGradient)"
-                                            dot={false}
-                                            isAnimationActive={false}
-                                        />
-
-
-
-                                        {/* Vertical Reference Line at Mean of H0 */}
-                                        <ReferenceLine
-                                            x={stats.effectH0Mean}
-                                            stroke="var(--color-accent-brass)"
-                                            strokeWidth={1.5}
-                                            strokeDasharray="10 4"
-                                            label={(props) =>
-                                                renderChartMathReferenceLabel(props, {
-                                                    math: '\\mu_0',
-                                                    color: 'var(--color-accent-brass)',
-                                                    width: 40,
-                                                    height: 30,
-                                                    xOffset: -20,
-                                                    yOffset: (viewBox) => (viewBox.height ?? 0) + 25,
-                                                    className: 'text-sm font-bold',
-                                                })
-                                            }
-                                        />
-
-                                        {/* Vertical Reference Line at Mean of H1 */}
-                                        <ReferenceLine
-                                            x={stats.effectH1Mean}
-                                            stroke="var(--color-accent-teal)"
-                                            strokeWidth={1.5}
-                                            strokeDasharray="10 4"
-                                            label={calculatePower ? (props) =>
-                                                renderChartMathReferenceLabel(props, {
-                                                    math: '\\mu_1',
-                                                    color: 'var(--color-accent-teal)',
-                                                    width: 40,
-                                                    height: 30,
-                                                    xOffset: -20,
-                                                    yOffset: (viewBox) => (viewBox.height ?? 0) + 25,
-                                                    className: 'text-sm font-bold',
-                                                }) : undefined}
-                                        />
-
-                                        {/* Vertical LINE for SELECTOR: Critical Values */}
-                                        {tailType === 'two-tailed' ? (
-                                            <>
-                                                <ReferenceLine
-                                                    x={stats.c1}
-                                                    stroke="var(--color-accent-crimson)"
-                                                    strokeWidth={2.5}
-                                                    label={(props) =>
-                                                        renderChartMathReferenceLabel(props, {
-                                                            math: `C_1: ${stats.c1.toFixed(2)}`,
-                                                            color: 'var(--color-accent-crimson)',
-                                                            width: 80,
-                                                            height: 30,
-                                                            xOffset: -40,
-                                                            yOffset: -25,
-                                                            className: 'text-xs font-bold',
-                                                        })
-                                                    }
-                                                />
-                                                <ReferenceLine
-                                                    x={stats.c2}
-                                                    stroke="var(--color-accent-crimson)"
-                                                    strokeWidth={2.5}
-                                                    label={(props) =>
-                                                        renderChartMathReferenceLabel(props, {
-                                                            math: `C_2: ${stats.c2.toFixed(2)}`,
-                                                            color: 'var(--color-accent-crimson)',
-                                                            width: 80,
-                                                            height: 30,
-                                                            xOffset: -40,
-                                                            yOffset: -25,
-                                                            className: 'text-xs font-bold',
-                                                        })
-                                                    }
-                                                />
-                                            </>
-                                        ) : (
-                                            <ReferenceLine
-                                                x={stats.c2}
-                                                stroke="var(--color-accent-crimson)"
-                                                strokeWidth={3}
-                                                label={(props) =>
-                                                    renderChartMathReferenceLabel(props, {
-                                                        math: `C: ${stats.c2.toFixed(2)}`,
-                                                        color: 'var(--color-accent-crimson)',
-                                                        width: 80,
-                                                        height: 30,
-                                                        xOffset: -40,
-                                                        yOffset: -25,
-                                                        className: 'text-sm font-bold',
-                                                    })
-                                                }
-                                            />
-                                        )}
-
-                                    </AreaChart>
-                                </ResponsiveContainer>
-                            </div>
-                        ) : (
-                            <div className="py-24 text-center text-[var(--color-accent-crimson)] text-[var(--color-error)] font-black text-lg md:text-xl">
-                                נא לתקן את שגיאות הקלטים בצד ימין על מנת להציג את הגרף.
-                            </div>
-                        )}
+                    <div className="tour-step-graph w-full min-w-0 order-1 lg:order-1">
+                        <ChartWrapper legend={<ChartLegend items={hypothesisLegendItems} />}>
+                            <HypothesisChart
+                                chartData={chartData}
+                                stats={stats as any}
+                                isValid={isValid}
+                                chartLimits={chartLimits as any}
+                                tailType={tailType}
+                                calculatePower={calculatePower}
+                                xAxisTicks={xAxisTicks}
+                            />
+                        </ChartWrapper>
                     </div>
 
                     {/* Solutions Steps Accordion / Panel */}
@@ -1864,7 +1625,7 @@ export default function HypothesisTestingCalculator() {
                                     setShowHypothesisTesting(!showHypothesisTesting);
                                 }
                             }}
-                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
+                            className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                         >
                             <div className="flex justify-end gap-3 lg:col-span-2 order-2 lg:order-2 mb-2">
                                 <button
@@ -1904,7 +1665,7 @@ export default function HypothesisTestingCalculator() {
                                 <div className="absolute left-1/4 top-1/2 -translate-y-1/2 rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
                                     <InlineMath math="H_1" />
                                 </div>
-                                <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
+                                <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
                                     <InlineMath math="\\bar{X}" />
                                 </div>
                                 <div className="absolute right-1/4 top-1/2 -translate-y-1/2 rotate-12 opacity-10 text-5xl sm:text-6xl font-mono text-[var(--color-accent-violet)]">
@@ -1916,7 +1677,7 @@ export default function HypothesisTestingCalculator() {
                                 <div className="flex items-center gap-3">
                                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Calculator size={24} /></div>
                                     <div className="flex flex-col items-start gap-1">
-                                        <h2 data-toc data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">
+                                        <h2 data-toc data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
                                             בדיקת השערות
                                         </h2>
                                         <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
@@ -1939,7 +1700,7 @@ export default function HypothesisTestingCalculator() {
                                                     document.getElementById('step-6')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
                                                 }
                                             }}
-                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base font-black bg-[var(--color-surface)] hover:bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)] hover:text-[var(--color-accent-cobalt)] border border-[var(--color-border)] shadow-md transition-all duration-300 leading-none group cursor-pointer"
+                                            className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm sm:text-base font-semibold bg-[var(--color-surface)] hover:bg-[var(--color-accent-cobalt-bg)] text-[var(--color-text-primary)] hover:text-[var(--color-accent-cobalt)] border border-[var(--color-border)] shadow-md transition-all duration-300 leading-none group cursor-pointer"
                                         >
                                             <span>קפיצה למסקנה</span>
                                             <Target size={18} className="shrink-0 text-[var(--color-accent-cobalt)] group-hover:scale-110 transition-transform" />
@@ -1968,9 +1729,9 @@ export default function HypothesisTestingCalculator() {
                                         <AnimatedDetails id="hypothesis-step-1" tocId="hypothesis-step-1" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">1</span>
-                                                    <h3 data-toc data-toc-target="hypothesis-step-1" data-toc-open="hypothesis-panel,hypothesis-step-1" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">ניסוח השערות המחקר</h3>
+                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">1</span>
+                                                    <h3 data-toc data-toc-target="hypothesis-step-1" data-toc-open="hypothesis-panel,hypothesis-step-1" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">ניסוח השערות המחקר</h3>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -2057,9 +1818,9 @@ export default function HypothesisTestingCalculator() {
                                         <AnimatedDetails id="step-2" tocId="step-2" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">2</span>
-                                                    <h3 data-toc data-toc-target="step-2" data-toc-open="hypothesis-panel,step-2" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">בחירת מבחן סטטיסטי מתאים</h3>
+                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">2</span>
+                                                    <h3 data-toc data-toc-target="step-2" data-toc-open="hypothesis-panel,step-2" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">בחירת מבחן סטטיסטי מתאים</h3>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -2084,7 +1845,7 @@ export default function HypothesisTestingCalculator() {
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(true)}
-                                                                    className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${varianceKnown ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-success)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-success)]'}`}>
+                                                                    className={`text-sm font-semibold mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${varianceKnown ? 'bg-[var(--color-success)]/15 text-[var(--color-success)] border-[var(--color-success)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-success)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-success)]'}`}>
                                                                     כן
                                                                 </button>
                                                                 <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
@@ -2157,7 +1918,7 @@ export default function HypothesisTestingCalculator() {
                                                                 <button
                                                                     type="button"
                                                                     onClick={() => setVarianceKnown(false)}
-                                                                    className={`text-sm font-black mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${!varianceKnown ? 'bg-[var(--color-error)]/15 text-[var(--color-error)] border-[var(--color-error)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-error)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-error)]'}`}>
+                                                                    className={`text-sm font-semibold mb-1 px-6 py-2 rounded-xl transition-all cursor-pointer hover:scale-105 active:scale-95 border-2 shadow-md ${!varianceKnown ? 'bg-[var(--color-error)]/15 text-[var(--color-error)] border-[var(--color-error)]/50' : 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] border-[var(--color-border)] hover:border-[var(--color-error)]/50 hover:bg-[var(--color-surface)] hover:text-[var(--color-error)]'}`}>
                                                                     לא
                                                                 </button>
                                                                 <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
@@ -2270,9 +2031,9 @@ export default function HypothesisTestingCalculator() {
                                         <AnimatedDetails id="hypothesis-step-3" tocId="hypothesis-step-3" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">3</span>
-                                                    <h3 data-toc data-toc-target="hypothesis-step-3" data-toc-open="hypothesis-panel,hypothesis-step-3" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קביעת רמת המובהקות (<InlineMath math="\alpha" />)</h3>
+                                                <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                    <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">3</span>
+                                                    <h3 data-toc data-toc-target="hypothesis-step-3" data-toc-open="hypothesis-panel,hypothesis-step-3" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת רמת המובהקות (<InlineMath math="\alpha" />)</h3>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -2286,7 +2047,7 @@ export default function HypothesisTestingCalculator() {
                                                 </p>
                                                 {/* Alpha Selection Row with type manually option */}
                                                 <div className="flex flex-col sm:flex-row items-center justify-start gap-4 mt-6 pr-9" dir="rtl">
-                                                    <span className="text-xs sm:text-sm font-black text-[var(--color-text-secondary)]">
+                                                    <span className="text-xs sm:text-sm font-semibold text-[var(--color-text-secondary)]">
                                                         בחר רמת מובהקות (<InlineMath math="\alpha" />):
                                                     </span>
 
@@ -2296,7 +2057,7 @@ export default function HypothesisTestingCalculator() {
                                                                 key={pVal}
                                                                 type="button"
                                                                 onClick={() => applyAlphaPreset(pVal)}
-                                                                className={`px-3 py-1.5 text-xs sm:text-sm font-black rounded-lg transition-all ${alpha === pVal
+                                                                className={`px-3 py-1.5 text-xs sm:text-sm font-semibold rounded-lg transition-all ${alpha === pVal
                                                                     ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white shadow-sm'
                                                                     : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)]'
                                                                     }`}
@@ -2362,9 +2123,9 @@ export default function HypothesisTestingCalculator() {
                                                 <AnimatedDetails id="hypothesis-step-4" tocId="hypothesis-step-4" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0">4</span>
-                                                            <h3 data-toc data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קביעת הערכים הקריטיים והגדרת כלל ההחלטה</h3>
+                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">4</span>
+                                                            <h3 data-toc data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת הערכים הקריטיים והגדרת כלל ההחלטה</h3>
                                                         </div>
                                                         <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
@@ -2514,12 +2275,12 @@ export default function HypothesisTestingCalculator() {
                                                                                 <ul className="list-disc pr-5 space-y-3 leading-relaxed marker:text-[var(--color-warning)]">
                                                                                     <li>
                                                                                         <strong>המוסכמה הרווחת:</strong> האינדקס התחתון בסימון <InlineMath math={`${varianceKnown ? 'Z' : 't'}_\\alpha`} /> מגדיר את
-                                                                                        השטח <strong>מימין לערך</strong> על גבי גרף ההתפלגות: <span dir="ltr" className="font-mono text-xs text-[var(--color-accent-brass)] px-1 py-0.5 rounded"><InlineMath math={`P(${varianceKnown ? 'Z' : 'T'} > ${varianceKnown ? 'z' : 't'}) = \\alpha`} /></span>.
+                                                                                        השטח <strong>מימין לערך</strong> על גבי גרף ההתפלגות: <span dir="ltr" className="font-mono text-xs text-[var(--color-primary)] px-1 py-0.5 rounded"><InlineMath math={`P(${varianceKnown ? 'Z' : 'T'} > ${varianceKnown ? 'z' : 't'}) = \\alpha`} /></span>.
                                                                                         לכן, עבור <InlineMath math="\alpha = 0.05" />, הסימון יהיה <InlineMath math={`${varianceKnown ? 'Z' : 't'}_{0.05}`} />.
                                                                                     </li>
                                                                                     <li>
-                                                                                        פונקציית התפלגות מצטברת <strong>רגילה</strong> <span dir="ltr" className="font-mono text-xs text-[var(--color-accent-brass)] px-1 py-0.5 rounded"><InlineMath math={`P(${varianceKnown ? 'Z' : 'T'} < ${varianceKnown ? 'z' : 't'}) = ${varianceKnown ? '\\Phi' : 'F_t'}(${varianceKnown ? 'z' : 't'})`} /></span> מקבלת ערכי <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> ומחזירה הסתברות מצטברת משמאל לערך (<InlineMath math={`${varianceKnown ? 'Z' : 'T'} \\rightarrow \\text{Probability}`} />).
-                                                                                        כדי למצוא ערך <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> לפי הסתברות נשתמש בפונקציה <strong>ההופכית</strong> <span dir="ltr" className="font-mono text-xs text-[var(--color-accent-brass)] px-1 py-0.5 rounded"><InlineMath math={`${varianceKnown ? 'z' : 't'} = ${varianceKnown ? '\\Phi^{-1}' : 'F_t^{-1}'}(P(${varianceKnown ? 'Z' : 'T'} < ${varianceKnown ? 'z' : 't'}))`} /></span> המקבלת הסתברויות ומחזירה ערך <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> (<InlineMath math={`\\text{Probability} \\rightarrow ${varianceKnown ? 'Z' : 'T'}`} />).
+                                                                                        פונקציית התפלגות מצטברת <strong>רגילה</strong> <span dir="ltr" className="font-mono text-xs text-[var(--color-primary)] px-1 py-0.5 rounded"><InlineMath math={`P(${varianceKnown ? 'Z' : 'T'} < ${varianceKnown ? 'z' : 't'}) = ${varianceKnown ? '\\Phi' : 'F_t'}(${varianceKnown ? 'z' : 't'})`} /></span> מקבלת ערכי <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> ומחזירה הסתברות מצטברת משמאל לערך (<InlineMath math={`${varianceKnown ? 'Z' : 'T'} \\rightarrow \\text{Probability}`} />).
+                                                                                        כדי למצוא ערך <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> לפי הסתברות נשתמש בפונקציה <strong>ההופכית</strong> <span dir="ltr" className="font-mono text-xs text-[var(--color-primary)] px-1 py-0.5 rounded"><InlineMath math={`${varianceKnown ? 'z' : 't'} = ${varianceKnown ? '\\Phi^{-1}' : 'F_t^{-1}'}(P(${varianceKnown ? 'Z' : 'T'} < ${varianceKnown ? 'z' : 't'}))`} /></span> המקבלת הסתברויות ומחזירה ערך <InlineMath math={`${varianceKnown ? 'Z' : 'T'}`} /> (<InlineMath math={`\\text{Probability} \\rightarrow ${varianceKnown ? 'Z' : 'T'}`} />).
                                                                                     </li>
                                                                                 </ul>
                                                                                 <div className="mt-4 pt-3 border-t border-[var(--color-border)] text-center font-semibold text-[var(--color-warning)] text-sm sm:text-base">
@@ -2579,7 +2340,7 @@ export default function HypothesisTestingCalculator() {
 
                                                             {/* Subheading for Decision Rules */}
                                                             <div className="mt-12 mb-6 pt-8 border-t border-[var(--color-border)]/60">
-                                                                <h4 className="text-2xl font-black text-[var(--color-accent-cobalt)] flex items-center gap-3">
+                                                                <h4 className="text-2xl font-semibold text-[var(--color-accent-cobalt)] flex items-center gap-3">
                                                                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]">
                                                                         <Target size={24} />
                                                                     </div>
@@ -2772,9 +2533,9 @@ export default function HypothesisTestingCalculator() {
                                                 <AnimatedDetails id="hypothesis-step-5" tocId="hypothesis-step-5" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden">
 
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0 shrink-0">5</span>
-                                                            <h3 data-toc data-toc-target="hypothesis-step-5" data-toc-open="hypothesis-panel,hypothesis-step-5" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">חישוב סטטיסטי המבחן</h3>
+                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0 shrink-0">5</span>
+                                                            <h3 data-toc data-toc-target="hypothesis-step-5" data-toc-open="hypothesis-panel,hypothesis-step-5" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">חישוב סטטיסטי המבחן</h3>
                                                         </div>
                                                         <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
@@ -2833,9 +2594,9 @@ export default function HypothesisTestingCalculator() {
                                                 <AnimatedDetails id="step-6" tocId="step-6" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm text-right [&_summary::-webkit-details-marker]:hidden">
 
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
-                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-accent-brass)]">
-                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-brass)]/20 text-[var(--color-accent-brass)] text-base font-black flex items-center justify-center border border-[var(--color-accent-brass)]/50 shrink-0 shrink-0">6</span>
-                                                            <h3 data-toc data-toc-target="step-6" data-toc-open="hypothesis-panel,step-6" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">קבלת החלטה / הסקת מסקנות</h3>
+                                                        <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                                                            <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0 shrink-0">6</span>
+                                                            <h3 data-toc data-toc-target="step-6" data-toc-open="hypothesis-panel,step-6" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קבלת החלטה / הסקת מסקנות</h3>
                                                             <span className="text-xs font-bold text-[var(--color-text-primary)]0 mr-auto font-mono">
                                                                 <InlineMath math="\alpha" /> = {alpha} | <InlineMath math="n" /> = {n}
                                                             </span>
@@ -2918,13 +2679,13 @@ export default function HypothesisTestingCalculator() {
                                                                                         <BlockMath math={`${statSymbol}_{stat} = \\frac{\\bar{X} - \\mu_0}{SE} = \\frac{${X_bar.toFixed(3)} - ${mu0}}{${stats.se.toFixed(3)}} = ${Z_stat.toFixed(3)}`} />
                                                                                     </div>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
-                                                                                        <Info size={20} className="text-[var(--color-accent-brass)] mt-0.5 shrink-0" />
+                                                                                        <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">בודקים האם התוצאה המנורמלת נמצאת מעבר לסף המובהקות (<InlineMath math={`${critSymbol}_{${alphaSymbol}}`} />) שקבענו מהטבלה.</p>
                                                                                     </div>
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--color-accent-teal)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `${statSymbol} \\ge ${Z_crit.toFixed(3)}` :
@@ -2977,13 +2738,13 @@ export default function HypothesisTestingCalculator() {
                                                                                         <BlockMath math={`C = ${mu0} ${tailType === 'left' ? '-' : tailType === 'right' ? '+' : '\\pm'} ${Z_crit.toFixed(3)} \\cdot ${stats.se.toFixed(3)} ${tailType === 'two-tailed' ? `\\Rightarrow [${C_crit_1.toFixed(3)}, ${C_crit_2.toFixed(3)}]` : `= ${C_crit.toFixed(3)}`}`} />
                                                                                     </div>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
-                                                                                        <Info size={20} className="text-[var(--color-accent-brass)] mt-0.5 shrink-0" />
+                                                                                        <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">כל תוצאה השייכת לקבוצת הדחייה <span dir="ltr" className="inline-block px-1"><InlineMath math={`C = \\{ \\bar{X} \\mid ${tailType === 'left' ? '\\bar{X} \\le C' : tailType === 'right' ? '\\bar{X} \\ge C' : `\\bar{X} \\le C_1 \\text{ or } \\bar{X} \\ge C_2`} \\}`} /></span> מעידה על כך שהמדגם אינו עולה בקנה אחד עם השערת האפס.</p>
                                                                                     </div>
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--color-accent-teal)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (<InlineMath math="C" />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `\\bar{X} \\ge ${C_crit.toFixed(3)}` :
@@ -3036,13 +2797,13 @@ export default function HypothesisTestingCalculator() {
                                                                                         <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > ${Math.abs(Z_stat).toFixed(3)}) = ${pVal.toFixed(4)}`} />
                                                                                     </div>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
-                                                                                        <Info size={20} className="text-[var(--color-accent-brass)] mt-0.5 shrink-0" />
+                                                                                        <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math="\\alpha" />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
                                                                                     </div>
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--color-accent-teal)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={`\\text{P-Value} \\le ${alpha}`} />
                                                                                     </div>
@@ -3081,9 +2842,9 @@ export default function HypothesisTestingCalculator() {
                                                                         parameterSymbol={statSymbol}
                                                                     />
 
-                                                                    <div className="bg-[var(--color-surface)] border border-[var(--color-accent-brass)]/30 p-4 rounded-lg flex gap-3 items-start">
+                                                                    <div className="bg-[var(--color-surface)] border border-[var(--color-primary)]/30 p-4 rounded-lg flex gap-3 items-start">
                                                                         <AlertTriangle size={20} className="text-[var(--color-warning)] mt-0.5 shrink-0" />
-                                                                        <div className="text-[var(--color-accent-brass)]/80 text-sm">
+                                                                        <div className="text-[var(--color-primary)]/80 text-sm">
                                                                             <strong className="text-[var(--color-warning)]">הערה חשובה: </strong>
                                                                             {unifiedDecisionResult.reject ? (
                                                                                 <span>
@@ -3118,10 +2879,10 @@ export default function HypothesisTestingCalculator() {
                         <div id="confidence-panel" className="tour-step-accordion-ci rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-4 lg:order-4 text-right mt-6">
                             <button
                                 onClick={() => setShowCI(!showCI)}
-                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
+                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                             >
                                 <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" dir="ltr">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
                                         <InlineMath math="1-\alpha" />
                                     </div>
                                     <div className="absolute left-1/4 top-1/2 -translate-y-1/2 rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-crimson)]">
@@ -3141,7 +2902,7 @@ export default function HypothesisTestingCalculator() {
                                     <div className="flex items-center gap-3">
                                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Target size={24} /></div>
                                         <div className="flex flex-col items-start gap-1">
-                                            <h2 data-toc data-toc-target="confidence-panel" data-toc-open="confidence-panel" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">
+                                            <h2 data-toc data-toc-target="confidence-panel" data-toc-open="confidence-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
                                                 רווח סמך לתוחלת
                                             </h2>
                                             <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
@@ -3438,10 +3199,10 @@ export default function HypothesisTestingCalculator() {
                         <div id="power-panel" className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
                             <button
                                 onClick={() => setShowPower(!showPower)}
-                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-black text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
+                                className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"
                             >
                                 <div className="absolute inset-0 pointer-events-none select-none overflow-hidden" dir="ltr">
-                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-teal)]">
+                                    <div className="absolute left-4 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
                                         <InlineMath math="1-\alpha" />
                                     </div>
                                     <div className="absolute left-1/4 top-1/2 -translate-y-1/2 rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--color-accent-crimson)]">
@@ -3461,7 +3222,7 @@ export default function HypothesisTestingCalculator() {
                                     <div className="flex items-center gap-3">
                                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Activity size={24} /></div>
                                         <div className="flex flex-col items-start gap-1">
-                                            <h2 data-toc data-toc-target="power-panel" data-toc-open="power-panel" className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">
+                                            <h2 data-toc data-toc-target="power-panel" data-toc-open="power-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
                                                 עוצמת מבחן
                                             </h2>
                                             <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">

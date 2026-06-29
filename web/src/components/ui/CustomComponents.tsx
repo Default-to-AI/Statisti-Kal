@@ -92,7 +92,7 @@ export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(function
 
   const labelClass = inline
     ? `text-xs sm:text-sm text-[var(--color-text-secondary)] font-bold shrink-0 ${inline && tooltip ? 'cursor-help border-b border-dotted border-[var(--color-text-secondary)]' : ''}`
-    : 'block text-xs font-black text-[var(--color-text-primary)] mb-1 font-sans';
+    : 'block text-xs font-semibold text-[var(--color-text-primary)] mb-1 font-sans';
 
   return (
     <div className={`${wrapperClass} ${className}`}>
@@ -188,7 +188,7 @@ export const ChartWrapper: React.FC<ChartWrapperProps> = ({
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[var(--color-border)] pb-3 mb-3">
           {title && (
             <div className="flex items-center gap-2 text-[var(--color-text-primary)]">
-              <span className="text-lg sm:text-xl font-black">{title}</span>
+              <span className="text-lg sm:text-xl font-semibold">{title}</span>
               {badge}
             </div>
           )}
@@ -198,7 +198,7 @@ export const ChartWrapper: React.FC<ChartWrapperProps> = ({
         </div>
       )}
       {isEmpty ? (
-        <div className="py-24 text-center text-[var(--color-text-secondary)] font-bold text-base">
+        <div className="py-24 text-center text-[var(--color-text-secondary)] font-medium text-base">
           {emptyState ?? DEFAULT_EMPTY_MESSAGE}
         </div>
       ) : (
@@ -274,12 +274,12 @@ const ACCENT_CLASSES: Record<NonNullable<StepListProps['accentColor']>, { badge:
     text: 'text-[var(--color-accent-cobalt)]',
   },
   brass: {
-    badge: 'bg-[var(--color-accent-brass)]/15 border-[var(--color-accent-brass)]',
-    text: 'text-[var(--color-accent-brass)]',
+    badge: 'bg-[var(--color-primary)]/15 border-[var(--color-primary)]',
+    text: 'text-[var(--color-primary)]',
   },
   teal: {
-    badge: 'bg-[var(--color-accent-teal)]/15 border-[var(--color-accent-teal)]',
-    text: 'text-[var(--color-accent-teal)]',
+    badge: 'bg-[var(--chart-2)]/15 border-[var(--chart-2)]',
+    text: 'text-[var(--chart-2)]',
   },
   crimson: {
     badge: 'bg-[var(--color-accent-crimson)]/15 border-[var(--color-accent-crimson)]',
@@ -303,11 +303,11 @@ export const StepList: React.FC<StepListProps> = ({
         >
           <div className={`flex items-center gap-3 font-extrabold ${accent.text}`}>
             <span
-              className={`w-9 h-9 rounded-full text-base font-black flex items-center justify-center border ${accent.badge}`}
+              className={`w-9 h-9 rounded-full text-base font-semibold flex items-center justify-center border ${accent.badge}`}
             >
               {step.number}
             </span>
-            <span className="text-xl sm:text-2xl font-black text-[var(--color-text-primary)]">
+            <span className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
               {step.title}
             </span>
           </div>
@@ -389,7 +389,7 @@ export function ModeTabs<T extends string = string>({
             aria-selected={isActive}
             aria-controls={`tabpanel-${tab.id}`}
             onClick={() => onChange(tab.id)}
-            className={`${TAB_SIZE_CLASSES[size]} ${fillClass} rounded-sm font-black transition-all text-center border cursor-pointer select-none flex items-center ${
+            className={`${TAB_SIZE_CLASSES[size]} ${fillClass} rounded-sm font-semibold transition-all text-center border cursor-pointer select-none flex items-center ${
               orientation === 'vertical' ? 'justify-center' : 'justify-center gap-1.5'
             } ${isActive ? activeClass : inactiveClass}`}
           >
@@ -452,7 +452,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
     <div className={`${PADDING_CLASSES[padding]} text-center ${TONE_CLASSES[tone]} ${className}`}>
       <div className="flex flex-col items-center justify-center gap-2">
         {icon && <div className="opacity-60 mb-1">{icon}</div>}
-        {title && <div className="text-base font-black">{title}</div>}
+        {title && <div className="text-base font-semibold">{title}</div>}
         {message && <div className="text-sm font-bold opacity-90">{message}</div>}
         {children}
       </div>
@@ -664,8 +664,8 @@ export interface DisclosureProps {
 
 const DISCLOSURE_ACCENT: Record<NonNullable<DisclosureProps['accentOnOpen']>, string> = {
   cobalt: 'group-[.is-open]:border-[var(--color-accent-cobalt)]',
-  brass: 'group-[.is-open]:border-[var(--color-accent-brass)]',
-  teal: 'group-[.is-open]:border-[var(--color-accent-teal)]',
+  brass: 'group-[.is-open]:border-[var(--color-primary)]',
+  teal: 'group-[.is-open]:border-[var(--chart-2)]',
   crimson: 'group-[.is-open]:border-[var(--color-accent-crimson)]',
 };
 
@@ -759,7 +759,7 @@ export const FormulaTranslation: React.FC<FormulaTranslationProps> = ({
     <div className={`relative inline-flex items-center justify-center ${className}`} ref={tooltipRef}>
       <button 
         onClick={toggleOpen}
-        className="relative flex items-center justify-center p-1.5 rounded-full text-[var(--color-accent-brass)] hover:bg-[var(--color-accent-brass)]/10 transition-colors shadow-sm bg-[var(--color-surface)] border border-[var(--color-accent-brass)]/50 hover:scale-105 active:scale-95"
+        className="relative flex items-center justify-center p-1.5 rounded-full text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 transition-colors shadow-sm bg-[var(--color-surface)] border border-[var(--color-primary)]/50 hover:scale-105 active:scale-95"
         title="קריאת הנוסחה במילים"
       >
         <Info size={24} strokeWidth={2} />
@@ -773,14 +773,14 @@ export const FormulaTranslation: React.FC<FormulaTranslationProps> = ({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -5, scale: 0.95 }}
               transition={{ duration: 0.15 }}
-              className="absolute top-0 -translate-x-1/2 w-[280px] sm:w-[320px] p-4 rounded-xl bg-[var(--color-surface-raised)] border border-[var(--color-accent-brass)] shadow-xl"
+              className="absolute top-0 -translate-x-1/2 w-[280px] sm:w-[320px] p-4 rounded-xl bg-[var(--color-surface-raised)] border border-[var(--color-primary)] shadow-xl"
               dir="rtl"
             >
               {/* Arrow pointing up */}
-              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-accent-brass)] rotate-45"></div>
+              <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-[var(--color-surface-raised)] border-t border-l border-[var(--color-primary)] rotate-45"></div>
               
               <div className="relative z-10 text-center space-y-2">
-                <div className="text-sm font-black text-[var(--color-accent-brass)] mb-1">{formulaName}</div>
+                <div className="text-sm font-semibold text-[var(--color-primary)] mb-1">{formulaName}</div>
                 <div className="text-sm sm:text-base font-medium leading-relaxed text-[var(--color-text-primary)]">
                   {translation}
                 </div>

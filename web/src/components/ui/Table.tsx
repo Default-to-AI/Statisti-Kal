@@ -344,8 +344,8 @@ export interface PowerTableProps {
 
 const HEADER_COLOR_CLASSES: Record<NonNullable<PowerTableProps['headerColor']>, string> = {
   cobalt: 'bg-[var(--color-surface)] text-[var(--color-accent-cobalt)]',
-  brass: 'bg-[var(--color-surface)] text-[var(--color-accent-brass)]',
-  teal: 'bg-[var(--color-surface)] text-[var(--color-accent-teal)]',
+  brass: 'bg-[var(--color-surface)] text-[var(--color-primary)]',
+  teal: 'bg-[var(--color-surface)] text-[var(--chart-2)]',
   crimson: 'bg-[var(--color-surface)] text-[var(--color-accent-crimson)]',
 };
 

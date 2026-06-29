@@ -47,7 +47,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
             <Home className="h-6 w-6 text-[#e2e2f0]" />
           </button>
           <div>
-            <h1 className="select-none text-xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
+            <h1 className="select-none text-xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
               סטטיטי-קל
             </h1>
             <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
@@ -116,8 +116,8 @@ function NavButton({
 function getButtonClass(group: NavItem['group'], isActive: boolean): string {
   if (group === 'hypothesis') {
     return isActive
-      ? 'bg-[var(--color-accent-brass)] text-[var(--color-background)] border-[var(--color-accent-brass)] shadow-md shadow-[var(--color-accent-brass)]/20 font-black'
-      : 'bg-[var(--color-surface)] border-[var(--color-accent-brass)]/45 text-[var(--color-accent-brass)] hover:bg-[var(--color-accent-brass)]/10 font-black';
+      ? 'bg-[var(--color-primary)] text-[var(--color-background)] border-[var(--color-primary)] shadow-md shadow-[var(--color-primary)]/20 font-semibold'
+      : 'bg-[var(--color-surface)] border-[var(--color-primary)]/45 text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10 font-semibold';
   }
 
   if (group === 'calculator') {
@@ -127,6 +127,6 @@ function getButtonClass(group: NavItem['group'], isActive: boolean): string {
   }
 
   return isActive
-    ? 'bg-[var(--color-accent-teal)]/15 text-[var(--color-accent-teal)] border-[var(--color-accent-teal)]/50 shadow-sm'
+    ? 'bg-[var(--chart-2)]/15 text-[var(--chart-2)] border-[var(--chart-2)]/50 shadow-sm'
     : 'bg-transparent border-[var(--color-border)]/60 text-[var(--color-text-secondary)]/80 hover:bg-[var(--color-surface)] hover:text-[var(--color-text-secondary)] hover:border-[var(--color-border)]';
 }
