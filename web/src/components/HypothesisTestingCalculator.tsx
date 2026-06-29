@@ -847,22 +847,26 @@ export default function HypothesisTestingCalculator() {
     // --- Chart Limits for X-axis & Gradient Calculations ---
     const chartLimits = useMemo(() => {
         if (!stats || !decisionData || !isValid) return { xMin: 0, xMax: 100 };
-        const { effectH0Mean, effectH1Mean, se } = stats;
+        const { effectH0Mean, effectH1Mean, se, c1, c2 } = stats;
         const xBar = decisionData.xBar;
+        const criticalValues = tailType === 'two-tailed' ? [c1, c2] : [c2];
+        const criticalPadding = 0.5 * se;
 
         return {
             xMin: Math.min(
                 effectH0Mean - 4 * se,
                 effectH1Mean - 4 * se,
-                xBar - 0.5 * se
+                xBar - 0.5 * se,
+                ...criticalValues.map((value) => value - criticalPadding)
             ),
             xMax: Math.max(
                 effectH0Mean + 4 * se,
                 effectH1Mean + 4 * se,
-                xBar + 0.5 * se
+                xBar + 0.5 * se,
+                ...criticalValues.map((value) => value + criticalPadding)
             ),
         };
-    }, [stats, decisionData, isValid]);
+    }, [stats, decisionData, isValid, tailType]);
 
     // --- Custom Ticks for X-Axis representing means and standard deviations ---
     const xAxisTicks = useMemo((): HypothesisAxisTick[] => {
