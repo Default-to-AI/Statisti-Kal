@@ -23,6 +23,7 @@ export interface HypothesisChartProps {
   tailType: 'left' | 'right' | 'two-tailed';
   calculatePower: boolean;
   xAxisTicks: number[];
+  sampleMean: number | null;
 }
 
 export const HypothesisChart: React.FC<HypothesisChartProps> = ({
@@ -33,6 +34,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   tailType,
   calculatePower,
   xAxisTicks,
+  sampleMean,
 }) => {
   if (!isValid || !stats || !chartLimits) {
     return (
@@ -90,7 +92,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 25 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 42 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -109,6 +111,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             type="number"
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={xAxisTicks}
+            interval={0}
             tick={(props: any) => {
               const { x, y, payload } = props;
               const val = payload.value;
@@ -122,15 +125,24 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
 
               return (
                 <g transform={`translate(${x},${y})`}>
-                  <text x={0} y={0} dy={16} textAnchor="middle" fill={fill} fontSize={14} className="font-semibold font-sans">
-                    {val.toFixed(2)}
+                  <text
+                    x={0}
+                    y={0}
+                    dy={16}
+                    textAnchor="end"
+                    transform="rotate(-35)"
+                    fill={fill}
+                    fontSize={12}
+                    className="font-semibold font-sans"
+                  >
+                    {val.toFixed(3)}
                   </text>
                 </g>
               );
             }}
             axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={true}
-            tickFormatter={(val) => val.toFixed(2)}
+            tickFormatter={(val) => val.toFixed(3)}
           />
           <YAxis
             tickFormatter={(val) => val.toFixed(2)}
@@ -273,6 +285,26 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   width: 40,
                   height: 30,
                   xOffset: -20,
+                  yOffset: -25,
+                  className: 'text-sm font-semibold',
+                })
+              }
+            />
+          )}
+
+          {sampleMean !== null && (
+            <ReferenceLine
+              x={sampleMean}
+              stroke="var(--color-success)"
+              strokeWidth={2.5}
+              strokeDasharray="6 4"
+              label={(props) =>
+                renderChartMathReferenceLabel(props, {
+                  math: '\\bar{X}',
+                  color: 'var(--color-success)',
+                  width: 48,
+                  height: 30,
+                  xOffset: -24,
                   yOffset: -25,
                   className: 'text-sm font-semibold',
                 })
