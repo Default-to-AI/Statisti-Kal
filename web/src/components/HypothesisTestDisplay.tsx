@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { CheckCircle, XCircle, Scale, Target } from 'lucide-react';
+import { CheckCircle, XCircle, Scale, Target, PenTool } from 'lucide-react';
 import { InlineMath } from 'react-katex';
 import type { UnifiedResult, Tail } from '../lib/statistics/hypothesis';
 
@@ -80,14 +80,23 @@ export default function HypothesisTestDisplay({
   const DecisionIcon = isReject ? CheckCircle : XCircle;
   const statName = varianceKnown ? 'Z' : 't';
   const pRule = pValueRuleMath(isReject);
+  const decisionToneClass = isReject
+    ? 'border-[var(--color-success)]/45 shadow-[0_0_24px_rgba(78,205,196,0.18)] pulse-success'
+    : 'border-[var(--color-error)]/45 shadow-[0_0_24px_rgba(224,62,62,0.18)] pulse-error';
+  const headerToneClass = isReject
+    ? 'border-[var(--color-success)]/30 bg-[var(--color-success)]/7'
+    : 'border-[var(--color-error)]/30 bg-[var(--color-error)]/7';
+  const cardToneClass = isReject
+    ? 'border-[var(--color-success)]/35 shadow-[0_0_16px_rgba(78,205,196,0.12)]'
+    : 'border-[var(--color-error)]/35 shadow-[0_0_16px_rgba(224,62,62,0.12)]';
 
   return (
     <section
       dir="rtl"
       aria-labelledby="hypothesis-unified-decision-title"
-      className="rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] shadow-md overflow-hidden"
+      className={`overflow-hidden rounded-lg border bg-[var(--color-surface-raised)] shadow-md ${decisionToneClass}`}
     >
-      <header className="flex flex-col gap-4 border-b border-[var(--color-border)] p-5 sm:flex-row sm:items-center sm:justify-between">
+      <header className={`flex flex-col gap-4 border-b p-5 sm:flex-row sm:items-center sm:justify-between ${headerToneClass}`}>
         <div className="flex items-center gap-3">
           <div className={`rounded-full p-2 ${isReject ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]' : 'bg-[var(--color-error)]/15 text-[var(--color-error)]'}`}>
             <DecisionIcon size={24} aria-hidden="true" />
@@ -111,7 +120,7 @@ export default function HypothesisTestDisplay({
       </header>
 
       <div className="grid gap-4 p-5 lg:grid-cols-3">
-        <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+        <article className={`rounded-md border bg-[var(--color-surface)] p-4 ${cardToneClass}`}>
           <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--color-accent-cobalt)]">
             <Target size={18} aria-hidden="true" />
             <span>סטטיסטי המבחן</span>
@@ -129,7 +138,7 @@ export default function HypothesisTestDisplay({
           </div>
         </article>
 
-        <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+        <article className={`rounded-md border bg-[var(--color-surface)] p-4 ${cardToneClass}`}>
           <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--color-primary)]">
             <Scale size={18} aria-hidden="true" />
             <span>כלל הערך הקריטי</span>
@@ -141,7 +150,7 @@ export default function HypothesisTestDisplay({
           </div>
         </article>
 
-        <article className="rounded-md border border-[var(--color-border)] bg-[var(--color-surface)] p-4">
+        <article className={`rounded-md border bg-[var(--color-surface)] p-4 ${cardToneClass}`}>
           <div className="mb-3 flex items-center gap-2 font-semibold text-[var(--chart-2)]">
             <CheckCircle size={18} aria-hidden="true" />
             <span>כלל P-value</span>
@@ -154,11 +163,16 @@ export default function HypothesisTestDisplay({
         </article>
       </div>
 
-      <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-sm sm:text-base leading-8 text-[var(--color-text-primary)]">
-        <p>
-          מאחר שסטטיסטי המבחן הוא <span dir="ltr" className="inline-block"><InlineMath math={`${statName} = ${formatNumber(result.stat)}`} /></span>
-          {' '}והמובהקות היא <span dir="ltr" className="inline-block"><InlineMath math={pValueMath(result.pValue)} /></span>,
-          {' '}ההחלטה הסופית היא: <strong data-testid="unified-final-decision">{decisionText}</strong>.
+      <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-[var(--color-text-primary)]">
+        <p className="w-full text-center text-xl leading-relaxed font-normal text-[var(--color-text-primary)] sm:text-2xl font-handwriting">
+          <span className="inline-flex max-w-full items-baseline justify-center gap-x-2 gap-y-1 whitespace-normal">
+            <PenTool size={22} className="mt-0.5 shrink-0 opacity-60 text-[var(--color-accent-cobalt)]" />
+            <span>
+              מאחר שסטטיסטי המבחן הוא <span dir="ltr" className="inline-block"><InlineMath math={`${statName} = ${formatNumber(result.stat)}`} /></span>
+              {' '}והמובהקות היא <span dir="ltr" className="inline-block"><InlineMath math={pValueMath(result.pValue)} /></span>,
+              {' '}ההחלטה הסופית היא: <strong data-testid="unified-final-decision">{decisionText}</strong>.
+            </span>
+          </span>
         </p>
       </footer>
     </section>
