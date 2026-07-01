@@ -115,10 +115,10 @@ export interface ResultBlockProps extends HTMLAttributes<HTMLDivElement> {
 }
 
 export const ResultBlock: React.FC<ResultBlockProps> = ({ children, className = '', ...rest }) => (
-  <div className={`flex flex-row items-center w-[95%] md:w-[85%] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr" {...rest}>
+  <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr" {...rest}>
       <div className="flex-1 overflow-x-auto scrollbar-thin rounded-[var(--rounded-lg)] shadow-sm">
           <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-primary)] rounded-[var(--rounded-lg)] bg-[var(--color-primary)]/10 px-6 py-4 text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-primary)]">
-              <div dir="rtl" className="w-full flex flex-col items-center justify-center space-y-3 font-bold text-base md:text-lg leading-relaxed">
+              <div dir="rtl" className="w-full flex flex-col items-center justify-center space-y-3 font-bold text-lg sm:text-xl md:text-2xl leading-relaxed text-[var(--color-text-primary)]">
                 {children}
               </div>
           </div>

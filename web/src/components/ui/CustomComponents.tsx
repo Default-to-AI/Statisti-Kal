@@ -660,6 +660,7 @@ export interface DisclosureProps {
   /** Accent color for the open-state border. */
   accentOnOpen?: 'cobalt' | 'brass' | 'teal' | 'crimson';
   className?: string;
+  watermark?: React.ReactNode;
 }
 
 const DISCLOSURE_ACCENT: Record<NonNullable<DisclosureProps['accentOnOpen']>, string> = {
@@ -676,12 +677,20 @@ export const Disclosure: React.FC<DisclosureProps> = ({
   defaultOpen = false,
   accentOnOpen = 'cobalt',
   className = '',
+  watermark,
 }) => {
   return (
     <AnimatedDetails
       defaultOpen={defaultOpen}
-      className={`border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)]/50 ${DISCLOSURE_ACCENT[accentOnOpen]} ${className}`}
+      className={`relative overflow-hidden border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)]/50 ${DISCLOSURE_ACCENT[accentOnOpen]} ${className}`}
     >
+      {watermark ? (
+        <div className="pointer-events-none absolute inset-y-0 left-5 flex items-center select-none">
+          <div className="text-[2.8rem] font-black uppercase tracking-[0.26em] text-white/[0.05]">
+            {watermark}
+          </div>
+        </div>
+      ) : null}
       <summary className="flex justify-between items-center font-bold cursor-pointer list-none p-5 text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors [&::-webkit-details-marker]:hidden">
         <div className="flex items-center gap-3">
           {icon}

@@ -54,6 +54,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
 
   const { c1, c2 } = stats;
   const { xMin, xMax } = chartLimits;
+  const sampleMeanColor = 'var(--color-text-primary)';
   const xAxisTickValues = xAxisTicks.map((tick) => tick.value);
   const zScoreAxisTicks = Array.from({ length: 9 }, (_, index) => {
     const zScore = index - 4;
@@ -109,7 +110,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 54 }}>
+        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -129,6 +130,8 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={xAxisTickValues}
             interval={0}
+            height={38}
+            tickMargin={8}
             tick={(props: any) => {
               const { x, y, payload } = props;
               const val = payload.value;
@@ -138,7 +141,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
               if (tickRole === 'critical') {
                 fill = 'var(--color-accent-crimson)';
               } else if (tickRole === 'sample') {
-                fill = 'var(--color-success)';
+                fill = sampleMeanColor;
               } else if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
                 fill = 'var(--chart-1)';
               } else if (calculatePower && Math.abs(val - stats.effectH1Mean) < 1e-4) {
@@ -173,7 +176,8 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={zScoreAxisTickValues}
             interval={0}
-            height={28}
+            height={24}
+            tickMargin={18}
             axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={{ stroke: 'var(--color-border)' }}
             tick={(props: any) => {
@@ -185,7 +189,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   <text
                     x={0}
                     y={0}
-                    dy={18}
+                    dy={22}
                     textAnchor="middle"
                     fill="var(--color-text-secondary)"
                     fontSize={12}
@@ -348,18 +352,19 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
           {sampleMean !== null && (
             <ReferenceLine
               x={sampleMean}
-              stroke="var(--color-success)"
-              strokeWidth={2.5}
-              strokeDasharray="6 4"
+              stroke={sampleMeanColor}
+              strokeWidth={2}
+              strokeDasharray="4 4"
+              strokeOpacity={1}
               label={(props) =>
                 renderChartMathReferenceLabel(props, {
                   math: '\\bar{X}',
-                  color: 'var(--color-success)',
-                  width: 48,
-                  height: 30,
+                  color: sampleMeanColor,
+                  width: 56,
+                  height: 34,
                   xOffset: -24,
                   yOffset: -25,
-                  className: 'text-sm font-semibold',
+                  className: 'text-sm font-semibold bg-[var(--color-surface)]/92 px-1.5 py-0.5 shadow-sm backdrop-blur-md',
                 })
               }
             />
