@@ -59,13 +59,33 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   const { xMin, xMax } = chartLimits;
   const sampleMeanColor = 'var(--color-text-primary)';
   const xAxisTickValues = xAxisTicks.map((tick) => tick.value);
-  const zScoreAxisTicks = Array.from({ length: 9 }, (_, index) => {
-    const zScore = index - 4;
-    return {
-      value: stats.effectH0Mean + zScore * stats.se,
-      label: zScore === 0 ? '0' : `${zScore > 0 ? '+' : ''}${zScore}\u03c3`,
-    };
-  });
+
+  // Dynamically compute σ ticks to cover the full chart width
+  const minZ = Math.floor((xMin - stats.effectH0Mean) / stats.se);
+  const maxZ = Math.ceil((xMax - stats.effectH0Mean) / stats.se);
+  const zScoreAxisTicks: { value: number; label: string; isMu1?: boolean }[] = [];
+  for (let z = minZ; z <= maxZ; z++) {
+    zScoreAxisTicks.push({
+      value: stats.effectH0Mean + z * stats.se,
+      label: z === 0 ? '0' : `${z > 0 ? '+' : ''}${z}σ`,
+    });
+  }
+
+  // Add μ₁ tick on the z-score axis when visible
+  if (shouldRenderPowerOverlay && Math.abs(stats.effectH1Mean - stats.effectH0Mean) > 1e-6) {
+    const mu1Value = stats.effectH1Mean;
+    // Only add if not overlapping an existing tick
+    const overlaps = zScoreAxisTicks.some((t) => Math.abs(t.value - mu1Value) < stats.se * 0.3);
+    if (!overlaps) {
+      zScoreAxisTicks.push({
+        value: mu1Value,
+        label: 'μ₁',
+        isMu1: true,
+      });
+    }
+  }
+
+  zScoreAxisTicks.sort((a, b) => a.value - b.value);
   const zScoreAxisTickValues = zScoreAxisTicks.map((tick) => tick.value);
 
   const pct = (x: number) => {
@@ -179,24 +199,26 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={zScoreAxisTickValues}
             interval={0}
-            height={24}
-            tickMargin={18}
-            axisLine={{ stroke: 'var(--color-border)' }}
+            height={30}
+            tickMargin={4}
+            axisLine={{ stroke: 'var(--color-border)', transform: 'translate(0, 4)' }}
             tickLine={{ stroke: 'var(--color-border)' }}
             tick={(props: any) => {
               const { x, y, payload } = props;
               const tick = zScoreAxisTicks.find((candidate) => Math.abs(candidate.value - payload.value) < 1e-5);
+              const isMu1 = tick?.isMu1 ?? false;
 
               return (
                 <g transform={`translate(${x},${y})`}>
                   <text
                     x={0}
                     y={0}
-                    dy={22}
+                    dy={14}
                     textAnchor="middle"
-                    fill="var(--color-text-secondary)"
-                    fontSize={12}
-                    className="font-semibold font-sans"
+                    fill={isMu1 ? 'var(--chart-2)' : 'var(--color-text-secondary)'}
+                    fontSize={isMu1 ? 13 : 12}
+                    fontWeight={isMu1 ? 700 : 600}
+                    className="font-sans"
                   >
                     {tick?.label ?? ''}
                   </text>
