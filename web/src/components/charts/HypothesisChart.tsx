@@ -29,7 +29,8 @@ export interface HypothesisChartProps {
   isValid: boolean;
   chartLimits: { xMin: number; xMax: number };
   tailType: 'left' | 'right' | 'two-tailed';
-  calculatePower: boolean;
+  powerEnabled: boolean;
+  showPowerOverlay: boolean;
   xAxisTicks: HypothesisAxisTick[];
   sampleMean: number | null;
 }
@@ -40,7 +41,8 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   isValid,
   chartLimits,
   tailType,
-  calculatePower,
+  powerEnabled,
+  showPowerOverlay,
   xAxisTicks,
   sampleMean,
 }) => {
@@ -52,6 +54,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
     );
   }
 
+  const shouldRenderPowerOverlay = powerEnabled && showPowerOverlay;
   const { c1, c2 } = stats;
   const { xMin, xMax } = chartLimits;
   const sampleMeanColor = 'var(--color-text-primary)';
@@ -144,7 +147,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                 fill = sampleMeanColor;
               } else if (Math.abs(val - stats.effectH0Mean) < 1e-4) {
                 fill = 'var(--chart-1)';
-              } else if (calculatePower && Math.abs(val - stats.effectH1Mean) < 1e-4) {
+              } else if (shouldRenderPowerOverlay && Math.abs(val - stats.effectH1Mean) < 1e-4) {
                 fill = 'var(--chart-2)';
               }
 
@@ -222,7 +225,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
           />
 
           {/* H1 Curve Base Area */}
-          {calculatePower && (
+          {shouldRenderPowerOverlay && (
             <Area
               type="monotone"
               dataKey="pdfH1"
@@ -235,7 +238,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
           )}
 
           {/* Shaded Emerald Layer for Power Area */}
-          {calculatePower && (
+          {shouldRenderPowerOverlay && (
             <Area
               type="monotone"
               dataKey="powerShade"
@@ -277,7 +280,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
           />
 
           {/* Vertical Reference Line at Mean of H1 */}
-          {calculatePower && (
+          {shouldRenderPowerOverlay && (
             <ReferenceLine
               x={stats.effectH1Mean}
               stroke="var(--chart-2)"

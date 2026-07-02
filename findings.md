@@ -151,3 +151,99 @@ Domain-specific chart layers stay separate:
 
 - hypothesis testing: H0/H1 curves, alpha/beta/power, critical regions
 - normal distribution: probability/percentile regions and conditional probability shading
+
+## Power Panel Isolation Audit
+- Current power flow in `web/src/components/HypothesisTestingCalculator.tsx` still uses a separate `muH1` / `muH1Input` state pair and localStorage keys `HT_muH1`, `HT_muH1Input`.
+- Current decision flow still reuses `mu1` as fallback `xBar` sample mean. That is acceptable for hypothesis testing, but it violates the browser comment if power also depends on a sixth parameter.
+- Existing power math already has most of the requested one-sided normal-approx structure:
+  - `SE = sigma / sqrt(n)`
+  - critical value from `mu0 + zCrit * SE` or `mu0 + zCritLower * SE`
+  - `beta` and `power` computed from CDF areas under `H1`
+- Main gap is architectural, not library choice:
+  - remove separate `muH1`
+  - reuse existing chart/formula/card surfaces
+  - rewrite labels/copy so power is explicitly driven by `mu1` as alternative mean, not by sample mean
+- Existing shared rendering primitives already fit task:
+  - `ChartLegend`, `ChartTooltipShell`, `renderChartMathReferenceLabel` in `web/src/components/charts/ChartPrimitives.tsx`
+  - existing `FormulaBlock`, `CalcBlock`, `ResultBlock` wrappers in `HypothesisTestingCalculator.tsx`
+  - global token source in `web/src/index.css`
+
+## 2026-07-02 Power Panel Request
+- Browser comment targets the `Statistical Power` / `עוצמת מבחן` section inside `web/src/components/HypothesisTestingCalculator.tsx`.
+- Requested scope is explicit: power component must be fully independent from sample mean `\bar{X}` input, validation, and display.
+- Required inputs for the new logic:
+  - `\mu_0`
+  - `\mu_1`
+  - `\sigma`
+  - `n`
+  - `\alpha`
+- Required calculations:
+  - `SE = \sigma / \sqrt{n}`
+  - choose left/right test direction by comparing `\mu_1` vs `\mu_0`
+  - compute critical value `C` from `\mu_0`, `Z_{1-\alpha}`, and `SE`
+  - compute `Z = (C - \mu_1) / SE`
+  - compute power from normal CDF over rejection region under `H_1`
+  - compute type-II error `\beta = 1 - power`
+- Required UI outputs:
+  - vertical line at critical value `C`
+  - shaded `\alpha` region under `H_0`
+  - shaded `1-\beta` region under `H_1`
+  - numeric cards for `C`, power percent, and `\beta`
+- Design constraint:
+  - reuse existing global design tokens, shared chart primitives, and dark-mode-compatible calculator cards/buttons/tooltips
+  - prefer existing chart stack in project over introducing a new chart library unless current primitives cannot support the rendering cleanly
+
+## 2026-07-02 Current Power Implementation Audit
+- Current power section is inline inside `web/src/components/HypothesisTestingCalculator.tsx` around the `power-panel` block.
+- Current stats computation depends on broader hypothesis-calculator state:
+  - `tailType`
+  - `varianceKnown`
+  - `muH1`
+  - `calculatePower`
+  - optional `sampleMean` line in `HypothesisChart`
+- Current power math supports:
+  - one-tailed left/right
+  - two-tailed
+  - normal and Student-t paths
+  - non-central t approximation path
+- Current chart rendering already has the right visual building blocks:
+  - H0 curve
+  - H1 curve
+  - alpha rejection shading
+  - power shading
+  - critical-value reference line
+  - shared `ChartPrimitives` label renderer
+- Current mismatch versus request:
+  - power explanation text and formulas still speak in terms of general hypothesis flow, not a self-contained five-input power module
+  - existing chart can render `\bar{X}` sample-mean line via `sampleMean`
+  - current power result path is coupled to global `tailType` and `varianceKnown`, while requested behavior infers direction only from `\mu_1` vs `\mu_0` and always uses the normal CDF formulas
+- Best-fit implementation stack from current codebase:
+  - math: `web/src/lib/statistics/math.ts`
+  - charting: Recharts already used in `web/src/components/charts/HypothesisChart.tsx`
+  - shared chart labels: `web/src/components/charts/ChartPrimitives.tsx`
+  - card/layout primitives: existing calculator `Card`/`ResultBlock`-style patterns already used on hypothesis page
+
+## 2026-07-02 Implementation Result
+- Added dedicated five-input power helper module:
+  - `web/src/lib/statistics/power.ts`
+  - `web/src/lib/statistics/power.test.ts`
+- The power helper now owns:
+  - direction inference from `mu1` vs `mu0`
+  - critical value computation
+  - `Z = (C - \mu_1) / SE`
+  - `\beta` and power via normal CDF
+  - power-only chart domain/data generation
+- `web/src/components/HypothesisTestingCalculator.tsx` now:
+  - keeps sample-mean decision flow on `xBar`
+  - uses `mu1` as the alternative-mean input for power
+  - renders a dedicated power chart inside the power accordion
+  - shows power-specific cards for `C`, `1-\beta`, and `\beta`
+  - routes `DecisionMatrix` power numbers through the isolated five-input power result
+
+## 2026-07-02 Power Visual Follow-Up
+- Latest browser comments require the power explanation steps to match the main hypothesis-step component pattern, not a custom card variant.
+- Correct reuse target inside `web/src/components/HypothesisTestingCalculator.tsx` is:
+  - `AnimatedDetails` for step container and numbered summary row
+  - `FormulaBlock` for symbolic formulas
+  - `CalcBlock` for substituted calculations
+- The standalone `יישום מספרי` label and the raw dashed formula container are both mismatches and should be removed.
