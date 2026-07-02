@@ -1499,14 +1499,15 @@ export default function HypothesisTestingCalculator() {
     }, [stats, decisionData, isValid, n, alpha, tailType]);
 
     // --- Chart Limits for X-axis & Gradient Calculations ---
+    const showH1OnChart = powerEnabled && showPowerOverlay;
     const chartLimits = useMemo(() => {
         if (!stats || !decisionData || !isValid) return { xMin: 0, xMax: 100 };
         const { effectH0Mean, effectH1Mean, se, c1, c2 } = stats;
         const xBar = decisionData.xBar;
         const criticalValues = tailType === 'two-tailed' ? [c1, c2] : [c2];
         const criticalPadding = 0.5 * se;
-        const leftExtent = powerEnabled ? effectH1Mean - 4 * se : effectH0Mean - 4 * se;
-        const rightExtent = powerEnabled ? effectH1Mean + 4 * se : effectH0Mean + 4 * se;
+        const leftExtent = showH1OnChart ? effectH1Mean - 4 * se : effectH0Mean - 4 * se;
+        const rightExtent = showH1OnChart ? effectH1Mean + 4 * se : effectH0Mean + 4 * se;
 
         return {
             xMin: Math.min(
@@ -1522,7 +1523,7 @@ export default function HypothesisTestingCalculator() {
                 ...criticalValues.map((value) => value + criticalPadding)
             ),
         };
-    }, [stats, decisionData, isValid, tailType, powerEnabled]);
+    }, [stats, decisionData, isValid, tailType, showH1OnChart]);
 
     // --- Custom Ticks for X-Axis representing means and standard deviations ---
     const xAxisTicks = useMemo((): HypothesisAxisTick[] => {
@@ -1579,7 +1580,7 @@ export default function HypothesisTestingCalculator() {
             const pdfH0 = varianceKnown
                 ? normalPDF(x, effectH0Mean, se)
                 : studentTPDF((x - effectH0Mean) / se, df) / se;
-            const pdfH1 = powerEnabled ? (varianceKnown
+            const pdfH1 = showH1OnChart ? (varianceKnown
                 ? normalPDF(x, effectH1Mean, se)
                 : studentTPDF((x - effectH1Mean) / se, df) / se) : 0;
 
@@ -1597,7 +1598,7 @@ export default function HypothesisTestingCalculator() {
             const alphaShade = isRejected ? pdfH0 : 0;
 
             // Rejection area under H1 is Power (1-Beta)
-            const powerShade = powerEnabled && isRejected ? pdfH1 : 0;
+            const powerShade = showH1OnChart && isRejected ? pdfH1 : 0;
 
             pts.push({
                 x: Number(x.toFixed(4)),
@@ -1609,7 +1610,7 @@ export default function HypothesisTestingCalculator() {
         }
 
         return pts;
-    }, [stats, isValid, tailType, powerEnabled, chartLimits]);
+    }, [stats, isValid, tailType, showH1OnChart, chartLimits]);
 
     const powerStats = useMemo(() => {
         if (!powerEnabled || !isValid || parsedMu1Input === null) {
@@ -1805,45 +1806,18 @@ export default function HypothesisTestingCalculator() {
     const hypothesisLegendItems = useMemo((): ChartLegendItem[] => {
         const items: ChartLegendItem[] = [
             { math: 'H_0', color: 'var(--chart-1)', style: 'area' },
-            {
-                math: 'H_1',
-                color: 'var(--chart-2)',
-                style: 'area',
-                muted: !powerEnabled || !showPowerOverlay,
-                label: (
-                    <button
-                        type="button"
-                        onClick={() => {
-                            if (!powerEnabled) return;
-                            setShowPowerOverlay(!showPowerOverlay);
-                        }}
-                        aria-label={showPowerOverlay ? 'הסתרת H1 והשטח של עוצמת המבחן בגרף' : 'הצגת H1 והשטח של עוצמת המבחן בגרף'}
-                        disabled={!powerEnabled}
-                        className={`relative inline-flex h-5 w-10 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${powerEnabled ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'} ${showPowerOverlay ? 'bg-[var(--color-accent-cobalt-bg-hover)]' : 'bg-[var(--color-surface-raised)]/80'}`}
-                    >
-                        <span
-                            className={`pointer-events-none flex h-4 w-4 items-center justify-center transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${showPowerOverlay ? '-translate-x-5' : 'translate-x-0'}`}
-                        >
-                            {showPowerOverlay ? (
-                                <div className="h-[8px] w-[2px] rounded-full bg-[var(--color-accent-cobalt-bg-hover)]" />
-                            ) : (
-                                <div className="h-2 w-2 rounded-full border-2 border-[var(--color-border)]" />
-                            )}
-                        </span>
-                    </button>
-                ),
-            },
             { math: '\\alpha', color: 'var(--color-accent-crimson)', style: 'area' },
             { math: 'C', color: 'var(--color-accent-crimson)', style: 'line', label: <span dir="rtl">קריטי</span> },
             { math: '\\bar{X}', color: 'var(--color-text-primary)', style: 'dashed-line' },
         ];
 
-        if (powerEnabled && showPowerOverlay) {
+        if (showH1OnChart) {
+            items.splice(1, 0, { math: 'H_1', color: 'var(--chart-2)', style: 'area' });
             items.push({ math: '1-\\beta', color: 'var(--chart-2)', style: 'area' });
         }
 
         return items;
-    }, [powerEnabled, showPowerOverlay]);
+    }, [showH1OnChart]);
 
     const decisionMatrixStats = powerEnabled && powerStats && stats
         ? { ...stats, beta: powerStats.beta, power: powerStats.power }
@@ -2208,7 +2182,51 @@ export default function HypothesisTestingCalculator() {
                 <div className="contents">
 
                     {/* Overlapping Curves Chart */}
-                    <div className="tour-step-graph w-full min-w-0 order-1 lg:order-1">
+                    <div className="tour-step-graph w-full min-w-0 order-1 lg:order-1 relative">
+                        {/* H₁ Toggle — top-left corner, independent of legend */}
+                        {powerEnabled && (
+                            <label
+                                className={`absolute top-3 left-3 z-20 flex items-center gap-2.5 pl-3 pr-3.5 py-2 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer select-none backdrop-blur-lg ${
+                                    showPowerOverlay
+                                        ? 'bg-[var(--chart-2)]/12 border-[var(--chart-2)]/50 text-[var(--chart-2)] shadow-[0_0_12px_var(--chart-2)/20]'
+                                        : 'bg-[var(--color-surface)]/90 border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/50 shadow-md'
+                                }`}
+                            >
+                                {/* Toggle track */}
+                                <span
+                                    className={`relative inline-flex h-6 w-11 shrink-0 rounded-full transition-colors duration-300 ease-in-out ${
+                                        showPowerOverlay
+                                            ? 'bg-[var(--chart-2)]'
+                                            : 'bg-[var(--color-border)]'
+                                    }`}
+                                >
+                                    {/* Toggle thumb */}
+                                    <span
+                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform duration-300 ease-in-out mt-0.5 ${
+                                            showPowerOverlay ? '-translate-x-[1.375rem]' : 'translate-x-0.5'
+                                        }`}
+                                    />
+                                </span>
+                                {/* Label area: colored swatch + H₁ math */}
+                                <span className="flex items-center gap-1.5" dir="ltr">
+                                    <span
+                                        className="inline-block h-3 w-3 rounded-sm border transition-colors duration-300"
+                                        style={{
+                                            backgroundColor: showPowerOverlay ? 'color-mix(in srgb, var(--chart-2) 25%, transparent)' : 'transparent',
+                                            borderColor: showPowerOverlay ? 'var(--chart-2)' : 'var(--color-border)',
+                                        }}
+                                    />
+                                    <InlineMath math="H_1" />
+                                </span>
+                                <input
+                                    type="checkbox"
+                                    className="sr-only"
+                                    checked={showPowerOverlay}
+                                    onChange={() => setShowPowerOverlay(!showPowerOverlay)}
+                                    aria-label={showPowerOverlay ? 'הסתרת H1 והשטח של עוצמת המבחן בגרף' : 'הצגת H1 והשטח של עוצמת המבחן בגרף'}
+                                />
+                            </label>
+                        )}
                         <ChartWrapper legend={<div className="flex w-full justify-start" dir="ltr"><ChartLegend items={hypothesisLegendItems} /></div>} className="flex-1 h-full flex flex-col" height="100%">
                             <HypothesisChart
                                 chartData={chartData}
