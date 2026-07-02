@@ -97,3 +97,75 @@ Start Phase 2: extract normal calculator internal UI units.
 - `npm test` passed: 5 files, 24 tests.
 - `npm run lint:colors` passed.
 - `npm run build` passed with existing large chunk warning.
+
+## 2026-07-02
+
+### Phase 7 Planning Started
+- Loaded `planning-with-files`, `ce-plan`, and `ce-work` guidance for a plan-first execution flow.
+- Audited the current power panel in `web/src/components/HypothesisTestingCalculator.tsx` and the chart surface in `web/src/components/charts/HypothesisChart.tsx`.
+- Captured that the current power implementation is coupled to `tailType`, `varianceKnown`, `muH1`, and a chart contract that can render `\bar{X}`.
+- Wrote `docs/plans/power-panel-isolation-plan.md` to define the five-input power rebuild with confidence scores and executable gates.
+
+### Next Action
+- Execute Task 1 from `docs/plans/power-panel-isolation-plan.md`: isolate five-input power math, then rebuild the chart/UI around that contract.
+
+### Phase 7 Completed
+- Added `web/src/lib/statistics/power.ts` and `web/src/lib/statistics/power.test.ts` to isolate five-parameter power math and chart data generation.
+- Rewired `web/src/components/HypothesisTestingCalculator.tsx` so the sample-mean decision flow stays on `xBar`, while the power panel uses only `mu0`, `mu1`, `sigma`, `n`, and `alpha`.
+- Rebuilt the power accordion body with:
+  - a dedicated chart using existing `HypothesisChart` + shared chart primitives
+  - summary cards for `C`, `1-\beta`, and `\beta`
+  - one-sided normal-CDF formulas and substituted calculations derived from the isolated helper
+- Updated `web/src/components/HypothesisTestingCalculator.integration.test.tsx` to drop legacy `muH1` storage expectations.
+
+### Phase 7 Verification
+- `npm run lint:tsc` passed.
+- `npm test` passed: 6 files, 28 tests.
+- `npm run lint:colors` passed.
+- `npm run build` passed with the existing Vite chunk-size warning on `HypothesisTestingCalculator`.
+
+## 2026-07-02
+
+### Phase 7 Started
+- Loaded `planning-with-files` again because the browser comment explicitly required plan-first execution.
+- Restored planning context from existing `task_plan.md`, `findings.md`, and `progress.md`.
+- Audited `HypothesisTestingCalculator.tsx` power section and confirmed current mismatch:
+  - power still uses separate `muH1`
+  - decision flow still uses `mu1` as sample mean fallback
+  - browser request requires power to rely on only five parameters: `mu0`, `mu1`, `sigma`, `n`, `alpha`
+- Confirmed best-fit implementation path is reuse, not new library work:
+  - existing hypothesis chart already shades `alpha` and `power`
+  - existing formula/result blocks already match design system
+  - token source remains `web/src/index.css`
+
+### Next Action
+- Patch `HypothesisTestingCalculator.tsx` to remove `muH1` from power logic and UI, then update tests and run full verification gates.
+
+### Phase 7 Completed
+- Added explicit `xBar` / `xBarInput` state so sample-mean logic no longer overloads `mu1`.
+- Removed the separate `muH1` / `muH1Input` power path and made the power panel consume `mu1` consistently as the alternative mean under `H_1`.
+- Repointed CI and hypothesis-step sample-mean formulas back to `xBar`.
+- Added power summary cards for critical value, power, and type-II error inside the accordion using existing design tokens.
+- Hardened tooltip/error portals with client-mount guards so static-render tests no longer hit React server-render portal failures.
+- Updated `HypothesisTestingCalculator.integration.test.tsx` to cover explicit `xBar` state and the no-`muH1` power path.
+
+### Phase 7 Verification
+- `npx tsc --noEmit --pretty false` passed.
+- `npx vitest run src/components/HypothesisTestingCalculator.integration.test.tsx` passed.
+- `npm test` passed: 6 files, 28 tests.
+- `npm run lint:colors` passed.
+- `npm run build` passed with the existing Vite chunk-size warning for large calculator bundles.
+
+### Phase 8 Started
+- Restored planning context from `task_plan.md`, `progress.md`, and `findings.md` per `planning-with-files`.
+- Re-audited the latest browser comments on the power panel.
+- Confirmed required visual parity changes:
+  - reuse `AnimatedDetails` summary/header shell from the hypothesis steps
+  - move symbolic math into `FormulaBlock`
+  - pair each symbolic step with its own `CalcBlock`
+  - remove `יישום מספרי`
+- Patched `PowerStepCard` in `web/src/components/HypothesisTestingCalculator.tsx` accordingly.
+
+### Phase 8 Verification
+- `npx tsc --noEmit --pretty false` passed.
+- `npx vitest run src/components/HypothesisTestingCalculator.integration.test.tsx` passed.

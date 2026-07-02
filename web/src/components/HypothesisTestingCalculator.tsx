@@ -27,6 +27,9 @@ import {
     studentTPDF,
     studentTPPF,
 } from '../lib/statistics/math';
+import {
+    computePowerAnalysis,
+} from '../lib/statistics/power';
 import { InlineMath, BlockMath } from 'react-katex';
 import {
     Info,
@@ -54,6 +57,7 @@ import {
     ExternalLink
 } from 'lucide-react';
 import { ChartWrapper } from './ui/CustomComponents';
+import { HandwrittenNote } from './ui';
 import { HypothesisChart, type HypothesisAxisTick } from './charts/HypothesisChart';
 import {
     ResponsiveContainer,
@@ -83,10 +87,10 @@ const DEFAULT_BODY_TEMPERATURE_STUDY = {
     calculatePower: true,
     mu0: 37,
     mu0Input: '37',
+    xBar: 36.82,
+    xBarInput: '36.82',
     mu1: 36.82,
     mu1Input: '36.82',
-    muH1: 36.82,
-    muH1Input: '36.82',
     sigma: 0.41,
     sigmaInput: '0.41',
     n: 148,
@@ -198,17 +202,6 @@ function CalcBlock({ children, className = '' }: { children: React.ReactNode; cl
     );
 }
 
-function HandwrittenNote({ children, className = '' }: { children: React.ReactNode; className?: string }) {
-    return (
-        <p className={`w-full text-center text-xl leading-relaxed font-normal text-[var(--color-text-primary)] sm:text-2xl font-handwriting ${className}`}>
-            <span className="inline-flex max-w-full items-baseline justify-center gap-x-2 gap-y-1 whitespace-normal">
-                <PenTool size={22} className="mt-0.5 shrink-0 opacity-60 text-[var(--color-accent-cobalt)]" />
-                <span>{children}</span>
-            </span>
-        </p>
-    );
-}
-
 function ResultSummaryCard({
     title,
     subtitle,
@@ -244,6 +237,69 @@ function ResultSummaryCard({
             ) : null}
             {visual ? <div className="mt-5">{visual}</div> : null}
         </section>
+    );
+}
+
+function PowerStepCard({
+    step,
+    title,
+    description,
+    formula,
+    application,
+    note,
+}: {
+    step: string;
+    title: React.ReactNode;
+    description: React.ReactNode;
+    formula: string | string[];
+    application?: string | string[];
+    note?: React.ReactNode;
+}) {
+    const formulas = Array.isArray(formula) ? formula : [formula];
+    const applications = application ? (Array.isArray(application) ? application : [application]) : [];
+    const stepNumber = step.replace(/\D+/g, '') || step;
+
+    return (
+        <AnimatedDetails defaultOpen className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
+            <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
+                <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
+                    <span className="w-9 h-9 rounded-full bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">
+                        {stepNumber}
+                    </span>
+                    <h3 className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">{title}</h3>
+                </div>
+                <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
+                    <ChevronDown size={24} />
+                </div>
+            </summary>
+            <div className="p-5 sm:p-6 space-y-4">
+                <div className="space-y-3 text-right">
+                    <p className="text-base sm:text-lg leading-relaxed text-[var(--color-text-secondary)]">
+                        {description}
+                    </p>
+                </div>
+
+                <FormulaBlock className="my-0">
+                    {formulas.map((entry) => (
+                        <BlockMath key={entry} math={entry} />
+                    ))}
+                </FormulaBlock>
+
+                {applications.length ? (
+                    <CalcBlock className="my-0">
+                        {applications.map((entry) => (
+                            <BlockMath key={entry} math={entry} />
+                        ))}
+                    </CalcBlock>
+                ) : null}
+
+                {note ? (
+                    <HandwrittenNote className="text-right text-lg sm:text-xl">
+                        {note}
+                    </HandwrittenNote>
+                ) : null}
+            </div>
+        </AnimatedDetails>
     );
 }
 
@@ -758,10 +814,15 @@ interface InputTooltipProps {
 }
 
 const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, className = "", tooltipClassName = "w-52" }) => {
+    const [canPortal, setCanPortal] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const triggerRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        setCanPortal(true);
+    }, []);
 
     useEffect(() => {
         return () => {
@@ -814,7 +875,7 @@ const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, classNam
         >
             {children}
             <Info size={13} className="text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)] cursor-help shrink-0" />
-            {isVisible && typeof document !== 'undefined' && document.body
+            {isVisible && canPortal && typeof document !== 'undefined' && document.body
                 ? createPortal(
                     <AnimatePresence>
                         <div
@@ -850,8 +911,13 @@ const FloatingFieldError: React.FC<FloatingFieldErrorProps> = ({
     offsetY = 8,
     bubbleClassName = "px-2.5 py-1",
 }) => {
+    const [canPortal, setCanPortal] = useState(false);
     const [position, setPosition] = useState({ top: 0, left: 0 });
     const anchorRef = useRef<HTMLSpanElement | null>(null);
+
+    useEffect(() => {
+        setCanPortal(true);
+    }, []);
 
     useEffect(() => {
         if (!message) return;
@@ -883,7 +949,7 @@ const FloatingFieldError: React.FC<FloatingFieldErrorProps> = ({
                 aria-hidden="true"
                 className="pointer-events-none absolute top-full left-1/2 h-0 w-0 -translate-x-1/2"
             />
-            {typeof document !== 'undefined' && document.body
+            {message && canPortal && typeof document !== 'undefined' && document.body
                 ? createPortal(
                     <AnimatePresence>
                         {message && (
@@ -972,16 +1038,16 @@ export default function HypothesisTestingCalculator() {
 
     // Input states
     const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
-    const [calculatePower, setCalculatePower] = useLocalStorageState<boolean>('HT_calculatePower', DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
+    const [showPowerOverlay, setShowPowerOverlay] = useLocalStorageState<boolean>('HT_showPowerOverlay', DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
 
     const [mu0, setMu0] = useLocalStorageState<number>('HT_mu0', DEFAULT_BODY_TEMPERATURE_STUDY.mu0);
     const [mu0Input, setMu0Input] = useLocalStorageState<string>('HT_mu0Input', DEFAULT_BODY_TEMPERATURE_STUDY.mu0Input);
 
+    const [xBar, setXBar] = useLocalStorageState<number>('HT_xBar', DEFAULT_BODY_TEMPERATURE_STUDY.xBar);
+    const [xBarInput, setXBarInput] = useLocalStorageState<string>('HT_xBarInput', DEFAULT_BODY_TEMPERATURE_STUDY.xBarInput);
+
     const [mu1, setMu1] = useLocalStorageState<number>('HT_mu1', DEFAULT_BODY_TEMPERATURE_STUDY.mu1);
     const [mu1Input, setMu1Input] = useLocalStorageState<string>('HT_mu1Input', DEFAULT_BODY_TEMPERATURE_STUDY.mu1Input);
-
-    const [muH1, setMuH1] = useLocalStorageState<number>('HT_muH1', DEFAULT_BODY_TEMPERATURE_STUDY.muH1);
-    const [muH1Input, setMuH1Input] = useLocalStorageState<string>('HT_muH1Input', DEFAULT_BODY_TEMPERATURE_STUDY.muH1Input);
 
     const [sigma, setSigma] = useLocalStorageState<number>('HT_sigma', DEFAULT_BODY_TEMPERATURE_STUDY.sigma);
     const [sigmaInput, setSigmaInput] = useLocalStorageState<string>('HT_sigmaInput', DEFAULT_BODY_TEMPERATURE_STUDY.sigmaInput);
@@ -1123,6 +1189,19 @@ export default function HypothesisTestingCalculator() {
         return () => window.removeEventListener('hashchange', handleHashNavigation);
     }, []);
 
+    const parsedMu1Input = useMemo(() => {
+        const parsed = parseFloat(mu1Input);
+        return mu1Input.trim() !== '' && !Number.isNaN(parsed) ? parsed : null;
+    }, [mu1Input]);
+
+    const powerInputError = useMemo(() => {
+        if (mu1Input.trim() === '') return 'שדה חובה';
+        if (parsedMu1Input === null) return 'הזן מספר תקין';
+        return undefined;
+    }, [mu1Input, parsedMu1Input]);
+
+    const powerEnabled = parsedMu1Input !== null;
+
     // Error validations
     const errors = useMemo(() => {
         const errList: { [key: string]: string } = {};
@@ -1131,15 +1210,9 @@ export default function HypothesisTestingCalculator() {
         if (mu0Input.trim() === '') errList.mu0 = 'שדה חובה';
         else if (isNaN(parsedMu0)) errList.mu0 = 'הזן מספר תקין';
 
-        const parsedMu1 = parseFloat(mu1Input);
-        if (mu1Input.trim() === '') errList.mu1 = 'שדה חובה';
-        else if (isNaN(parsedMu1)) errList.mu1 = 'הזן מספר תקין';
-
-        const parsedMuH1 = parseFloat(muH1Input);
-        if (calculatePower) {
-            if (muH1Input.trim() === '') errList.muH1 = 'שדה חובה';
-            else if (isNaN(parsedMuH1)) errList.muH1 = 'הזן מספר תקין';
-        }
+        const parsedXBar = parseFloat(xBarInput);
+        if (xBarInput.trim() === '') errList.xBar = 'שדה חובה';
+        else if (isNaN(parsedXBar)) errList.xBar = 'הזן מספר תקין';
 
         const parsedSigma = parseFloat(sigmaInput);
         if (sigmaInput.trim() === '') errList.sigma = 'שדה חובה';
@@ -1157,7 +1230,7 @@ export default function HypothesisTestingCalculator() {
         else if (parsedAlpha <= 0 || parsedAlpha >= 1) errList.alpha = 'רמת מובהקות חייבת להיות בין 0 ל-1 בלבד';
 
         return errList;
-    }, [mu0Input, mu1Input, sigmaInput, nInput, alphaInput, calculatePower, muH1Input]);
+    }, [mu0Input, xBarInput, sigmaInput, nInput, alphaInput]);
 
     const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
@@ -1168,16 +1241,16 @@ export default function HypothesisTestingCalculator() {
         if (!isNaN(parsed)) setMu0(parsed);
     };
 
+    const handleXBarChange = (val: string) => {
+        setXBarInput(val);
+        const parsed = parseFloat(val);
+        if (!isNaN(parsed)) setXBar(parsed);
+    };
+
     const handleMu1Change = (val: string) => {
         setMu1Input(val);
         const parsed = parseFloat(val);
         if (!isNaN(parsed)) setMu1(parsed);
-    };
-
-    const handleMuH1Change = (val: string) => {
-        setMuH1Input(val);
-        const parsed = parseFloat(val);
-        if (!isNaN(parsed)) setMuH1(parsed);
     };
 
     const handleSigmaChange = (val: string) => {
@@ -1207,13 +1280,13 @@ export default function HypothesisTestingCalculator() {
     // Reset calculator to the Mackowiak body-temperature study defaults.
     const handleReset = () => {
         setVarianceKnown(DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
-        setCalculatePower(DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
+        setShowPowerOverlay(DEFAULT_BODY_TEMPERATURE_STUDY.calculatePower);
         setMu0(DEFAULT_BODY_TEMPERATURE_STUDY.mu0);
         setMu0Input(DEFAULT_BODY_TEMPERATURE_STUDY.mu0Input);
+        setXBar(DEFAULT_BODY_TEMPERATURE_STUDY.xBar);
+        setXBarInput(DEFAULT_BODY_TEMPERATURE_STUDY.xBarInput);
         setMu1(DEFAULT_BODY_TEMPERATURE_STUDY.mu1);
         setMu1Input(DEFAULT_BODY_TEMPERATURE_STUDY.mu1Input);
-        setMuH1(DEFAULT_BODY_TEMPERATURE_STUDY.muH1);
-        setMuH1Input(DEFAULT_BODY_TEMPERATURE_STUDY.muH1Input);
         setSigma(DEFAULT_BODY_TEMPERATURE_STUDY.sigma);
         setSigmaInput(DEFAULT_BODY_TEMPERATURE_STUDY.sigmaInput);
         setN(DEFAULT_BODY_TEMPERATURE_STUDY.n);
@@ -1232,7 +1305,7 @@ export default function HypothesisTestingCalculator() {
         // Mean-only hypothesis testing: standard error is based on the sampling distribution of X-bar.
         const se = sigma / Math.sqrt(n);
         const effectH0Mean = mu0;
-        const effectH1Mean = muH1;
+        const effectH1Mean = parsedMu1Input ?? mu0;
         const df = Math.max(1, n - 1);
 
         // Non-Centrality Parameter calculation
@@ -1322,15 +1395,13 @@ export default function HypothesisTestingCalculator() {
             varianceKnown,
             usesNormalApprox
         };
-    }, [mu0, mu1, muH1, sigma, n, alpha, tailType, isValid, varianceKnown, calculatePower]);
+    }, [mu0, parsedMu1Input, sigma, n, alpha, tailType, isValid, varianceKnown]);
 
     // --- Dynamic Decision Data Logic ---
     const decisionData = useMemo(() => {
         if (!stats || !isValid) return null;
 
-        // We decouple xBar from mu1, by defining xBar variable which will eventually be bound to a separate state.
-        // For now we use the existing mu1 state as the xBar fallback until we add the xBar state, but the calculation is completely isolated.
-        const xBarValue = mu1;
+        const xBarValue = xBar;
 
         let isReject = false;
         let ruleText = '';
@@ -1410,7 +1481,7 @@ export default function HypothesisTestingCalculator() {
             pValue,
             statObs
         };
-    }, [stats, isValid, mu0, mu1, alpha, tailType]);
+    }, [stats, isValid, mu0, xBar, alpha, tailType]);
 
     const unifiedDecisionResult = useMemo(() => {
         if (!stats || !decisionData || !isValid) return null;
@@ -1434,8 +1505,8 @@ export default function HypothesisTestingCalculator() {
         const xBar = decisionData.xBar;
         const criticalValues = tailType === 'two-tailed' ? [c1, c2] : [c2];
         const criticalPadding = 0.5 * se;
-        const leftExtent = calculatePower ? effectH1Mean - 4 * se : effectH0Mean - 4 * se;
-        const rightExtent = calculatePower ? effectH1Mean + 4 * se : effectH0Mean + 4 * se;
+        const leftExtent = powerEnabled ? effectH1Mean - 4 * se : effectH0Mean - 4 * se;
+        const rightExtent = powerEnabled ? effectH1Mean + 4 * se : effectH0Mean + 4 * se;
 
         return {
             xMin: Math.min(
@@ -1451,7 +1522,7 @@ export default function HypothesisTestingCalculator() {
                 ...criticalValues.map((value) => value + criticalPadding)
             ),
         };
-    }, [stats, decisionData, isValid, tailType, calculatePower]);
+    }, [stats, decisionData, isValid, tailType, powerEnabled]);
 
     // --- Custom Ticks for X-Axis representing means and standard deviations ---
     const xAxisTicks = useMemo((): HypothesisAxisTick[] => {
@@ -1493,7 +1564,7 @@ export default function HypothesisTestingCalculator() {
     }, [stats, decisionData, isValid, tailType]);
 
     // --- Dynamic Graph Data Generation ---
-    const chartData = useMemo(() => {
+    const chartData = useMemo((): HypothesisChartDataPoint[] => {
         if (!stats || !isValid) return [];
 
         const pts = [];
@@ -1508,7 +1579,7 @@ export default function HypothesisTestingCalculator() {
             const pdfH0 = varianceKnown
                 ? normalPDF(x, effectH0Mean, se)
                 : studentTPDF((x - effectH0Mean) / se, df) / se;
-            const pdfH1 = calculatePower ? (varianceKnown
+            const pdfH1 = powerEnabled ? (varianceKnown
                 ? normalPDF(x, effectH1Mean, se)
                 : studentTPDF((x - effectH1Mean) / se, df) / se) : 0;
 
@@ -1526,7 +1597,7 @@ export default function HypothesisTestingCalculator() {
             const alphaShade = isRejected ? pdfH0 : 0;
 
             // Rejection area under H1 is Power (1-Beta)
-            const powerShade = calculatePower && isRejected ? pdfH1 : 0;
+            const powerShade = powerEnabled && isRejected ? pdfH1 : 0;
 
             pts.push({
                 x: Number(x.toFixed(4)),
@@ -1538,7 +1609,21 @@ export default function HypothesisTestingCalculator() {
         }
 
         return pts;
-    }, [stats, isValid, tailType, calculatePower, chartLimits]);
+    }, [stats, isValid, tailType, powerEnabled, chartLimits]);
+
+    const powerStats = useMemo(() => {
+        if (!powerEnabled || !isValid || parsedMu1Input === null) {
+            return null;
+        }
+
+        return computePowerAnalysis({
+            mu0,
+            mu1: parsedMu1Input,
+            sigma,
+            n,
+            alpha,
+        });
+    }, [powerEnabled, isValid, mu0, parsedMu1Input, sigma, n, alpha]);
 
 
     const ciChartData = useMemo(() => {
@@ -1550,9 +1635,9 @@ export default function HypothesisTestingCalculator() {
 
         const alphaNum = parseFloat(alphaInput) || 0.05;
 
-        // Limits for the CI chart: +/- 4 SE from both mu0 and mu1 to ensure both distributions are visible
-        const minMean = Math.min(mu0, mu1);
-        const maxMean = Math.max(mu0, mu1);
+        // Limits for the CI chart: +/- 4 SE from both mu0 and xBar to ensure both distributions are visible
+        const minMean = Math.min(mu0, xBar);
+        const maxMean = Math.max(mu0, xBar);
         const xMin = minMean - 4 * se;
         const xMax = maxMean + 4 * se;
         const step = (xMax - xMin) / (numPoints - 1);
@@ -1562,10 +1647,10 @@ export default function HypothesisTestingCalculator() {
         const MoE2Side = ciCrit2Side * se;
         const MoE1Side = ciCrit1Side * se;
 
-        const lower2Side = mu1 - MoE2Side;
-        const upper2Side = mu1 + MoE2Side;
-        const lower1Side = mu1 - MoE1Side;
-        const upper1Side = mu1 + MoE1Side;
+        const lower2Side = xBar - MoE2Side;
+        const upper2Side = xBar + MoE2Side;
+        const lower1Side = xBar - MoE1Side;
+        const upper1Side = xBar + MoE1Side;
 
         for (let i = 0; i < numPoints; i++) {
             const x = xMin + i * step;
@@ -1573,8 +1658,8 @@ export default function HypothesisTestingCalculator() {
                 ? normalPDF(x, mu0, se)
                 : studentTPDF((x - mu0) / se, df) / se;
             const pdfSample = usesNormalApprox
-                ? normalPDF(x, mu1, se)
-                : studentTPDF((x - mu1) / se, df) / se;
+                ? normalPDF(x, xBar, se)
+                : studentTPDF((x - xBar) / se, df) / se;
 
             // CI fill interval depending on tailType
             let inCI = false;
@@ -1594,7 +1679,7 @@ export default function HypothesisTestingCalculator() {
             });
         }
         return pts;
-    }, [stats, isValid, mu0, mu1, tailType, alphaInput]);
+    }, [stats, isValid, mu0, xBar, tailType, alphaInput]);
 
     // Custom tooltips for graphs
 
@@ -1608,20 +1693,20 @@ export default function HypothesisTestingCalculator() {
         const MoE2Side = ciCrit2Side * se;
         const MoE1Side = ciCrit1Side * se;
 
-        const lower2Side = mu1 - MoE2Side;
-        const upper2Side = mu1 + MoE2Side;
-        const lower1Side = mu1 - MoE1Side;
-        const upper1Side = mu1 + MoE1Side;
+        const lower2Side = xBar - MoE2Side;
+        const upper2Side = xBar + MoE2Side;
+        const lower1Side = xBar - MoE1Side;
+        const upper1Side = xBar + MoE1Side;
 
         const ticksSet = new Set<string>();
         const addVal = (val) => { ticksSet.add(val.toFixed(2)); };
 
         addVal(mu0);
-        addVal(mu1);
-        addVal(mu1 - se);
-        addVal(mu1 + se);
-        addVal(mu1 - 2 * se);
-        addVal(mu1 + 2 * se);
+        addVal(xBar);
+        addVal(xBar - se);
+        addVal(xBar + se);
+        addVal(xBar - 2 * se);
+        addVal(xBar + 2 * se);
         addVal(mu0 - se);
         addVal(mu0 + se);
         addVal(mu0 - 2 * se);
@@ -1650,7 +1735,7 @@ export default function HypothesisTestingCalculator() {
                 } else {
                     const isImportant = (v) => {
                         const sv = v.toFixed(2);
-                        return sv === mu0.toFixed(2) || sv === mu1.toFixed(2) ||
+                        return sv === mu0.toFixed(2) || sv === xBar.toFixed(2) ||
                             (tailType === 'two-tailed' && (sv === lower2Side.toFixed(2) || sv === upper2Side.toFixed(2))) ||
                             (tailType === 'right' && sv === lower1Side.toFixed(2)) ||
                             (tailType === 'left' && sv === upper1Side.toFixed(2));
@@ -1665,7 +1750,7 @@ export default function HypothesisTestingCalculator() {
             }
         }
         return finalTicks;
-    }, [stats, isValid, mu0, mu1, tailType, alphaInput]);
+    }, [stats, isValid, mu0, xBar, tailType, alphaInput]);
 
     const CustomCIChartTooltip = ({ active, payload }: any) => {
         if (active && payload && payload.length) {
@@ -1724,20 +1809,45 @@ export default function HypothesisTestingCalculator() {
                 math: 'H_1',
                 color: 'var(--chart-2)',
                 style: 'area',
-                onClick: () => setCalculatePower(!calculatePower),
-                muted: !calculatePower,
+                muted: !powerEnabled || !showPowerOverlay,
+                label: (
+                    <button
+                        type="button"
+                        onClick={() => {
+                            if (!powerEnabled) return;
+                            setShowPowerOverlay(!showPowerOverlay);
+                        }}
+                        aria-label={showPowerOverlay ? 'הסתרת H1 והשטח של עוצמת המבחן בגרף' : 'הצגת H1 והשטח של עוצמת המבחן בגרף'}
+                        disabled={!powerEnabled}
+                        className={`relative inline-flex h-5 w-10 shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${powerEnabled ? 'cursor-pointer' : 'cursor-not-allowed opacity-40'} ${showPowerOverlay ? 'bg-[var(--color-accent-cobalt-bg-hover)]' : 'bg-[var(--color-surface-raised)]/80'}`}
+                    >
+                        <span
+                            className={`pointer-events-none flex h-4 w-4 items-center justify-center transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${showPowerOverlay ? '-translate-x-5' : 'translate-x-0'}`}
+                        >
+                            {showPowerOverlay ? (
+                                <div className="h-[8px] w-[2px] rounded-full bg-[var(--color-accent-cobalt-bg-hover)]" />
+                            ) : (
+                                <div className="h-2 w-2 rounded-full border-2 border-[var(--color-border)]" />
+                            )}
+                        </span>
+                    </button>
+                ),
             },
             { math: '\\alpha', color: 'var(--color-accent-crimson)', style: 'area' },
             { math: 'C', color: 'var(--color-accent-crimson)', style: 'line', label: <span dir="rtl">קריטי</span> },
             { math: '\\bar{X}', color: 'var(--color-text-primary)', style: 'dashed-line' },
         ];
 
-        if (calculatePower) {
+        if (powerEnabled && showPowerOverlay) {
             items.push({ math: '1-\\beta', color: 'var(--chart-2)', style: 'area' });
         }
 
         return items;
-    }, [calculatePower]);
+    }, [powerEnabled, showPowerOverlay]);
+
+    const decisionMatrixStats = powerEnabled && powerStats && stats
+        ? { ...stats, beta: powerStats.beta, power: powerStats.power }
+        : stats;
 
     return (
         <div className="tour-step-intro space-y-8 bg-[var(--color-background)] min-h-screen text-[var(--color-text-primary)] p-4 sm:p-6 md:p-8" dir="rtl">
@@ -1994,36 +2104,34 @@ export default function HypothesisTestingCalculator() {
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
                                                     <input
                                                         type="text"
-                                                        value={mu1Input}
-                                                        onChange={(e) => handleMu1Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu1Input || errors.mu1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
+                                                        value={xBarInput}
+                                                        onChange={(e) => handleXBarChange(e.target.value)}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!xBarInput || errors.xBar) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
                                                             }`}
                                                         placeholder=""
                                                         dir="ltr"
                                                     />
-                                                    <FloatingFieldError message={errors.mu1} />
+                                                    <FloatingFieldError message={errors.xBar} />
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] transition-all ${!calculatePower ? 'opacity-30' : ''}`}>
+                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] transition-all">
                                             <CellWatermark math="\mu_1" colorClass="text-[var(--chart-2)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
-                                                    <span className={`w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 ${!calculatePower ? 'text-[var(--color-text-primary)] opacity-50' : 'text-[var(--color-text-primary)]/90'}`}>
+                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 text-[var(--color-text-primary)]/90">
                                                         <span>ממוצע (</span><InlineMath math="\mu_1" /><span>):</span>
                                                     </span>
                                                 </InputTooltip>
                                                 <div className="w-16 sm:w-20 shrink-0 relative">
                                                     <input
                                                         type="text"
-                                                        value={muH1Input}
-                                                        disabled={!calculatePower}
-                                                        onChange={(e) => handleMuH1Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${!calculatePower ? 'opacity-40 cursor-not-allowed border-transparent' : ''
-                                                            } ${calculatePower && (!muH1Input || errors.muH1) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : calculatePower ? 'border-[var(--color-border)]' : ''}`}
+                                                        value={mu1Input}
+                                                        onChange={(e) => handleMu1Change(e.target.value)}
+                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${powerInputError ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'}`}
                                                         placeholder=""
                                                         dir="ltr" />
-                                                    <FloatingFieldError message={calculatePower ? errors.muH1 : undefined} />
+                                                    <FloatingFieldError message={powerInputError} />
                                                 </div>
                                             </div>
                                         </td>
@@ -2079,25 +2187,8 @@ export default function HypothesisTestingCalculator() {
                                             <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
                                             <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
                                                 <span className="w-36 sm:w-44 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1 whitespace-nowrap">
-                                                    <span>חישוב עוצמה (</span><InlineMath math="1-\beta" /><span>)</span>
+                                                    <span>הצגת בגרף (</span><InlineMath math="1-\beta" /><span>)</span>
                                                 </span>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => setCalculatePower(!calculatePower)}
-                                                    className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${calculatePower ? 'bg-[var(--color-accent-cobalt-bg-hover)]' : 'bg-[var(--color-surface-raised)]/80'
-                                                        }`}
-                                                >
-                                                    <span
-                                                        className={`pointer-events-none flex items-center justify-center h-5 w-5 transform rounded-full bg-white shadow-md transition duration-200 ease-in-out ${calculatePower ? '-translate-x-5' : 'translate-x-0'
-                                                            }`}
-                                                    >
-                                                        {calculatePower ? (
-                                                            <div className="w-[2px] h-[10px] bg-[var(--color-accent-cobalt-bg-hover)] rounded-full" />
-                                                        ) : (
-                                                            <div className="w-2.5 h-2.5 rounded-full border-2 border-[var(--color-border)]" />
-                                                        )}
-                                                    </span>
-                                                </button>
                                             </div>
                                         </td>
                                     </tr>
@@ -2118,14 +2209,15 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Overlapping Curves Chart */}
                     <div className="tour-step-graph w-full min-w-0 order-1 lg:order-1">
-                        <ChartWrapper legend={<ChartLegend items={hypothesisLegendItems} />} className="flex-1 h-full flex flex-col" height="100%">
+                        <ChartWrapper legend={<div className="flex w-full justify-start" dir="ltr"><ChartLegend items={hypothesisLegendItems} /></div>} className="flex-1 h-full flex flex-col" height="100%">
                             <HypothesisChart
                                 chartData={chartData}
                                 stats={stats as any}
                                 isValid={isValid}
                                 chartLimits={chartLimits as any}
                                 tailType={tailType}
-                                calculatePower={calculatePower}
+                                powerEnabled={powerEnabled}
+                                showPowerOverlay={showPowerOverlay}
                                 xAxisTicks={xAxisTicks}
                                 sampleMean={decisionData?.xBar ?? null}
                             />
@@ -3097,9 +3189,9 @@ export default function HypothesisTestingCalculator() {
                                                             {/* Calculation with actual values */}
                                                             <CalcBlock>
                                                                 {varianceKnown ? (
-                                                                    <BlockMath math={`Z_{\\text{stat}} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
+                                                                    <BlockMath math={`Z_{\\text{stat}} = \\frac{${xBar} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
                                                                 ) : (
-                                                                    <BlockMath math={`t_{\\text{stat}} = \\frac{${mu1} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
+                                                                    <BlockMath math={`t_{\\text{stat}} = \\frac{${xBar} - ${mu0}}{${stats.se.toFixed(4)}} = ${decisionData.statObs.toFixed(4)}`} />
                                                                 )}
                                                             </CalcBlock>
 
@@ -3424,11 +3516,11 @@ export default function HypothesisTestingCalculator() {
                                             <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Target size={24} /></div>
                                             <div className="flex flex-col items-start gap-1">
                                                 <h2 data-toc data-toc-target="confidence-panel" data-toc-open="confidence-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
-                                                    רווח סמך לתוחלת
+                                                    רווח סמך לתוחלת <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(CI)" /></span>
                                                 </h2>
-                                                <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
-                                                    <InlineMath math="\text{Confidence Interval}" />
-                                                </span>
+                                            <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
+                                                    <InlineMath math="\text{Confidence Interval}\;(CI)" />
+                                            </span>
                                             </div>
                                         </div>
                                         <div className="flex items-center self-end sm:self-auto gap-4">
@@ -3963,10 +4055,10 @@ export default function HypothesisTestingCalculator() {
                                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Activity size={24} /></div>
                                         <div className="flex flex-col items-start gap-1">
                                             <h2 data-toc data-toc-target="power-panel" data-toc-open="power-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
-                                                עוצמת מבחן
+                                                עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
                                             </h2>
                                             <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
-                                                <InlineMath math="\text{Statistical Power}" />
+                                                <InlineMath math="\text{Statistical Power}\;(1-\beta)" />
                                             </span>
                                         </div>
                                     </div>
@@ -3988,120 +4080,104 @@ export default function HypothesisTestingCalculator() {
                                     >
                                         <div className="p-5 sm:p-8 space-y-8 bg-[var(--color-surface)] text-right">
                                             <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
-                                                טעות מסוג שני (<InlineMath math="\beta" />) היא ההסתברות לקבל החלטה שגויה של אי-דחיית השערת האפס, למרות שהיא שקרית במציאות. עוצמת המבחן (<InlineMath math="1-\beta" />) היא ההסתברות לדחות בצדק את השערת האפס (לזהות אפקט אמיתי). לצורך החישוב, יש להגדיר תוחלת ספציפית חלופית <InlineMath math="\mu_1" /> תחת <InlineMath math="H_1" />.
+                                                <InlineMath math="\beta = P(\text{Fail to Reject } H_0 \mid H_1)" />. לכן <InlineMath math="1-\beta" /> היא ההסתברות לדחות נכון את <InlineMath math="H_0" /> כאשר <InlineMath math="H_1" /> נכונה.
                                             </p>
 
-                                            {calculatePower ? (
-                                                <div className="space-y-6">
+                                            {powerEnabled && powerStats ? (
+                                                <div className="space-y-8">
                                                     <p className="text-base sm:text-lg text-[var(--color-text-primary)] leading-relaxed font-semibold">
-                                                        נמצא את ההסתברות לאי-דחיית <InlineMath math="H_0" /> (שהמדגם ייפול באזור <InlineMath math="\bar{C}" />), תחת ההנחה כי התוחלת האמיתית היא <InlineMath math="\mu_1" /> (התפלגות <InlineMath math="H_1" />).
+                                                        קלט: <InlineMath math="\mu_0,\ \mu_1,\ \sigma,\ n,\ \alpha" />. מהלך: <InlineMath math="SE \to C \to Z \to Power,\beta" />.
                                                     </p>
 
-                                                    {/* General formula template */}
-                                                    <FormulaBlock
-                                                        formulaName="חישוב עוצמת מבחן (Power)"
-                                                        translation="מחשב את עוצמת המבחן וההסתברות לטעות מסוג שני (β). הערך Z_{H_1} משקף את מיקום הערך הקריטי תחת ההתפלגות האלטרנטיבית."
-                                                    >
-                                                        {varianceKnown ? (
-                                                            tailType === 'right' ? (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1} = \\frac{C - \\mu_1}{SE}`} />
-                                                                    <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = \\Phi(Z_{H_1})`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                </>
-                                                            ) : tailType === 'left' ? (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1} = \\frac{C - \\mu_1}{SE}`} />
-                                                                    <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = 1 - \\Phi(Z_{H_1})`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1,1} = \\frac{C_1 - \\mu_1}{SE} \\quad,\\quad Z_{H_1,2} = \\frac{C_2 - \\mu_1}{SE}`} />
-                                                                    <BlockMath math={`\\beta = P(\\text{Fail to Reject } H_0 \\mid H_1) = \\Phi(Z_{H_1,2}) - \\Phi(Z_{H_1,1})`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                </>
-                                                            )
-                                                        ) : (
-                                                            <>
-                                                                <BlockMath math={`NCP = \\frac{\\mu_1 - \\mu_0}{SE}`} />
-                                                                {tailType === 'right' ? (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta} = t_{crit} - NCP`} />
-                                                                        <BlockMath math={`\\beta = P(t_{df} < t_{\\beta})`} />
-                                                                        <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                    </>
-                                                                ) : tailType === 'left' ? (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta} = t_{crit} - NCP`} />
-                                                                        <BlockMath math={`\\beta = 1 - P(t_{df} < t_{\\beta})`} />
-                                                                        <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta, 1} = -t_{crit} - NCP \\quad,\\quad t_{\\beta, 2} = t_{crit} - NCP`} />
-                                                                        <BlockMath math={`\\beta = P(t_{df} < t_{\\beta, 2}) - P(t_{df} < t_{\\beta, 1})`} />
-                                                                        <BlockMath math={`\\text{Power} = 1 - \\beta`} />
-                                                                    </>
-                                                                )}
-                                                            </>
-                                                        )}
-                                                    </FormulaBlock>
+                                                    <div className="space-y-5">
+                                                        <PowerStepCard
+                                                            step="שלב 1"
+                                                            title={<>מוצאים את התפלגות ממוצע המדגם <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(\bar{X},\,SE)" /></span></>}
+                                                            description={<>עובדים עם <InlineMath math="\bar{X}" />, כי זה המשתנה שעליו מתקבלת ההחלטה. לכן סטיית התקן הרלוונטית היא טעות התקן <InlineMath math="SE" />.</>}
+                                                            formula={[
+                                                                String.raw`\bar{X} \sim N\!\left(\mu,\frac{\sigma^2}{n}\right)`,
+                                                                String.raw`SE = \frac{\sigma}{\sqrt{n}}`,
+                                                            ]}
+                                                            application={String.raw`SE = \frac{${sigma.toFixed(4)}}{\sqrt{${n}}} = ${powerStats.se.toFixed(4)}`}
+                                                            note={<>כלומר: במקום לעבוד עם תצפית בודדת, עובדים עם פיזור של ממוצע המדגם סביב <InlineMath math="\mu" />.</>}
+                                                        />
 
-                                                    {/* Calculation with actual values */}
-                                                    <CalcBlock>
-                                                        {varianceKnown ? (
-                                                            tailType === 'right' ? (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
-                                                                    <BlockMath math={`\\beta = \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
-                                                                </>
-                                                            ) : tailType === 'left' ? (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
-                                                                    <BlockMath math={`\\beta = 1 - \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
-                                                                </>
-                                                            ) : (
-                                                                <>
-                                                                    <BlockMath math={`Z_{H_1,1} = \\frac{${stats.c1.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
-                                                                    <BlockMath math={`Z_{H_1,2} = \\frac{${stats.c2.toFixed(3)} - ${stats.effectH1Mean}}{${stats.se.toFixed(4)}} = ${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(4)}`} />
-                                                                    <BlockMath math={`\\beta = \\Phi(${((stats.c2 - stats.effectH1Mean) / stats.se).toFixed(3)}) - \\Phi(${((stats.c1 - stats.effectH1Mean) / stats.se).toFixed(3)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
-                                                                </>
-                                                            )
-                                                        ) : (
-                                                            <>
-                                                                <BlockMath math={`NCP = \\frac{${stats.effectH1Mean} - ${stats.effectH0Mean}}{${stats.se.toFixed(4)}} = ${stats.ncp.toFixed(4)}`} />
-                                                                {tailType === 'right' ? (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
-                                                                        <BlockMath math={`\\beta = P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    </>
-                                                                ) : tailType === 'left' ? (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
-                                                                        <BlockMath math={`\\beta = 1 - P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    </>
-                                                                ) : (
-                                                                    <>
-                                                                        <BlockMath math={`t_{\\beta, 1} = ${(-stats.zCrit).toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(-stats.zCrit - stats.ncp).toFixed(4)}`} />
-                                                                        <BlockMath math={`t_{\\beta, 2} = ${stats.zCrit.toFixed(4)} - ${stats.ncp.toFixed(4)} = ${(stats.zCrit - stats.ncp).toFixed(4)}`} />
-                                                                        <BlockMath math={`\\beta = P(t_{${stats.df}} < ${(stats.zCrit - stats.ncp).toFixed(4)}) - P(t_{${stats.df}} < ${(-stats.zCrit - stats.ncp).toFixed(4)}) = ${stats.beta.toFixed(4)}`} />
-                                                                    </>
-                                                                )}
-                                                                <BlockMath math={`\\text{Power} = 1 - ${stats.beta.toFixed(4)} = ${(stats.power).toFixed(4)}`} />
-                                                            </>
-                                                        )}
-                                                    </CalcBlock>
+                                                        <PowerStepCard
+                                                            step="שלב 2"
+                                                            title={<>קובעים את סף הדחייה <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(C)" /></span></>}
+                                                            description={powerStats.tail === 'left'
+                                                                ? <>כאן <InlineMath math="\mu_1 < \mu_0" />, לכן זה מבחן שמאלי. אזור הדחייה נמצא משמאל, ולכן <InlineMath math="C" /> נבנה משמאל ל-<InlineMath math="\mu_0" />.</>
+                                                                : <>כאן <InlineMath math="\mu_1 > \mu_0" />, לכן זה מבחן ימני. אזור הדחייה נמצא מימין, ולכן <InlineMath math="C" /> נבנה מימין ל-<InlineMath math="\mu_0" />.</>}
+                                                            formula={powerStats.tail === 'left'
+                                                                ? String.raw`C = \mu_0 - Z_{1-\alpha}\cdot SE`
+                                                                : String.raw`C = \mu_0 + Z_{1-\alpha}\cdot SE`}
+                                                            application={powerStats.tail === 'left'
+                                                                ? `C = ${mu0.toFixed(4)} - ${powerStats.criticalZ.toFixed(4)} \\cdot ${powerStats.se.toFixed(4)} = ${powerStats.criticalValue.toFixed(4)}`
+                                                                : `C = ${mu0.toFixed(4)} + ${powerStats.criticalZ.toFixed(4)} \\cdot ${powerStats.se.toFixed(4)} = ${powerStats.criticalValue.toFixed(4)}`}
+                                                            note={<>הערך <InlineMath math="C" /> הוא הגבול שמפריד בין דחיית <InlineMath math="H_0" /> לבין אי-דחייתה.</>}
+                                                        />
+
+                                                        <PowerStepCard
+                                                            step="שלב 3"
+                                                            title={<>מתרגמים את הגבול להתפלגות של H₁ <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(Z)" /></span></>}
+                                                            description={<>כעת בודקים איפה הערך הקריטי <InlineMath math="C" /> יושב ביחס להתפלגות האלטרנטיבית, כלומר ביחס ל-<InlineMath math="\mu_1" />.</>}
+                                                            formula={String.raw`Z = \frac{C-\mu_1}{SE}`}
+                                                            application={`Z = \\frac{${powerStats.criticalValue.toFixed(4)} - ${mu1.toFixed(4)}}{${powerStats.se.toFixed(4)}} = ${powerStats.zUnderH1.toFixed(4)}`}
+                                                            note={<>זהו המרחק של <InlineMath math="C" /> מ-<InlineMath math="\mu_1" />, ביחידות של טעות תקן.</>}
+                                                        />
+
+                                                        <PowerStepCard
+                                                            step="שלב 4"
+                                                            title={<>מחשבים את Power ואת β <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta,\;\beta)" /></span></>}
+                                                            description={powerStats.tail === 'left'
+                                                                ? <>במבחן שמאלי ה־Power הוא השטח שמשמאל ל-<InlineMath math="C" /> תחת <InlineMath math="H_1" />. השטח המשלים הוא <InlineMath math="\beta" />.</>
+                                                                : <>במבחן ימני ה־Power הוא השטח שמימין ל-<InlineMath math="C" /> תחת <InlineMath math="H_1" />. השטח המשלים הוא <InlineMath math="\beta" />.</>}
+                                                            formula={powerStats.tail === 'left'
+                                                                ? [
+                                                                    String.raw`\text{Power} = \Phi(Z)`,
+                                                                    String.raw`\beta = 1 - \Phi(Z)`,
+                                                                ]
+                                                                : [
+                                                                    String.raw`\text{Power} = 1 - \Phi(Z)`,
+                                                                    String.raw`\beta = \Phi(Z)`,
+                                                                ]}
+                                                            application={powerStats.tail === 'left'
+                                                                ? [
+                                                                    `\\text{Power} = \\Phi(${powerStats.zUnderH1.toFixed(4)}) = ${powerStats.power.toFixed(4)}`,
+                                                                    `\\beta = 1 - ${powerStats.power.toFixed(4)} = ${powerStats.beta.toFixed(4)}`,
+                                                                ]
+                                                                : [
+                                                                    `\\text{Power} = 1 - \\Phi(${powerStats.zUnderH1.toFixed(4)}) = ${powerStats.power.toFixed(4)}`,
+                                                                    `\\beta = \\Phi(${powerStats.zUnderH1.toFixed(4)}) = ${powerStats.beta.toFixed(4)}`,
+                                                                ]}
+                                                            note={<>ככל שה־Power גבוה יותר, כך גדל הסיכוי לזהות אפקט אמיתי ולא לפספס אותו.</>}
+                                                        />
+                                                    </div>
+
+                                                    <div className="grid gap-4 lg:grid-cols-3">
+                                                        <ResultSummaryCard
+                                                            title={<>ערך קריטי <InlineMath math="C" /></>}
+                                                            subtitle={<>סף הדחייה שנקבע לפי <InlineMath math="\mu_0" />, <InlineMath math="\alpha" />, ו-<InlineMath math="SE" />.</>}
+                                                            math={`C = ${powerStats.criticalValue.toFixed(4)}`}
+                                                        />
+                                                        <ResultSummaryCard
+                                                            title={<>עוצמת מבחן <InlineMath math="1-\\beta" /></>}
+                                                            subtitle={<>ההסתברות לזהות נכון אפקט אמיתי כאשר <InlineMath math="H_1" /> נכונה.</>}
+                                                            math={`1-\\beta = ${(powerStats.power * 100).toFixed(2)}\\%`}
+                                                        />
+                                                        <ResultSummaryCard
+                                                            title={<>טעות מסוג II <InlineMath math="\\beta" /></>}
+                                                            subtitle={<>הסיכוי שלא לדחות את <InlineMath math="H_0" /> למרות שקיים אפקט אמיתי.</>}
+                                                            math={`\\beta = ${(powerStats.beta * 100).toFixed(2)}\\%`}
+                                                        />
+                                                    </div>
                                                 </div>
                                             ) : (
                                                 <div className="bg-[var(--color-surface)] p-5 rounded-lg border border-[var(--color-border)] text-center text-[var(--color-text-secondary)] space-y-2 max-w-xl mx-auto mt-4">
                                                     <Info size={20} className="mx-auto text-[var(--color-accent-cobalt)]" />
-                                                    <h5 className="font-extrabold text-[var(--color-text-primary)] text-sm sm:text-base">חישוב עוצמת מבחן כבוי</h5>
+                                                    <h5 className="font-extrabold text-[var(--color-text-primary)] text-sm sm:text-base">נדרש ממוצע תחת <InlineMath math="H_1" /></h5>
                                                     <p className="text-xs sm:text-sm font-medium leading-relaxed">
-                                                        על מנת להציג את שלבי החישוב המלאים של טעות מסוג שני (<InlineMath math="\beta" />) ועוצמת המבחן (<InlineMath math="1-\beta" />), הפעל את אפשרות "חישוב עוצמה" בתוך כרטיסיית הפרמטרים למעלה.
+                                                        כדי להמשיך לחישוב המלא של <InlineMath math="\beta" /> ושל <InlineMath math="1-\beta" />, הזן ערך תקין עבור ממוצע השערת המחקר <InlineMath math="\mu_1" /> בטבלת הפרמטרים.
                                                     </p>
                                                 </div>
                                             )}
@@ -4117,7 +4193,7 @@ export default function HypothesisTestingCalculator() {
 
                         {/* Decision Matrix Hero (Moved to side panel) */}
                         <div className="tour-step-decision text-right w-full min-w-0 order-2 lg:order-2">
-                            <DecisionMatrix isValid={isValid} stats={stats} alpha={alpha} calculatePower={calculatePower} />
+                            <DecisionMatrix isValid={isValid} stats={decisionMatrixStats} alpha={alpha} calculatePower={powerEnabled} />
                         </div>
 
                     </div>

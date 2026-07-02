@@ -1,10 +1,10 @@
-# Task Plan: Normal Calculator Refactor
+# Task Plan: Calculator Refactor And Power Panel Isolation
 
 ## Goal
 Normalize the normal-distribution calculator architecture deliberately: shared math first, then component extraction, with behavior preserved and verification after each phase.
 
 ## Current Phase
-Complete
+Phase 7 complete
 
 ## Phases
 
@@ -65,6 +65,24 @@ Complete
 - [ ] Run visual and code verification: `npm run lint:tsc`, `npm test`, `npm run lint:colors`, `npm run build`, plus manual RTL/light-dark review
 - **Status:** in progress
 
+### Phase 7: Power Panel Five-Parameter Isolation
+- [x] Audit current power-panel dependencies on `muH1`, `mu1`, and `\bar{X}` semantics
+- [x] Remove separate `muH1` state/input path so power uses only `\mu_0`, `\mu_1`, `\sigma`, `n`, and `\alpha`
+- [x] Keep hypothesis decision flow on sample-mean semantics without making the power panel depend on `\bar{X}`
+- [x] Rework power copy/formulas/cards/chart labels to match one-sided power logic from browser comment
+- [x] Preserve existing design tokens, shared chart primitives, dark/light compatibility, and accordion behavior
+- [x] Update or add focused tests for five-parameter power behavior
+- [x] Run `npm run lint:tsc`, `npm test`, `npm run lint:colors`, `npm run build`
+- **Status:** complete
+
+### Phase 8: Power Steps Visual Parity
+- [x] Replace custom power step cards with the same `AnimatedDetails` shell used in hypothesis steps
+- [x] Render theoretical formulas inside shared `FormulaBlock`
+- [x] Render substituted calculations directly in shared `CalcBlock` under each matching step
+- [x] Remove the standalone `יישום מספרי` label and old custom formula box styling
+- [x] Run focused verification: `npx tsc --noEmit --pretty false`, `npx vitest run src/components/HypothesisTestingCalculator.integration.test.tsx`
+- **Status:** complete
+
 ## Key Questions
 1. Which functions were already extracted? Answer: pure probability/statistics helpers in `web/src/lib/statistics/math.ts`.
 2. Where are duplicates still present? Answer: both main calculators still define local copies.
@@ -80,6 +98,8 @@ Complete
 | Verify after each extraction group | Massive TSX file has many hidden dependencies; smaller gates catch regressions early. |
 | Use existing `web/src/lib/statistics/math.ts` instead of creating new math files | Source already exists and is exported with typed functions. |
 | Treat cross-calculator UI consistency as a new phase | Architecture cleanup is complete; shared UI/template extraction needs its own audit and visual gates. |
+| Reuse existing hypothesis chart and formula blocks for power | User asked for plan-first and strict design-system alignment; current calculator already has compliant rendering primitives. |
+| Power panel will use `mu1` as the alternative mean input | Browser comment requires exactly five inputs and no separate `\bar{X}` dependency inside power. |
 
 ## Errors Encountered
 | Error | Attempt | Resolution |

@@ -52,10 +52,10 @@ function renderCalculator(values: StorageValues) {
     HT_calculatePower: true,
     HT_mu0: 100,
     HT_mu0Input: '100',
+    HT_xBar: 108,
+    HT_xBarInput: '108',
     HT_mu1: 108,
     HT_mu1Input: '108',
-    HT_muH1: 108,
-    HT_muH1Input: '108',
     HT_sigma: 15,
     HT_sigmaInput: '15',
     HT_n: 36,
@@ -89,10 +89,10 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     const html = renderCalculator({
       HT_mu0: 37,
       HT_mu0Input: '37',
+      HT_xBar: 36.82,
+      HT_xBarInput: '36.82',
       HT_mu1: 36.82,
       HT_mu1Input: '36.82',
-      HT_muH1: 36.82,
-      HT_muH1Input: '36.82',
       HT_sigma: 0.41,
       HT_sigmaInput: '0.41',
       HT_n: 148,
@@ -139,9 +139,9 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
   it('renders the parameter table in the requested order with editable sigma and math placeholders', () => {
     const html = renderCalculator({
       HT_varianceKnown: false,
+      HT_xBarInput: '',
       HT_mu0Input: '',
       HT_mu1Input: '',
-      HT_muH1Input: '',
       HT_sigmaInput: '',
       HT_nInput: '',
     });
@@ -150,7 +150,7 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     const tableHtml = html.slice(tableStart, tableEnd);
 
     expect(tableHtml.indexOf('ממוצע מדגם')).toBeLessThan(tableHtml.indexOf('גודל מדגם'));
-    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('חישוב עוצמה'));
+    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('הצגת בגרף'));
     expect(tableHtml).toContain('data-testid="parameter-sigma-input"');
     expect(tableHtml).not.toContain('לא נקבע');
     expect(tableHtml).toContain('data-cell-watermark="\\mu_0"');
@@ -169,5 +169,27 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     expect(tableHtml).toContain('annotation encoding="application/x-tex">\\mu_1</annotation>');
     expect(tableHtml).toContain('annotation encoding="application/x-tex">\\bar{X}</annotation>');
     expect(tableHtml).toContain('annotation encoding="application/x-tex">n</annotation>');
+  });
+
+  it('renders without legacy muH1 storage keys when power relies on mu1', () => {
+    const html = renderCalculator({
+      HT_mu0: 100,
+      HT_mu0Input: '100',
+      HT_xBar: 102,
+      HT_xBarInput: '102',
+      HT_mu1: 108,
+      HT_mu1Input: '108',
+      HT_sigma: 15,
+      HT_sigmaInput: '15',
+      HT_n: 36,
+      HT_nInput: '36',
+      HT_alpha: 0.05,
+      HT_alphaInput: '0.05',
+      HT_tailType: 'right',
+    });
+
+    expect(html).toContain('עוצמת מבחן');
+    expect(html).toContain('השערת המחקר');
+    expect(html).not.toContain('HT_muH1');
   });
 });

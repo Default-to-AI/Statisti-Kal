@@ -67,4 +67,6 @@ export type { TooltipProps, TooltipPlacement, TooltipSize, ChartTooltipProps, Ch
 
 export { FormulaBlock, CalcBlock, ResultBlock } from './FormulaBlock';
 export type { FormulaBlockProps, FormulaBlockVariant, CalcBlockProps, ResultBlockProps } from './FormulaBlock';
+export { HandwrittenNote } from './HandwrittenNote';
+export type { HandwrittenNoteProps } from './HandwrittenNote';
 
