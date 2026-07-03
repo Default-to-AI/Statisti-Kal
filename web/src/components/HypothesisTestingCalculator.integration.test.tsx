@@ -150,7 +150,7 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
     const tableHtml = html.slice(tableStart, tableEnd);
 
     expect(tableHtml.indexOf('ממוצע מדגם')).toBeLessThan(tableHtml.indexOf('גודל מדגם'));
-    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('הצגת בגרף'));
+    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('עוצמת מבחן'));
     expect(tableHtml).toContain('data-testid="parameter-sigma-input"');
     expect(tableHtml).not.toContain('לא נקבע');
     expect(tableHtml).toContain('data-cell-watermark="\\mu_0"');
