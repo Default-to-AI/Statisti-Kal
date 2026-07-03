@@ -513,6 +513,9 @@ function ConfidenceIntervalFollowups({
                 <CalcBlock>
                     <BlockMath math={String.raw`L = 2 \cdot ${halfWidth.toFixed(4)} = ${currentWidth.toFixed(4)}`} />
                 </CalcBlock>
+                <ResultBlock>
+                    <BlockMath math={String.raw`L = ${currentWidth.toFixed(4)}`} />
+                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -531,6 +534,9 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     הסטייה המירבית <InlineMath math="(d)" /> היא בדיוק איבר ה"פלוס-מינוס" סביב <InlineMath math="\bar{X}" />, ולכן כאן היא <InlineMath math={halfWidth.toFixed(4)} /> לכל צד.
                 </p>
+                <ResultBlock>
+                    <BlockMath math={String.raw`d = ${halfWidth.toFixed(4)}`} />
+                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -555,6 +561,9 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     הסיבה: כאשר <InlineMath math="n" /> גדל, המכנה <InlineMath math="\sqrt{n}" /> גדל גם הוא, ולכן כל הביטוי נהיה קטן יותר והרווח נעשה צר יותר.
                 </p>
+                <ResultBlock>
+                    <span>האורך {sampleSizeRelation} ל- <InlineMath math={sampleSizeWidth.toFixed(4)} /></span>
+                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -585,6 +594,9 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     כלומר, ככל שרוצים להיות בטוחים יותר, נדרש ערך קריטי גדול יותר ולכן גם רווח הסמך מתרחב.
                 </p>
+                <ResultBlock>
+                    <span>האורך יגדל ל- <InlineMath math={confidenceWidth.toFixed(4)} /></span>
+                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -616,11 +628,14 @@ function ConfidenceIntervalFollowups({
                     <BlockMath math={String.raw`n \ge ${minNReal.toFixed(2)}`} />
                 </CalcBlock>
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
-                    מאחר שגודל מדגם חייב להיות שלם, מעגלים כלפי מעלה ומקבלים <strong>תשובה: <InlineMath math={`n = ${minNRounded}`} /></strong>.
+                    מאחר שגודל מדגם חייב להיות שלם, מעגלים כלפי מעלה.
                 </p>
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     זה בדיוק סוג תרגיל שבו לא מחשבים רווח סמך קיים, אלא שואלים מראש איזה מדגם צריך כדי להגיע לדיוק הרצוי.
                 </p>
+                <ResultBlock>
+                    <BlockMath math={`n = ${minNRounded}`} />
+                </ResultBlock>
             </Disclosure>
         </div>
     );
