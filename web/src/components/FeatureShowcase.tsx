@@ -1,6 +1,7 @@
 import { useState, useEffect, type ReactElement } from 'react';
 import { MousePointerClick, Calculator, LineChart, MessageSquareQuote } from 'lucide-react';
 import { InlineMath } from 'react-katex';
+import { LandingFeatureArt, type LandingPreviewId } from './LandingFeatureArt';
 import { ScrollReveal } from './landing-template/TemplatePrimitives';
 
 const features = [
@@ -9,7 +10,7 @@ const features = [
     title: "הזנת נתונים נטולת פיצ'פקעס",
     description: "תזינו את הנתונים היבשים של המדגם. אין צורך להעביר אגפים או לשנן הצבות – הטכניקה היא אויב. המחשב עושה את השאר.",
     icon: MousePointerClick,
-    image: "/images/carousel-inputs.png",
+    previewId: "hypothesis" as LandingPreviewId,
     tone: "teal" as const
   },
   {
@@ -17,7 +18,7 @@ const features = [
     title: "חישובים שמשאירים מקום לנשמה",
     description: <><InlineMath math="P\text{-Value}" />, ערכים קריטיים וטבלאות <InlineMath math="Z" /> או <InlineMath math="T" />? הכל מחושב אוטומטית. לכם רק נשאר לשלוט בשפה ולהבין את הרציונל.</>,
     icon: Calculator,
-    image: "/images/carousel-matrix.png",
+    previewId: "table" as LandingPreviewId,
     tone: "cobalt" as const
   },
   {
@@ -25,7 +26,7 @@ const features = [
     title: "תצוגה גרפית של המהות",
     description: "לראות את אזורי הדחייה והקבלה בעיניים. כדי שתבינו את הרעיון והמוטיבציה, ולא סתם תהיו רובוטים של טכניקה.",
     icon: LineChart,
-    image: "/images/carousel-graph.png",
+    previewId: "normal" as LandingPreviewId,
     tone: "brass" as const
   },
   {
@@ -33,7 +34,7 @@ const features = [
     title: "מסקנה אופרטיבית לגופו של עניין",
     description: "התוצאה מובהקת? המערכת מפיקה מסקנה מחקרית על האוכלוסייה בסמנטיקה הנכונה, שלא תגידו לי 'לא ידעתי איך לנסח'.",
     icon: MessageSquareQuote,
-    image: "/images/carousel-steps.png",
+    previewId: "helper" as LandingPreviewId,
     tone: "cobalt" as const
   }
 ];
@@ -145,10 +146,9 @@ export function FeatureShowcase(): ReactElement {
                   : 'opacity-0 z-0 translate-y-8 scale-95 pointer-events-none'
               }`}
             >
-              <img
-                src={feature.image}
-                alt={feature.title}
-                className="max-w-full max-h-full object-contain drop-shadow-2xl rounded-[16px]"
+              <LandingFeatureArt
+                previewId={feature.previewId}
+                className="max-h-full w-full max-w-xl drop-shadow-2xl"
               />
             </div>
           ))}

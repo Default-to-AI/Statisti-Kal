@@ -7,6 +7,7 @@ import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { PageLayout } from './ui/PageLayout';
 import { FeatureShowcase } from './FeatureShowcase';
+import { LandingFeatureArt, LandingFeatureGlyph, type LandingPreviewId } from './LandingFeatureArt';
 
 interface LandingPageProps {
   onNavigate: (page: SitePage) => void;
@@ -68,12 +69,12 @@ function ScatteredImages(): ReactElement {
     return () => clearInterval(timer);
   }, []);
 
-  const images = [
-    { src: '/images/landing-showcase-2026-06-22/z-table.png', alt: 'טבלת התפלגות נורמלית Z' },
-    { src: '/images/landing-showcase-2026-06-22/t-table.png', alt: 'טבלת התפלגות Student T' },
-    { src: '/images/carousel/ht-parameters.png', alt: 'פרמטרים והשערות מחקר' },
-    { src: '/images/gemini-picks/05-conclusion-phase.png', alt: 'רווח סמך ועוצמת מבחן' },
-    { src: '/images/gemini-picks/03-chart.png', alt: 'גרף עוצמת מבחן ואזורי דחייה' },
+  const images: Array<{ previewId: LandingPreviewId; alt: string }> = [
+    { previewId: 'table', alt: 'טבלאות ערכים קריטיים' },
+    { previewId: 'formula', alt: 'דף נוסחאות סטטיסטי' },
+    { previewId: 'hypothesis', alt: 'בדיקת השערות עם קלט ומסקנה' },
+    { previewId: 'helper', alt: 'עוזר סמנטי לניסוח מסקנות' },
+    { previewId: 'normal', alt: 'התפלגות נורמלית עם שטח מסומן' },
   ];
 
   const positions = [
@@ -98,7 +99,7 @@ function ScatteredImages(): ReactElement {
 
         return (
           <div
-            key={img.src}
+            key={img.previewId}
             onClick={() => setOffset((4 - i + 5) % 5)}
             className="absolute transition-all duration-1000 ease-out shadow-[0_20px_40px_rgba(0,0,0,0.5)] rounded-xl border border-[var(--color-border)] overflow-hidden bg-[var(--color-surface)] pointer-events-auto cursor-pointer"
             style={{
@@ -116,12 +117,12 @@ function ScatteredImages(): ReactElement {
                <div className="w-2 h-2 rounded-full bg-[var(--chart-2)] opacity-80"></div>
             </div>
             
-            <img 
-               src={img.src} 
-               alt={img.alt} 
-               className={`w-full h-[calc(100%-1.5rem)] object-cover object-top transition-all duration-1000 ${isCenter ? 'brightness-100' : 'brightness-50 hover:brightness-75'}`}
-               onError={(e) => { e.currentTarget.style.display = 'none'; }}
-            />
+            <div
+              aria-label={img.alt}
+              className={`h-[calc(100%-1.5rem)] transition-all duration-1000 ${isCenter ? 'brightness-100' : 'brightness-50 hover:brightness-75'}`}
+            >
+              <LandingFeatureArt previewId={img.previewId} compact className="h-full w-full" />
+            </div>
           </div>
         );
       })}
@@ -204,8 +205,11 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
           <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-12">הכלים שלנו</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-accent-cobalt-line)] hover:-translate-y-1">
-              <div className="w-16 h-16 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-accent-cobalt-line)]">
-                <Calculator className="w-8 h-8" />
+              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
+                <LandingFeatureArt previewId="hypothesis" compact className="w-full" />
+              </div>
+              <div className="mb-6">
+                <LandingFeatureGlyph previewId="hypothesis" />
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">בדיקת השערות</h3>
               <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
@@ -217,8 +221,11 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
             </Card>
 
             <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--chart-2)]/40 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-[var(--chart-2)]/10 text-[var(--chart-2)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--chart-2)]/30">
-                <AreaChart className="w-8 h-8" />
+              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
+                <LandingFeatureArt previewId="normal" compact className="w-full" />
+              </div>
+              <div className="mb-6">
+                <LandingFeatureGlyph previewId="normal" />
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">התפלגות נורמלית</h3>
               <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
@@ -230,8 +237,11 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
             </Card>
 
             <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-primary)]/40 hover:-translate-y-1">
-              <div className="w-16 h-16 bg-[var(--color-primary)]/10 text-[var(--color-primary)] rounded-2xl flex items-center justify-center mb-6 border border-[var(--color-primary)]/30">
-                <BookOpen className="w-8 h-8" />
+              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
+                <LandingFeatureArt previewId="formula" compact className="w-full" />
+              </div>
+              <div className="mb-6">
+                <LandingFeatureGlyph previewId="formula" />
               </div>
               <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">דף נוסחאות</h3>
               <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
