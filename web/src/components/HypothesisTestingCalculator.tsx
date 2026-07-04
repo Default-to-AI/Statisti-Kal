@@ -9,7 +9,7 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Joyride, Step } from 'react-joyride';
 import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
-import { CalcBlock as UICalcBlock, FormulaBlock as UIFormulaBlock, ResultBlock, Disclosure } from './ui';
+import { CalcBlock as UICalcBlock, FormulaBlock as UIFormulaBlock, ResultBlock, Disclosure, AlertBlock } from './ui';
 import {
     ChartLegend,
     ChartTooltipShell,
@@ -3449,14 +3449,92 @@ export default function HypothesisTestingCalculator() {
                                                                             <div className="p-5 border-t border-[var(--color-border)]/50 text-[var(--color-text-primary)] space-y-4">
                                                                                 <div className="mb-4 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
                                                                                     <p className="mb-2">גישה זו מודדת את הסבירות לקבלת התוצאה שנצפתה מהמדגם המקרי תחת התפלגות <InlineMath math="H_0" />, אל מול רמת המובהקות שנקבעה (<InlineMath math="\alpha" />).</p>
-                                                                                    <strong className="text-[var(--color-text-primary)]">דרך החישוב:</strong>
-                                                                                    <div className="bg-[var(--color-surface-raised)] p-3 rounded-lg border border-[var(--color-border)]/50 mt-2 mb-3 overflow-x-auto">
-                                                                                        <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${statSymbol}_{stat})` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${statSymbol}_{stat})` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > |${statSymbol}_{stat}|)`} />
-                                                                                        <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > ${Math.abs(Z_stat).toFixed(3)}) = ${pVal.toFixed(4)}`} />
+                                                                                </div>
+
+                                                                                {/* ── Section 1: Theoretical Integral Formula ── */}
+                                                                                <div className="space-y-3">
+                                                                                    <strong className="text-[var(--color-text-primary)] text-sm sm:text-base block">א׳ — הנוסחה התיאורטית (אינטגרל):</strong>
+                                                                                    <div className="py-2 space-y-4 text-xl md:text-2xl">
+                                                                                        <FormulaBlock
+                                                                                            formulaName="ערך ה-P (P-Value) — נוסחת האינטגרל"
+                                                                                            translation="ההסתברות לקבל תוצאה קיצונית לפחות כמו במדגם שלנו, בהנחה שהשערת האפס נכונה. מחושב כשטח מתחת לעקומת הצפיפות מעבר לסטטיסטי המבחן."
+                                                                                        >
+                                                                                            {tailType === 'right' && (
+                                                                                                varianceKnown ?
+                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{${statSymbol}_{\\text{stat}}}^{\\infty} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = 1 - \\Phi(${statSymbol}_{\\text{stat}})`} /> :
+                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{${statSymbol}_{\\text{stat}}}^{\\infty} f_{t_{(${n - 1})}}(x)\\, dx`} />
+                                                                                            )}
+                                                                                            {tailType === 'left' && (
+                                                                                                varianceKnown ?
+                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{-\\infty}^{${statSymbol}_{\\text{stat}}} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = \\Phi(${statSymbol}_{\\text{stat}})`} /> :
+                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{-\\infty}^{${statSymbol}_{\\text{stat}}} f_{t_{(${n - 1})}}(x)\\, dx`} />
+                                                                                            )}
+                                                                                            {tailType === 'two-tailed' && (
+                                                                                                varianceKnown ?
+                                                                                                    <BlockMath math={`P\\text{-Value} = 2 \\int_{|${statSymbol}_{\\text{stat}}|}^{\\infty} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = 2\\bigl(1 - \\Phi(|${statSymbol}_{\\text{stat}}|)\\bigr)`} /> :
+                                                                                                    <BlockMath math={`P\\text{-Value} = 2 \\int_{|${statSymbol}_{\\text{stat}}|}^{\\infty} f_{t_{(${n - 1})}}(x)\\, dx`} />
+                                                                                            )}
+                                                                                        </FormulaBlock>
                                                                                     </div>
-                                                                                    <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
-                                                                                        <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
-                                                                                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math="\\alpha" />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
+                                                                                </div>
+
+                                                                                {/* ── Section 2: Disclaimer ── */}
+                                                                                <AlertBlock>
+                                                                                    הערה: חישוב מובהקות מדויק דורש פתרון של אינטגרל מורכב זה ואינו מבוצע ידנית, אלא מחושב אוטומטית באמצעות פונקציות התפלגות.
+                                                                                </AlertBlock>
+
+                                                                                {/* ── Section 3: Practical Table Approach (Bounding) ── */}
+                                                                                <div className="space-y-3">
+                                                                                    <strong className="text-[var(--color-text-primary)] text-sm sm:text-base block">ב׳ — גישה מעשית: חסימה באמצעות טבלה:</strong>
+                                                                                    <div className="py-2 space-y-4 text-xl md:text-2xl">
+                                                                                        <CalcBlock>
+                                                                                            <ul dir="rtl" className="list-disc list-inside space-y-3 text-sm sm:text-base text-[var(--color-text-primary)] leading-relaxed text-right w-full">
+                                                                                                <li>
+                                                                                                    הערך הקריטי בטבלת{' '}
+                                                                                                    <strong dir="ltr" className="inline-block px-0.5"><InlineMath math={varianceKnown ? 'Z' : 't'} /></strong>
+                                                                                                    {' '}עבור רמת המובהקות הרלוונטית{' '}
+                                                                                                    <span dir="ltr" className="inline-block"><InlineMath math={`${alphaSymbol} = ${tailType === 'two-tailed' ? (alpha / 2) : alpha}`} /></span>
+                                                                                                    {!varianceKnown && (
+                                                                                                        <span>{' '}עם <span dir="ltr" className="inline-block"><InlineMath math={`df = ${n - 1}`} /></span></span>
+                                                                                                    )}
+                                                                                                    {' '}הוא{' '}
+                                                                                                    <strong dir="ltr" className="inline-block px-0.5"><InlineMath math={`${critSymbol}_{${alphaSymbol}} = ${Z_crit.toFixed(4)}`} /></strong>.
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    הסטטיסטי שחישבנו{' '}
+                                                                                                    (<strong dir="ltr" className="inline-block px-0.5"><InlineMath math={`${tailType === 'two-tailed' ? `|${statSymbol}_{stat}|` : `${statSymbol}_{stat}`} = ${tailType === 'two-tailed' ? Math.abs(Z_stat).toFixed(4) : Z_stat.toFixed(4)}`} /></strong>)
+                                                                                                    {' '}ממוקם{' '}
+                                                                                                    <strong className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                                                                                                        {isReject ? 'מעבר' : 'לא מעבר'}
+                                                                                                    </strong>
+                                                                                                    {' '}לערך הקריטי בטבלה.
+                                                                                                </li>
+                                                                                                <li>
+                                                                                                    מכאן נובע שההסתברות (P-Value{tailType !== 'two-tailed' ? ' חד-צדדי' : ''}){' '}
+                                                                                                    <strong className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                                                                                                        {isReject ? 'קטנה' : 'גדולה'}
+                                                                                                    </strong>
+                                                                                                    {' '}מ-<span dir="ltr" className="inline-block"><InlineMath math={`${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'} = ${tailType === 'two-tailed' ? (alpha / 2) : alpha}`} /></span>.
+                                                                                                </li>
+                                                                                                {tailType === 'two-tailed' && (
+                                                                                                    <li>
+                                                                                                        מכיוון שזהו מבחן דו-צדדי, מכפילים את ההסתברות ב-2:{' '}
+                                                                                                        <span dir="ltr" className="inline-block">
+                                                                                                            <InlineMath math={`\\text{P-Value} ${isReject ? '<' : '>'} 2 \\times ${tailType === 'two-tailed' ? (alpha / 2) : alpha} = ${alpha}`} />
+                                                                                                        </span>.
+                                                                                                    </li>
+                                                                                                )}
+                                                                                            </ul>
+                                                                                        </CalcBlock>
+
+                                                                                        <ResultBlock isReject={isReject}>
+                                                                                            <span className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                                                                                                <InlineMath math={`\\text{P-Value} = ${pVal.toFixed(4)} ${isReject ? '\\le' : '>'} \\alpha = ${alpha}`} />
+                                                                                            </span>
+                                                                                            <span className="text-base font-bold">
+                                                                                                {isReject ? '→ דוחים את השערת האפס' : '→ אין לדחות את השערת האפס'}
+                                                                                            </span>
+                                                                                        </ResultBlock>
                                                                                     </div>
                                                                                 </div>
 
@@ -3500,21 +3578,18 @@ export default function HypothesisTestingCalculator() {
                                                                         parameterSymbol={statSymbol}
                                                                     />
 
-                                                                    <div className="bg-[var(--color-surface)] border border-[var(--color-primary)]/30 p-4 rounded-lg flex gap-3 items-start">
-                                                                        <AlertTriangle size={20} className="text-[var(--color-warning)] mt-0.5 shrink-0" />
-                                                                        <div className="text-[var(--color-primary)]/80 text-sm">
-                                                                            <strong className="text-[var(--color-warning)]">הערה חשובה: </strong>
-                                                                            {unifiedDecisionResult.reject ? (
-                                                                                <span>
-                                                                                    דחיית השערת האפס <strong>לא מוכיחה</strong> בוודאות שתוחלת האוכלוסייה (<InlineMath math="\mu" />) {tailType === 'right' ? 'גדולה יותר' : tailType === 'left' ? 'קטנה יותר' : 'שונה'}. תמיד קיים סיכוי של <strong>{alpha * 100}%</strong> (טעות מסוג I) שההחלטה שגויה, ושהתוצאה החריגה שהתקבלה במדגם הינה מקרית בלבד.
-                                                                                </span>
-                                                                            ) : (
-                                                                                <span>
-                                                                                    אי-דחיית השערת האפס <strong>לא מוכיחה</strong> שהיא נכונה. משמעות הדבר היא שפשוט אין מספיק ראיות במדגם הנוכחי כדי <strong>להצדיק</strong> את דחייתה, תחת רמת המובהקות והביטחון שנבחרו.
-                                                                                </span>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
+                                                                    <AlertBlock>
+                                                                        <strong className="text-[var(--color-warning)] ml-1">הערה חשובה:</strong>
+                                                                        {unifiedDecisionResult.reject ? (
+                                                                            <span>
+                                                                                דחיית השערת האפס <strong>לא מוכיחה</strong> בוודאות שתוחלת האוכלוסייה (<InlineMath math="\mu" />) {tailType === 'right' ? 'גדולה יותר' : tailType === 'left' ? 'קטנה יותר' : 'שונה'}. תמיד קיים סיכוי של <strong>{alpha * 100}%</strong> (טעות מסוג I) שההחלטה שגויה, ושהתוצאה החריגה שהתקבלה במדגם הינה מקרית בלבד.
+                                                                            </span>
+                                                                        ) : (
+                                                                            <span>
+                                                                                אי-דחיית השערת האפס <strong>לא מוכיחה</strong> שהיא נכונה. משמעות הדבר היא שפשוט אין מספיק ראיות במדגם הנוכחי כדי <strong>להצדיק</strong> את דחייתה, תחת רמת המובהקות והביטחון שנבחרו.
+                                                                            </span>
+                                                                        )}
+                                                                    </AlertBlock>
                                                                 </div>
                                                             )}
                                                         </div>

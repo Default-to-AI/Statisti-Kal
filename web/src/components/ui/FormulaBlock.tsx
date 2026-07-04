@@ -13,7 +13,7 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { Award } from 'lucide-react';
+import { Calculator, Award, AlertTriangle } from 'lucide-react';
 
 export type FormulaBlockVariant = 'formula' | 'calculation';
 
@@ -108,23 +108,23 @@ export const CalcBlock: React.FC<CalcBlockProps> = ({ label = 'Calculation', chi
 );
 
 /**
- * ResultBlock — presentation for final results
+ * AlertBlock — presentation for important notes and warnings
  */
-export interface ResultBlockProps extends HTMLAttributes<HTMLDivElement> {
+export interface AlertBlockProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
 }
 
-export const ResultBlock: React.FC<ResultBlockProps> = ({ children, className = '', ...rest }) => (
-  <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr" {...rest}>
+export const AlertBlock: React.FC<AlertBlockProps> = ({ children, className = '', ...rest }) => (
+  <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 sm:gap-6 py-1 my-0 ${className}`} dir="ltr" {...rest}>
       <div className="flex-1 overflow-x-auto scrollbar-thin rounded-[var(--rounded-lg)] shadow-sm">
-          <div className="relative border border-[var(--color-border)] border-l-4 border-solid border-l-[var(--color-primary)] rounded-[var(--rounded-lg)] bg-[var(--color-primary)]/10 px-6 py-4 text-center flex flex-col items-center justify-center min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-primary)]">
-              <div dir="rtl" className="w-full flex flex-col items-center justify-center space-y-3 font-bold text-lg sm:text-xl md:text-2xl leading-relaxed text-[var(--color-text-primary)]">
+          <div className="relative border border-[var(--color-warning)]/40 border-l-4 border-solid border-l-[var(--color-warning)] rounded-[var(--rounded-md)] bg-[var(--color-warning)]/5 px-4 py-3 flex flex-col items-center justify-center">
+              <div dir="rtl" className="w-full text-center text-[var(--color-text-primary)] text-sm leading-relaxed">
                 {children}
               </div>
           </div>
       </div>
-      <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-primary)]/60">
-          <Award size={36} strokeWidth={1.2} />
+      <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-warning)]/60">
+          <AlertTriangle size={36} strokeWidth={1.2} />
       </div>
   </div>
 );
