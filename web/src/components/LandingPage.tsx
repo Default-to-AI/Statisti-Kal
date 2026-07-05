@@ -1,5 +1,5 @@
 import { type ReactElement, useState, useEffect, useMemo } from 'react';
-import { AreaChart, Calculator, BookOpen, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { AreaChart, Calculator, BookOpen, ArrowRight, ShieldCheck, Zap, Award, TrendingUp, Sliders, ScrollText, ExternalLink, ChevronLeft, ChevronRight, Quote } from 'lucide-react';
 import { InlineMath } from 'react-katex';
 import SiteFooter from './SiteFooter';
 import SiteHeader, { type SitePage } from './SiteHeader';
@@ -59,73 +59,197 @@ function TypewriterEffect({ words }: { words: string[] }): ReactElement {
   );
 }
 
-function ScatteredImages(): ReactElement {
-  const [offset, setOffset] = useState(0);
+function ConstitutionQuote(): ReactElement {
+  return (
+    <div className="relative w-full flex flex-col items-center justify-center lg:mt-0 select-none px-4 py-16">
+      <div className="mx-auto max-w-2xl flex flex-col items-center text-center gap-8 relative">
+        
+        {/* Top Opening Quotes (SVG) */}
+        <div className="absolute -top-10 -right-6 sm:-right-10 text-[var(--color-text-secondary)] opacity-40 select-none pointer-events-none">
+          <Quote className="w-16 h-16 sm:w-20 sm:h-20" fill="currentColor" />
+        </div>
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setOffset((prev) => (prev + 1) % 5);
-    }, 4000);
-    return () => clearInterval(timer);
-  }, []);
+        <h2 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-[var(--color-text-primary)] leading-tight z-10">
+          אנחנו לא בתיכון, <br className="hidden lg:block"/>
+          <span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--color-primary)] to-[var(--color-accent-brass)]">אנחנו באקדמיה.</span>
+        </h2>
+        
+        <blockquote className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-medium leading-relaxed text-[var(--color-text-primary)]/90 z-10 relative">
+          אני מלמד את הנשמה, את המהות, את השפה, ואת הרעיון
+        </blockquote>
 
-  const images: Array<{ previewId: LandingPreviewId; alt: string }> = [
-    { previewId: 'table', alt: 'טבלאות ערכים קריטיים' },
-    { previewId: 'formula', alt: 'דף נוסחאות סטטיסטי' },
-    { previewId: 'hypothesis', alt: 'בדיקת השערות עם קלט ומסקנה' },
-    { previewId: 'helper', alt: 'עוזר סמנטי לניסוח מסקנות' },
-    { previewId: 'normal', alt: 'התפלגות נורמלית עם שטח מסומן' },
-  ];
+        {/* Bottom Closing Quotes (SVG) */}
+        <div className="absolute -bottom-8 -left-4 sm:-left-10 text-[var(--color-text-secondary)] opacity-40 select-none pointer-events-none">
+          <Quote className="w-16 h-16 sm:w-20 sm:h-20 transform rotate-180" fill="currentColor" />
+        </div>
 
-  const positions = [
-    // 0: Deepest background - spread far left
-    { angle: -15, x: '-45%', y: '-15%', scale: 0.65, z: 10 },
-    // 1: Background - top left
-    { angle: 12, x: '-15%', y: '-35%', scale: 0.6, z: 15 },
-    // 2: Background - spread far left and down
-    { angle: -8, x: '-50%', y: '25%', scale: 0.7, z: 20 },
-    // 3: Midground - bottom left/center
-    { angle: 8, x: '-10%', y: '35%', scale: 0.65, z: 25 },
-    // 4: Center (Main focus) - positioned slightly right (closer to text)
-    { angle: -2, x: '15%', y: '5%', scale: 1.05, z: 40 },
-  ];
+      </div>
+    </div>
+  );
+}
+
+function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: SitePage) => void; onTryHypothesis: () => void; }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const tools = useMemo(() => [
+    {
+      id: 'hypothesis',
+      title: 'בדיקת השערות',
+      description: <>מחשבון שלם לבדיקת השערות על תוחלת. לא צריך לזכור נוסחאות, רק להבין מה המסקנה. הפיצ'פקעס עלינו.</>,
+      icon: Award,
+      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
+      bgClass: 'bg-[var(--color-primary)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
+      iconBgClass: 'bg-[var(--color-primary)]/10',
+      iconColorClass: 'text-[var(--color-primary)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
+      buttonText: 'למחשבון',
+      onClick: onTryHypothesis
+    },
+    {
+      id: 'forward',
+      title: 'חישובי הסתברויות',
+      description: <>חישוב שטחים (הסתברויות) תחת העקומה הנורמלית. מהיר יותר מטבלת <InlineMath math="Z" />, ובלי לטעות בשורה.</>,
+      icon: TrendingUp,
+      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt-line)]',
+      bgClass: 'bg-[var(--color-accent-cobalt)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-cobalt)]/10',
+      iconBgClass: 'bg-[var(--color-accent-cobalt)]/10',
+      iconColorClass: 'text-[var(--color-accent-cobalt)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-accent-cobalt)]/5',
+      buttonText: 'למחשבון',
+      onClick: () => onNavigate('forward')
+    },
+    {
+      id: 'inverse',
+      title: 'חישוב אחוזונים',
+      description: <>מציאת ציון תקן וערכים מקוריים מתוך הסתברות נתונה. הפוך את התהליך בקלות ובדיוק מרבי.</>,
+      icon: Sliders,
+      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt-line)]',
+      bgClass: 'bg-[var(--color-accent-cobalt)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-cobalt)]/10',
+      iconBgClass: 'bg-[var(--color-accent-cobalt)]/10',
+      iconColorClass: 'text-[var(--color-accent-cobalt)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-accent-cobalt)]/5',
+      buttonText: 'למחשבון',
+      onClick: () => onNavigate('inverse')
+    },
+    {
+      id: 'table',
+      title: 'טבלאות התפלגות',
+      description: <>טבלאות סטטיסטיות קלאסיות להתפלגות נורמלית והתפלגות <InlineMath math="T" />, זמינות ונגישות לכל צורך אקדמי.</>,
+      icon: BookOpen,
+      hoverBorderClass: 'hover:border-[var(--chart-2)]/40',
+      bgClass: 'bg-[var(--chart-2)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--chart-2)]/10',
+      iconBgClass: 'bg-[var(--chart-2)]/10',
+      iconColorClass: 'text-[var(--chart-2)]',
+      hoverBtnBgClass: 'hover:bg-[var(--chart-2)]/5',
+      buttonText: 'לטבלאות',
+      onClick: () => onNavigate('table')
+    },
+    {
+      id: 'formula-sheet',
+      title: 'נוסחאות',
+      description: <>כל הנוסחאות מסודרות במקום אחד. כי בעידן המודרני אין סיבה לשנן בעל פה (טכניקה זה אויב).</>,
+      icon: ScrollText,
+      hoverBorderClass: 'hover:border-[var(--chart-2)]/40',
+      bgClass: 'bg-[var(--chart-2)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--chart-2)]/10',
+      iconBgClass: 'bg-[var(--chart-2)]/10',
+      iconColorClass: 'text-[var(--chart-2)]',
+      hoverBtnBgClass: 'hover:bg-[var(--chart-2)]/5',
+      buttonText: 'לדף הנוסחאות',
+      onClick: () => onNavigate('formula-sheet')
+    }
+  ], [onNavigate, onTryHypothesis]);
+
+  const handleNext = () => setActiveIndex((prev) => (prev + 1) % tools.length);
+  const handlePrev = () => setActiveIndex((prev) => (prev - 1 + tools.length) % tools.length);
 
   return (
-    <div className="relative w-full aspect-square md:aspect-[16/10] flex items-center justify-center pointer-events-none mt-10 lg:mt-0">
-      {images.map((img, i) => {
-        const posIndex = (i + offset) % 5;
-        const pos = positions[posIndex];
-        const isCenter = posIndex === 4;
+    <div className="relative w-full max-w-[100vw] h-[520px] flex items-center justify-center overflow-hidden py-8">
+      {/* Navigation Arrows */}
+      <button 
+        onClick={handleNext}
+        className="absolute left-4 md:left-12 z-40 p-4 rounded-full bg-[var(--color-surface)]/90 border border-[var(--color-border)] hover:bg-[var(--color-surface-raised)] hover:scale-110 transition-all transform -translate-y-1/2 top-1/2 shadow-xl hover:shadow-2xl text-[var(--color-text-primary)] backdrop-blur-md"
+        aria-label="הבא"
+      >
+        <ChevronLeft className="w-8 h-8" />
+      </button>
 
-        return (
-          <div
-            key={img.previewId}
-            onClick={() => setOffset((4 - i + 5) % 5)}
-            className="absolute transition-all duration-1000 ease-out shadow-[0_20px_40px_rgba(0,0,0,0.5)] rounded-xl border border-[var(--color-border)] overflow-hidden bg-[var(--color-surface)] pointer-events-auto cursor-pointer"
-            style={{
-              transform: `translate(${pos.x}, ${pos.y}) rotate(${pos.angle}deg) scale(${pos.scale})`,
-              zIndex: pos.z,
-              width: '75%',
-              aspectRatio: '16/10'
-            }}
-          >
-            <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-white/10 pointer-events-none z-10" />
-            
-            <div className="h-6 bg-[var(--color-surface-raised)] border-b border-[var(--color-border)] flex items-center gap-1.5 px-3">
-               <div className="w-2 h-2 rounded-full bg-[var(--color-accent-crimson)] opacity-80"></div>
-               <div className="w-2 h-2 rounded-full bg-[var(--color-primary)] opacity-80"></div>
-               <div className="w-2 h-2 rounded-full bg-[var(--chart-2)] opacity-80"></div>
-            </div>
-            
+      <button 
+        onClick={handlePrev}
+        className="absolute right-4 md:right-12 z-40 p-4 rounded-full bg-[var(--color-surface)]/90 border border-[var(--color-border)] hover:bg-[var(--color-surface-raised)] hover:scale-110 transition-all transform -translate-y-1/2 top-1/2 shadow-xl hover:shadow-2xl text-[var(--color-text-primary)] backdrop-blur-md"
+        aria-label="הקודם"
+      >
+        <ChevronRight className="w-8 h-8" />
+      </button>
+
+      <div className="relative w-full h-full flex items-center justify-center perspective-[1200px]">
+        {tools.map((tool, i) => {
+          let diff = (i - activeIndex + tools.length) % tools.length;
+          if (diff > Math.floor(tools.length / 2)) {
+            diff -= tools.length;
+          }
+
+          const Icon = tool.icon;
+          const isActive = diff === 0;
+          const distance = Math.abs(diff);
+          const direction = Math.sign(diff);
+          const translateOffset = distance === 0 ? 0 : 105 + (distance - 1) * 90;
+          const translateX = distance === 0 ? '0' : `${direction * -translateOffset}%`;
+          const scale = distance === 0 ? '1' : `${Math.max(0.4, 1 - distance * 0.15)}`;
+          const zIndex = Math.max(10, 30 - distance * 10);
+          const opacity = distance === 0 ? '1' : `${Math.max(0, 0.9 - distance * 0.3)}`;
+
+          return (
             <div
-              aria-label={img.alt}
-              className={`h-[calc(100%-1.5rem)] transition-all duration-1000 ${isCenter ? 'brightness-100' : 'brightness-50 hover:brightness-75'}`}
+              key={tool.id}
+              className="absolute w-[90%] max-w-[320px] sm:max-w-[380px] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+              aria-hidden={!isActive}
+              style={{
+                transform: `translateX(${translateX}) scale(${scale})`,
+                zIndex,
+                opacity,
+              }}
             >
-              <LandingFeatureArt previewId={img.previewId} compact className="h-full w-full" />
+              <Card 
+                className={`p-6 sm:p-8 flex flex-col items-start text-right bg-[var(--color-surface)] border-[var(--color-border)] h-[400px] w-full cursor-pointer relative overflow-hidden group transition-all duration-300
+                ${isActive ? 'shadow-2xl shadow-black/40 ring-1 ring-white/10' : 'shadow-md hover:opacity-100 opacity-80'} ${tool.hoverBorderClass}`}
+                onClick={() => {
+                  if (!isActive) setActiveIndex(i);
+                }}
+              >
+                <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-full -z-10 transition-colors ${tool.bgClass} ${tool.groupHoverBgClass}`}></div>
+                <div className={`mb-6 p-4 rounded-2xl ${tool.iconBgClass} ${tool.iconColorClass}`}>
+                  <Icon className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4 font-display">{tool.title}</h3>
+                <p className="text-body-lg text-[var(--color-text-secondary)] mb-8 flex-grow leading-relaxed">
+                  {tool.description}
+                </p>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full group/btn text-lg border border-[var(--color-border)] whitespace-nowrap flex-nowrap ${tool.hoverBtnBgClass} ${isActive ? 'bg-[var(--color-surface-raised)]' : ''}`}
+                  leftIcon={<ExternalLink className="w-5 h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform duration-300" />}
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={(e) => {
+                    if (!isActive) {
+                      e.stopPropagation();
+                      setActiveIndex(i);
+                    } else {
+                      tool.onClick();
+                    }
+                  }}
+                >
+                  {tool.buttonText}
+                </Button>
+              </Card>
             </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -140,21 +264,21 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
       <div className="relative flex w-full flex-col overflow-hidden">
         {/* Hero Section */}
         <div className="relative isolate px-6 pt-8 lg:pt-14 pb-20 mb-12 overflow-hidden">
-          <div className="absolute inset-0 -z-20 h-full w-full bg-[var(--color-background)] bg-[linear-gradient(to_right,var(--color-border)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-border)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-30"></div>
-
-          <div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 pointer-events-none" aria-hidden="true">
-            <div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[var(--color-accent-cobalt)] to-[var(--chart-2)] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" />
-          </div>
+          {/* Abstract Generated Background Image */}
+          <div 
+            className="absolute inset-0 -z-20 h-full w-full bg-cover bg-center bg-no-repeat opacity-30 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_30%,black_40%,transparent_100%)]" 
+            style={{ backgroundImage: 'url(/images/hero-bg.png)' }}
+          ></div>
+          <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--color-background)] via-transparent to-[var(--color-background)]/80 pointer-events-none"></div>
 
           <div className="max-w-[90rem] mx-auto flex flex-col lg:flex-row items-center gap-8 relative z-10">
             {/* Text Content */}
             <div className="text-center lg:text-right lg:w-5/12 px-4 sm:px-6 relative z-20">
 
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-8">
-                <span className="block mb-2 font-display">סטטיסטי-קל</span>
+              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8">
                 <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent-cobalt)] to-[var(--chart-2)] pb-2 font-display">
-                  הקץ לטכניקה.
+                  פחות טכניקה, יותר סמנטיקה.
                 </span>
               </h1>
 
@@ -164,30 +288,34 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
                 של הסטטיסטיקה.
               </p>
 
-              <div className="flex flex-row justify-center lg:justify-start gap-4 flex-wrap">
+              <div className="flex flex-row justify-center lg:justify-start gap-4 flex-wrap w-full sm:w-auto mt-6">
+                <style>{`
+                  @keyframes shimmer {
+                    0% { transform: translateX(150%) skewX(-15deg); }
+                    100% { transform: translateX(-150%) skewX(-15deg); }
+                  }
+                  .animate-shimmer {
+                    animation: shimmer 2.5s infinite linear;
+                  }
+                `}</style>
                 <Button
                   size="lg"
-                  onClick={onTryHypothesis}
-                  className="group transform transition-all duration-300 hover:scale-105 shadow-xl shadow-[var(--color-accent-cobalt-bg)] h-14 px-8 text-lg whitespace-nowrap"
-                  leftIcon={<Calculator className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />}
-                >
-                  התחל בדיקת השערות
-                </Button>
-                <Button
-                  size="lg"
-                  variant="secondary"
+                  variant="ghost"
                   onClick={onStartHypothesisTour}
-                  className="group transform transition-all duration-300 hover:scale-105 hover:shadow-lg hover:bg-[var(--color-surface-raised)] border-2 border-[var(--color-border)] h-14 px-8 text-lg bg-[var(--color-surface)]/50 backdrop-blur-sm whitespace-nowrap"
-                  leftIcon={<AreaChart className="w-6 h-6 text-[var(--color-accent-cobalt)] transition-transform duration-300 group-hover:-translate-y-1" />}
+                  className="relative overflow-hidden group transform transition-all duration-300 hover:scale-105 shadow-2xl shadow-[var(--color-accent-brass)]/30 h-20 w-full sm:w-[480px] text-3xl sm:text-4xl font-black whitespace-nowrap border-0"
+                  style={{ backgroundColor: 'var(--color-accent-brass)', color: '#000000' }}
+                  rightIcon={<ExternalLink className="w-10 h-10 transition-transform duration-300 group-hover:-translate-y-1 group-hover:-translate-x-1 relative z-10" />}
                 >
-                  הפעל סיור מודרך
+                  <span className="relative z-10">פה מתחילים</span>
+                  {/* Shimmer effect */}
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shimmer pointer-events-none"></div>
                 </Button>
               </div>
             </div>
 
             {/* Visual/Mockup Content */}
-            <div className="lg:w-7/12 w-full max-w-4xl px-4 sm:px-6 relative z-10">
-              <ScatteredImages />
+            <div className="lg:w-7/12 w-full px-4 sm:px-6 relative z-10">
+              <ConstitutionQuote />
             </div>
           </div>
 
@@ -198,84 +326,44 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
 
         <FeatureShowcase />
 
-        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-12">הכלים שלנו</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-accent-cobalt-line)] hover:-translate-y-1">
-              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
-                <LandingFeatureArt previewId="hypothesis" compact className="w-full" />
-              </div>
-              <div className="mb-6">
-                <LandingFeatureGlyph previewId="hypothesis" />
-              </div>
-              <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">בדיקת השערות</h3>
-              <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
-                מחשבון שלם לבדיקת השערות על תוחלת. לא צריך לזכור נוסחאות, רק להבין מה המסקנה. הפיצ'פקעס עלינו.
-              </p>
-              <Button variant="ghost" className="w-full justify-center group" onClick={onTryHypothesis}>
-                למחשבון <ArrowRight className="ml-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              </Button>
-            </Card>
-
-            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--chart-2)]/40 hover:-translate-y-1">
-              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
-                <LandingFeatureArt previewId="normal" compact className="w-full" />
-              </div>
-              <div className="mb-6">
-                <LandingFeatureGlyph previewId="normal" />
-              </div>
-              <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">התפלגות נורמלית</h3>
-              <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
-                חישוב שטחים (הסתברויות) תחת העקומה הנורמלית. מהיר יותר מטבלת <InlineMath math="Z" />, ובלי לטעות בשורה.
-              </p>
-              <Button variant="ghost" className="w-full justify-center group" onClick={() => onNavigate('forward')}>
-                למחשבון <ArrowRight className="ml-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              </Button>
-            </Card>
-
-            <Card className="p-6 flex flex-col items-center text-center hover:shadow-lg transition-all duration-300 bg-[var(--color-surface)] border-[var(--color-border)] hover:border-[var(--color-primary)]/40 hover:-translate-y-1">
-              <div className="mb-6 w-full overflow-hidden rounded-[20px] border border-[var(--color-border)] bg-[rgba(255,255,255,0.02)] p-3">
-                <LandingFeatureArt previewId="formula" compact className="w-full" />
-              </div>
-              <div className="mb-6">
-                <LandingFeatureGlyph previewId="formula" />
-              </div>
-              <h3 className="text-heading-section font-bold text-[var(--color-text-primary)] mb-3">דף נוסחאות</h3>
-              <p className="text-body-sm text-[var(--color-text-secondary)] mb-6 flex-grow font-medium">
-                כל הנוסחאות מסודרות במקום אחד. כי בעידן המודרני אין סיבה לשנן בעל פה (טכניקה זה אויב).
-              </p>
-              <Button variant="ghost" className="w-full justify-center group" onClick={() => onNavigate('formula-sheet')}>
-                לדף הנוסחאות <ArrowRight className="ml-2 w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              </Button>
-            </Card>
+        <section className="w-full mx-auto py-20 overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-6">הכלים שלנו</h2>
+            <p className="text-center text-[var(--color-text-secondary)] text-xl mb-12 max-w-2xl mx-auto">
+              בחר כלי כדי להתחיל. הכלים שלנו תוכננו להסיר את הטכניקה ולהתמקד בהבנה הסטטיסטית.
+            </p>
           </div>
+          <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} />
         </section>
 
-        <section className="bg-[var(--color-surface-raised)] border-y border-[var(--color-border)] py-20 mt-10">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 data-toc id="landing-why" className="text-display-h2 font-display text-[var(--color-text-primary)] mb-10">למה סטטיסטי-קל?</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-right">
-              <div className="flex gap-4 items-start bg-[var(--color-surface)] p-6 rounded-[24px] border border-[var(--color-border)] shadow-sm">
-                <div className="shrink-0 mt-1 bg-[var(--color-accent-cobalt-bg)] p-3 rounded-xl border border-[var(--color-accent-cobalt-line)] text-[var(--color-accent-cobalt)] shadow-inner">
-                  <Zap className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[var(--color-text-primary)] mb-2">חישובים אוטומטיים</h4>
-                  <p className="text-[var(--color-text-secondary)] leading-relaxed">הזן נתונים, קבל תוצאות. <InlineMath math="Z" />, <InlineMath math="T" />, <InlineMath math="P\text{-Value}" /> – הכל מחושב בשבריר שנייה. די עם הטכניקות.</p>
-                </div>
+        {/* Philosophy Section */}
+        <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+          <div className="relative isolate overflow-hidden rounded-[32px] bg-[var(--color-surface)] border border-[var(--color-border)] px-6 py-12 sm:px-12 xl:py-16 shadow-xl hover:shadow-2xl transition-shadow duration-500 group">
+            <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,var(--color-primary)_0%,transparent_100%)] opacity-5 group-hover:opacity-10 transition-opacity duration-500"></div>
+            
+            <div className="mx-auto max-w-2xl lg:max-w-4xl flex flex-col items-center text-center gap-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 font-bold text-sm">
+                <BookOpen className="w-4 h-4" />
+                פילוסופיית המערכת
               </div>
-              <div className="flex gap-4 items-start bg-[var(--color-surface)] p-6 rounded-[24px] border border-[var(--color-border)] shadow-sm">
-                <div className="shrink-0 mt-1 bg-[var(--chart-2)]/10 p-3 rounded-xl border border-[var(--chart-2)]/30 text-[var(--chart-2)] shadow-inner">
-                  <ShieldCheck className="w-6 h-6" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-lg text-[var(--color-text-primary)] mb-2">דיוק ואמינות</h4>
-                  <p className="text-[var(--color-text-secondary)] leading-relaxed">מבוסס על נוסחאות סטטיסטיות מדויקות, מונע טעויות חישוב ידניות (כמו להעביר אגפים לא נכון).</p>
-                </div>
-              </div>
+              <h2 className="text-3xl sm:text-4xl font-display font-bold text-[var(--color-text-primary)]">
+                אנחנו לא בתיכון, <span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--color-primary)] to-[var(--color-accent-cobalt)]">אנחנו באקדמיה.</span>
+              </h2>
+              
+              <blockquote className="mt-2 text-xl sm:text-2xl font-medium leading-relaxed text-[var(--color-text-primary)]/90 relative">
+                <span className="text-5xl font-serif text-[var(--color-primary)]/30 absolute -top-6 -right-8">"</span>
+                סטודנטים שמתרכזים רק בשינון טכני – קורסים ברגע שהשאלה משתנה קצת. בעידן המודרני, הפיצ'פקעס של חישובים ידניים הם תפל.
+                <span className="text-5xl font-serif text-[var(--color-primary)]/30 absolute -bottom-8 -left-8">"</span>
+              </blockquote>
+              
+              <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl mt-4">
+                המחשב יעשה את העבודה השחורה והטכנית. התפקיד שלכם הוא אחד: <strong className="text-[var(--color-text-primary)]">להבין את הרעיון, לשלוט בשפה ולראות את התמונה המלאה.</strong> בסטטיסטי-קל תמצאו פחות התעסקות בהעברת אגפים, ויותר מקום לפתח אינטואיציה סטטיסטית.
+              </p>
             </div>
           </div>
         </section>
+
+
       </div>
     </PageLayout>
   );

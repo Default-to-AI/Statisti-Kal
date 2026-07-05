@@ -4,9 +4,10 @@
  */
 
 import React from 'react';
-import { CheckCircle, XCircle, Scale, Target, PenTool } from 'lucide-react';
+import { CheckCircle, XCircle, Scale, Target } from 'lucide-react';
 import { InlineMath } from 'react-katex';
 import type { UnifiedResult, Tail } from '../lib/statistics/hypothesis';
+import { HandwrittenNote } from './ui';
 
 export interface HypothesisTestDisplayProps {
   result: UnifiedResult;
@@ -164,16 +165,11 @@ export default function HypothesisTestDisplay({
       </div>
 
       <footer className="border-t border-[var(--color-border)] bg-[var(--color-surface)] p-5 text-[var(--color-text-primary)]">
-        <p className="w-full text-center text-xl leading-relaxed font-normal text-[var(--color-text-primary)] sm:text-2xl font-handwriting">
-          <span className="inline-flex max-w-full items-baseline justify-center gap-x-2 gap-y-1 whitespace-normal">
-            <PenTool size={22} className="mt-0.5 shrink-0 opacity-60 text-[var(--color-accent-cobalt)]" />
-            <span>
-              מאחר שסטטיסטי המבחן הוא <span dir="ltr" className="inline-block"><InlineMath math={`${statName} = ${formatNumber(result.stat)}`} /></span>
-              {' '}והמובהקות היא <span dir="ltr" className="inline-block"><InlineMath math={pValueMath(result.pValue)} /></span>,
-              {' '}ההחלטה הסופית היא: <strong data-testid="unified-final-decision">{decisionText}</strong>.
-            </span>
-          </span>
-        </p>
+        <HandwrittenNote>
+          מאחר שסטטיסטי המבחן הוא <span dir="ltr" className="inline-block"><InlineMath math={`${statName} = ${formatNumber(result.stat)}`} /></span>
+          {' '}והמובהקות היא <span dir="ltr" className="inline-block"><InlineMath math={pValueMath(result.pValue)} /></span>,
+          {' '}ההחלטה הסופית היא: <strong data-testid="unified-final-decision">{decisionText}</strong>.
+        </HandwrittenNote>
       </footer>
     </section>
   );

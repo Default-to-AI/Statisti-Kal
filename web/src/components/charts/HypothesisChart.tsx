@@ -279,7 +279,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={enrichedChartData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
+        <AreaChart data={enrichedChartData} margin={{ top: 20, right: 10, left: 0, bottom: 44 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -299,8 +299,8 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={xAxisTickValues}
             interval={0}
-            height={38}
-            tickMargin={8}
+            height={34}
+            tickMargin={5}
             tick={(props: any) => {
               const { x, y, payload } = props;
               const val = payload.value;
@@ -322,7 +322,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   <text
                     x={0}
                     y={0}
-                    dy={16}
+                    dy={14}
                     textAnchor="end"
                     transform="rotate(-35)"
                     fill={fill}
@@ -345,8 +345,8 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             domain={[chartLimits.xMin, chartLimits.xMax]}
             ticks={zScoreAxisTickValues}
             interval={0}
-            height={30}
-            tickMargin={4}
+            height={22}
+            tickMargin={2}
             axisLine={{ stroke: 'var(--color-border)', transform: 'translate(0, 4)' }}
             tickLine={{ stroke: 'var(--color-border)' }}
             tick={(props: any) => {
@@ -359,7 +359,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   <text
                     x={0}
                     y={0}
-                    dy={14}
+                    dy={12}
                     textAnchor="middle"
                     fill={isMu1 ? 'var(--chart-2)' : 'var(--color-text-secondary)'}
                     fontSize={isMu1 ? 13 : 12}

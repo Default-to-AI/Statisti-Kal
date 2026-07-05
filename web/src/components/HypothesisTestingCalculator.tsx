@@ -46,7 +46,6 @@ import {
     BarChart2,
     Check,
     X,
-    PenTool,
     Activity,
     Target,
     Map,
@@ -228,7 +227,7 @@ function ResultSummaryCard({
                 </ResultBlock>
             </div>
             {subtitle ? (
-                <HandwrittenNote className="mt-4 text-right text-lg sm:text-xl">
+                <HandwrittenNote className="mt-4 text-lg sm:text-xl">
                     {subtitle}
                 </HandwrittenNote>
             ) : null}
@@ -291,7 +290,7 @@ function PowerStepCard({
                 ) : null}
 
                 {note ? (
-                    <HandwrittenNote className="text-right text-lg sm:text-xl">
+                    <HandwrittenNote className="text-lg sm:text-xl">
                         {note}
                     </HandwrittenNote>
                 ) : null}
@@ -2113,13 +2112,13 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
+                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] text-center">
                                             <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
                                             <button
                                                 type="button"
                                                 onClick={openPowerSectionFromQuickNav}
                                                 disabled={!isValid || !stats}
-                                                className={`tour-power-quick-link relative z-10 inline-flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-all ${
+                                                className={`tour-power-quick-link relative z-10 inline-flex w-fit mx-auto items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm font-semibold transition-all ${
                                                     isValid && stats
                                                         ? 'cursor-pointer border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-accent-cobalt)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--chart-2)]/35'
                                                         : 'cursor-default border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] opacity-70'
@@ -2127,9 +2126,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                 aria-label="קפיצה לעוצמת מבחן ופתיחת האקורדיון"
                                             >
                                                 <span className="whitespace-nowrap">
-                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\\beta)" /></span>
+                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
                                                 </span>
-                                                <ExternalLink size={16} className="shrink-0" />
+                                                <ExternalLink size={14} className="shrink-0" />
                                             </button>
                                         </td>
                                     </tr>
@@ -2153,7 +2152,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                         {/* H₁ Toggle — top-left corner, independent of legend */}
                         {powerEnabled && (
                             <label
-                                className={`tour-step-graph-toggle absolute top-3 left-3 z-20 flex items-center gap-2.5 pl-3 pr-3.5 py-1.5 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer select-none backdrop-blur-lg ${
+                                className={`tour-step-graph-toggle absolute top-3 left-3 z-20 flex h-10 items-center gap-2.5 pl-3 pr-3.5 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer select-none backdrop-blur-lg ${
                                     showPowerOverlay
                                         ? 'bg-[var(--chart-2)]/12 border-[var(--chart-2)]/50 text-[var(--chart-2)] shadow-[0_0_12px_var(--chart-2)/20]'
                                         : 'bg-[var(--color-surface)]/90 border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/50 shadow-md'
@@ -2194,7 +2193,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                 />
                             </label>
                         )}
-                        <ChartWrapper legend={<div className="flex w-full justify-start" dir="ltr"><ChartLegend items={hypothesisLegendItems} /></div>} className="flex-1 h-full flex flex-col" height="100%">
+                        <ChartWrapper legend={<div className="flex w-full justify-start" dir="ltr"><ChartLegend items={hypothesisLegendItems} /></div>} className="flex min-h-[455px] flex-1 flex-col" height={355}>
                             <HypothesisChart
                                 chartData={chartData}
                                 stats={stats as any}
@@ -2397,8 +2396,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
 
 
                                                     {/* Researcher's note */}
-                                                    <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-4 text-center">
-                                                        <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                    <HandwrittenNote className="mt-4">
                                                         {tailType === 'right' ? (
                                                             <span>מכיוון שהשערת המחקר <InlineMath math="H_1" /> מציינת הבדל <span className="font-bold underline">בכיוון אחד בלבד</span> (גדול מערך השערת האפס), אנו אומרים שזהו <span className="font-bold">מבחן חד-צדדי (ימני)</span>.</span>
                                                         ) : tailType === 'left' ? (
@@ -2406,7 +2404,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                         ) : (
                                                             <span>מכיוון שהשערת המחקר <InlineMath math="H_1" /> מציינת הבדל <span className="font-bold underline">בשני הכיוונים</span> (שונה מערך השערת האפס), אנו אומרים שזהו <span className="font-bold">מבחן דו-צדדי</span>.</span>
                                                         )}
-                                                    </p>
+                                                    </HandwrittenNote>
                                                 </div>
                                             </div></AnimatedDetails>
 
@@ -2612,8 +2610,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                 </div>
 
                                                 {/* Researcher's note */}
-                                                <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-6 text-center">
-                                                    <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                <HandwrittenNote className="mt-6">
                                                     {varianceKnown ? (
                                                         <span>מכיוון שסטיית התקן (<InlineMath math="\sigma" />) <span className="font-bold underline">ידועה</span>, המבחן הסטטיסטי המתאים הוא <span className="font-bold">מבחן <InlineMath math="Z" /></span>.</span>
                                                     ) : !varianceKnown && n >= 30 ? (
@@ -2621,7 +2618,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                     ) : (
                                                         <span>מכיוון ששונות האוכלוסייה <span className="font-bold underline">אינה ידועה</span> וגודל המדגם קטן מ-30 (<InlineMath math="n < 30" />), נשתמש בסטיית התקן המדגמית <InlineMath math="S" /> וב<span className="font-bold">מבחן <InlineMath math="t" /></span>.</span>
                                                     )}
-                                                </p>
+                                                </HandwrittenNote>
                                             </div></AnimatedDetails>
 
                                         {/* Step 3: Specify the level of significance */}
@@ -2707,10 +2704,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
 
 
                                                 {/* Researcher's note */}
-                                                <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-6 text-center">
-                                                    <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                <HandwrittenNote className="mt-6">
                                                     קבענו שרמת המובהקות של המבחן תהיה <InlineMath math={`\\alpha = ${alpha}`} />, הנגזרת מרמת ביטחון של <InlineMath math={`${((1 - alpha) * 100).toFixed(0)}\\%`} />.
-                                                </p>
+                                                </HandwrittenNote>
                                             </div></AnimatedDetails>
 
 
@@ -2927,10 +2923,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                         </div>
 
                                                                         {/* Researcher's note */}
-                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-10 mb-2 text-center">
-                                                                            <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                        <HandwrittenNote className="mt-10 mb-2">
                                                                             ערך ה-{varianceKnown ? 'Z' : 't'} הקריטי יהווה את הרף שעל פיו נגדיר את אזור הדחייה של המבחן: <InlineMath math={`${varianceKnown ? 'Z' : 't'}_{\\text{crit}} = ${tailType === 'two-tailed' ? '\\pm ' : tailType === 'left' ? '-' : ''}${displayCrit}`} />.
-                                                                        </p>
+                                                                        </HandwrittenNote>
                                                                     </>
                                                                 );
                                                             })()}
@@ -3016,10 +3011,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                                 </div>
                                                                             </CalcBlock>
                                                                         </div>
-                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
-                                                                            <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                        <HandwrittenNote className="mt-6 mb-2">
                                                                             בכלל סטטיסטי המבחן נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם סטטיסטי המבחן המחושב נופל באזור הדחייה, מעבר לערך הסף הקריטי.
-                                                                        </p>
+                                                                        </HandwrittenNote>
                                                                     </div>
                                                                 </AnimatedDetails>
 
@@ -3064,10 +3058,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                                         </div>
                                                                                     </CalcBlock>
                                                                                 </div>
-                                                                                <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
-                                                                                    <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                                <HandwrittenNote className="mt-6 mb-2">
                                                                                     בכלל אזור הדחייה (הערך המקורי) נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם הערך המקורי של המדגם שייך לקבוצת הדחייה (<InlineMath math="C" />).
-                                                                                </p>
+                                                                                </HandwrittenNote>
                                                                             </div>
                                                                         </AnimatedDetails>
                                                                     );
@@ -3115,10 +3108,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                                 </div>
                                                                             </CalcBlock>
                                                                         </div>
-                                                                        <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed text-center mt-6 mb-2">
-                                                                            <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" />{' '}
+                                                                        <HandwrittenNote className="mt-6 mb-2">
                                                                             בכלל מובהקות התוצאה נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
-                                                                        </p>
+                                                                        </HandwrittenNote>
                                                                     </div>
                                                                 </AnimatedDetails>
                                                             </div>
@@ -3181,9 +3173,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                             </CalcBlock>
 
                                                             {/* Researcher's note */}
-                                                            <p className="text-xl sm:text-2xl font-handwriting font-normal text-[var(--color-text-primary)] leading-relaxed mt-6 text-center">
-                                                                <PenTool size={22} className="inline-block ml-2 opacity-60 text-[var(--color-accent-cobalt)]" /> מצאנו כי סטטיסטי המבחן (מרחק התוצאה מתוחלת <InlineMath math="H_0" />) הוא <span dir="ltr"><InlineMath math={`${varianceKnown ? 'Z' : 't'} = ${decisionData.statObs.toFixed(4)}`} /></span>.
-                                                            </p>
+                                                            <HandwrittenNote className="mt-6">
+                                                                מצאנו כי סטטיסטי המבחן (מרחק התוצאה מתוחלת <InlineMath math="H_0" />) הוא <span dir="ltr"><InlineMath math={`${varianceKnown ? 'Z' : 't'} = ${decisionData.statObs.toFixed(4)}`} /></span>.
+                                                            </HandwrittenNote>
                                                         </div>
                                                     </div></AnimatedDetails>
 
@@ -3624,7 +3616,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                         {ciTailType === 'two-tailed' ? <BlockMath math="A = \bar{X} - Z_{1-\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}} \quad , \quad B = \bar{X} + Z_{1-\frac{\alpha}{2}} \frac{\sigma}{\sqrt{n}}" /> : ciTailType === 'left' ? <BlockMath math="B = \bar{X} + Z_{1-\alpha} \frac{\sigma}{\sqrt{n}}" /> : <BlockMath math="A = \bar{X} - Z_{1-\alpha} \frac{\sigma}{\sqrt{n}}" />}
                                                     </FormulaBlock>
 
-                                                    <HandwrittenNote className="mt-2 text-right">
+                                                    <HandwrittenNote className="mt-2">
                                                         ערך {ciTailType === 'two-tailed' ? <InlineMath math="Z_{1-\frac{\alpha}{2}}" /> : <InlineMath math="Z_{1-\alpha}" />} נלקח מטבלת ההתפלגות הנורמלית הסטנדרטית.
                                                     </HandwrittenNote>
 
@@ -3801,7 +3793,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                             ? <BlockMath math={String.raw`B = \bar{X} + t_{n-1, 1-\alpha} \frac{S}{\sqrt{n}}`} />
                                                                             : <BlockMath math={String.raw`A = \bar{X} - t_{n-1, 1-\alpha} \frac{S}{\sqrt{n}}`} />)}
                                                             </FormulaBlock>
-                                                            <HandwrittenNote className="mt-2 text-right">
+                                                            <HandwrittenNote className="mt-2">
                                                                 ערך {n >= 30
                                                                     ? (ciTailType === 'two-tailed' ? <InlineMath math={String.raw`z_{1-\frac{\alpha}{2}}`} /> : <InlineMath math={String.raw`z_{1-\alpha}`} />)
                                                                     : (ciTailType === 'two-tailed' ? <InlineMath math={String.raw`t_{n-1, 1-\frac{\alpha}{2}}`} /> : <InlineMath math={String.raw`t_{n-1, 1-\alpha}`} />)}
