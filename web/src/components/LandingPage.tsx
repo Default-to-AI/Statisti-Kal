@@ -1,5 +1,5 @@
 import { type ReactElement, useState, useEffect, useMemo } from 'react';
-import { AreaChart, Calculator, BookOpen, ArrowRight, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { AreaChart, Calculator, BookOpen, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { InlineMath } from 'react-katex';
 import SiteFooter from './SiteFooter';
 import SiteHeader, { type SitePage } from './SiteHeader';
@@ -149,10 +149,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
           <div className="max-w-[90rem] mx-auto flex flex-col lg:flex-row items-center gap-8 relative z-10">
             {/* Text Content */}
             <div className="text-center lg:text-right lg:w-5/12 px-4 sm:px-6 relative z-20">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] font-medium text-sm mb-8 border border-[var(--color-accent-cobalt-line)] shadow-sm animate-pulse backdrop-blur-sm">
-                <Sparkles className="w-4 h-4" />
-                <span>גרסה 2.0 - פחות חישובים, יותר הבנה</span>
-              </div>
+
 
               <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-[var(--color-text-primary)] tracking-tight mb-8">
                 <span className="block mb-2 font-display">סטטיסטי-קל</span>
