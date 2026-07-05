@@ -193,51 +193,25 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
             diff -= tools.length;
           }
 
-          let translateX = '0';
-          let scale = '1';
-          let zIndex = 10;
-          let opacity = '1';
-          let pointerEvents = 'auto';
-
-          if (diff === 0) {
-            translateX = '0';
-            scale = '1';
-            zIndex = 30;
-            opacity = '1';
-          } else if (diff === 1) {
-            translateX = '-105%';
-            scale = '0.85';
-            zIndex = 20;
-            opacity = '0.6';
-          } else if (diff === -1) {
-            translateX = '105%';
-            scale = '0.85';
-            zIndex = 20;
-            opacity = '0.6';
-          } else if (diff === 2) {
-            translateX = '-195%';
-            scale = '0.7';
-            zIndex = 10;
-            opacity = '0.3';
-          } else if (diff === -2) {
-            translateX = '195%';
-            scale = '0.7';
-            zIndex = 10;
-            opacity = '0.3';
-          }
-
           const Icon = tool.icon;
           const isActive = diff === 0;
+          const distance = Math.abs(diff);
+          const direction = Math.sign(diff);
+          const translateOffset = distance === 0 ? 0 : 105 + (distance - 1) * 90;
+          const translateX = distance === 0 ? '0' : `${direction * -translateOffset}%`;
+          const scale = distance === 0 ? '1' : `${Math.max(0.4, 1 - distance * 0.15)}`;
+          const zIndex = Math.max(10, 30 - distance * 10);
+          const opacity = distance === 0 ? '1' : `${Math.max(0, 0.9 - distance * 0.3)}`;
 
           return (
             <div
               key={tool.id}
               className="absolute w-[90%] max-w-[320px] sm:max-w-[380px] transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)]"
+              aria-hidden={!isActive}
               style={{
                 transform: `translateX(${translateX}) scale(${scale})`,
                 zIndex,
                 opacity,
-                pointerEvents: pointerEvents as 'auto' | 'none'
               }}
             >
               <Card 
@@ -259,6 +233,7 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
                   variant="ghost" 
                   className={`w-full group/btn text-lg border border-[var(--color-border)] whitespace-nowrap flex-nowrap ${tool.hoverBtnBgClass} ${isActive ? 'bg-[var(--color-surface-raised)]' : ''}`}
                   leftIcon={<ExternalLink className="w-5 h-5 group-hover/btn:-translate-y-1 group-hover/btn:translate-x-1 transition-transform duration-300" />}
+                  tabIndex={isActive ? 0 : -1}
                   onClick={(e) => {
                     if (!isActive) {
                       e.stopPropagation();

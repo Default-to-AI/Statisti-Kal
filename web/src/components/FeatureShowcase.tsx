@@ -1,38 +1,37 @@
 import { useState, useEffect, type ReactElement } from 'react';
 import { MousePointerClick, Calculator, LineChart, MessageSquareQuote } from 'lucide-react';
-import { InlineMath } from 'react-katex';
 import { LandingFeatureArt, type LandingPreviewId } from './LandingFeatureArt';
 import { ScrollReveal } from './landing-template/TemplatePrimitives';
 
 const features = [
   {
     id: 0,
-    title: "הזנת נתונים נטולת פיצ'פקעס",
-    description: "תזינו את הנתונים היבשים של המדגם. אין צורך להעביר אגפים או לשנן הצבות – הטכניקה היא אויב. המחשב עושה את השאר.",
+    title: "הזנת נתונים",
+    description: "מזינים את הנתונים היבשים, והאתר עושה את השאר. להבין את ה-'מה?' מבלי להתעכב על ה-'איך?'.",
     icon: MousePointerClick,
     previewId: "hypothesis" as LandingPreviewId,
     tone: "teal" as const
   },
   {
     id: 1,
-    title: "חישובים שמשאירים מקום לנשמה",
-    description: <><InlineMath math="P\text{-Value}" />, ערכים קריטיים וטבלאות <InlineMath math="Z" /> או <InlineMath math="T" />? הכל מחושב אוטומטית. לכם רק נשאר לשלוט בשפה ולהבין את הרציונל.</>,
+    title: "תבינו את הנשמה מאחורי החישובים",
+    description: <>היום הכול מחושב אוטומטית. לכן, חייבים לשלוט בשפה ולהבין את הרציונל.</>,
     icon: Calculator,
     previewId: "table" as LandingPreviewId,
     tone: "cobalt" as const
   },
   {
     id: 2,
-    title: "תצוגה גרפית של המהות",
-    description: "לראות את אזורי הדחייה והקבלה בעיניים. כדי שתבינו את הרעיון והמוטיבציה, ולא סתם תהיו רובוטים של טכניקה.",
+    title: "לראות את המהות דרך הגרף",
+    description: "ברגע שתראו - תבינו. צריך להבין גם עם העיניים, לא רק עם הראש.",
     icon: LineChart,
     previewId: "normal" as LandingPreviewId,
     tone: "brass" as const
   },
   {
     id: 3,
-    title: "מסקנה אופרטיבית לגופו של עניין",
-    description: "התוצאה מובהקת? המערכת מפיקה מסקנה מחקרית על האוכלוסייה בסמנטיקה הנכונה, שלא תגידו לי 'לא ידעתי איך לנסח'.",
+    title: "ניסוחים מדוייקים נאמנים למקור",
+    description: "סטטיסטיקאים כנראה לא תהיו. אבל את הניסוחים הרשמיים שלהם, את השפה, המוטיבציה, חשוב להכיר.",
     icon: MessageSquareQuote,
     previewId: "helper" as LandingPreviewId,
     tone: "cobalt" as const
@@ -57,17 +56,28 @@ export function FeatureShowcase(): ReactElement {
   return (
     <section className="w-full space-y-8">
       <ScrollReveal>
-        <div className="space-y-4 text-center mb-8">
-          <div className="flex items-center justify-center gap-3">
-            <div className="accent-bar" />
-            <span className="text-heading-label font-semibold text-[var(--color-primary)]">פחות טכניקה שחורה</span>
-          </div>
-          <h2 data-toc id="landing-focus" className="block text-display-h2 text-[var(--color-text-primary)]">
-            איך המערכת עוזרת לכם להתמקד בעיקר?
+        <div className="mb-8 text-center">
+          <h2
+            data-toc
+            id="landing-focus"
+            className="flex items-center justify-center gap-4 text-display-h2 text-[var(--color-text-primary)]"
+          >
+            <span
+              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+              aria-hidden="true"
+            />
+            <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+              <span>בלי כל</span>
+              <span className="font-handwriting text-[1.18em] text-[var(--color-primary)] -rotate-2">
+                טכניקה
+              </span>
+              <span>השחורה</span>
+            </span>
+            <span
+              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(46,196,182,0.45),transparent)] sm:block"
+              aria-hidden="true"
+            />
           </h2>
-          <p className="mx-auto block max-w-3xl text-body-lg font-semibold text-[var(--color-text-secondary)]">
-            יותר הבנה של הרציונל הסטטיסטי מאחורי המספרים
-          </p>
         </div>
       </ScrollReveal>
       
