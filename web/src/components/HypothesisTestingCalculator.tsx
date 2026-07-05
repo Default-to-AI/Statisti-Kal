@@ -2113,13 +2113,13 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                 </div>
                                             </div>
                                         </td>
-                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
+                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] text-center">
                                             <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
                                             <button
                                                 type="button"
                                                 onClick={openPowerSectionFromQuickNav}
                                                 disabled={!isValid || !stats}
-                                                className={`tour-power-quick-link relative z-10 inline-flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-all ${
+                                                className={`tour-power-quick-link relative z-10 inline-flex w-fit mx-auto items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm font-semibold transition-all ${
                                                     isValid && stats
                                                         ? 'cursor-pointer border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-accent-cobalt)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--chart-2)]/35'
                                                         : 'cursor-default border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] opacity-70'
@@ -2127,9 +2127,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                 aria-label="קפיצה לעוצמת מבחן ופתיחת האקורדיון"
                                             >
                                                 <span className="whitespace-nowrap">
-                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\\beta)" /></span>
+                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
                                                 </span>
-                                                <ExternalLink size={16} className="shrink-0" />
+                                                <ExternalLink size={14} className="shrink-0" />
                                             </button>
                                         </td>
                                     </tr>
