@@ -19,7 +19,7 @@ export function ScrollToTopButton({ visible }: ScrollToTopButtonProps): ReactEle
     <AnimatePresence>
       {visible && (
         <motion.button
-          className="fixed bottom-6 left-6 z-50 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-[var(--color-accent-cobalt)] shadow-lg backdrop-blur-sm transition-colors hover:border-[var(--color-accent-cobalt-line)] hover:bg-[var(--color-accent-cobalt)] hover:text-white cursor-pointer"
+          className="tour-scroll-top-button fixed bottom-6 left-6 z-50 flex items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] p-3 text-[var(--color-accent-cobalt)] shadow-lg backdrop-blur-sm transition-colors hover:border-[var(--color-accent-cobalt-line)] hover:bg-[var(--color-accent-cobalt)] hover:text-white cursor-pointer"
           onClick={scrollToTop}
           initial={{ opacity: 0, scale: 0.8, y: 20 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

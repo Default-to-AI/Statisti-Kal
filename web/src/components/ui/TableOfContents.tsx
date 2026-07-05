@@ -285,7 +285,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ rootRef }) => 
         onClick={() => setIsExpanded((current) => !current)}
         aria-label={isExpanded ? 'סגור ניווט מהיר' : 'פתח ניווט מהיר'}
         aria-expanded={isExpanded}
-        className="fixed bottom-6 right-6 z-50 inline-flex cursor-pointer flex-row-reverse items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] shadow-[0_16px_40px_rgba(0,0,0,0.32)] transition-all hover:-translate-y-0.5 hover:bg-[var(--color-surface)]"
+        className="tour-quick-nav-toggle fixed bottom-6 right-6 z-50 inline-flex cursor-pointer flex-row-reverse items-center gap-2 rounded-full border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 py-3 text-sm font-semibold text-[var(--color-text-primary)] shadow-[0_16px_40px_rgba(0,0,0,0.32)] transition-all hover:-translate-y-0.5 hover:bg-[var(--color-surface)]"
       >
         {isExpanded ? <X size={18} /> : <Bolt size={18} />}
         <span>ניווט מהיר</span>

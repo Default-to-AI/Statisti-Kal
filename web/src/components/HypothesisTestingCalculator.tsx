@@ -7,9 +7,8 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { Joyride, Step } from 'react-joyride';
 import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
-import { CalcBlock as UICalcBlock, FormulaBlock as UIFormulaBlock, ResultBlock, Disclosure, AlertBlock } from './ui';
+import { CalcBlock as UICalcBlock, FormulaBlock as UIFormulaBlock, ResultBlock, Disclosure } from './ui';
 import {
     ChartLegend,
     ChartTooltipShell,
@@ -68,9 +67,6 @@ import {
     ReferenceLine,
     CartesianGrid,
 } from 'recharts';
-
-const JoyrideComponent = Joyride as any;
-const HYPOTHESIS_TOUR_STORAGE_KEY = 'HT_startTourOnOpen';
 
 // --- Types ---
 type TailType = 'right' | 'left' | 'two-tailed';
@@ -513,9 +509,6 @@ function ConfidenceIntervalFollowups({
                 <CalcBlock>
                     <BlockMath math={String.raw`L = 2 \cdot ${halfWidth.toFixed(4)} = ${currentWidth.toFixed(4)}`} />
                 </CalcBlock>
-                <ResultBlock>
-                    <BlockMath math={String.raw`L = ${currentWidth.toFixed(4)}`} />
-                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -534,9 +527,6 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     הסטייה המירבית <InlineMath math="(d)" /> היא בדיוק איבר ה"פלוס-מינוס" סביב <InlineMath math="\bar{X}" />, ולכן כאן היא <InlineMath math={halfWidth.toFixed(4)} /> לכל צד.
                 </p>
-                <ResultBlock>
-                    <BlockMath math={String.raw`d = ${halfWidth.toFixed(4)}`} />
-                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -561,9 +551,6 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     הסיבה: כאשר <InlineMath math="n" /> גדל, המכנה <InlineMath math="\sqrt{n}" /> גדל גם הוא, ולכן כל הביטוי נהיה קטן יותר והרווח נעשה צר יותר.
                 </p>
-                <ResultBlock>
-                    <span>האורך {sampleSizeRelation} ל- <InlineMath math={sampleSizeWidth.toFixed(4)} /></span>
-                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -594,9 +581,6 @@ function ConfidenceIntervalFollowups({
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     כלומר, ככל שרוצים להיות בטוחים יותר, נדרש ערך קריטי גדול יותר ולכן גם רווח הסמך מתרחב.
                 </p>
-                <ResultBlock>
-                    <span>האורך יגדל ל- <InlineMath math={confidenceWidth.toFixed(4)} /></span>
-                </ResultBlock>
             </Disclosure>
 
             <Disclosure
@@ -628,14 +612,11 @@ function ConfidenceIntervalFollowups({
                     <BlockMath math={String.raw`n \ge ${minNReal.toFixed(2)}`} />
                 </CalcBlock>
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
-                    מאחר שגודל מדגם חייב להיות שלם, מעגלים כלפי מעלה.
+                    מאחר שגודל מדגם חייב להיות שלם, מעגלים כלפי מעלה ומקבלים <strong>תשובה: <InlineMath math={`n = ${minNRounded}`} /></strong>.
                 </p>
                 <p className="text-right text-[var(--color-text-primary)] leading-relaxed">
                     זה בדיוק סוג תרגיל שבו לא מחשבים רווח סמך קיים, אלא שואלים מראש איזה מדגם צריך כדי להגיע לדיוק הרצוי.
                 </p>
-                <ResultBlock>
-                    <BlockMath math={`n = ${minNRounded}`} />
-                </ResultBlock>
             </Disclosure>
         </div>
     );
@@ -1010,69 +991,11 @@ const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => {
     );
 };
 
-export default function HypothesisTestingCalculator() {
-    // Tour state
-    const [runTour, setRunTour] = useState(false);
-    const tourSteps: Step[] = useMemo(() => [
-        {
-            target: '.tour-step-intro',
-            content: 'ברוכים הבאים למחשבון בדיקת ההשערות! כאן תוכלו לבחון נתונים ולחשב עוצמה בקלות.',
-            disableBeacon: true,
-            placement: 'center',
-        },
-        {
-            target: '.tour-step-inputs',
-            content: 'כאן מזינים את הפרמטרים של אוכלוסיית הבסיס (השערת האפס) ושל המדגם שלכם.',
-            placement: 'right',
-        },
-        {
-            target: '.tour-step-test-type',
-            content: 'בחרו את סוג המבחן והכיוון שלו (חד-צדדי או דו-צדדי).',
-            placement: 'bottom',
-        },
-        {
-            target: '.tour-step-graph',
-            content: 'הגרף יתעדכן בזמן אמת ויציג לכם את התפלגות הדגימה, אזורי הדחייה והעוצמה (1-Beta).',
-            placement: 'left',
-        },
-        {
-            target: '.tour-step-decision',
-            content: 'מטריצת ההחלטה מציגה בצורה ברורה את המסקנה הסטטיסטית של המבחן.',
-            placement: 'top',
-        },
-        {
-            target: '.tour-step-accordion-ht',
-            content: 'בחלק זה מוצגים 6 שלבי הפתרון. בשלב 1 (ניסוח השערות) נקבע צד המבחן וידיעת השונות. בשלב 3 נקבעת רמת המובהקות. שלבים 4, 5 ו-6 מתבצעים אוטומטית עד לקבלת מסקנה.',
-            placement: 'top',
-        },
-        {
-            target: '.tour-step-accordion-ci',
-            content: 'במידת הצורך, כאן תוכלו למצוא גם חישוב מפורט של רווח סמך לתוחלת, ומיד מתחתיו חישוב לעוצמת המבחן (Power).',
-            placement: 'top',
-        },
-        {
-            target: '.tour-step-nav-table',
-            content: 'בעמוד טבלאות ההתפלגות תוכלו למצוא טבלאות סטטיסטיות כמו טבלת Z ו-t, שימושי למציאת ערכים קריטיים ידנית.',
-            placement: 'bottom',
-        },
-        {
-            target: '.tour-step-nav-formula-sheet',
-            content: 'בעמוד הנוסחאות מרוכזות כל הנוסחאות הסטטיסטיות שנלמדו בקורס, לנוחותכם במהלך פתרון תרגילים.',
-            placement: 'bottom',
-        }
-    ], []);
+interface HypothesisTestingCalculatorProps {
+    onStartGuidedTour?: () => void;
+}
 
-    useEffect(() => {
-        try {
-            const shouldStartTour = window.localStorage.getItem(HYPOTHESIS_TOUR_STORAGE_KEY);
-            if (shouldStartTour === 'true') {
-                window.localStorage.removeItem(HYPOTHESIS_TOUR_STORAGE_KEY);
-                setRunTour(true);
-            }
-        } catch {
-            // Ignore storage access issues; manual tour button still works.
-        }
-    }, []);
+export default function HypothesisTestingCalculator({ onStartGuidedTour }: HypothesisTestingCalculatorProps) {
 
     // Input states
     const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
@@ -1191,6 +1114,35 @@ export default function HypothesisTestingCalculator() {
 
         scrollToTarget(target);
         window.setTimeout(() => flashTarget(target), 320);
+    };
+
+    const openPowerSectionFromQuickNav = () => {
+        setShowPower(true);
+
+        const target = document.getElementById('power-panel');
+        if (!target) {
+            return;
+        }
+
+        const targetTop = target.getBoundingClientRect().top + window.scrollY;
+        const viewportOffset = Math.max(Math.round(window.innerHeight * 0.1), 88);
+
+        window.scrollTo({
+            top: Math.max(0, targetTop - viewportOffset),
+            behavior: 'smooth',
+        });
+
+        window.dispatchEvent(new CustomEvent('toc-open-path', { detail: { ids: ['power-panel'] } }));
+
+        window.setTimeout(() => {
+            target.classList.remove('toc-target-flash');
+            void target.offsetWidth;
+            target.classList.add('toc-target-flash');
+
+            window.setTimeout(() => {
+                target.classList.remove('toc-target-flash');
+            }, 1350);
+        }, 320);
     };
 
     useEffect(() => {
@@ -1863,40 +1815,6 @@ export default function HypothesisTestingCalculator() {
 
     return (
         <div className="tour-step-intro space-y-8 bg-[var(--color-background)] min-h-screen text-[var(--color-text-primary)] p-4 sm:p-6 md:p-8" dir="rtl">
-            <JoyrideComponent
-                steps={tourSteps}
-                run={runTour}
-                continuous
-                showSkipButton
-                disableOverlayClose
-                styles={({
-                    options: {
-                        zIndex: 10000,
-                        primaryColor: '#d4a843',
-                        backgroundColor: '#1e1e24',
-                        textColor: '#e0e0e0',
-                        arrowColor: '#1e1e24',
-                        overlayColor: 'rgba(0, 0, 0, 0.65)'
-                    },
-                    tooltip: {
-                        direction: 'rtl',
-                        fontFamily: 'Assistant, sans-serif',
-                        textAlign: 'right',
-                        borderRadius: '8px',
-                        border: '1px solid #3f3f46'
-                    },
-                    buttonNext: { backgroundColor: '#34529e', color: '#fff', borderRadius: '4px', fontWeight: 'bold' },
-                    buttonBack: { color: '#a1a1aa', fontWeight: 'bold' },
-                    buttonSkip: { color: '#ef4444', fontWeight: 'bold' }
-                }) as any}
-                callback={(data) => {
-                    if (data.status === 'finished' || data.status === 'skipped') {
-                        setRunTour(false);
-                    }
-                }}
-                locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
-            />
-
             {/* Default Study Accordion */}
             <AnimatedDetails id="hypothesis-study-example" tocId="hypothesis-study-example" defaultOpen className="group relative bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg mb-8 shadow-sm border-r-4 border-r-[var(--color-accent-cobalt)] overflow-hidden [&_summary::-webkit-details-marker]:hidden">
                 <summary className="relative z-10 cursor-pointer select-none p-4 sm:p-5 flex flex-col xl:flex-row xl:items-center gap-4 border-b border-[var(--color-border)]/70 overflow-hidden">
@@ -1930,7 +1848,7 @@ export default function HypothesisTestingCalculator() {
                             type="button"
                             onClick={(event) => {
                                 event.preventDefault();
-                                setRunTour(true);
+                                onStartGuidedTour?.();
                             }}
                             className="px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
                         >
@@ -2197,11 +2115,22 @@ export default function HypothesisTestingCalculator() {
                                         </td>
                                         <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)]">
                                             <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <span className="w-36 sm:w-44 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 flex items-center justify-end gap-1 whitespace-nowrap">
-                                                    <span>הצגת בגרף (</span><InlineMath math="1-\beta" /><span>)</span>
+                                            <button
+                                                type="button"
+                                                onClick={openPowerSectionFromQuickNav}
+                                                disabled={!isValid || !stats}
+                                                className={`tour-power-quick-link relative z-10 inline-flex w-full items-center justify-center gap-2 rounded-lg border px-4 py-3 text-sm font-semibold transition-all ${
+                                                    isValid && stats
+                                                        ? 'cursor-pointer border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-accent-cobalt)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--chart-2)]/35'
+                                                        : 'cursor-default border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] opacity-70'
+                                                }`}
+                                                aria-label="קפיצה לעוצמת מבחן ופתיחת האקורדיון"
+                                            >
+                                                <span className="whitespace-nowrap">
+                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\\beta)" /></span>
                                                 </span>
-                                            </div>
+                                                <ExternalLink size={16} className="shrink-0" />
+                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -2224,7 +2153,7 @@ export default function HypothesisTestingCalculator() {
                         {/* H₁ Toggle — top-left corner, independent of legend */}
                         {powerEnabled && (
                             <label
-                                className={`absolute top-3 left-3 z-20 flex items-center gap-2.5 pl-3 pr-3.5 py-2 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer select-none backdrop-blur-lg ${
+                                className={`tour-step-graph-toggle absolute top-3 left-3 z-20 flex items-center gap-2.5 pl-3 pr-3.5 py-1.5 rounded-xl border text-sm font-semibold transition-all duration-300 cursor-pointer select-none backdrop-blur-lg ${
                                     showPowerOverlay
                                         ? 'bg-[var(--chart-2)]/12 border-[var(--chart-2)]/50 text-[var(--chart-2)] shadow-[0_0_12px_var(--chart-2)/20]'
                                         : 'bg-[var(--color-surface)]/90 border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-text-secondary)]/50 shadow-md'
@@ -2483,7 +2412,7 @@ export default function HypothesisTestingCalculator() {
 
 
                                         {/* Step 2: Select an appropriate test */}
-                                        <AnimatedDetails id="step-2" tocId="step-2" className="group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
+                                        <AnimatedDetails id="step-2" tocId="step-2" className="tour-step-test-type group space-y-0 bg-[var(--color-surface-raised)] border border-[var(--color-border)] rounded-lg shadow-sm [&_summary::-webkit-details-marker]:hidden">
 
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
@@ -3459,92 +3388,14 @@ export default function HypothesisTestingCalculator() {
                                                                             <div className="p-5 border-t border-[var(--color-border)]/50 text-[var(--color-text-primary)] space-y-4">
                                                                                 <div className="mb-4 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
                                                                                     <p className="mb-2">גישה זו מודדת את הסבירות לקבלת התוצאה שנצפתה מהמדגם המקרי תחת התפלגות <InlineMath math="H_0" />, אל מול רמת המובהקות שנקבעה (<InlineMath math="\alpha" />).</p>
-                                                                                </div>
-
-                                                                                {/* ── Section 1: Theoretical Integral Formula ── */}
-                                                                                <div className="space-y-3">
-                                                                                    <strong className="text-[var(--color-text-primary)] text-sm sm:text-base block">א׳ — הנוסחה התיאורטית (אינטגרל):</strong>
-                                                                                    <div className="py-2 space-y-4 text-xl md:text-2xl">
-                                                                                        <FormulaBlock
-                                                                                            formulaName="ערך ה-P (P-Value) — נוסחת האינטגרל"
-                                                                                            translation="ההסתברות לקבל תוצאה קיצונית לפחות כמו במדגם שלנו, בהנחה שהשערת האפס נכונה. מחושב כשטח מתחת לעקומת הצפיפות מעבר לסטטיסטי המבחן."
-                                                                                        >
-                                                                                            {tailType === 'right' && (
-                                                                                                varianceKnown ?
-                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{${statSymbol}_{\\text{stat}}}^{\\infty} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = 1 - \\Phi(${statSymbol}_{\\text{stat}})`} /> :
-                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{${statSymbol}_{\\text{stat}}}^{\\infty} f_{t_{(${n - 1})}}(x)\\, dx`} />
-                                                                                            )}
-                                                                                            {tailType === 'left' && (
-                                                                                                varianceKnown ?
-                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{-\\infty}^{${statSymbol}_{\\text{stat}}} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = \\Phi(${statSymbol}_{\\text{stat}})`} /> :
-                                                                                                    <BlockMath math={`P\\text{-Value} = \\int_{-\\infty}^{${statSymbol}_{\\text{stat}}} f_{t_{(${n - 1})}}(x)\\, dx`} />
-                                                                                            )}
-                                                                                            {tailType === 'two-tailed' && (
-                                                                                                varianceKnown ?
-                                                                                                    <BlockMath math={`P\\text{-Value} = 2 \\int_{|${statSymbol}_{\\text{stat}}|}^{\\infty} \\frac{1}{\\sqrt{2\\pi}}\\, e^{-\\frac{z^2}{2}}\\, dz = 2\\bigl(1 - \\Phi(|${statSymbol}_{\\text{stat}}|)\\bigr)`} /> :
-                                                                                                    <BlockMath math={`P\\text{-Value} = 2 \\int_{|${statSymbol}_{\\text{stat}}|}^{\\infty} f_{t_{(${n - 1})}}(x)\\, dx`} />
-                                                                                            )}
-                                                                                        </FormulaBlock>
+                                                                                    <strong className="text-[var(--color-text-primary)]">דרך החישוב:</strong>
+                                                                                    <div className="bg-[var(--color-surface-raised)] p-3 rounded-lg border border-[var(--color-border)]/50 mt-2 mb-3 overflow-x-auto">
+                                                                                        <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${statSymbol}_{stat})` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${statSymbol}_{stat})` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > |${statSymbol}_{stat}|)`} />
+                                                                                        <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > ${Math.abs(Z_stat).toFixed(3)}) = ${pVal.toFixed(4)}`} />
                                                                                     </div>
-                                                                                </div>
-
-                                                                                {/* ── Section 2: Disclaimer ── */}
-                                                                                <AlertBlock>
-                                                                                    הערה: חישוב מובהקות מדויק דורש פתרון של אינטגרל מורכב זה ואינו מבוצע ידנית, אלא מחושב אוטומטית באמצעות פונקציות התפלגות.
-                                                                                </AlertBlock>
-
-                                                                                {/* ── Section 3: Practical Table Approach (Bounding) ── */}
-                                                                                <div className="space-y-3">
-                                                                                    <strong className="text-[var(--color-text-primary)] text-sm sm:text-base block">ב׳ — גישה מעשית: חסימה באמצעות טבלה:</strong>
-                                                                                    <div className="py-2 space-y-4 text-xl md:text-2xl">
-                                                                                        <CalcBlock>
-                                                                                            <ul dir="rtl" className="list-disc list-inside space-y-3 text-sm sm:text-base text-[var(--color-text-primary)] leading-relaxed text-right w-full">
-                                                                                                <li>
-                                                                                                    הערך הקריטי בטבלת{' '}
-                                                                                                    <strong dir="ltr" className="inline-block px-0.5"><InlineMath math={varianceKnown ? 'Z' : 't'} /></strong>
-                                                                                                    {' '}עבור רמת המובהקות הרלוונטית{' '}
-                                                                                                    <span dir="ltr" className="inline-block"><InlineMath math={`${alphaSymbol} = ${tailType === 'two-tailed' ? (alpha / 2) : alpha}`} /></span>
-                                                                                                    {!varianceKnown && (
-                                                                                                        <span>{' '}עם <span dir="ltr" className="inline-block"><InlineMath math={`df = ${n - 1}`} /></span></span>
-                                                                                                    )}
-                                                                                                    {' '}הוא{' '}
-                                                                                                    <strong dir="ltr" className="inline-block px-0.5"><InlineMath math={`${critSymbol}_{${alphaSymbol}} = ${Z_crit.toFixed(4)}`} /></strong>.
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    הסטטיסטי שחישבנו{' '}
-                                                                                                    (<strong dir="ltr" className="inline-block px-0.5"><InlineMath math={`${tailType === 'two-tailed' ? `|${statSymbol}_{stat}|` : `${statSymbol}_{stat}`} = ${tailType === 'two-tailed' ? Math.abs(Z_stat).toFixed(4) : Z_stat.toFixed(4)}`} /></strong>)
-                                                                                                    {' '}ממוקם{' '}
-                                                                                                    <strong className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
-                                                                                                        {isReject ? 'מעבר' : 'לא מעבר'}
-                                                                                                    </strong>
-                                                                                                    {' '}לערך הקריטי בטבלה.
-                                                                                                </li>
-                                                                                                <li>
-                                                                                                    מכאן נובע שההסתברות (P-Value{tailType !== 'two-tailed' ? ' חד-צדדי' : ''}){' '}
-                                                                                                    <strong className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
-                                                                                                        {isReject ? 'קטנה' : 'גדולה'}
-                                                                                                    </strong>
-                                                                                                    {' '}מ-<span dir="ltr" className="inline-block"><InlineMath math={`${tailType === 'two-tailed' ? '\\alpha/2' : '\\alpha'} = ${tailType === 'two-tailed' ? (alpha / 2) : alpha}`} /></span>.
-                                                                                                </li>
-                                                                                                {tailType === 'two-tailed' && (
-                                                                                                    <li>
-                                                                                                        מכיוון שזהו מבחן דו-צדדי, מכפילים את ההסתברות ב-2:{' '}
-                                                                                                        <span dir="ltr" className="inline-block">
-                                                                                                            <InlineMath math={`\\text{P-Value} ${isReject ? '<' : '>'} 2 \\times ${tailType === 'two-tailed' ? (alpha / 2) : alpha} = ${alpha}`} />
-                                                                                                        </span>.
-                                                                                                    </li>
-                                                                                                )}
-                                                                                            </ul>
-                                                                                        </CalcBlock>
-
-                                                                                        <ResultBlock isReject={isReject}>
-                                                                                            <span className={isReject ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
-                                                                                                <InlineMath math={`\\text{P-Value} = ${pVal.toFixed(4)} ${isReject ? '\\le' : '>'} \\alpha = ${alpha}`} />
-                                                                                            </span>
-                                                                                            <span className="text-base font-bold">
-                                                                                                {isReject ? '→ דוחים את השערת האפס' : '→ אין לדחות את השערת האפס'}
-                                                                                            </span>
-                                                                                        </ResultBlock>
+                                                                                    <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
+                                                                                        <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
+                                                                                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math="\\alpha" />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
                                                                                     </div>
                                                                                 </div>
 
@@ -3588,18 +3439,21 @@ export default function HypothesisTestingCalculator() {
                                                                         parameterSymbol={statSymbol}
                                                                     />
 
-                                                                    <AlertBlock>
-                                                                        <strong className="text-[var(--color-warning)] ml-1">הערה חשובה:</strong>
-                                                                        {unifiedDecisionResult.reject ? (
-                                                                            <span>
-                                                                                דחיית השערת האפס <strong>לא מוכיחה</strong> בוודאות שתוחלת האוכלוסייה (<InlineMath math="\mu" />) {tailType === 'right' ? 'גדולה יותר' : tailType === 'left' ? 'קטנה יותר' : 'שונה'}. תמיד קיים סיכוי של <strong>{alpha * 100}%</strong> (טעות מסוג I) שההחלטה שגויה, ושהתוצאה החריגה שהתקבלה במדגם הינה מקרית בלבד.
-                                                                            </span>
-                                                                        ) : (
-                                                                            <span>
-                                                                                אי-דחיית השערת האפס <strong>לא מוכיחה</strong> שהיא נכונה. משמעות הדבר היא שפשוט אין מספיק ראיות במדגם הנוכחי כדי <strong>להצדיק</strong> את דחייתה, תחת רמת המובהקות והביטחון שנבחרו.
-                                                                            </span>
-                                                                        )}
-                                                                    </AlertBlock>
+                                                                    <div className="bg-[var(--color-surface)] border border-[var(--color-primary)]/30 p-4 rounded-lg flex gap-3 items-start">
+                                                                        <AlertTriangle size={20} className="text-[var(--color-warning)] mt-0.5 shrink-0" />
+                                                                        <div className="text-[var(--color-primary)]/80 text-sm">
+                                                                            <strong className="text-[var(--color-warning)]">הערה חשובה: </strong>
+                                                                            {unifiedDecisionResult.reject ? (
+                                                                                <span>
+                                                                                    דחיית השערת האפס <strong>לא מוכיחה</strong> בוודאות שתוחלת האוכלוסייה (<InlineMath math="\mu" />) {tailType === 'right' ? 'גדולה יותר' : tailType === 'left' ? 'קטנה יותר' : 'שונה'}. תמיד קיים סיכוי של <strong>{alpha * 100}%</strong> (טעות מסוג I) שההחלטה שגויה, ושהתוצאה החריגה שהתקבלה במדגם הינה מקרית בלבד.
+                                                                                </span>
+                                                                            ) : (
+                                                                                <span>
+                                                                                    אי-דחיית השערת האפס <strong>לא מוכיחה</strong> שהיא נכונה. משמעות הדבר היא שפשוט אין מספיק ראיות במדגם הנוכחי כדי <strong>להצדיק</strong> את דחייתה, תחת רמת המובהקות והביטחון שנבחרו.
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             )}
                                                         </div>
@@ -4159,7 +4013,7 @@ export default function HypothesisTestingCalculator() {
 
                     {/* Power Section */}
                     {isValid && stats && (
-                        <div id="power-panel" className="rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
+                        <div id="power-panel" className="tour-power-panel rounded-lg border shadow-md transition-all overflow-hidden bg-[var(--color-surface)] border-[var(--color-border)] w-full min-w-0 lg:col-span-2 order-5 lg:order-5 text-right mt-6">
                             <button
                                 onClick={() => setShowPower(!showPower)}
                                 className="relative overflow-hidden w-full px-8 py-5.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 font-semibold text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-colors border-b border-[var(--color-border)] cursor-pointer"

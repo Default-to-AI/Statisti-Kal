@@ -37,12 +37,15 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           className="flex items-center gap-4 text-right"
           aria-label="חזרה לדף הבית"
         >
-          <div
-            className="flex select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3 py-2 transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
-            aria-hidden="true"
+          <button
+            type="button"
+            onClick={() => onNavigate('landing')}
+            className="flex cursor-pointer select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3 py-2 transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
+            aria-label="דף הבית"
+            title="דף הבית"
           >
             <Home className="h-6 w-6 text-[#e2e2f0]" />
-          </div>
+          </button>
           <div>
             <h1 className="select-none text-xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
               סטטיטי-קל
@@ -98,7 +101,7 @@ function NavButton({
       key={item.id}
       type="button"
       onClick={() => onNavigate(item.id)}
-      className={`tour-step-nav-${item.id} flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3 py-2 text-sm font-medium tracking-wide transition whitespace-nowrap ${getButtonClass(item.group, isActive)}`}
+      className={`tour-nav-${item.id} flex cursor-pointer select-none items-center gap-1.5 rounded-sm border px-3 py-2 text-sm font-medium tracking-wide transition whitespace-nowrap ${getButtonClass(item.group, isActive)}`}
       aria-current={isActive ? 'page' : undefined}
     >
       {/* Icon first (RTL: appears on right) */}

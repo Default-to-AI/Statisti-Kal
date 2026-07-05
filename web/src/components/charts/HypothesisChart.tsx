@@ -7,7 +7,9 @@ import {
   YAxis,
   ReferenceLine,
   CartesianGrid,
+  Tooltip as RechartsTooltip,
 } from 'recharts';
+import { InlineMath } from 'react-katex';
 import { renderChartMathReferenceLabel } from './ChartPrimitives';
 
 export type HypothesisAxisTickRole = 'standard' | 'critical' | 'sample';
@@ -34,6 +36,18 @@ export interface HypothesisChartProps {
   xAxisTicks: HypothesisAxisTick[];
   sampleMean: number | null;
 }
+
+interface HypothesisChartDataPoint {
+  x: number;
+  pdfH0: number;
+  pdfH1?: number;
+  alphaShade?: number;
+  powerShade?: number;
+  cdfH0?: number;
+  cdfH1?: number;
+}
+
+type HoverZone = 'rejection' | 'power' | 'non-rejection';
 
 export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   chartData,
@@ -87,6 +101,138 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
 
   zScoreAxisTicks.sort((a, b) => a.value - b.value);
   const zScoreAxisTickValues = zScoreAxisTicks.map((tick) => tick.value);
+  const enrichedChartData = React.useMemo<HypothesisChartDataPoint[]>(() => {
+    if (chartData.length === 0) {
+      return [];
+    }
+
+    let cumulativeH0 = 0;
+    let cumulativeH1 = 0;
+
+    return chartData.map((rawPoint, index) => {
+      const point = rawPoint as HypothesisChartDataPoint;
+
+      if (index > 0) {
+        const previousPoint = chartData[index - 1] as HypothesisChartDataPoint;
+        const dx = point.x - previousPoint.x;
+
+        cumulativeH0 += ((previousPoint.pdfH0 + point.pdfH0) / 2) * dx;
+
+        if (previousPoint.pdfH1 !== undefined && point.pdfH1 !== undefined) {
+          cumulativeH1 += ((previousPoint.pdfH1 + point.pdfH1) / 2) * dx;
+        }
+      }
+
+      return {
+        ...point,
+        cdfH0: Math.max(0, Math.min(1, cumulativeH0)),
+        cdfH1: point.pdfH1 !== undefined ? Math.max(0, Math.min(1, cumulativeH1)) : undefined,
+      };
+    });
+  }, [chartData]);
+
+  const classifyHoverZone = (point: HypothesisChartDataPoint): HoverZone => {
+    const powerShade = point.powerShade ?? 0;
+    const alphaShade = point.alphaShade ?? 0;
+
+    if (powerShade > 0) {
+      return 'power';
+    }
+
+    if (alphaShade > 0) {
+      return 'rejection';
+    }
+
+    return 'non-rejection';
+  };
+
+  const CustomTooltipInner = ({
+    active,
+    payload,
+  }: {
+    active?: boolean;
+    payload?: Array<{ payload: HypothesisChartDataPoint }>;
+  }) => {
+    if (!active || !payload || payload.length === 0) {
+      return null;
+    }
+
+    const point = payload[0].payload;
+    const zone = classifyHoverZone(point);
+    const zScore = (point.x - stats.effectH0Mean) / stats.se;
+
+    const zoneTheme =
+      zone === 'power'
+        ? {
+            title: 'עוצמת מבחן',
+            math: '1-\\beta',
+            textClassName: 'text-[var(--chart-2)]',
+            borderColor: 'var(--chart-2)',
+            backgroundColor: 'color-mix(in srgb, var(--chart-2) 14%, var(--color-surface))',
+          }
+        : zone === 'rejection'
+          ? {
+              title: 'אזור דחייה',
+              math: '\\alpha',
+              textClassName: 'text-[var(--color-accent-crimson)]',
+              borderColor: 'var(--color-accent-crimson)',
+              backgroundColor: 'color-mix(in srgb, var(--color-accent-crimson) 14%, var(--color-surface))',
+            }
+          : {
+              title: 'אזור אי-דחייה',
+              math: '1-\\alpha',
+              textClassName: 'text-[var(--chart-1)]',
+              borderColor: 'var(--chart-1)',
+              backgroundColor: 'color-mix(in srgb, var(--chart-1) 14%, var(--color-surface))',
+            };
+
+    return (
+      <div
+        className="min-w-[190px] rounded-sm border p-3 font-sans text-sm shadow-sm backdrop-blur-md"
+        dir="rtl"
+        style={{
+          borderColor: zoneTheme.borderColor,
+          backgroundColor: zoneTheme.backgroundColor,
+          color: 'var(--color-text-primary)',
+        }}
+      >
+        <div className={`mb-2 flex items-center justify-between gap-4 border-b pb-2 ${zoneTheme.textClassName}`} style={{ borderColor: zoneTheme.borderColor }}>
+          <span className="font-bold">{zoneTheme.title}</span>
+          <span dir="ltr" className="inline-flex items-center font-semibold">
+            <InlineMath math={zoneTheme.math} />
+          </span>
+        </div>
+
+        <div className="mb-2 flex items-center justify-between gap-4">
+          <span className="font-semibold text-[var(--color-text-secondary)]">ערך על הציר</span>
+          <span dir="ltr" className={`font-mono font-bold ${zoneTheme.textClassName}`}>{point.x.toFixed(2)}</span>
+        </div>
+
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between gap-4 text-[var(--color-text-primary)]">
+            <span className="font-semibold">ציון תקן <InlineMath math="Z" /></span>
+            <span dir="ltr" className="font-mono font-bold">{zScore.toFixed(2)}</span>
+          </div>
+
+          <div className="flex items-center justify-between gap-4 text-[var(--chart-1)]">
+            <span className="font-semibold">
+              הסתברות מצטברת <InlineMath math="P(X < x \mid H_0)" />
+            </span>
+            <span dir="ltr" className="font-mono font-bold">{((point.cdfH0 ?? 0) * 100).toFixed(2)}%</span>
+          </div>
+
+          {point.cdfH1 !== undefined && (
+            <div className="flex items-center justify-between gap-4 text-[var(--chart-2)]">
+              <span className="font-semibold">
+                הסתברות מצטברת <InlineMath math="P(X < x \mid H_1)" />
+              </span>
+              <span dir="ltr" className="font-mono font-bold">{(point.cdfH1 * 100).toFixed(2)}%</span>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
 
   const pct = (x: number) => {
     const p = ((x - xMin) / (xMax - xMin)) * 100;
@@ -133,7 +279,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   return (
     <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
+        <AreaChart data={enrichedChartData} margin={{ top: 20, right: 10, left: 0, bottom: 60 }}>
           <defs>
             <linearGradient id="h0Color" x1="0" y1="0" x2="0" y2="1">
               <stop offset="5%" stopColor={'var(--chart-1)'} stopOpacity={0.1} />
@@ -233,6 +379,10 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             tickLine={true}
             width={45}
             className="font-mono font-medium"
+          />
+          <RechartsTooltip
+            cursor={{ stroke: 'var(--color-text-secondary)', strokeDasharray: '4 4', strokeOpacity: 0.5 }}
+            content={<CustomTooltipInner />}
           />
 
           {/* H0 Curve Base Area */}

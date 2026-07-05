@@ -1338,7 +1338,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
   }, [searchQuery]);
 
   return (
-    <div className="space-y-6 text-right" dir="rtl">
+    <div className="tour-formula-sheet-root space-y-6 text-right" dir="rtl">
       
       {/* Top Search bar & Actions */}
       <div className={`p-4 rounded-lg border flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm transition-all ${
@@ -1374,6 +1374,8 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
           </button>
         </div>
       </div>
+
+      <div className="tour-formula-sheet-scroll-anchor h-px w-full" aria-hidden="true" />
 
       {/* Main Grid: Sidebar + Accordion Content */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">

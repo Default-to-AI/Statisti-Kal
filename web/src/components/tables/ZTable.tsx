@@ -305,11 +305,13 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
   );
 
   return (
-    <div className="space-y-6 text-right" dir="rtl">
+    <div className="tour-z-table-root space-y-6 text-right" dir="rtl">
       <div className="border-b border-[var(--color-border)] pb-4">
         <h2 data-toc id="normal-distribution-tables" className="text-lg font-bold text-[var(--color-text-primary)]">טבלאות התפלגות סטטיסטיות</h2>
         <p className="text-xs text-[var(--color-text-secondary)] mt-1 font-sans">איתור ערכים קריטיים וחיפוש מדויק בהתפלגות נורמלית ובהתפלגות t של Student</p>
       </div>
+
+      <div className="tour-z-table-scroll-anchor h-px w-full" aria-hidden="true" />
 
       {/* Z-Table Accordion */}
       <div id="normal-z-table" className="bg-[var(--color-surface)] border border-[var(--color-border)] rounded-lg overflow-hidden">
