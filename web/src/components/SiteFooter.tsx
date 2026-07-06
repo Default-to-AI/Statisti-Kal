@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { motion } from 'motion/react';
 import { Github, GraduationCap, ArrowUpRight } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
 
@@ -26,8 +27,15 @@ const githubUrl = 'https://github.com/Default-to-AI/statistics';
 
 export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElement {
   return (
-    <footer className="border-t border-[var(--color-border)]" dir="rtl">
-      <div className="mx-auto px-5 py-10 sm:px-6">
+    <motion.footer 
+      className="border-t border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_-16px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] mt-16 w-full max-w-[1800px] mx-auto overflow-hidden" 
+      dir="rtl"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: false, amount: 0.15 }}
+      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+    >
+      <div className="mx-auto px-5 py-10 sm:px-10">
         {/* Main grid */}
         <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr]">
 
@@ -104,6 +112,6 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
           <span>כל הזכויות שמורות לרוברט טייגר | המכללה האקדמית תל אביב 2026</span>
         </div>
       </div>
-    </footer>
+    </motion.footer>
   );
 }

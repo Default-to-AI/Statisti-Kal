@@ -73,3 +73,5 @@ export type { ResultBlockProps } from './ResultBlock';
 export { HandwrittenNote } from './HandwrittenNote';
 export type { HandwrittenNoteProps } from './HandwrittenNote';
 
+export { CyberneticBackground } from './CyberneticBackground';
+

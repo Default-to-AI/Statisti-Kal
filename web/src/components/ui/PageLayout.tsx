@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { useScrollPosition } from '../../hooks/useScrollPosition';
 import { ScrollToTopButton } from '../ScrollToTopButton';
 import { TableOfContents } from './TableOfContents';
+import { CyberneticBackground } from './CyberneticBackground';
 
 export interface PageLayoutProps {
   /** The content of the header (title, logo, tabs, etc.) */
@@ -41,7 +42,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
   const mainRef = useRef<HTMLElement | null>(null);
 
   return (
-    <div className="min-h-screen bg-[var(--color-background)] text-[var(--color-text-primary)] font-sans flex flex-col">
+    <div className="min-h-screen text-[var(--color-text-primary)] font-sans flex flex-col relative">
+      <CyberneticBackground />
       {header && (
         <header
           className={`sticky top-0 z-40 w-full transition-all duration-300 ${
@@ -62,9 +64,9 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         </main>
 
         {footer && (
-          <footer className={`mt-10 w-full ${contentWidthClassName} mx-auto pt-6`} dir={dir}>
+          <div className="mt-auto w-full pt-10" dir={dir}>
             {footer}
-          </footer>
+          </div>
         )}
       </div>
 

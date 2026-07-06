@@ -205,6 +205,19 @@ body {
   letter-spacing: 0.015em;
 }
 
+@keyframes float-cycle {
+  0%   { opacity: 0; transform: translate3d(0, 20px, 0); }
+  15%  { opacity: var(--max-opacity); transform: translate3d(0, 5px, 0); }
+  85%  { opacity: var(--max-opacity); transform: translate3d(0, -15px, 0); }
+  100% { opacity: 0; transform: translate3d(0, -30px, 0); }
+}
+
+.math-chip-drift {
+  animation: float-cycle var(--duration) linear infinite;
+  animation-delay: var(--delay);
+  animation-fill-mode: both;
+}
+
 .font-handwriting {
   font-family: var(--font-handwriting);
   font-weight: 400;
