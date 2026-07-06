@@ -21,10 +21,10 @@ export const ResultBlock: React.FC<ResultBlockProps> = ({ children, isReject, cl
     const glowColor = isErrorState ? 'shadow-[0_0_20px_rgba(217,91,91,0.15)]' : 'shadow-[0_0_20px_rgba(59,169,141,0.15)]';
 
     return (
-        <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 sm:gap-6 py-1 my-0 ${className}`} dir="ltr" {...rest}>
-            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-[var(--rounded-lg)] py-2">
-                <div className={`relative border border-solid ${borderColor} border-l-4 ${borderLeftColor} rounded-[var(--rounded-lg)] ${bgColor} ${glowColor} px-4 py-3 sm:px-5 sm:py-4 flex flex-col items-center justify-center min-h-0 min-w-max mx-1`}>
-                    <div dir="rtl" className="w-full text-center text-[var(--color-text-primary)] text-sm sm:text-base leading-relaxed flex flex-col items-center justify-center space-y-3 font-bold [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center">
+        <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 py-3 sm:gap-6 ${className}`} dir="ltr" {...rest}>
+            <div className="flex-1 overflow-x-auto rounded-lg shadow-sm">
+                <div className={`relative border border-solid ${borderColor} border-l-4 ${borderLeftColor} ${bgColor} ${glowColor} rounded-[var(--rounded-md)] min-h-[84px] min-w-max px-6 py-4 flex flex-col items-center justify-center`}>
+                    <div dir="rtl" className="w-full text-center text-lg font-bold font-sans text-[var(--color-text-primary)] leading-relaxed flex flex-col items-center justify-center space-y-3 [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center sm:text-xl md:text-2xl">
                         {children}
                     </div>
                 </div>

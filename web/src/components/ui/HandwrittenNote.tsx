@@ -13,6 +13,12 @@ const ALIGN_CLASSES: Record<NonNullable<HandwrittenNoteProps['align']>, string> 
   end: 'text-end justify-end',
 };
 
+const INNER_ALIGN_CLASSES: Record<NonNullable<HandwrittenNoteProps['align']>, string> = {
+  start: 'justify-start text-start',
+  center: 'justify-center text-center',
+  end: 'justify-end text-end',
+};
+
 export const HandwrittenNote: React.FC<HandwrittenNoteProps> = ({
   children,
   className = '',
@@ -21,9 +27,9 @@ export const HandwrittenNote: React.FC<HandwrittenNoteProps> = ({
   <p
     className={`flex w-full text-xl leading-relaxed font-normal text-[var(--color-text-primary)] sm:text-2xl font-handwriting ${ALIGN_CLASSES[align]} ${className}`}
   >
-    <span className="inline-flex max-w-full flex-wrap items-center justify-center gap-x-2 gap-y-1">
+    <span className={`inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 ${INNER_ALIGN_CLASSES[align]}`}>
       <PenTool size={22} className="shrink-0 opacity-60 text-[var(--color-accent-cobalt)]" />
-      <span>{children}</span>
+      <span className="min-w-0">{children}</span>
     </span>
   </p>
 );

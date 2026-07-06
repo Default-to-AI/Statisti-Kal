@@ -13,7 +13,8 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { Calculator, Award, AlertTriangle } from 'lucide-react';
+import { Calculator, Award, AlertTriangle, BookOpen } from 'lucide-react';
+import { FormulaTranslation } from './CustomComponents';
 
 export type FormulaBlockVariant = 'formula' | 'calculation';
 
@@ -105,6 +106,72 @@ export const CalcBlock: React.FC<CalcBlockProps> = ({ label = 'Calculation', chi
   <FormulaBlock variant="calculation" label={label} {...rest}>
     {children}
   </FormulaBlock>
+);
+
+export interface ReadingFormulaBlockProps extends Omit<FormulaBlockProps, 'variant' | 'label' | 'caption' | 'copyable'> {
+  formulaName?: string;
+  translation?: string;
+  wrapperClassName?: string;
+  contentWidthClassName?: string;
+}
+
+const DEFAULT_READING_CONTENT_WIDTH_CLASS = 'w-full max-w-[65rem] mx-auto';
+
+export const ReadingFormulaBlock: React.FC<ReadingFormulaBlockProps> = ({
+  children,
+  className = '',
+  formulaName,
+  translation,
+  wrapperClassName = '',
+  contentWidthClassName = DEFAULT_READING_CONTENT_WIDTH_CLASS,
+  ...rest
+}) => (
+  <div className={`flex flex-row items-center ${contentWidthClassName} gap-4 py-3 sm:gap-6 ${wrapperClassName}`} dir="ltr">
+    <div className="relative flex-1 overflow-x-auto rounded-lg shadow-sm">
+      <FormulaBlock
+        className={`relative min-h-[84px] min-w-max border-l-4 border-dashed border-l-[var(--color-primary)]/70 bg-[var(--color-primary)]/5 px-6 py-4 text-lg font-sans text-[var(--color-text-primary)] [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full sm:text-xl md:text-2xl ${className}`}
+        {...rest}
+      >
+        {formulaName && translation ? (
+          <div className="absolute left-2.5 top-2.5 z-10 opacity-70 transition-opacity hover:opacity-100">
+            <FormulaTranslation formulaName={formulaName} translation={translation} />
+          </div>
+        ) : null}
+        {children}
+      </FormulaBlock>
+    </div>
+    <div className="flex w-10 shrink-0 justify-center text-[var(--color-primary)]/60 sm:w-12">
+      <BookOpen size={36} strokeWidth={1.2} />
+    </div>
+  </div>
+);
+
+export interface ReadingCalcBlockProps extends Omit<CalcBlockProps, 'label'> {
+  wrapperClassName?: string;
+  contentWidthClassName?: string;
+}
+
+export const ReadingCalcBlock: React.FC<ReadingCalcBlockProps> = ({
+  children,
+  className = '',
+  wrapperClassName = '',
+  contentWidthClassName = DEFAULT_READING_CONTENT_WIDTH_CLASS,
+  ...rest
+}) => (
+  <div className={`flex flex-row items-center ${contentWidthClassName} gap-4 py-3 sm:gap-6 ${wrapperClassName}`} dir="ltr">
+    <div className="flex-1 overflow-x-auto rounded-lg shadow-sm">
+      <CalcBlock
+        label={null}
+        className={`min-h-[84px] min-w-max border-l-4 border-l-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)]/5 px-6 py-4 text-lg font-sans text-[var(--color-text-primary)] [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full sm:text-xl md:text-2xl ${className}`}
+        {...rest}
+      >
+        {children}
+      </CalcBlock>
+    </div>
+    <div className="flex w-10 shrink-0 justify-center text-[var(--color-accent-cobalt)]/60 sm:w-12">
+      <Calculator size={36} strokeWidth={1.2} />
+    </div>
+  </div>
 );
 
 /**

@@ -11,6 +11,7 @@ import { FeatureShowcase } from './FeatureShowcase';
 interface LandingPageProps {
   onNavigate: (page: SitePage) => void;
   onTryHypothesis: () => void;
+  onTryPointEstimation: () => void;
   onStartHypothesisTour: () => void;
 }
 
@@ -87,7 +88,15 @@ function ConstitutionQuote(): ReactElement {
   );
 }
 
-function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: SitePage) => void; onTryHypothesis: () => void; }) {
+function ToolCarousel({
+  onNavigate,
+  onTryHypothesis,
+  onTryPointEstimation,
+}: {
+  onNavigate: (page: SitePage) => void;
+  onTryHypothesis: () => void;
+  onTryPointEstimation: () => void;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const tools = useMemo(() => [
@@ -104,6 +113,20 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
       hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
       buttonText: 'למחשבון',
       onClick: onTryHypothesis
+    },
+    {
+      id: 'point-estimation',
+      title: 'אמידה נקודתית',
+      description: <>כל הנושא של אומדים, א.ח.ה, שונות, <InlineMath math="MSE" /> ו-<InlineMath math="MLE" /> בדף למידה אחד עם דוגמאות פתורות.</>,
+      icon: Award,
+      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
+      bgClass: 'bg-[var(--color-primary)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
+      iconBgClass: 'bg-[var(--color-primary)]/10',
+      iconColorClass: 'text-[var(--color-primary)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
+      buttonText: 'לדף',
+      onClick: onTryPointEstimation
     },
     {
       id: 'forward',
@@ -161,7 +184,7 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
       buttonText: 'לדף הנוסחאות',
       onClick: () => onNavigate('formula-sheet')
     }
-  ], [onNavigate, onTryHypothesis]);
+  ], [onNavigate, onTryHypothesis, onTryPointEstimation]);
 
   const handleNext = () => setActiveIndex((prev) => (prev + 1) % tools.length);
   const handlePrev = () => setActiveIndex((prev) => (prev - 1 + tools.length) % tools.length);
@@ -253,7 +276,7 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
   );
 }
 
-export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypothesisTour }: LandingPageProps): ReactElement {
+export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEstimation, onStartHypothesisTour }: LandingPageProps): ReactElement {
   return (
     <PageLayout
       header={<SiteHeader activePage="landing" onNavigate={onNavigate} />}
@@ -329,7 +352,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-6">הכלים שלנו</h2>
           </div>
-          <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} />
+          <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} onTryPointEstimation={onTryPointEstimation} />
         </section>
 
         {/* Philosophy Section */}

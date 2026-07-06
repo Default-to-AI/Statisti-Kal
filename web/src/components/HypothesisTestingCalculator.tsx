@@ -7,8 +7,8 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { AnimatedDetails, FormulaTranslation } from './ui/CustomComponents';
-import { CalcBlock as UICalcBlock, FormulaBlock as UIFormulaBlock, ResultBlock, Disclosure } from './ui';
+import { AnimatedDetails } from './ui/CustomComponents';
+import { ReadingCalcBlock as SharedReadingCalcBlock, ReadingFormulaBlock as SharedReadingFormulaBlock, ResultBlock, Disclosure } from './ui';
 import {
     ChartLegend,
     ChartTooltipShell,
@@ -164,37 +164,23 @@ function FormulaBlock({
     translation?: string;
 }) {
     return (
-        <div className={`flex flex-row items-center ${STEP_BLOCK_WIDTH_CLASS} gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
-            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm relative group">
-                <UIFormulaBlock className="relative border-l-4 border-dashed border-l-[var(--color-primary)]/70 bg-[var(--color-primary)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
-                    {formulaName && translation && (
-                        <div className="absolute top-2.5 left-2.5 z-10 transition-opacity opacity-60 hover:opacity-100">
-                            <FormulaTranslation formulaName={formulaName} translation={translation} />
-                        </div>
-                    )}
-                    {children}
-                </UIFormulaBlock>
-            </div>
-            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-primary)]/60">
-                <BookOpen size={36} strokeWidth={1.2} />
-            </div>
-        </div>
+        <SharedReadingFormulaBlock
+            contentWidthClassName={STEP_BLOCK_WIDTH_CLASS}
+            formulaName={formulaName}
+            translation={translation}
+            wrapperClassName={className}
+        >
+            {children}
+        </SharedReadingFormulaBlock>
     );
 }
 
 // CalcBlock: Calculation with actual substituted values
 function CalcBlock({ children, className = '' }: { children: React.ReactNode; className?: string }) {
     return (
-        <div className={`flex flex-row items-center ${STEP_BLOCK_WIDTH_CLASS} gap-4 sm:gap-6 py-3 my-2 ${className}`} dir="ltr">
-            <div className="flex-1 overflow-x-auto scrollbar-thin rounded-lg shadow-sm">
-                <UICalcBlock label={null} className="relative border-l-4 border-solid border-l-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)]/5 px-6 py-4 text-lg sm:text-xl md:text-2xl min-h-[84px] h-auto w-full min-w-max [&_.katex-display]:!overflow-visible [&_.katex-display]:w-full [&_.katex-display]:!m-0 [&_.katex-display]:flex [&_.katex-display]:justify-center font-sans text-[var(--color-text-primary)]">
-                    {children}
-                </UICalcBlock>
-            </div>
-            <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-accent-cobalt)]/60">
-                <Calculator size={36} strokeWidth={1.2} />
-            </div>
-        </div>
+        <SharedReadingCalcBlock contentWidthClassName={STEP_BLOCK_WIDTH_CLASS} wrapperClassName={className}>
+            {children}
+        </SharedReadingCalcBlock>
     );
 }
 

@@ -13,6 +13,7 @@ interface FooterLink {
 
 const quickLinks: FooterLink[] = [
   { label: 'בדיקת השערות', page: 'hypothesis' },
+  { label: 'אמידה נקודתית', page: 'point-estimation' },
   { label: 'חישובי הסתברויות', page: 'forward' },
   { label: 'אחוזונים', page: 'inverse' },
   { label: 'טבלאות Z ו-T', page: 'table' },
@@ -41,7 +42,7 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
             </div>
             <p className="max-w-sm text-body-base font-medium leading-7 text-[var(--color-text-secondary)]">
               כלי אקדמי בעברית לחישובי התפלגות נורמלית, חישובי אחוזונים,
-              בדיקות השערות, וטבלאות אינטראקטיביות. נבנה כדי להציג את הדרך
+              בדיקות השערות, אמידה נקודתית, וטבלאות אינטראקטיביות. נבנה כדי להציג את הדרך
               הפורמלית והנכונה לחישובים סטטיסטיים, תוך שימוש בעזרים
               ויזואליים וטקסט קריא.
             </p>
