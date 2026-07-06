@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { Award, BookOpen, Home, ScrollText, Sliders, TrendingUp, PlayCircle } from 'lucide-react';
 
-export type SitePage = 'landing' | 'hypothesis' | 'forward' | 'inverse' | 'table' | 'formula-sheet';
+export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'forward' | 'inverse' | 'table' | 'formula-sheet';
 
 interface SiteHeaderProps {
   activePage: SitePage;
@@ -24,6 +24,7 @@ interface NavItem {
 const inverseItem: NavItem = { id: 'inverse', label: 'חישוב אחוזונים', icon: <Sliders className="h-4 w-4 shrink-0" />, group: 'calculator' };
 const forwardItem: NavItem = { id: 'forward', label: 'חישובי הסתברויות', icon: <TrendingUp className="h-4 w-4 shrink-0" />, group: 'calculator' };
 const hypothesisItem: NavItem = { id: 'hypothesis', label: 'בדיקת השערות', icon: <Award className="h-4 w-4 shrink-0" />, group: 'hypothesis' };
+const pointEstimationItem: NavItem = { id: 'point-estimation', label: 'אמידה נקודתית', icon: <Award className="h-4 w-4 shrink-0" />, group: 'hypothesis' };
 const tableItem: NavItem = { id: 'table', label: 'טבלאות התפלגות', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
 const formulaItem: NavItem = { id: 'formula-sheet', label: 'נוסחאות', icon: <ScrollText className="h-4 w-4 shrink-0" />, group: 'reference' };
 
@@ -69,6 +70,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
         <Separator />
         
         <NavButton item={hypothesisItem} isActive={activePage === 'hypothesis'} onNavigate={onNavigate} />
+        <NavButton item={pointEstimationItem} isActive={activePage === 'point-estimation'} onNavigate={onNavigate} />
         
         <Separator />
         

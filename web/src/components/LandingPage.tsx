@@ -7,11 +7,11 @@ import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { PageLayout } from './ui/PageLayout';
 import { FeatureShowcase } from './FeatureShowcase';
-import { LandingFeatureArt, LandingFeatureGlyph, type LandingPreviewId } from './LandingFeatureArt';
 
 interface LandingPageProps {
   onNavigate: (page: SitePage) => void;
   onTryHypothesis: () => void;
+  onTryPointEstimation: () => void;
   onStartHypothesisTour: () => void;
 }
 
@@ -88,7 +88,15 @@ function ConstitutionQuote(): ReactElement {
   );
 }
 
-function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: SitePage) => void; onTryHypothesis: () => void; }) {
+function ToolCarousel({
+  onNavigate,
+  onTryHypothesis,
+  onTryPointEstimation,
+}: {
+  onNavigate: (page: SitePage) => void;
+  onTryHypothesis: () => void;
+  onTryPointEstimation: () => void;
+}) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const tools = useMemo(() => [
@@ -105,6 +113,20 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
       hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
       buttonText: 'למחשבון',
       onClick: onTryHypothesis
+    },
+    {
+      id: 'point-estimation',
+      title: 'אמידה נקודתית',
+      description: <>כל הנושא של אומדים, א.ח.ה, שונות, <InlineMath math="MSE" /> ו-<InlineMath math="MLE" /> בדף למידה אחד עם דוגמאות פתורות.</>,
+      icon: Award,
+      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
+      bgClass: 'bg-[var(--color-primary)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
+      iconBgClass: 'bg-[var(--color-primary)]/10',
+      iconColorClass: 'text-[var(--color-primary)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
+      buttonText: 'לדף',
+      onClick: onTryPointEstimation
     },
     {
       id: 'forward',
@@ -162,7 +184,7 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
       buttonText: 'לדף הנוסחאות',
       onClick: () => onNavigate('formula-sheet')
     }
-  ], [onNavigate, onTryHypothesis]);
+  ], [onNavigate, onTryHypothesis, onTryPointEstimation]);
 
   const handleNext = () => setActiveIndex((prev) => (prev + 1) % tools.length);
   const handlePrev = () => setActiveIndex((prev) => (prev - 1 + tools.length) % tools.length);
@@ -254,7 +276,7 @@ function ToolCarousel({ onNavigate, onTryHypothesis }: { onNavigate: (page: Site
   );
 }
 
-export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypothesisTour }: LandingPageProps): ReactElement {
+export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEstimation, onStartHypothesisTour }: LandingPageProps): ReactElement {
   return (
     <PageLayout
       header={<SiteHeader activePage="landing" onNavigate={onNavigate} />}
@@ -273,12 +295,12 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
 
           <div className="max-w-[90rem] mx-auto flex flex-col lg:flex-row items-center gap-8 relative z-10">
             {/* Text Content */}
-            <div className="text-center lg:text-right lg:w-5/12 px-4 sm:px-6 relative z-20">
+            <div className="relative z-20 flex min-h-[480px] flex-col justify-center px-4 text-center sm:px-6 lg:w-5/12 lg:text-right">
 
 
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight mb-8">
-                <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[var(--color-accent-cobalt)] to-[var(--chart-2)] pb-2 font-display">
-                  פחות טכניקה, יותר סמנטיקה.
+              <h1 className="mb-8 max-w-[600px] text-5xl font-extrabold tracking-tight sm:text-6xl lg:mr-0 lg:text-7xl">
+                <span className="block bg-gradient-to-r from-[var(--color-accent-cobalt)] to-[var(--chart-2)] bg-clip-text pb-2 font-display text-transparent">
+                  יותר סמנטיקה ודקויות. הטכניקה פחות...
                 </span>
               </h1>
 
@@ -329,11 +351,8 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onStartHypoth
         <section className="w-full mx-auto py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-6">הכלים שלנו</h2>
-            <p className="text-center text-[var(--color-text-secondary)] text-xl mb-12 max-w-2xl mx-auto">
-              בחר כלי כדי להתחיל. הכלים שלנו תוכננו להסיר את הטכניקה ולהתמקד בהבנה הסטטיסטית.
-            </p>
           </div>
-          <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} />
+          <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} onTryPointEstimation={onTryPointEstimation} />
         </section>
 
         {/* Philosophy Section */}

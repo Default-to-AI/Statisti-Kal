@@ -6,6 +6,7 @@
 import { Suspense, lazy, useState, useCallback, useMemo, useEffect } from 'react';
 import { Joyride, type Step } from 'react-joyride';
 import LandingPage from './components/LandingPage';
+import PointEstimationPage from './components/PointEstimationPage';
 import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
 import { PageLayout } from './components/ui/PageLayout';
@@ -13,7 +14,7 @@ import { PageTransition } from './components/PageTransition';
 import type { CalcMode } from './components/calc-ui';
 import { type TourMode, type GuidedTourStep, getTourStepsByMode } from './config/tours';
 
-type ActivePage = 'landing' | 'hypothesis' | 'normal';
+type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'normal';
 const JoyrideComponent = Joyride as any;
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
@@ -122,7 +123,7 @@ export default function App() {
     // Smooth scroll to top on every navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (page === 'landing' || page === 'hypothesis') {
+    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation') {
       setActivePage(page);
       return;
     }
@@ -151,6 +152,11 @@ export default function App() {
       return;
     }
 
+    if (step.context?.page === 'point-estimation') {
+      setActivePage('point-estimation');
+      return;
+    }
+
     if (step.context?.page === 'normal' && step.context.normalMode) {
       setNormalMode(step.context.normalMode);
       setActivePage('normal');
@@ -166,6 +172,7 @@ export default function App() {
     const isAlreadyOnTargetPage =
       (nextStep.context?.page === 'landing' && activePage === 'landing') ||
       (nextStep.context?.page === 'hypothesis' && activePage === 'hypothesis') ||
+      (nextStep.context?.page === 'point-estimation' && activePage === 'point-estimation') ||
       (nextStep.context?.page === 'normal' && activePage === 'normal' && normalMode === nextStep.context.normalMode);
 
     if (!isAlreadyOnTargetPage) {
@@ -337,6 +344,15 @@ export default function App() {
         </PageLayout>
       ) : null}
 
+      {activePage === 'point-estimation' ? (
+        <PageLayout
+          header={<SiteHeader activePage="point-estimation" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <PointEstimationPage />
+        </PageLayout>
+      ) : null}
+
       {activePage === 'normal' ? (
         <PageLayout
           header={<SiteHeader activePage={normalMode as SitePage} onNavigate={handleNavigate} onStartLocalTour={() => handleStartTour(normalMode as TourMode)} />}
@@ -356,6 +372,7 @@ export default function App() {
         <LandingPage
           onNavigate={handleNavigate}
           onTryHypothesis={() => handleNavigate('hypothesis')}
+          onTryPointEstimation={() => handleNavigate('point-estimation')}
           onStartHypothesisTour={handleStartHypothesisTour}
         />
       ) : null}

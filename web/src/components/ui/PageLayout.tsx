@@ -62,7 +62,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         </main>
 
         {footer && (
-          <footer className={`mt-10 w-full ${contentWidthClassName} mx-auto border-t border-[var(--color-border)] pt-6`} dir={dir}>
+          <footer className={`mt-10 w-full ${contentWidthClassName} mx-auto pt-6`} dir={dir}>
             {footer}
           </footer>
         )}

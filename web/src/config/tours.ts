@@ -2,7 +2,7 @@ import { type Step } from 'react-joyride';
 import type { SitePage } from '../components/SiteHeader';
 import type { CalcMode } from '../components/calc-ui';
 
-export type ActivePage = 'landing' | 'hypothesis' | 'normal';
+export type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'normal';
 export type TourMode = 'global' | 'hypothesis' | 'inverse' | 'forward' | 'table' | 'formula-sheet' | null;
 
 export interface GuidedTourStep extends Step {
