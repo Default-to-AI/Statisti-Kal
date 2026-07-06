@@ -13,7 +13,7 @@
  */
 
 import React, { forwardRef, HTMLAttributes } from 'react';
-import { Calculator, Award, AlertTriangle, BookOpen } from 'lucide-react';
+import { Calculator, Award, AlertTriangle, BookOpen, Lightbulb } from 'lucide-react';
 import { FormulaTranslation } from './CustomComponents';
 
 export type FormulaBlockVariant = 'formula' | 'calculation';
@@ -192,6 +192,28 @@ export const AlertBlock: React.FC<AlertBlockProps> = ({ children, className = ''
       </div>
       <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-warning)]/60">
           <AlertTriangle size={36} strokeWidth={1.2} />
+      </div>
+  </div>
+);
+
+/**
+ * InsightBlock — presentation for side explanations and tips
+ */
+export interface InsightBlockProps extends HTMLAttributes<HTMLDivElement> {
+  children: React.ReactNode;
+}
+
+export const InsightBlock: React.FC<InsightBlockProps> = ({ children, className = '', ...rest }) => (
+  <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 sm:gap-6 py-1 my-0 ${className}`} dir="ltr" {...rest}>
+      <div className="flex-1 overflow-x-auto scrollbar-thin rounded-[var(--rounded-lg)] shadow-sm">
+          <div className="relative border border-[var(--color-warning)]/40 border-l-4 border-solid border-l-[var(--color-warning)] rounded-[var(--rounded-md)] bg-[var(--color-warning)]/5 px-4 py-4 flex flex-col items-center justify-center">
+              <div dir="rtl" className="w-full text-right text-[var(--color-text-primary)] text-sm md:text-base leading-relaxed space-y-2">
+                {children}
+              </div>
+          </div>
+      </div>
+      <div className="shrink-0 w-10 sm:w-12 flex justify-center text-[var(--color-warning)]/80">
+          <Lightbulb size={36} strokeWidth={1.2} />
       </div>
   </div>
 );

@@ -16,8 +16,10 @@ const quickLinks: FooterLink[] = [
   { label: 'אמידה נקודתית', page: 'point-estimation' },
   { label: 'חישובי הסתברויות', page: 'forward' },
   { label: 'אחוזונים', page: 'inverse' },
+  { label: 'רגרסיה ליניארית', page: 'regression' },
   { label: 'טבלאות Z ו-T', page: 'table' },
   { label: 'דף נוסחאות', page: 'formula-sheet' },
+  { label: 'סיכום שיעור', page: 'summary' },
 ];
 
 const githubUrl = 'https://github.com/Default-to-AI/statistics';

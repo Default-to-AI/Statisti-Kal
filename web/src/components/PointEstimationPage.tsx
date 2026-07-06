@@ -5,6 +5,8 @@ import {
   BarChart3,
   CheckCircle2,
   ChevronDown,
+  CircleHelp,
+  Coins,
   Dice5,
   FunctionSquare,
   Lightbulb,
@@ -17,6 +19,7 @@ import {
   AnimatedDetails,
   Disclosure,
   HandwrittenNote,
+  InsightBlock,
   ReadingCalcBlock,
   ReadingFormulaBlock,
   ResultBlock,
@@ -28,6 +31,8 @@ const CONTENT_WIDTH_CLASS = 'w-full max-w-[70rem] mx-auto';
 function SectionDisclosure({
   id,
   title,
+  englishTitle,
+  englishAbbr,
   eyebrow,
   icon,
   children,
@@ -35,14 +40,17 @@ function SectionDisclosure({
 }: {
   id: string;
   title: string;
+  englishTitle?: string;
+  englishAbbr?: string;
   eyebrow?: ReactNode;
   icon: ReactNode;
   children: ReactNode;
   defaultOpen?: boolean;
 }): ReactElement {
   return (
-    <section id={id} data-toc className={`${CONTENT_WIDTH_CLASS} scroll-mt-24`}>
+    <section id={id} data-toc data-toc-label={title} data-toc-target={id} data-toc-open={id} className={`${CONTENT_WIDTH_CLASS} scroll-mt-24`}>
       <AnimatedDetails
+        tocId={id}
         defaultOpen={defaultOpen}
         className="group overflow-hidden rounded-[var(--rounded-xl)] border border-[var(--color-border)] bg-[var(--color-surface)] shadow-sm"
       >
@@ -51,9 +59,16 @@ function SectionDisclosure({
             <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-primary)]/35 bg-[var(--color-primary)]/10 text-[var(--color-primary)]">
               {icon}
             </div>
-            <div className="space-y-2">
-              {eyebrow ? <p className="text-sm font-semibold tracking-wide text-[var(--color-primary)]">{eyebrow}</p> : null}
-              <h2 className="text-2xl font-bold sm:text-3xl">{title}</h2>
+            <div className="flex flex-col items-start gap-1">
+              {eyebrow ? <p className="text-sm font-semibold tracking-wide text-[var(--color-primary)] mb-1">{eyebrow}</p> : null}
+              <h2 className="text-2xl font-bold sm:text-3xl">
+                {title} {englishAbbr && <span dir="ltr" className="inline-flex align-middle"><InlineMath math={`(${englishAbbr})`} /></span>}
+              </h2>
+              {englishTitle && (
+                <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80 font-normal" dir="ltr">
+                  <InlineMath math={`\\text{${englishTitle}}\\text{ }(${englishAbbr})`} />
+                </span>
+              )}
             </div>
           </div>
           <span className="text-[var(--color-text-secondary)] transition-transform group-[.is-open]:rotate-180">
@@ -70,10 +85,12 @@ function SummaryCard({
   title,
   children,
   tone = 'brass',
+  watermark,
 }: {
   title: ReactNode;
   children: ReactNode;
   tone?: 'brass' | 'cobalt' | 'teal' | 'crimson';
+  watermark?: ReactNode;
 }): ReactElement {
   const toneMap = {
     brass: 'border-[var(--color-primary)]/20 bg-[var(--color-primary)]/6',
@@ -83,9 +100,14 @@ function SummaryCard({
   } as const;
 
   return (
-    <div className={`rounded-[var(--rounded-xl)] border px-5 py-5 shadow-sm sm:px-6 ${toneMap[tone]}`}>
-      <h3 className="text-lg font-bold text-[var(--color-text-primary)] sm:text-xl">{title}</h3>
-      <div className="mt-3 text-base leading-relaxed text-[var(--color-text-secondary)]">{children}</div>
+    <div className={`relative overflow-hidden rounded-[var(--rounded-xl)] border px-5 py-5 shadow-sm sm:px-6 ${toneMap[tone]}`}>
+      {watermark && (
+        <div className="pointer-events-none absolute -bottom-6 -left-4 select-none opacity-[0.04] text-[var(--color-text-primary)] transition-opacity duration-500 hover:opacity-[0.06]" aria-hidden="true">
+          {watermark}
+        </div>
+      )}
+      <h3 className="relative z-10 text-lg font-bold text-[var(--color-text-primary)] sm:text-xl">{title}</h3>
+      <div className="relative z-10 mt-3 text-base leading-relaxed text-[var(--color-text-secondary)]">{children}</div>
     </div>
   );
 }
@@ -356,112 +378,205 @@ function PointEstimationPage(): ReactElement {
           </Disclosure>
         </SectionDisclosure>
 
-        <SectionDisclosure id="mle-panel" title="אומד נראות מקסימלית (MLE)" icon={<Lightbulb className="h-6 w-6" />}>
-          <div className="grid gap-4 lg:grid-cols-3">
-            <SummaryCard title="רעיון אינטואיטיבי" tone="teal">
-              אחרי שראינו מדגם, אנחנו שואלים: עבור איזה ערך של הפרמטר המדגם הזה היה הכי סביר להופיע?
-              זה כל הרעיון של MLE.
+        <SectionDisclosure 
+          id="mle-panel" 
+          title="אומד נראות מקסימלית" 
+          englishTitle="Maximum Likelihood Estimator" 
+          englishAbbr="MLE" 
+          icon={<Lightbulb className="h-6 w-6" />}
+        >
+          <div className="grid gap-4 lg:grid-cols-2">
+            <SummaryCard 
+              title="מה זה בכלל?" 
+              tone="teal"
+              watermark={<CircleHelp className="h-40 w-40" />}
+            >
+              אומד נראות מקסימלית (Maximum Likelihood Estimator - MLE) היא שיטה לאמידת פרמטרים של התפלגות נתונים. הרעיון המרכזי הוא: בהינתן אוסף של תצפיות שכבר קרו במציאות, אנו מחפשים את הפרמטר הסטטיסטי שהופך את התצפיות הללו לאירוע הסביר ביותר (בעל ההסתברות הגבוהה ביותר) להתרחש.
             </SummaryCard>
-            <SummaryCard title="מהי פונקציית נראות?" tone="cobalt">
-              זו אותה הסתברות או צפיפות של הנתונים שכבר ראינו, אבל עכשיו מסתכלים עליה כפונקציה של
-              <InlineMath math="\theta" /> ולא של <InlineMath math="x" />.
-            </SummaryCard>
-            <SummaryCard title="מה מחפשים בפועל?" tone="brass">
-              את הערך <InlineMath math="\hat{\theta}_{MLE}" /> שממקסם את <InlineMath math="L(\theta)" /> או את
-              <InlineMath math="l(\theta)=\ln L(\theta)" />.
+            <SummaryCard 
+              title="דוגמת המטבע" 
+              tone="brass"
+              watermark={<Coins className="h-40 w-40" />}
+            >
+              נניח שמצאת מטבע מוזר. הטלת אותו 10 פעמים, וקיבלת <strong>7 פעמים "עץ" ו-3 פעמים "פלי"</strong>.
+              אנחנו רוצים למצוא את הפרמטר <InlineMath math="p" /> (ההסתברות לקבל "עץ" בהטלה בודדת) שהופך את התוצאה הזו (7 מתוך 10) לתוצאה הסבירה ביותר.
             </SummaryCard>
           </div>
 
-          <SummaryCard title="למה בכלל זה עובד?" tone="teal">
-            הרעיון הוא לבחור את הפרמטר שמסביר הכי טוב את מה שבפועל נצפה. אם שני ערכי פרמטר אפשריים,
-            והנתונים שלנו הרבה יותר סבירים תחת אחד מהם, נעדיף אותו בתור אומד. לכן הנראות איננה
-            "הסתברות של הפרמטר", אלא מדד התאמה של הפרמטר לנתונים שכבר התקבלו.
-          </SummaryCard>
-
-          <div className={CONTENT_WIDTH_CLASS}>
-            <StepList
-              accentColor="cobalt"
-              steps={[
-                {
-                  number: 1,
-                  title: 'בונים פונקציית נראות',
-                  content: (
-                    <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-                      למדגם בלתי תלוי כותבים את צפיפות/הסתברות כל תצפית ואז כופלים:
-                      <InlineMath math="L(\theta)=\prod_{i=1}^{n}f(x_i;\theta)" />.
-                    </p>
-                  ),
-                },
-                {
-                  number: 2,
-                  title: 'עוברים ללוג-נראות',
-                  content: (
-                    <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-                      מותר למקסם גם את <InlineMath math="\ln L(\theta)" />, כי לוג הוא פונקציה עולה, והוא
-                      הופך מכפלות ארוכות לסכומים נוחים.
-                    </p>
-                  ),
-                },
-                {
-                  number: 3,
-                  title: 'גוזרים ומוצאים מועמד',
-                  content: (
-                    <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-                      פותרים <InlineMath math="\frac{\partial l(\theta)}{\partial\theta}=0" /> ומבודדים את
-                      הפרמטר.
-                    </p>
-                  ),
-                },
-                {
-                  number: 4,
-                  title: 'בודקים שזה באמת מקסימום',
-                  content: (
-                    <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-                      משתמשים בנגזרת שנייה או בודקים מי מקטין/מגדיל את הנראות בקצות התחום.
-                    </p>
-                  ),
-                },
-                {
-                  number: 5,
-                  title: 'נזהרים כשיש תמיכה תלויה בפרמטר',
-                  content: (
-                    <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-                      אם עצם התחום המותר של הנתונים תלוי ב-<InlineMath math="\theta" />, לפעמים המקסימום יגיע
-                      מהגבול ולא מנקודת גזירה פנימית.
-                    </p>
-                  ),
-                },
-              ]}
-            />
-          </div>
+          <p className="text-xl font-bold mt-4 mb-2 text-[var(--color-text-primary)]">
+            תהליך מציאת אומד MLE מורכב מ-5 שלבים טכניים קבועים:
+          </p>
 
           <Disclosure
-            title="דוגמה 1: ברנולי עם 3 הצלחות מתוך 5"
-            icon={<Dice5 className="h-5 w-5 text-[var(--color-primary)]" />}
-            defaultOpen
+            title="פונקציית ההסתברות של תצפית בודדת"
+            icon={<span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-sm font-bold text-[var(--color-primary)]">1</span>}
+            accentOnOpen="brass"
+          >
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              עבור כל הטלה בודדת (משתנה מקרי מסוג ברנולי), ההסתברות מוגדרת כך:
+            </p>
+            <ul className="list-inside list-disc text-base leading-relaxed text-[var(--color-text-secondary)] space-y-1 my-2">
+              <li>ההסתברות לעץ היא <InlineMath math="p" />.</li>
+              <li>ההסתברות לפלי היא <InlineMath math="1-p" />.</li>
+            </ul>
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              המתמטיקאים אוהבים לכתוב את זה כמשוואה אחת שמתאימה לכל תוצאה <InlineMath math="x" /> (כאשר עץ=1, פלי=0):
+            </p>
+
+            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="הסתברות ברנולי" translation="פונקציית הסתברות לתצפית בודדת">
+              <BlockMath math="f(x; p) = p^x \cdot (1-p)^{1-x}" />
+            </ReadingFormulaBlock>
+
+            <InsightBlock>
+              המשוואה הזו היא פשוט "טריק" רישום מתמטי.<br/>
+              אם יצא עץ (<InlineMath math="x=1" />), אז מציבים 1 ומקבלים <InlineMath math="p^1 \cdot (1-p)^0" />, שזה פשוט <InlineMath math="p" />.<br/>
+              אם יצא פלי (<InlineMath math="x=0" />), אז מציבים 0 ומקבלים <InlineMath math="p^0 \cdot (1-p)^1" />, שזה פשוט <InlineMath math="1-p" />.<br/>
+              זה כל מה שהנוסחה הזו אומרת.
+            </InsightBlock>
+          </Disclosure>
+
+          <Disclosure
+            title={
+              <span className="flex items-center flex-wrap gap-x-2 gap-y-1 font-sans">
+                <span>בניית פונקציית הנראות</span>
+                <span aria-hidden="true" className="text-[0.9em] font-serif text-[var(--color-text-secondary)] opacity-80 font-normal" dir="ltr">
+                  (Likelihood &ndash; <InlineMath math="L" />)
+                </span>
+              </span>
+            }
+            icon={<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-sm font-bold text-[var(--color-primary)]">2</span>}
+            accentOnOpen="brass"
+          >
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              הנראות היא ההסתברות לקבל את <strong>כל המדגם שלנו יחד</strong>. מכיוון שההטלות בלתי תלויות, כופלים את ההסתברויות. קיבלנו 7 פעמים עץ ו-3 פעמים פלי:
+            </p>
+
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
+              <BlockMath math="L(p) = \underbrace{(p \cdot p \cdot ... \cdot p)}_{\text{7 times}} \cdot \underbrace{((1-p) \cdot (1-p) \cdot (1-p))}_{\text{3 times}}" />
+            </ReadingCalcBlock>
+
+            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="פונקציית הנראות" translation="מכפלת ההסתברויות של המדגם כולו">
+              <BlockMath math="L(p) = p^7 \cdot (1-p)^3" />
+            </ReadingFormulaBlock>
+
+            <InsightBlock>
+              למה כופלים? בדיוק כמו שאם תשאל "מה הסיכוי לקבל '6' בקובייה פעמיים ברצף?", התשובה היא שישית כפול שישית (<InlineMath math="1/36" />). כשיש מאורעות בלתי תלויים, ההסתברות שכולם יקרו יחד היא המכפלה שלהם. הפונקציה <InlineMath math="L(p)" /> מתארת את הסיכוי לקבל בדיוק את מה שקיבלנו במציאות, כתלות בפרמטר הלא ידוע <InlineMath math="p" />.
+            </InsightBlock>
+          </Disclosure>
+
+          <Disclosure
+            title={
+              <span className="flex items-center flex-wrap gap-x-2 gap-y-1 font-sans">
+                <span>מעבר לפונקציית הלוג-נראות</span>
+                <span aria-hidden="true" className="text-[0.9em] font-serif text-[var(--color-text-secondary)] opacity-80 font-normal" dir="ltr">
+                  (Log-Likelihood &ndash; <InlineMath math="l" />)
+                </span>
+              </span>
+            }
+            icon={<span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-sm font-bold text-[var(--color-primary)]">3</span>}
+            accentOnOpen="brass"
+          >
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              כדי שנוכל לגזור את הפונקציה בקלות, נפעיל עליה לוגריתם טבעי (<InlineMath math="\ln" />).
+              נשתמש בחוקי הלוגריתמים:
+            </p>
+            <ol className="list-inside list-decimal text-base leading-relaxed text-[var(--color-text-secondary)] space-y-1 my-2">
+              <li>לוג של מכפלה הופך לחיבור: <InlineMath math="\ln(a \cdot b) = \ln(a) + \ln(b)" /></li>
+              <li>לוג של חזקה קופץ החוצה ככפל: <InlineMath math="\ln(a^b) = b \cdot \ln(a)" /></li>
+            </ol>
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              נפעיל זאת על הפונקציה שלנו:
+            </p>
+
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
+              <BlockMath math="l(p) = \ln(p^7 \cdot (1-p)^3)" />
+            </ReadingCalcBlock>
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
+              <BlockMath math="l(p) = \ln(p^7) + \ln((1-p)^3)" />
+            </ReadingCalcBlock>
+            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="לוג-נראות" translation="הלוגריתם הטבעי של פונקציית הנראות">
+              <BlockMath math="l(p) = 7\ln(p) + 3\ln(1-p)" />
+            </ReadingFormulaBlock>
+
+            <InsightBlock>
+              זה שלב שנראה מרתיע, אבל הוא "גלגל ההצלה" שלנו. לגזור מתמטית מכפלות של אלפי תצפיות זה סיוט אלגברי (דורש את כלל השרשרת של הכפל המון פעמים). הלוגריתם הופך פעולות כפל לפעולות חיבור, וחזקות לכפל רגיל.<br/>
+              מכיוון שפונקציית לוגריתם היא פונקציה שעולה תמיד (מונוטונית), הנקודה שבה פונקציית הלוג תגיע למקסימום היא <strong>בדיוק</strong> אותה נקודה שבה הפונקציה המקורית תגיע למקסימום. אנחנו רק משנים את ה"קנה מידה" כדי שיהיה קל לגזור.
+            </InsightBlock>
+          </Disclosure>
+
+          <Disclosure
+            title="הגזירה והשוואה לאפס"
+            icon={<span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-sm font-bold text-[var(--color-primary)]">4</span>}
+            accentOnOpen="brass"
+          >
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              עכשיו אנחנו רוצים למצוא מתי הפונקציה נמצאת בשיא שלה (המקסימום). כדי לעשות זאת, נגזור את <InlineMath math="l(p)" /> לפי <InlineMath math="p" /> ונשווה לאפס.
+            </p>
+            <ul className="list-inside list-disc text-base leading-relaxed text-[var(--color-text-secondary)] space-y-1 my-2">
+              <li>הנגזרת של <InlineMath math="\ln(p)" /> היא <InlineMath math="\frac{1}{p}" />.</li>
+              <li>הנגזרת של <InlineMath math="\ln(1-p)" /> היא <InlineMath math="\frac{1}{1-p}" />, כפול הנגזרת הפנימית שהיא (<InlineMath math="-1" />), כלומר: <InlineMath math="-\frac{1}{1-p}" />.</li>
+            </ul>
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              נבצע את הגזירה:
+            </p>
+
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
+              <BlockMath math="l'(p) = 7 \cdot \left(\frac{1}{p}\right) + 3 \cdot \left(-\frac{1}{1-p}\right)" />
+            </ReadingCalcBlock>
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
+              <BlockMath math="l'(p) = \frac{7}{p} - \frac{3}{1-p}" />
+            </ReadingCalcBlock>
+
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
+              נשווה לאפס כדי למצוא קיצון (מקסימום):
+            </p>
+
+            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="השוואה לאפס" translation="חיפוש נקודת הקיצון">
+              <BlockMath math="\frac{7}{p} - \frac{3}{1-p} = 0" />
+            </ReadingFormulaBlock>
+
+            <InsightBlock>
+              למה גוזרים ומשווים לאפס? דמיין הר. כשאתה מטפס על ההר, השיפוע (הנגזרת) חיובי. כשאתה יורד, השיפוע שלילי. רק בפסגה של ההר, השיפוע שטוח לחלוטין - כלומר שווה לאפס. המטרה שלנו היא למצוא את ה-<InlineMath math="p" /> שמביא אותנו לפסגת ההר, לנקודה הכי גבוהה (הסבירה ביותר).
+            </InsightBlock>
+          </Disclosure>
+
+          <Disclosure
+            title="חילוץ הפרמטר"
+            icon={<span className="flex h-6 w-6 items-center justify-center rounded-full bg-[var(--color-primary)]/20 text-sm font-bold text-[var(--color-primary)]">5</span>}
             accentOnOpen="brass"
             watermark={<InlineMath math="\hat{p}_{MLE}" />}
           >
             <p className="text-base leading-relaxed text-[var(--color-text-secondary)]">
-              ראינו 3 הצלחות ו-2 כישלונות. לכן בוחנים איזה ערך של <InlineMath math="p" /> נותן למדגם הזה
-              את ההסתברות הכי גבוהה.
+              נשאר לנו רק לפתור משוואה אלגברית פשוטה כדי לבודד את <InlineMath math="p" />:
             </p>
+            
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)] mt-2">נעביר אגף:</p>
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-1">
+              <BlockMath math="\frac{7}{p} = \frac{3}{1-p}" />
+            </ReadingCalcBlock>
 
-            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="נראות לברנולי" translation="מכפלת הסתברויות של הצלחות וכישלונות">
-              <BlockMath math="L(p)=p^3(1-p)^2" />
-            </ReadingFormulaBlock>
-            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
-              <BlockMath math="l(p)=3\ln(p)+2\ln(1-p)" />
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)] mt-2">נבצע כפל בהצלבה:</p>
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-1">
+              <BlockMath math="7(1-p) = 3p" />
             </ReadingCalcBlock>
-            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">
-              <BlockMath math="\frac{dl(p)}{dp}=\frac{3}{p}-\frac{2}{1-p}=0\Rightarrow 3(1-p)=2p" />
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-1">
+              <BlockMath math="7 - 7p = 3p" />
             </ReadingCalcBlock>
+
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)] mt-2">נעביר את ה-<InlineMath math="p" /> לצד אחד:</p>
+            <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-1">
+              <BlockMath math="7 = 10p" />
+            </ReadingCalcBlock>
+
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)] mt-2">נחלק ב-10 ונקבל את האומד שלנו:</p>
             <ResultBlock className="py-2">
-              <BlockMath math="\hat{p}_{MLE}=\frac{3}{5}=0.6" />
+              <BlockMath math="\hat{p}_{MLE} = \frac{7}{10} = 0.7" />
             </ResultBlock>
-            <HandwrittenNote>
-              כאן ה-MLE תואם את האינטואיציה: שיעור ההצלחות שנראה במדגם.
-            </HandwrittenNote>
+
+            <InsightBlock>
+              יצא לנו 0.7. עכשיו תחשוב על זה בהיגיון פשוט: אם זרקת מטבע 10 פעמים ויצא לך 7 פעמים עץ, מה הניחוש הכי טוב שלך לגבי הסיכוי של המטבע הזה ליפול על עץ? כמובן, 7 מתוך 10 (70%).<br/>
+              המתמטיקה הארוכה של ה-MLE בעצם מספקת <strong>הוכחה מתמטית פורמלית</strong> לכך שהאינטואיציה האנושית הפשוטה שלנו (ממוצע המדגם) היא אכן האומדן הסטטיסטי הטוב והמדויק ביותר האפשרי במקרה הזה.
+            </InsightBlock>
           </Disclosure>
 
           <Disclosure
@@ -470,7 +585,12 @@ function PointEstimationPage(): ReactElement {
             accentOnOpen="cobalt"
             watermark={<InlineMath math="\theta" />}
           >
-            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="נראות קטגוריאלית" translation="מכפלת הסתברויות לפי שכיחות כל קטגוריה">
+            <p className="text-base leading-relaxed text-[var(--color-text-secondary)] mb-4">
+              בחנות בגדים יש שלוש מידות. ההסתברות שלקוח יבחר מידה Small היא <InlineMath math="2\theta" />, מידה Medium היא <InlineMath math="1-6\theta" />, ומידה Large היא <InlineMath math="4\theta" />.<br/>
+              נניח שהגיעו 10 לקוחות לחנות, ומתוכם: <strong>3 בחרו Small, 3 בחרו Medium, ו-4 בחרו Large</strong>.
+            </p>
+            
+            <ReadingFormulaBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2" formulaName="נראות קטגוריאלית" translation="מכפלת הסתברויות לפי שכיחות כל קטגוריה במדגם">
               <BlockMath math="L(\theta)=(2\theta)^3(1-6\theta)^3(4\theta)^4" />
             </ReadingFormulaBlock>
             <ReadingCalcBlock contentWidthClassName={CONTENT_WIDTH_CLASS} wrapperClassName="py-2">

@@ -448,6 +448,16 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
               </p>
               <div className="p-3 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)]/40 rounded-lg text-center font-sans">
                 <BlockMath math="Var(X) = \sigma^2 = \mathbb{E}\left[(X - \mu)^2\right] = \mathbb{E}[X^2] - (\mathbb{E}[X])^2" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-3 border-t border-[var(--color-border)] dark:border-[var(--color-border)]/50 text-xs">
+                  <div>
+                    <span className="block text-[var(--color-text-secondary)] mb-1">נוסחת ההגדרה:</span>
+                    <BlockMath math="Var(X) = \sum (x_i - \mu)^2 \cdot P(X=x_i)" />
+                  </div>
+                  <div>
+                    <span className="block text-[var(--color-text-secondary)] mb-1">נוסחת עבודה (קיצור):</span>
+                    <BlockMath math="Var(X) = \left( \sum x_i^2 \cdot P(X=x_i) \right) - \mu^2" />
+                  </div>
+                </div>
               </div>
               
               <div className="p-3.5 bg-[var(--color-accent-cobalt-bg)]/40 dark:bg-[var(--color-accent-cobalt-strong)]/15 rounded-lg border border-[var(--color-accent-cobalt-line)]/70 dark:border-[var(--color-accent-cobalt-line)]/30 flex flex-col sm:flex-row items-center justify-between gap-2.5">
@@ -915,10 +925,60 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
                   <InlineMath math="\text{IQR} = Q_3 - Q_1" />
                 </div>
               </div>
+            </div>
+          )
+        },
+        {
+          title: 'שונות וסטיית תקן (אוכלוסייה ומדגם)',
+          content: (
+            <div className="space-y-4">
+              <div className="p-4 rounded-lg border border-[var(--color-border)] dark:border-[var(--color-border)]/60 bg-white dark:bg-[var(--color-surface-raised)]/80 shadow-sm animate-fade-in">
+                <h4 className="font-extrabold text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-2 border-r-2 border-[var(--color-accent-cobalt-line)] pr-2 text-right" dir="rtl">א. נתוני אוכלוסייה שלמה <InlineMath math="(\sigma^2)" /></h4>
+                <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-primary)] leading-relaxed mb-3">
+                  כאשר הנתונים כוללים את כלל פריטי האוכלוסייה (<InlineMath math="N" /> תצפיות) והתוחלת היא <InlineMath math="\mu" />:
+                </p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-center text-xs mb-3">
+                  <div className="p-3 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)] rounded-lg">
+                    <span className="block text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-body-xs mb-2">נוסחת ההגדרה (הפרשי ריבועים)</span>
+                    <BlockMath math="\sigma^2 = \frac{\sum_{i=1}^{N} (x_i - \mu)^2}{N}" />
+                  </div>
+                  <div className="p-3 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)] rounded-lg">
+                    <span className="block text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-body-xs mb-2">נוסחת עבודה (קיצור)</span>
+                    <BlockMath math="\sigma^2 = \frac{\sum_{i=1}^{N} x_i^2}{N} - \mu^2" />
+                  </div>
+                </div>
+                <div className="text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-right font-bold">
+                  סטיית תקן של האוכלוסייה: <InlineMath math="\sigma = \sqrt{\sigma^2}" />
+                </div>
+              </div>
 
-              <div className="p-3.5 bg-[var(--color-surface-raised)]/50 dark:bg-[var(--color-surface)]/40 rounded-lg text-center space-y-2">
-                <span className="block text-body-sm text-[var(--color-text-secondary)]">שונות המדגם המתוקנת (חלוקה ב-<InlineMath math="n-1" /> לקבלת אומד חסר הטיה לשונות האוכלוסייה):</span>
-                <BlockMath math="S^2 = \frac{\sum_{i=1}^{n} (x_i - \overline{X})^2}{n - 1}" />
+              <div className="p-4 rounded-lg border border-[var(--color-border)] dark:border-[var(--color-border)]/60 bg-white dark:bg-[var(--color-surface-raised)]/80 shadow-sm animate-fade-in">
+                <h4 className="font-extrabold text-sm text-[var(--color-text-primary)] dark:text-[var(--color-text-primary)] mb-2 border-r-2 border-[var(--color-accent-cobalt-line)] pr-2 text-right" dir="rtl">ב. נתוני מדגם (אומדן חסר הטיה <InlineMath math="S^2" />)</h4>
+                <p className="text-xs sm:text-sm text-[var(--color-text-secondary)] dark:text-[var(--color-text-primary)] leading-relaxed mb-3">
+                  כאשר הנתונים הם מדגם בגודל <InlineMath math="n" /> מתוך האוכלוסייה, וממוצע המדגם הוא <InlineMath math="\overline{X}" />. החלוקה היא ב- <InlineMath math="n-1" /> כדי לתקן את ההטיה.
+                </p>
+                <div className="space-y-3">
+                  <div className="p-3 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)] rounded-lg text-center">
+                    <span className="block text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-body-xs mb-2">נוסחת ההגדרה (הפרשי ריבועים מהממוצע)</span>
+                    <BlockMath math="S^2 = \frac{\sum_{i=1}^{n} (x_i - \overline{X})^2}{n-1}" />
+                  </div>
+                  <div className="p-3 bg-[var(--color-surface-raised)] dark:bg-[var(--color-surface)] rounded-lg text-center">
+                    <span className="block text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-body-xs mb-2">נוסחאות עבודה (קיצור) - שקולות מתמטית</span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-2">
+                      <div>
+                        <span className="block text-xs text-[var(--color-text-secondary)] mb-1">שימוש בממוצע המדגם:</span>
+                        <BlockMath math="S^2 = \frac{\sum_{i=1}^{n} x_i^2 - n\overline{X}^2}{n-1}" />
+                      </div>
+                      <div>
+                        <span className="block text-xs text-[var(--color-text-secondary)] mb-1">שימוש בסכומי התצפיות בלבד:</span>
+                        <BlockMath math="S^2 = \frac{1}{n-1} \left[ \sum_{i=1}^{n} x_i^2 - \frac{(\sum x_i)^2}{n} \right]" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3 text-xs text-[var(--color-text-secondary)] dark:text-[var(--color-text-secondary)] text-right font-bold">
+                  סטיית תקן מדגמית: <InlineMath math="S = \sqrt{S^2}" />
+                </div>
               </div>
             </div>
           )

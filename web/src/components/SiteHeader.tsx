@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
-import { Award, BookOpen, Home, ScrollText, Sliders, TrendingUp, PlayCircle } from 'lucide-react';
+import { Award, BookOpen, Home, ScrollText, Sliders, TrendingUp, PlayCircle, Activity } from 'lucide-react';
 
-export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'forward' | 'inverse' | 'table' | 'formula-sheet';
+export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'forward' | 'inverse' | 'table' | 'formula-sheet' | 'summary' | 'regression';
 
 interface SiteHeaderProps {
   activePage: SitePage;
@@ -23,10 +23,12 @@ interface NavItem {
 
 const inverseItem: NavItem = { id: 'inverse', label: 'חישוב אחוזונים', icon: <Sliders className="h-4 w-4 shrink-0" />, group: 'calculator' };
 const forwardItem: NavItem = { id: 'forward', label: 'חישובי הסתברויות', icon: <TrendingUp className="h-4 w-4 shrink-0" />, group: 'calculator' };
+const regressionItem: NavItem = { id: 'regression', label: 'רגרסיה', icon: <Activity className="h-4 w-4 shrink-0" />, group: 'calculator' };
 const hypothesisItem: NavItem = { id: 'hypothesis', label: 'בדיקת השערות', icon: <Award className="h-4 w-4 shrink-0" />, group: 'hypothesis' };
 const pointEstimationItem: NavItem = { id: 'point-estimation', label: 'אמידה נקודתית', icon: <Award className="h-4 w-4 shrink-0" />, group: 'hypothesis' };
 const tableItem: NavItem = { id: 'table', label: 'טבלאות התפלגות', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
 const formulaItem: NavItem = { id: 'formula-sheet', label: 'נוסחאות', icon: <ScrollText className="h-4 w-4 shrink-0" />, group: 'reference' };
+const summaryItem: NavItem = { id: 'summary', label: 'סיכום', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
 
 export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }: SiteHeaderProps): ReactElement {
   return (
@@ -66,6 +68,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
       >
         <NavButton item={inverseItem} isActive={activePage === 'inverse'} onNavigate={onNavigate} />
         <NavButton item={forwardItem} isActive={activePage === 'forward'} onNavigate={onNavigate} />
+        <NavButton item={regressionItem} isActive={activePage === 'regression'} onNavigate={onNavigate} />
         
         <Separator />
         
@@ -76,6 +79,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
         
         <NavButton item={tableItem} isActive={activePage === 'table'} onNavigate={onNavigate} />
         <NavButton item={formulaItem} isActive={activePage === 'formula-sheet'} onNavigate={onNavigate} />
+        <NavButton item={summaryItem} isActive={activePage === 'summary'} onNavigate={onNavigate} />
       </nav>
 
       {/* 3. Empty spacer for balanced flex layout (sits on the far left) */}

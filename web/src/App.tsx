@@ -14,11 +14,13 @@ import { PageTransition } from './components/PageTransition';
 import type { CalcMode } from './components/calc-ui';
 import { type TourMode, type GuidedTourStep, getTourStepsByMode } from './config/tours';
 
-type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'normal';
+type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'normal' | 'summary' | 'regression';
 const JoyrideComponent = Joyride as any;
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
 const NormalDistributionCalculator = lazy(() => import('./components/NormalDistributionCalculator'));
+const SummaryPage = lazy(() => import('./components/SummaryPage'));
+const LinearRegressionCalculator = lazy(() => import('./components/LinearRegressionCalculator'));
 
 function getTourViewportOffset(): number {
   return Math.max(Math.round(window.innerHeight * 0.1), 88);
@@ -123,7 +125,7 @@ export default function App() {
     // Smooth scroll to top on every navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation') {
+    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'summary' || page === 'regression') {
       setActivePage(page);
       return;
     }
@@ -350,6 +352,28 @@ export default function App() {
           footer={<SiteFooter onNavigate={handleNavigate} />}
         >
           <PointEstimationPage />
+        </PageLayout>
+      ) : null}
+
+      {activePage === 'summary' ? (
+        <PageLayout
+          header={<SiteHeader activePage="summary" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <Suspense fallback={<PageLoadingState />}>
+            <SummaryPage />
+          </Suspense>
+        </PageLayout>
+      ) : null}
+
+      {activePage === 'regression' ? (
+        <PageLayout
+          header={<SiteHeader activePage="regression" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <Suspense fallback={<PageLoadingState />}>
+            <LinearRegressionCalculator />
+          </Suspense>
         </PageLayout>
       ) : null}
 
