@@ -202,7 +202,7 @@ export const ChartWrapper: React.FC<ChartWrapperProps> = ({
           {emptyState ?? DEFAULT_EMPTY_MESSAGE}
         </div>
       ) : (
-        <div className="w-full mt-2" style={{ height: heightStyle }} dir={childrenDir}>
+        <div className="w-full mt-2" style={{ height: heightStyle, touchAction: 'pan-y' }} dir={childrenDir}>
           {children}
         </div>
       )}
