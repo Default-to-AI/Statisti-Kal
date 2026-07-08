@@ -5,6 +5,7 @@
 
 import { Suspense, lazy, useState, useCallback, useMemo, useEffect } from 'react';
 import { Joyride, type Step } from 'react-joyride';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import LandingPage from './components/LandingPage';
 import PointEstimationPage from './components/PointEstimationPage';
 import SiteFooter from './components/SiteFooter';
@@ -412,6 +413,7 @@ export default function App() {
           onStartHypothesisTour={handleStartHypothesisTour}
         />
       ) : null}
+      <SpeedInsights />
     </PageTransition>
   );
 }
