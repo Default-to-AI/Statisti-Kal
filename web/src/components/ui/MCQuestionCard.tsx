@@ -28,7 +28,7 @@ export function MCQuestionCard({ id, prompt, options, rationale }: MCQuestionCar
   const correctOption = options.find((opt) => opt.correct);
 
   return (
-    <Card variant="bordered" className={CONTENT_WIDTH_CLASS} id={id}>
+    <Card variant="default" className={CONTENT_WIDTH_CLASS} id={id}>
       {prompt ? (
         <div className="border-b border-[var(--color-border)] px-4 py-3 sm:px-5">
           <p className="text-right text-base font-semibold leading-relaxed text-[var(--color-text-primary)] sm:text-lg">

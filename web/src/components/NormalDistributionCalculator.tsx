@@ -60,6 +60,7 @@ import {
 import { NormalChart } from './charts/NormalChart';
 import { FormattedStep } from './results/FormattedStep';
 import { ZTable } from './tables/ZTable';
+import { TTable } from './tables/TTable';
 
 // --- Types ---
 
@@ -580,7 +581,11 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.25 }}
           >
-            <ZTable activeZ={calculation ? calculation.z1 : null} showSearch={true} />
+            {/* Statistical Tables */}
+            <div className="mt-8 space-y-6">
+              <ZTable activeZ={calculation ? calculation.z1 : null} showSearch={true} />
+              <TTable />
+            </div>
           </motion.div>
         ) : (
           <motion.div

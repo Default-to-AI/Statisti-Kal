@@ -103,54 +103,54 @@ function ToolCarousel({
     {
       id: 'hypothesis',
       title: 'בדיקת השערות',
-      description: <>מחשבון שלם לבדיקת השערות על תוחלת. לא צריך לזכור נוסחאות, רק להבין מה המסקנה. הפיצ'פקעס עלינו.</>,
+      description: <>מערכת אינטראקטיבית לבדיקת השערות על תוחלת. הזנת נתונים חכמה, סימולציה ויזואלית של אזורי הדחייה וקבלת מסקנות אוטומטית ומדויקת.</>,
       icon: Award,
-      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
-      bgClass: 'bg-[var(--color-primary)]/5',
-      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
-      iconBgClass: 'bg-[var(--color-primary)]/10',
-      iconColorClass: 'text-[var(--color-primary)]',
-      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
-      buttonText: 'למחשבון',
+      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt)]/40',
+      bgClass: 'bg-[var(--color-accent-cobalt)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-cobalt)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-accent-cobalt)]/20 to-transparent',
+      iconColorClass: 'text-[var(--color-accent-cobalt)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-accent-cobalt)]/5',
+      buttonText: 'למערכת',
       onClick: onTryHypothesis
     },
     {
       id: 'point-estimation',
       title: 'אמידה נקודתית',
-      description: <>כל הנושא של אומדים, א.ח.ה, שונות, <InlineMath math="MSE" /> ו-<InlineMath math="MLE" /> בדף למידה אחד עם דוגמאות פתורות.</>,
+      description: <>ריכוז מקצועי של נושאי אמידה: אומדים חסרי הטיה, תוחלת, שונות, אומדי <InlineMath math="MLE" /> מדורגים, וחישובי <InlineMath math="MSE" /> מפורטים שלב אחר שלב.</>,
       icon: Award,
-      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
-      bgClass: 'bg-[var(--color-primary)]/5',
-      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
-      iconBgClass: 'bg-[var(--color-primary)]/10',
-      iconColorClass: 'text-[var(--color-primary)]',
-      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
-      buttonText: 'לדף',
+      hoverBorderClass: 'hover:border-[var(--color-accent-teal)]/40',
+      bgClass: 'bg-[var(--color-accent-teal)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-teal)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-accent-teal)]/20 to-transparent',
+      iconColorClass: 'text-[var(--color-accent-teal)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-accent-teal)]/5',
+      buttonText: 'לדף הלמידה',
       onClick: onTryPointEstimation
     },
     {
       id: 'forward',
       title: 'חישובי הסתברויות',
-      description: <>חישוב שטחים (הסתברויות) תחת העקומה הנורמלית. מהיר יותר מטבלת <InlineMath math="Z" />, ובלי לטעות בשורה.</>,
+      description: <>חישוב מהיר ומדויק של הסתברויות תחת עקומת ההתפלגות הנורמלית. תצוגה גרפית בזמן אמת של האזור המחושב ללא צורך בחיפוש ידני בטבלאות.</>,
       icon: TrendingUp,
-      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt-line)]',
-      bgClass: 'bg-[var(--color-accent-cobalt)]/5',
-      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-cobalt)]/10',
-      iconBgClass: 'bg-[var(--color-accent-cobalt)]/10',
-      iconColorClass: 'text-[var(--color-accent-cobalt)]',
-      hoverBtnBgClass: 'hover:bg-[var(--color-accent-cobalt)]/5',
+      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
+      bgClass: 'bg-[var(--color-primary)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-primary)]/15 to-transparent',
+      iconColorClass: 'text-[var(--color-primary)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
       buttonText: 'למחשבון',
       onClick: () => onNavigate('forward')
     },
     {
       id: 'inverse',
       title: 'חישוב אחוזונים',
-      description: <>מציאת ציון תקן וערכים מקוריים מתוך הסתברות נתונה. הפוך את התהליך בקלות ובדיוק מרבי.</>,
+      description: <>חילוץ אחוזונים, ציוני תקן וערכי סף מתוך הסתברויות נתונות, תוך שימוש בפונקציית ההתפלגות הנורמלית ההפוכה.</>,
       icon: Sliders,
-      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt-line)]',
+      hoverBorderClass: 'hover:border-[var(--color-accent-cobalt)]/40',
       bgClass: 'bg-[var(--color-accent-cobalt)]/5',
       groupHoverBgClass: 'group-hover:bg-[var(--color-accent-cobalt)]/10',
-      iconBgClass: 'bg-[var(--color-accent-cobalt)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-accent-cobalt)]/20 to-transparent',
       iconColorClass: 'text-[var(--color-accent-cobalt)]',
       hoverBtnBgClass: 'hover:bg-[var(--color-accent-cobalt)]/5',
       buttonText: 'למחשבון',
@@ -159,29 +159,29 @@ function ToolCarousel({
     {
       id: 'table',
       title: 'טבלאות התפלגות',
-      description: <>טבלאות סטטיסטיות קלאסיות להתפלגות נורמלית והתפלגות <InlineMath math="T" />, זמינות ונגישות לכל צורך אקדמי.</>,
+      description: <>טבלאות התפלגות דינמיות: התפלגות נורמלית סטנדרטית (Z) והתפלגות Student's T, מעוצבות לקריאה אופטימלית וסימון חכם.</>,
       icon: BookOpen,
-      hoverBorderClass: 'hover:border-[var(--chart-2)]/40',
-      bgClass: 'bg-[var(--chart-2)]/5',
-      groupHoverBgClass: 'group-hover:bg-[var(--chart-2)]/10',
-      iconBgClass: 'bg-[var(--chart-2)]/10',
-      iconColorClass: 'text-[var(--chart-2)]',
-      hoverBtnBgClass: 'hover:bg-[var(--chart-2)]/5',
-      buttonText: 'לטבלאות',
+      hoverBorderClass: 'hover:border-[var(--color-accent-teal)]/40',
+      bgClass: 'bg-[var(--color-accent-teal)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-accent-teal)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-accent-teal)]/20 to-transparent',
+      iconColorClass: 'text-[var(--color-accent-teal)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-accent-teal)]/5',
+      buttonText: 'למאגר',
       onClick: () => onNavigate('table')
     },
     {
       id: 'formula-sheet',
       title: 'נוסחאות',
-      description: <>כל הנוסחאות מסודרות במקום אחד. כי בעידן המודרני אין סיבה לשנן בעל פה (טכניקה זה אויב).</>,
+      description: <>דף נוסחאות מקיף וקריא הכולל את כל הזהויות והקשרים הסטטיסטיים הנפוצים בקורס, מותאם לשליפה מהירה של מידע תוך כדי פתרון תרגילים.</>,
       icon: ScrollText,
-      hoverBorderClass: 'hover:border-[var(--chart-2)]/40',
-      bgClass: 'bg-[var(--chart-2)]/5',
-      groupHoverBgClass: 'group-hover:bg-[var(--chart-2)]/10',
-      iconBgClass: 'bg-[var(--chart-2)]/10',
-      iconColorClass: 'text-[var(--chart-2)]',
-      hoverBtnBgClass: 'hover:bg-[var(--chart-2)]/5',
-      buttonText: 'לדף הנוסחאות',
+      hoverBorderClass: 'hover:border-[var(--color-primary)]/40',
+      bgClass: 'bg-[var(--color-primary)]/5',
+      groupHoverBgClass: 'group-hover:bg-[var(--color-primary)]/10',
+      iconBgClass: 'bg-gradient-to-br from-[var(--color-primary)]/15 to-transparent',
+      iconColorClass: 'text-[var(--color-primary)]',
+      hoverBtnBgClass: 'hover:bg-[var(--color-primary)]/5',
+      buttonText: 'לגיליון הנוסחאות',
       onClick: () => onNavigate('formula-sheet')
     }
   ], [onNavigate, onTryHypothesis, onTryPointEstimation]);
@@ -237,20 +237,20 @@ function ToolCarousel({
               }}
             >
               <Card 
-                className={`p-6 sm:p-8 flex flex-col items-start text-right bg-[var(--color-surface)] border-[var(--color-border)] h-[400px] w-full cursor-pointer relative overflow-hidden group transition-all duration-300
-                ${isActive ? 'shadow-2xl shadow-black/40 ring-1 ring-white/10' : 'shadow-md hover:opacity-100 opacity-80'} ${tool.hoverBorderClass}`}
+                className={`p-6 sm:p-8 flex flex-col items-start text-right bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface)] border border-[var(--color-border)]/50 h-[400px] w-full cursor-pointer relative overflow-hidden group transition-all duration-500
+                ${isActive ? 'shadow-2xl shadow-black/60 ring-1 ring-white/10 scale-[1.02]' : 'shadow-lg hover:opacity-100 opacity-70 scale-[0.98]'} ${tool.hoverBorderClass}`}
                 onClick={() => {
                   if (!isActive) setActiveIndex(i);
                 }}
               >
-                <div className={`absolute top-0 right-0 w-32 h-32 rounded-bl-full -z-10 transition-colors ${tool.bgClass} ${tool.groupHoverBgClass}`}></div>
-                <div className={`mb-6 p-4 rounded-2xl ${tool.iconBgClass} ${tool.iconColorClass}`}>
-                  <Icon className="w-8 h-8" />
+                {/* Decorative background flare */}
+                <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] -z-10 transition-opacity duration-700 ${isActive ? 'opacity-40' : 'opacity-10'} ${tool.bgClass}`}></div>
+                
+                <div className={`mb-6 p-4 rounded-2xl border border-white/5 shadow-inner transition-transform duration-500 group-hover:-translate-y-1 ${tool.iconBgClass} ${tool.iconColorClass}`}>
+                  <Icon className="w-8 h-8 drop-shadow-md" strokeWidth={1.5} />
                 </div>
-                <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4 font-display">{tool.title}</h3>
-                <p className="text-body-lg text-[var(--color-text-secondary)] mb-8 flex-grow leading-relaxed">
-                  {tool.description}
-                </p>
+                <h3 className="text-2xl font-bold text-[var(--color-text-primary)] mb-4 font-display tracking-tight drop-shadow-sm">{tool.title}</h3>
+                <p className="text-[var(--color-text-secondary)] leading-relaxed text-sm flex-1">{tool.description}</p>
                 <Button 
                   variant="ghost" 
                   className={`w-full group/btn text-lg border border-[var(--color-border)] whitespace-nowrap flex-nowrap ${tool.hoverBtnBgClass} ${isActive ? 'bg-[var(--color-surface-raised)]' : ''}`}
@@ -350,7 +350,27 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
 
         <section className="w-full mx-auto py-20 overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 data-toc id="landing-tools" className="text-display-h2 text-center text-[var(--color-text-primary)] mb-6">הכלים שלנו</h2>
+            <h2
+              data-toc
+              id="landing-tools"
+              className="flex items-center justify-center gap-4 text-display-h2 text-[var(--color-text-primary)] mb-8"
+            >
+              <span
+                className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+                aria-hidden="true"
+              />
+              <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+                <span>מה אפשר</span>
+                <span className="font-handwriting text-[1.18em] text-[var(--color-primary)] -rotate-2">
+                  למצוא
+                </span>
+                <span>פה?</span>
+              </span>
+              <span
+                className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+                aria-hidden="true"
+              />
+            </h2>
           </div>
           <ToolCarousel onNavigate={onNavigate} onTryHypothesis={onTryHypothesis} onTryPointEstimation={onTryPointEstimation} />
         </section>
@@ -361,10 +381,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
             <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,var(--color-primary)_0%,transparent_100%)] opacity-5 group-hover:opacity-10 transition-opacity duration-500"></div>
             
             <div className="mx-auto max-w-2xl lg:max-w-4xl flex flex-col items-center text-center gap-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/20 font-bold text-sm">
-                <BookOpen className="w-4 h-4" />
-                פילוסופיית המערכת
-              </div>
+
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-[var(--color-text-primary)]">
                 אנחנו לא בתיכון, <span className="text-transparent bg-clip-text bg-gradient-to-l from-[var(--color-primary)] to-[var(--color-accent-cobalt)]">אנחנו באקדמיה.</span>
               </h2>
@@ -376,7 +393,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
               </blockquote>
               
               <p className="text-lg text-[var(--color-text-secondary)] leading-relaxed max-w-3xl mt-4">
-                המחשב יעשה את העבודה השחורה והטכנית. התפקיד שלכם הוא אחד: <strong className="text-[var(--color-text-primary)]">להבין את הרעיון, לשלוט בשפה ולראות את התמונה המלאה.</strong> בסטטיסטי-קל תמצאו פחות התעסקות בהעברת אגפים, ויותר מקום לפתח אינטואיציה סטטיסטית.
+                המחשב יעשה את העבודה השחורה והטכנית. התפקיד שלכם הוא אחד: <strong className="text-[var(--color-text-primary)]">להבין את הרעיון, לשלוט בשפה ולראות את התמונה המלאה.</strong> אתם איתי? תנו לAI לעשות את החישובים, זה לא שווה כלום אם אתם לא מבינים.
               </p>
             </div>
           </div>

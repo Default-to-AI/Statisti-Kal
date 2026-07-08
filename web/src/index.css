@@ -109,7 +109,9 @@
   --color-background: #000000;        /* Pure Black */
   --color-surface: #121212;           /* Material Dark */
   --color-surface-raised: #1E1E1E;    /* Elevated */
+  --color-surface-elevated: #282828;  /* Highest Elevation */
   --color-border: #333333;            /* Solid crisp border */
+  --color-border-strong: #555555;     /* Stronger border */
 
   /* === Text layer === */
   --color-text-primary: #FFFFFF;      /* Pure White (Math & Headers) */
