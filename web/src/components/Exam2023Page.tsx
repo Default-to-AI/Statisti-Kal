@@ -368,7 +368,7 @@ function Exam2023Page(): ReactElement {
                 },
                 {
                   math: String.raw`\text{דחינו }H_0\Rightarrow\text{ השגיאה האפשרית = מסוג ראשון (Type I)}`,
-                  commentary: '״אם דחינו את H₀ הטעות האפשרית היא תמיד מסוג ראשון; אם לא דחינו — מסוג שני.״',
+                  commentary: <>״אם דחינו את <InlineMath math={String.raw`H_0`} /> הטעות האפשרית היא תמיד מסוג ראשון; אם לא דחינו — מסוג שני.״</>,
                 },
               ]}
               finalAnswer={String.raw`\text{דוחים }H_0:\mu=50\ \text{ברמת }\alpha=0.01;\ \text{השגיאה האפשרית = מסוג ראשון (Type I)}`}
@@ -571,7 +571,7 @@ function Exam2023Page(): ReactElement {
               solutionSteps={[
                 {
                   math: String.raw`0.75=\dfrac{x_{0.75}-25}{33-25}`,
-                  commentary: 'רבעון עליון = אחוזון 75 = הנקודה שמשמאלה 75% מהשטח; זה בדיוק F(x)=0.75.',
+                  commentary: 'רבעון עליון = אחוזון 75 = הנקודה שמשמאלה 75% מהשטח; <>זה בדיוק <InlineMath math={String.raw`F(x)=0.75`} />.</>',
                 },
                 {
                   math: String.raw`x_{0.75}-25=0.75\times 8=6\ \Rightarrow\ x_{0.75}=25+6=31`,
@@ -645,11 +645,11 @@ function Exam2023Page(): ReactElement {
               solutionSteps={[
                 {
                   math: String.raw`"\text{מוטה תמיד עדיף}"\ \Rightarrow\ \text{שגוי — משווים לפי }MSE`,
-                  commentary: '"אנחנו קובעים לפי ה‑MSE… לא לפי אם העומד מוטה או לא מוטה."',
+                  commentary: <>"אנחנו קובעים לפי ה‑<InlineMath math={String.raw`MSE`} />… לא לפי אם העומד מוטה או לא מוטה."</>,
                 },
                 {
                   math: String.raw`"\text{חסר הטיה תמיד עדיף}"\ \Rightarrow\ \text{שגוי — אותה סיבה}`,
-                  commentary: 'חסר‑הטיה אינו מבטיח MSE נמוך יותר.',
+                  commentary: <>חסר‑הטיה אינו מבטיח <InlineMath math={String.raw`MSE`} /> נמוך יותר.</>,
                 },
                 {
                   math: String.raw`"\text{חסר הטיה בעל הטיה קטנה יותר}"\ \Rightarrow\ \text{חסר‑משמעות (חסר הטיה}\Rightarrow\text{bias=0)}`,
@@ -657,7 +657,7 @@ function Exam2023Page(): ReactElement {
                 },
                 {
                   math: String.raw`"\text{שני מוטים}\Rightarrow\text{נעדיף שונות קטנה}"\ \Rightarrow\ \text{שגוי — צריך גם }bias^2`,
-                  commentary: 'רק אם שניהם חסרי הטיה (bias=0) היה "שונות קטנה ⇒ MSE קטן" נכון. עם הטיה נדרשים שני האיברים.',
+                  commentary: <>רק אם שניהם חסרי הטיה (bias=0) היה "שונות קטנה ⇒ <InlineMath math={String.raw`MSE`} /> קטן" נכון. עם הטיה נדרשים שני האיברים.</>,
                 },
                 { math: String.raw`\Rightarrow\boxed{\text{אף טענה אינה בהכרח נכונה}}`, commentary: '' },
               ]}
@@ -777,11 +777,11 @@ function Exam2023Page(): ReactElement {
                 },
                 {
                   math: String.raw`s^2=\dfrac{158.63-6(4.983)^2}{5}=\dfrac{158.63-148.98}{5}=\dfrac{9.65}{5}=1.93\ (1.9257\ \text{בדיוק})`,
-                  commentary: <>כי ממוצע אוכלוסיית חולי הסוכרת אינו ידוע — משתמשים במכנה n−1. אילו <InlineMath math={String.raw`\mu`} /> היה ידוע היינו מחלקים ב‑n.</>,
+                  commentary: <>כי ממוצע אוכלוסיית חולי הסוכרת אינו ידוע — משתמשים במכנה <InlineMath math={String.raw`n-1`} />. אילו <InlineMath math={String.raw`\mu`} /> היה ידוע היינו מחלקים ב‑<InlineMath math={String.raw`n`} />.</>,
                 },
                 {
                   math: String.raw`\text{אין שורש ריבוע — מבקשים את אומד השונות }s^2`,
-                  commentary: 'אומד סטיית תקן היה דורש √s².',
+                  commentary: <>אומד סטיית תקן היה דורש <InlineMath math={String.raw`\sqrt{s^2}`} />.</>,
                 },
               ]}
               finalAnswer={String.raw`\bar x=4.983;\quad s^2=1.9257\ \text{(אומדים חסרי הטיה של }\mu,\ \sigma^2)`}
@@ -901,7 +901,7 @@ function Exam2023Page(): ReactElement {
                 },
                 {
                   math: String.raw`1.029<2.015\ \Rightarrow\ \text{באזור הקבלה}\ \Rightarrow\ \text{לא דוחים }H_0`,
-                  commentary: 'דחייה דורשת t_stat ≥ t_crit; 1.029 רחוק מתחת ל‑2.015, לכן נשארים עם H₀.',
+                  commentary: <>דחייה דורשת <InlineMath math={String.raw`t_\text{stat} \ge t_\text{crit}`} />; 1.029 רחוק מתחת ל‑2.015, לכן נשארים עם <InlineMath math={String.raw`H_0`} />.</>,
                 },
               ]}
               finalAnswer={String.raw`\text{לא דוחים }H_0:\mu=4.4\ \text{ברמת }\alpha=0.05\ \text{(לא גבוה מהבריאים)}`}
@@ -914,7 +914,7 @@ function Exam2023Page(): ReactElement {
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> תמיד כותבים את ההשערות — הן מדורגות במפורש. ימני "גבוה מ‑4.4" ⇒ <InlineMath math={String.raw`H_1:\mu>4.4`} />, דוחים רק
                   על <InlineMath math={String.raw`t`} /> חיובי גדול. למבחני t עדיף כלל אזור הדחייה על פני ה‑p-value כשהטבלה גסה; שניהם נותנים את אותה החלטה. המסקנה חייבת להיות בהקשר
-                  ("לא גבוה מהבריאים"), לא רק "לא דוחים H₀".
+                  ("לא גבוה מהבריאים"), לא רק "לא דוחים <InlineMath math={String.raw`H_0`} />".
                 </>
               }
             />
@@ -963,7 +963,7 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    אי‑אפשר לקרוא p-value מדויק מטבלת t, אך אפשר <strong>לחסום</strong> אותו.
+                    <>אי‑אפשר לקרוא <InlineMath math={String.raw`p\text{-value}`} /> מדויק מטבלת <InlineMath math={String.raw`t`} />, אך אפשר <strong>לחסום</strong> אותו.</>
                   </>
                 ),
                 distribution: (
@@ -988,7 +988,7 @@ function Exam2023Page(): ReactElement {
                 },
                 {
                   math: '0.10<P(t_5>1.029)<0.25',
-                  commentary: 't גדול יותר ⇒ זנב ימיני קטן יותר; מכיוון ש‑1.029 בין שני הגבולות, השטח ביניהם.',
+                  commentary: '<><InlineMath math={String.raw`t`} /> גדול יותר ⇒ זנב ימיני קטן יותר;</> מכיוון ש‑1.029 בין שני הגבולות, השטח ביניהם.',
                 },
                 {
                   math: String.raw`\text{התחום כולו }>0.05=\alpha\ \Rightarrow\ \text{לא דוחים (תואם סעיף ד)}`,
@@ -1176,7 +1176,7 @@ function Exam2023Page(): ReactElement {
               trap={
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> ה‑X המקורי אחיד ⇒ <strong>חובה</strong> לצטט את ה‑משפט הגבול המרכזי כדי להצדיק קירוב נורמלי; השמטת צעד ה‑משפט הגבול המרכזי עולה
-                  בכמחצית נקודות הסעיף. אילו X היה כבר נורמלי, ה‑משפט הגבול המרכזי היה מיותר (סכום נורמליים הוא בדיוק נורמלי). מנרמלים את <strong>הממוצע</strong> עם <InlineMath math={String.raw`\sigma`} />/<InlineMath math={String.raw`\sqrt{n}`} />; אל תשתמשו
+                  <>בכמחצית נקודות הסעיף. אילו X היה כבר נורמלי, ה‑משפט הגבול המרכזי היה מיותר (סכום נורמליים הוא בדיוק נורמלי).</> מנרמלים את <strong>הממוצע</strong> עם <InlineMath math={String.raw`\sigma`} />/<InlineMath math={String.raw`\sqrt{n}`} />; אל תשתמשו
                   ב‑<InlineMath math={String.raw`\sigma`} /> לבדה כאן.
                 </>
               }
@@ -1242,8 +1242,8 @@ function Exam2023Page(): ReactElement {
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> תחת <InlineMath math={String.raw`H_0`} /> (אחיד) זקוקים ל‑משפט הגבול המרכזי כדי לקרב את X̄; תחת <InlineMath math={String.raw`H_1`} /> (נורמלי){' '}
                   <strong>אין</strong> צורך בו — סכום/ממוצע של נורמליים הוא בדיוק נורמלי. שכחת משפט הגבול המרכזי היכן שנדרש, או הוספתו היכן שאינו נדרש, שתיהן עולות בנקודות.{' '}
-                  <InlineMath math={String.raw`\alpha`} /> ו‑<InlineMath math={String.raw`\beta`} /> מחושבים תחת התפלגויות <em>שונות</em> (אפס מול חלופית). שמרו על ה‑SE במקומו הנכון: √
-                  (33.33/20) תחת <InlineMath math={String.raw`H_0`} /> מול √(4/20) תחת <InlineMath math={String.raw`H_1`} />.
+                  <InlineMath math={String.raw`\alpha`} /> ו‑<InlineMath math={String.raw`\beta`} /> מחושבים תחת התפלגויות <em>שונות</em> (אפס מול חלופית). שמרו על ה‑<InlineMath math={String.raw`SE`} /> במקומו הנכון: <InlineMath math={String.raw`\sqrt{33.33/20}`} /> תחת
+                  <InlineMath math={String.raw`H_0`} /> מול <InlineMath math={String.raw`\sqrt{4/20}`} /> תחת <InlineMath math={String.raw`H_1`} />.
                 </>
               }
             />
@@ -1260,19 +1260,19 @@ function Exam2023Page(): ReactElement {
               {[
                 ['אחיד — תוחלת', 'E(X)=\\dfrac{a+b}{2}', 'אחיד רציף על [a,b]'],
                 ['אחיד — שונות', 'V(X)=\\dfrac{(b-a)^2}{12}', 'מכנה 12 (רציף)'],
-                ['אחיד — פונקציית מצטברת', 'F(x)=\\dfrac{x-a}{b-a},\\ x\\in[a,b]', 'לאחוזונים / הסתברויות'],
+                [<>אחיד — פונקציית מצטברת</>, 'F(x)=\\dfrac{x-a}{b-a},\\ x\\in[a,b]', 'לאחוזונים / הסתברויות'],
                 ['אחיד — אחוזון', 'x_p=a+p(b-a)', 'p\\in[0,1]'],
                 ['הסתברות מותנית', 'P(A\\mid B)=\\dfrac{P(A\\cap B)}{P(B)}', 'תוצאה ב‑[0,1]'],
                 [<>Z חד‑מדגמי (<InlineMath math={String.raw`\sigma`} /> ידוע)</>, 'Z=\\dfrac{\\bar X-\\mu_0}{\\sigma/\\sqrt{n}}', 'שמאלי / ימני / דו‑צדדי'],
                 [<>t חד‑מדגמי (<InlineMath math={String.raw`\sigma`} /> לא ידוע)</>, 't=\\dfrac{\\bar X-\\mu_0}{s/\\sqrt{n}}', 'df=n-1'],
                 [<>רווח סמך t ל‑<InlineMath math={String.raw`\mu`} /></>, '\\bar X\\pm t_{n-1,1-\\alpha/2}\\dfrac{s}{\\sqrt{n}}', <><InlineMath math={String.raw`\sigma`} /> לא ידוע</>],
-                [<>שונות מדגמית (חסר הטיה, <InlineMath math={String.raw`\mu`} /> לא ידוע)</>, 's^2=\\dfrac{1}{n-1}\\sum(X_i-\\bar X)^2', 'מחלקים ב‑n-1'],
-                ['שונות — צורה חישובית', 's^2=\\dfrac{\\sum X_i^2-n\\bar X^2}{n-1}', 'מהיר, פחות עיגולים'],
+                [<>שונות מדגמית (חסר הטיה, <InlineMath math={String.raw`\mu`} /> לא ידוע)</>, 's^2=\\dfrac{1}{n-1}\\sum(X_i-\\bar X)^2', '<>מחלקים ב‑<InlineMath math={String.raw`n-1`} /></>'],
+                [<>שונות — צורה חישובית</>, 's^2=\\dfrac{\\sum X_i^2-n\\bar X^2}{n-1}', 'מהיר, פחות עיגולים'],
                 [<>אומד שונות כש‑<InlineMath math={String.raw`\mu`} /> ידוע</>, '\\dfrac{1}{n}\\sum(X_i-\\mu)^2', 'מחלקים ב‑n'],
-                ['משפט הגבול המרכזי (ממוצע מדגם)', '\\bar X\\overset{\\text{approx}}{\\sim}N\\!\\left(\\mu,\\dfrac{\\sigma^2}{n}\\right)', 'X לא נורמלי ⇒ צטטו משפט הגבול המרכזי'],
-                ['סכום נורמליים בלתי־תלויים', '\\sum X_i\\sim N(n\\mu,\\ n\\sigma^2)', 'מדויק, בלי משפט הגבול המרכזי'],
-                ['שגיאות Type I / II', '\\alpha=P(\\text{דחייה}\\mid H_0);\\ \\beta=P(\\text{קבלה}\\mid H_1)', 'דחייה⇒I; קבלה⇒II'],
-                ['MSE של אומד', '\\operatorname{MSE}(T)=V(T)+\\operatorname{Bias}(T)^2', 'קריטריון דירוג אומדים'],
+                [<>משפט הגבול המרכזי (ממוצע מדגם)</>, '\\bar X\\overset{\\text{approx}}{\\sim}N\\!\\left(\\mu,\\dfrac{\\sigma^2}{n}\\right)', <>X לא נורמלי ⇒ צטטו משפט הגבול המרכזי</>],
+                [<>סכום נורמליים בלתי־תלויים</>, '\\sum X_i\\sim N(n\\mu,\\ n\\sigma^2)', 'מדויק, בלי משפט הגבול המרכזי'],
+                [<>שגיאות <InlineMath math={String.raw`\text{Type I / II}`} /></>, '\\alpha=P(\\text{דחייה}\\mid H_0);\\ \\beta=P(\\text{קבלה}\\mid H_1)', <>דחייה⇒I; קבלה⇒II</>],
+                [<><InlineMath math={String.raw`MSE`} /> של אומד</>, '\\operatorname{MSE}(T)=V(T)+\\operatorname{Bias}(T)^2', 'קריטריון דירוג אומדים'],
               ].map(([name, latex, note], idx) => (
                 <div key={idx} className="border-b border-[var(--color-border)] py-2 last:border-0">
                   <p className="text-sm font-semibold text-[var(--color-text-primary)]">{name}</p>
@@ -1295,15 +1295,15 @@ function Exam2023Page(): ReactElement {
             <CardBody className="space-y-3 text-right" dir="rtl">
               {[
                 [<>השערות עוסקות ב‑<InlineMath math={String.raw`\mu`} />, לא ב‑<InlineMath math={String.raw`\bar{x}`} /></>, <>לעולם לא כותבים השערה עם 42 או <InlineMath math={String.raw`\bar{x}`} />; 42 הוא נתון מדגמי שנצפה.</>],
-                ['החלטה ↔ סוג שגיאה נעולים', 'דחיית H₀ ⇒ Type I אפשרי; אי‑דחייה ⇒ Type II אפשרי. "שגיאה אפשרית" פירושה סטטיסטית, לעולם לא "טעות במחשבון".'],
-                ['כלל ה‑p-value אוניברסלי', 'דוחים ⇔ p-value < α, לכל כיוון ולכל מבחן (Z או t).'],
-                ['טיפול ב‑z שלילי', 'P(Z<-a)=1−Φ(a) — הופכים גם סימן וגם זנב; אל תקראו שלילי מטבלה חיובית‑בלבד.'],
+                [<>החלטה ↔ סוג שגיאה נעולים</>, <>דחיית <InlineMath math={String.raw`H_0`} /> ⇒ <InlineMath math={String.raw`\text{Type I}`} /> אפשרי; אי‑דחייה ⇒ <InlineMath math={String.raw`\text{Type II}`} /> אפשרי. "שגיאה אפשרית" פירושה סטטיסטית, לעולם לא "טעות במחשבון".</>],
+                [<>כלל ה‑<InlineMath math={String.raw`p\text{-value}`} /> אוניברסלי</>, <>דוחים ⇔ <InlineMath math={String.raw`p\text{-value} < \alpha`} />, לכל כיוון ולכל מבחן (Z או t).</>],
+                [<>טיפול ב‑<InlineMath math={String.raw`z`} /> שלילי</>, <><InlineMath math={String.raw`P(Z<-a)=1-\Phi(a)`} /> — הופכים גם סימן וגם זנב; אל תקראו שלילי מטבלה חיובית‑בלבד.</>],
                 [<>שונות אוכלוסייה לא ידועה ⇒ <InlineMath math={String.raw`t`} />, לא Z</>, <>רווח ומבחן ל‑<InlineMath math={String.raw`\mu`} /> משתמשים בהתפלגות <InlineMath math={String.raw`t`} />; מה שקובע הוא אם <InlineMath math={String.raw`\sigma^2`} /> (האוכלוסייה) ידוע.</>],
                 [<>מכנה שונות חסרת הטיה</>, <><InlineMath math={String.raw`\mu`} /> לא ידוע ⇒ מחלקים ב‑n−1; <InlineMath math={String.raw`\mu`} /> ידוע ⇒ מחלקים ב‑n. ערבוב ביניהם מפסיד נקודות.</>],
                 [<>הערכה מול פרמטר</>, <>כותבים <InlineMath math={String.raw`\bar{x}`} />=4.983 ו‑<InlineMath math={String.raw`s^2`} />=1.9257, לעולם לא "<InlineMath math={String.raw`\mu`} />=4.983" או "<InlineMath math={String.raw`\sigma^2`} />=…". הפרמטר נשאר לא ידוע.</>],
                 ['חובה לצטט את ה‑משפט הגבול המרכזי', 'כש‑X המקורי לא נורמלי ומשתמשים בקירוב נורמלי לסכום/ממוצע — כותבים את שורת ה‑משפט הגבול המרכזי; השמטה עולה בכמחצית נקודות הסעיף.'],
                 [<>אין <InlineMath math={String.raw`\sqrt{n}`} /> לתצפית בודדת</>, <>נרמול תצפית אחת משתמש ב‑<InlineMath math={String.raw`\sigma`} /> לבדה, לא ב‑<InlineMath math={String.raw`\sigma`} />/<InlineMath math={String.raw`\sqrt{n}`} />.</>],
-                ['העדפת אומדים = MSE', 'חסר‑הטיה לבדו אינו הופך אומד לטוב יותר; משווים MSE=V+bias². שני חסרי הטיה ⇒ שונות קטנה מנצחת; שני מוטים ⇒ דרושים שני האיברים.'],
+                [<>העדפת אומדים = <InlineMath math={String.raw`MSE`} /></>, <>חסר‑הטיה לבדו אינו הופך אומד לטוב יותר; משווים <InlineMath math={String.raw`MSE=V+\text{bias}^2`} />. שני חסרי הטיה ⇒ שונות קטנה מנצחת; שני מוטים ⇒ דרושים שני האיברים.</>],
               ].map(([title, body], idx) => (
                 <div key={idx} className="flex items-start gap-3">
                   <span className="mt-1 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[var(--color-warning)]/40 bg-[var(--color-warning)]/10 text-sm font-bold text-[var(--color-warning)]">
