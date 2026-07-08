@@ -140,23 +140,14 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
   const containerRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (activeCellRef.current && containerRef.current) {
-      const cell = activeCellRef.current;
-      const container = containerRef.current;
-
-      const cellRect = cell.getBoundingClientRect();
-      const containerRect = container.getBoundingClientRect();
-
-      const scrollTop = container.scrollTop + (cellRect.top - containerRect.top) - (containerRect.height / 2) + (cellRect.height / 2);
-      const scrollLeft = container.scrollLeft + (cellRect.left - containerRect.left) - (containerRect.width / 2) + (cellRect.width / 2);
-
-      container.scrollTo({
-        top: scrollTop,
-        left: scrollLeft,
-        behavior: 'smooth'
+    if (activeCellRef.current) {
+      activeCellRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center'
       });
     }
-  }, [rowVal, colVal]);
+  }, [actualZ]);
 
   const computedTCritical = useMemo(() => {
     if (typeof tDf === 'string' || tDf <= 0 || isNaN(tDf)) return null;
@@ -381,7 +372,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                       <div className="relative flex flex-col sm:flex-row bg-[var(--color-surface)] rounded-md border border-[var(--color-border)] p-1.5 shadow-inner shrink-0 w-full md:w-auto" dir="rtl">
                         {[
                           { id: 'z', label: 'חיפוש לפי ציון תקן', math: 'Z' },
-                          { id: 'phi', label: 'חיפוש לפי הסתברות', math: '\\Phi' }
+                          { id: 'phi', label: 'חיפוש לפי הסתברות', math: String.raw`\Phi` }
                         ].map((tab) => (
                           <button
                             key={tab.id}
@@ -415,30 +406,30 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                           dir="ltr"
                         />
 
-                        <AnimatePresence>
-                          {(!searchVal && searchType === 'z') && (
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="absolute inset-0 flex items-center justify-center pointer-events-none text-[var(--color-text-secondary)] opacity-50 text-lg sm:text-xl z-10"
-                              dir="ltr"
-                            >
-                              <InlineMath math="Z = ?" />
-                            </motion.div>
-                          )}
-                          {(!phiSearchVal && searchType === 'phi') && (
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="absolute inset-0 flex items-center justify-center pointer-events-none text-[var(--color-text-secondary)] opacity-50 text-lg sm:text-xl z-10"
-                              dir="ltr"
-                            >
-                              <InlineMath math="\Phi = ?" />
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
+                          <AnimatePresence>
+                            {(!searchVal && searchType === 'z') && (
+                              <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none text-[var(--color-text-secondary)] opacity-50 text-lg sm:text-xl z-10"
+                                dir="ltr"
+                              >
+                                <InlineMath math="0 \le Z \le 3.99" />
+                              </motion.div>
+                            )}
+                            {(!phiSearchVal && searchType === 'phi') && (
+                              <motion.div
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="absolute inset-0 flex items-center justify-center pointer-events-none text-[var(--color-text-secondary)] opacity-50 text-lg sm:text-xl z-10"
+                                dir="ltr"
+                              >
+                                <InlineMath math="0 \le \Phi \le 1" />
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                       </div>
                     </div>
 

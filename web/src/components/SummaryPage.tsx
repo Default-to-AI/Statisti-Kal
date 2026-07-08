@@ -123,7 +123,7 @@ export default function SummaryPage(): React.ReactElement {
           <GoldenRuleCard 
             title="משפט הגבול המרכזי"
             example={<BlockMath math="\bar{X} \approx N\left(\mu, \frac{\sigma^2}{n}\right)" />}
-            watermark="CLT"
+            watermark="משפט הגבול המרכזי"
           >
             לא משנה מאיזו צורה האוכלוסייה, אם תאספו מדגם מספיק גדול, הממוצעים ייראו <span className="font-bold text-[var(--color-text-primary)] underline decoration-[var(--color-primary)] decoration-2 underline-offset-4">נורמלים לחלוטין</span>.
           </GoldenRuleCard>
@@ -233,7 +233,7 @@ export default function SummaryPage(): React.ReactElement {
         </Disclosure>
 
         <Disclosure
-          title="6. חילוץ פרמטרים ממשפט הגבול המרכזי (CLT) כשההשערה היא התפלגות מלאה"
+          title="6. חילוץ פרמטרים ממשפט הגבול המרכזי (משפט הגבול המרכזי) כשההשערה היא התפלגות מלאה"
           defaultOpen={false}
           accentOnOpen="brass"
         >

@@ -165,7 +165,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
       zone === 'power'
         ? {
             title: 'עוצמת מבחן',
-            math: '1-\\beta',
+            math: String.raw`1-\beta`,
             textClassName: 'text-[var(--chart-2)]',
             borderColor: 'var(--chart-2)',
             backgroundColor: 'color-mix(in srgb, var(--chart-2) 14%, var(--color-surface))',
@@ -173,14 +173,14 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
         : zone === 'rejection'
           ? {
               title: 'אזור דחייה',
-              math: '\\alpha',
+              math: String.raw`\alpha`,
               textClassName: 'text-[var(--color-accent-crimson)]',
               borderColor: 'var(--color-accent-crimson)',
               backgroundColor: 'color-mix(in srgb, var(--color-accent-crimson) 14%, var(--color-surface))',
             }
           : {
               title: 'אזור אי-דחייה',
-              math: '1-\\alpha',
+              math: String.raw`1-\alpha`,
               textClassName: 'text-[var(--chart-1)]',
               borderColor: 'var(--chart-1)',
               backgroundColor: 'color-mix(in srgb, var(--chart-1) 14%, var(--color-surface))',
@@ -440,7 +440,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             strokeDasharray="4 4"
             label={(props) =>
               renderChartMathReferenceLabel(props, {
-                math: '\\mu_0',
+                math: String.raw`\mu_0`,
                 color: 'var(--chart-1)',
                 width: 40,
                 height: 30,
@@ -460,7 +460,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
               strokeDasharray="4 4"
               label={(props) =>
                 renderChartMathReferenceLabel(props, {
-                  math: '\\mu_1',
+                  math: String.raw`\mu_1`,
                   color: 'var(--chart-2)',
                   width: 40,
                   height: 30,
@@ -535,7 +535,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
               strokeOpacity={1}
               label={(props) =>
                 renderChartMathReferenceLabel(props, {
-                  math: '\\bar{X}',
+                  math: String.raw`\bar{X}`,
                   color: sampleMeanColor,
                   width: 56,
                   height: 34,

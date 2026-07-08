@@ -720,7 +720,7 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
           )
         },
         {
-          title: 'משפט הגבול המרכזי (CLT)',
+          title: 'משפט הגבול המרכזי (משפט הגבול המרכזי)',
           content: (
             <div className="space-y-4">
               <p className="text-sm leading-relaxed">

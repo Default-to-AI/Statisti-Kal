@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
-import { Award, BookOpen, Home, ScrollText, Sliders, TrendingUp, PlayCircle, Activity } from 'lucide-react';
+import { Award, BookOpen, ClipboardList, Home, ScrollText, Sliders, TrendingUp, PlayCircle, Activity } from 'lucide-react';
 
-export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'forward' | 'inverse' | 'table' | 'formula-sheet' | 'summary' | 'regression';
+export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'forward' | 'inverse' | 'table' | 'formula-sheet' | 'summary' | 'regression';
 
 interface SiteHeaderProps {
   activePage: SitePage;
@@ -29,6 +29,7 @@ const pointEstimationItem: NavItem = { id: 'point-estimation', label: 'אמיד�
 const tableItem: NavItem = { id: 'table', label: 'טבלאות התפלגות', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
 const formulaItem: NavItem = { id: 'formula-sheet', label: 'נוסחאות', icon: <ScrollText className="h-4 w-4 shrink-0" />, group: 'reference' };
 const summaryItem: NavItem = { id: 'summary', label: 'סיכום', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
+const exam2023Item: NavItem = { id: 'exam-2023', label: 'מבחן 2023', icon: <ClipboardList className="h-4 w-4 shrink-0" />, group: 'reference' };
 
 export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }: SiteHeaderProps): ReactElement {
   return (
@@ -80,6 +81,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
         <NavButton item={tableItem} isActive={activePage === 'table'} onNavigate={onNavigate} />
         <NavButton item={formulaItem} isActive={activePage === 'formula-sheet'} onNavigate={onNavigate} />
         <NavButton item={summaryItem} isActive={activePage === 'summary'} onNavigate={onNavigate} />
+        <NavButton item={exam2023Item} isActive={activePage === 'exam-2023'} onNavigate={onNavigate} />
       </nav>
 
       {/* 3. Empty spacer for balanced flex layout (sits on the far left) */}

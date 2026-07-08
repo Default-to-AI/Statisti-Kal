@@ -95,7 +95,7 @@ FormulaBlock.displayName = 'FormulaBlock';
  * CalcBlock — shorthand for block math calculations.
  * Example:
  *   <CalcBlock label="Substituted values">
- *     <InlineMath math="Z = \\frac{115-100}{15}" />
+ *     <InlineMath math={String.raw`Z = \frac{115-100}{15}`} />
  *   </CalcBlock>
  */
 export interface CalcBlockProps extends Omit<FormulaBlockProps, 'variant' | 'label'> {

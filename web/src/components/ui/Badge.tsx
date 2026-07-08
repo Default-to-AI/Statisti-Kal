@@ -7,7 +7,7 @@
 
 import React, { forwardRef, HTMLAttributes } from 'react';
 
-export type BadgeVariant = 'brass' | 'teal' | 'crimson' | 'cobalt' | 'neutral';
+export type BadgeVariant = 'brass' | 'teal' | 'crimson' | 'cobalt' | 'neutral' | 'success';
 export type BadgeSize = 'sm' | 'md' | 'lg';
 
 export interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
@@ -52,6 +52,11 @@ const VARIANT_CLASSES: Record<BadgeVariant, { bg: string; text: string; border: 
     bg: 'bg-[var(--color-surface-raised)]',
     text: 'text-[var(--color-text-secondary)]',
     border: 'border-[var(--color-border)]',
+  },
+  success: {
+    bg: 'bg-[var(--color-success)]/15',
+    text: 'text-[var(--color-success)]',
+    border: 'border-[var(--color-success)]',
   },
 };
 

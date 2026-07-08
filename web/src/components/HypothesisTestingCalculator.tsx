@@ -1781,14 +1781,14 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
     const hypothesisLegendItems = useMemo((): ChartLegendItem[] => {
         const items: ChartLegendItem[] = [
             { math: 'H_0', color: 'var(--chart-1)', style: 'area' },
-            { math: '\\alpha', color: 'var(--color-accent-crimson)', style: 'area' },
+            { math: String.raw`\alpha`, color: 'var(--color-accent-crimson)', style: 'area' },
             { math: 'C', color: 'var(--color-accent-crimson)', style: 'line', label: <span dir="rtl">קריטי</span> },
-            { math: '\\bar{X}', color: 'var(--color-text-primary)', style: 'dashed-line' },
+            { math: String.raw`\bar{X}`, color: 'var(--color-text-primary)', style: 'dashed-line' },
         ];
 
         if (showH1OnChart) {
             items.splice(1, 0, { math: 'H_1', color: 'var(--chart-2)', style: 'area' });
-            items.push({ math: '1-\\beta', color: 'var(--chart-2)', style: 'area' });
+            items.push({ math: String.raw`1-\beta`, color: 'var(--chart-2)', style: 'area' });
         }
 
         return items;
@@ -2248,7 +2248,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                     <InlineMath math="H_1" />
                                 </div>
                                 <div className="absolute left-1/2 top-1/2 -translate-y-1/2 -rotate-6 opacity-10 text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
-                                    <InlineMath math="\\bar{X}" />
+                                    <InlineMath math={String.raw`\bar{X}`} />
                                 </div>
                                 <div className="absolute right-1/4 top-1/2 -translate-y-1/2 rotate-12 opacity-10 text-5xl sm:text-6xl font-mono text-[var(--color-accent-violet)]">
                                     <InlineMath math="P" />
@@ -2736,7 +2736,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                     {/* Compact Legend */}
                                                                     <div className="absolute top-4 right-6 bg-[var(--color-surface)] py-1.5 px-3 rounded-lg border border-[var(--color-border)]/50 z-10" dir="rtl">
                                                                         <ChartLegend
-                                                                            items={[{ math: '\\alpha', color: 'var(--color-accent-crimson)', style: 'area' }]}
+                                                                            items={[{ math: String.raw`\alpha`, color: 'var(--color-accent-crimson)', style: 'area' }]}
                                                                             className="gap-1.5"
                                                                         />
                                                                     </div>
@@ -3328,7 +3328,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                                         } />
                                                                                     </div>
                                                                                     <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_rgba(248,113,113,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
-                                                                                        <div className="text-[var(--color-error)] font-bold mb-2">אזור אי-הדחייה (<InlineMath math="\\bar{C}" />)</div>
+                                                                                        <div className="text-[var(--color-error)] font-bold mb-2">אזור אי-הדחייה (<InlineMath math={String.raw`\bar{C}`} />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `\\bar{X} < ${C_crit.toFixed(3)}` :
                                                                                                 tailType === 'left' ? `\\bar{X} > ${C_crit.toFixed(3)}` :
@@ -3373,7 +3373,7 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                                                     </div>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
                                                                                         <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
-                                                                                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math="\\alpha" />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
+                                                                                        <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math={String.raw`\alpha`} />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
                                                                                     </div>
                                                                                 </div>
 
@@ -4124,12 +4124,12 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                                             math={`C = ${powerStats.criticalValue.toFixed(4)}`}
                                                         />
                                                         <ResultSummaryCard
-                                                            title={<>עוצמת מבחן <InlineMath math="1-\\beta" /></>}
+                                                            title={<>עוצמת מבחן <InlineMath math={String.raw`1-\beta`} /></>}
                                                             subtitle={<>ההסתברות לזהות נכון אפקט אמיתי כאשר <InlineMath math="H_1" /> נכונה.</>}
                                                             math={`1-\\beta = ${(powerStats.power * 100).toFixed(2)}\\%`}
                                                         />
                                                         <ResultSummaryCard
-                                                            title={<>טעות מסוג II <InlineMath math="\\beta" /></>}
+                                                            title={<>טעות מסוג II <InlineMath math={String.raw`\beta`} /></>}
                                                             subtitle={<>הסיכוי שלא לדחות את <InlineMath math="H_0" /> למרות שקיים אפקט אמיתי.</>}
                                                             math={`\\beta = ${(powerStats.beta * 100).toFixed(2)}\\%`}
                                                         />
