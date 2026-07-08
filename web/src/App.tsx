@@ -14,12 +14,13 @@ import { PageTransition } from './components/PageTransition';
 import type { CalcMode } from './components/calc-ui';
 import { type TourMode, type GuidedTourStep, getTourStepsByMode } from './config/tours';
 
-type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'normal' | 'summary' | 'regression';
+type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'normal' | 'summary' | 'regression';
 const JoyrideComponent = Joyride as any;
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
 const NormalDistributionCalculator = lazy(() => import('./components/NormalDistributionCalculator'));
 const SummaryPage = lazy(() => import('./components/SummaryPage'));
+const Exam2023Page = lazy(() => import('./components/Exam2023Page'));
 const LinearRegressionCalculator = lazy(() => import('./components/LinearRegressionCalculator'));
 
 function getTourViewportOffset(): number {
@@ -125,7 +126,7 @@ export default function App() {
     // Smooth scroll to top on every navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'summary' || page === 'regression') {
+    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'exam-2023' || page === 'summary' || page === 'regression') {
       setActivePage(page);
       return;
     }
@@ -362,6 +363,17 @@ export default function App() {
         >
           <Suspense fallback={<PageLoadingState />}>
             <SummaryPage />
+          </Suspense>
+        </PageLayout>
+      ) : null}
+
+      {activePage === 'exam-2023' ? (
+        <PageLayout
+          header={<SiteHeader activePage="exam-2023" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <Suspense fallback={<PageLoadingState />}>
+            <Exam2023Page />
           </Suspense>
         </PageLayout>
       ) : null}

@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
-import { Award, BookOpen, Home, ScrollText, Sliders, TrendingUp, PlayCircle, Activity } from 'lucide-react';
+import { Award, BookOpen, ClipboardList, Home, ScrollText, Sliders, TrendingUp, PlayCircle, Activity, Sigma } from 'lucide-react';
 
-export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'forward' | 'inverse' | 'table' | 'formula-sheet' | 'summary' | 'regression';
+export type SitePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'forward' | 'inverse' | 'table' | 'formula-sheet' | 'summary' | 'regression';
 
 interface SiteHeaderProps {
   activePage: SitePage;
@@ -29,6 +29,7 @@ const pointEstimationItem: NavItem = { id: 'point-estimation', label: 'אמיד�
 const tableItem: NavItem = { id: 'table', label: 'טבלאות התפלגות', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
 const formulaItem: NavItem = { id: 'formula-sheet', label: 'נוסחאות', icon: <ScrollText className="h-4 w-4 shrink-0" />, group: 'reference' };
 const summaryItem: NavItem = { id: 'summary', label: 'סיכום', icon: <BookOpen className="h-4 w-4 shrink-0" />, group: 'reference' };
+const exam2023Item: NavItem = { id: 'exam-2023', label: 'מבחן 2023', icon: <ClipboardList className="h-4 w-4 shrink-0" />, group: 'reference' };
 
 export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }: SiteHeaderProps): ReactElement {
   return (
@@ -38,25 +39,20 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
         <button
           type="button"
           onClick={() => onNavigate('landing')}
-          className="flex items-center gap-4 text-right"
+          className="flex items-center gap-3 cursor-pointer select-none group focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-cobalt)] rounded-lg p-1"
           aria-label="חזרה לדף הבית"
         >
-          <button
-            type="button"
-            onClick={() => onNavigate('landing')}
-            className="flex cursor-pointer select-none items-center gap-4 rounded-sm border border-2 border-[rgb(240,241,245)] px-3 py-2 transition bg-[var(--color-surface-raised)] text-[var(--color-text-primary)]"
-            aria-label="דף הבית"
-            title="דף הבית"
-          >
-            <Home className="h-6 w-6 text-[var(--color-text-primary)]" />
-          </button>
-          <div>
-            <h1 className="select-none text-xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-2xl">
-              סטטיטי-קל
+          <div className="relative flex items-center justify-center w-10 h-10 rounded-xl bg-gradient-to-br from-[var(--color-accent-cobalt)] to-[var(--color-accent-cobalt-dark)] shadow-[var(--shadow-soft)] group-hover:scale-105 transition-transform duration-300">
+            <Sigma className="w-6 h-6 text-[#000000]" strokeWidth={2.5} />
+            <div className="absolute inset-0 rounded-xl ring-1 ring-white/20"></div>
+          </div>
+          <div className="flex flex-col text-right">
+            <h1 className="text-2xl font-black tracking-tight text-[var(--color-text-primary)] leading-none font-display">
+              סטטיסטי<span className="text-[var(--color-accent-cobalt)]">-קל</span>
             </h1>
-            <p className="mt-0.5 text-xs font-medium text-[var(--color-text-secondary)] sm:text-sm">
-              סטטיסטיקה בדרך מובנת, פשוטה וברורה
-            </p>
+            <span className="text-[0.65rem] font-bold tracking-[0.15em] text-[var(--color-text-secondary)] mt-1 font-sans uppercase">
+              Precision Statistics
+            </span>
           </div>
         </button>
       </div>
@@ -80,6 +76,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
         <NavButton item={tableItem} isActive={activePage === 'table'} onNavigate={onNavigate} />
         <NavButton item={formulaItem} isActive={activePage === 'formula-sheet'} onNavigate={onNavigate} />
         <NavButton item={summaryItem} isActive={activePage === 'summary'} onNavigate={onNavigate} />
+        <NavButton item={exam2023Item} isActive={activePage === 'exam-2023'} onNavigate={onNavigate} />
       </nav>
 
       {/* 3. Empty spacer for balanced flex layout (sits on the far left) */}

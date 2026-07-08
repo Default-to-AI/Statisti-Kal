@@ -27,8 +27,8 @@ export const HandwrittenNote: React.FC<HandwrittenNoteProps> = ({
   <p
     className={`flex w-full text-xl leading-relaxed font-normal text-[var(--color-text-primary)] sm:text-2xl font-handwriting ${ALIGN_CLASSES[align]} ${className}`}
   >
-    <span className={`inline-flex max-w-full flex-wrap items-center gap-x-2 gap-y-1 ${INNER_ALIGN_CLASSES[align]}`}>
-      <PenTool size={22} className="shrink-0 opacity-60 text-[var(--color-accent-cobalt)]" />
+    <span className={`inline-flex max-w-full items-start gap-x-2 ${INNER_ALIGN_CLASSES[align]}`}>
+      <PenTool size={22} className="shrink-0 mt-1 opacity-60 text-[var(--color-accent-cobalt)]" />
       <span className="min-w-0">{children}</span>
     </span>
   </p>

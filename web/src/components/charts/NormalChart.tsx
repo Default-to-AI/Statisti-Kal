@@ -140,7 +140,7 @@ export const NormalChart: React.FC<{
   const xDomain = [mean - 4.2 * stdDev, mean + 4.2 * stdDev] as const;
   const xMarkers = useMemo(() => {
     const markers: Array<{ value: number; math: string; color: string }> = [
-      { value: mean, math: '\\mu', color: 'var(--color-primary)' },
+      { value: mean, math: String.raw`\mu`, color: 'var(--color-primary)' },
     ];
 
     if (type === 'conditional' && mode === 'forward') {
@@ -190,7 +190,7 @@ export const NormalChart: React.FC<{
 
   const legendChips = useMemo((): ChartLegendItem[] => {
     const chips: ChartLegendItem[] = [
-      { math: '\\mu', color: curveColor, style: 'line' },
+      { math: String.raw`\mu`, color: curveColor, style: 'line' },
     ];
 
     if (type === 'conditional' && mode === 'forward') {

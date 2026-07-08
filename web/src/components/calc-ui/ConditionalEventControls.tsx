@@ -7,9 +7,9 @@ const CONDITIONAL_EVENT_OPTIONS: ReadonlyArray<{
   math: string;
   note: string;
 }> = [
-    { value: 'below', math: 'X \\le v_1', note: 'עד ערך נתון' },
-    { value: 'above', math: 'X \\ge v_1', note: 'מעל ערך נתון' },
-    { value: 'between', math: 'v_1 \\le X \\le v_2', note: 'בין שני ערכים' },
+    { value: 'below', math: String.raw`X \le v_1`, note: 'עד ערך נתון' },
+    { value: 'above', math: String.raw`X \ge v_1`, note: 'מעל ערך נתון' },
+    { value: 'between', math: String.raw`v_1 \le X \le v_2`, note: 'בין שני ערכים' },
   ];
 
 export function getConditionalEventMath(type: CondType, variablePrefix: 'a' | 'b'): string {

@@ -72,6 +72,8 @@ export { ResultBlock } from './ResultBlock';
 export type { ResultBlockProps } from './ResultBlock';
 export { HandwrittenNote } from './HandwrittenNote';
 export type { HandwrittenNoteProps } from './HandwrittenNote';
+export { MCQuestionCard } from './MCQuestionCard';
+export type { MCQuestionCardProps, MCOption } from './MCQuestionCard';
 
 export { CyberneticBackground } from './CyberneticBackground';
 
