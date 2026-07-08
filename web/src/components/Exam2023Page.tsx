@@ -250,8 +250,8 @@ function Exam2023Page(): ReactElement {
               ]}
               rationale={
                 <>
-                  ההשערות עוסקות בפרמטר האוכלוסייה <InlineMath math="\mu" /> (ממוצע היסטורי 50); ״שיפור״ = זמן קצר יותר ⇒ חד‑צדדי שמאלי{' '}
-                  <InlineMath math="\mu<50" />. האפשרויות ב/ד משתמשות בערך המדגם 42; ה משתמשת ב‑<InlineMath math="\bar{X}" />.
+                  ההשערות עוסקות בפרמטר האוכלוסייה <InlineMath math={String.raw`\mu`} /> (ממוצע היסטורי 50); ״שיפור״ = זמן קצר יותר ⇒ חד‑צדדי שמאלי{' '}
+                  <InlineMath math={String.raw`\mu<50`} />. האפשרויות ב/ד משתמשות בערך המדגם 42; ה משתמשת ב‑<InlineMath math={String.raw`\bar{X}`} />.
                 </>
               }
             />
@@ -262,20 +262,20 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    אנחנו נשאלים איזו זוג השערות נכון. השערות תמיד עוסקות בפרמטר האוכלוסייה <InlineMath math="\mu" />, לעולם לא בסטטיסטי המדגם{' '}
-                    <InlineMath math="\bar{x}" />.
+                    אנחנו נשאלים איזו זוג השערות נכון. השערות תמיד עוסקות בפרמטר האוכלוסייה <InlineMath math={String.raw`\mu`} />, לעולם לא בסטטיסטי המדגם{' '}
+                    <InlineMath math={String.raw`\bar{x}`} />.
                   </>
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu_0=50,\sigma_0^2=10^2)" /> במצב ההיסטורי; <InlineMath math="\sigma" /> ידוע ולא השתנה.
+                    <InlineMath math={String.raw`X\sim N(\mu_0=50,\sigma_0^2=10^2)`} /> במצב ההיסטורי; <InlineMath math={String.raw`\sigma`} /> ידוע ולא השתנה.
                   </>
                 ),
                 formulas: [String.raw`H_0:\mu=\mu_0`, String.raw`H_1:\mu<\mu_0\ \text{(שיפור = זמן קצר יותר)}`],
                 approach: (
                   <>
-                    זהה את פרמטר האוכלוסייה (<InlineMath math="\mu" />, לא <InlineMath math="\bar{x}=42" />). ״שיפור״ → זמן קצר יותר → חד‑צדדי שמאלי{' '}
-                    <InlineMath math="\mu<50" />. סלק כל אפשרות עם <InlineMath math="\bar{x}" /> או המספר 42.
+                    זהה את פרמטר האוכלוסייה (<InlineMath math={String.raw`\mu`} />, לא <InlineMath math={String.raw`\bar{x}=42`} />). ״שיפור״ → זמן קצר יותר → חד‑צדדי שמאלי{' '}
+                    <InlineMath math={String.raw`\mu<50`} />. סלק כל אפשרות עם <InlineMath math={String.raw`\bar{x}`} /> או המספר 42.
                   </>
                 ),
               }}
@@ -294,14 +294,14 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`H_0:\mu=50\ \text{מול}\ H_1:\mu<50\ (\text{מבחן חד-צדדי שמאלי})`}
               narration={
                 <>
-                  השערות נכתבות תמיד במונחי <InlineMath math="\mu" />; מכיוון ש״לשפר״ זמן המתנה אומר לקצר אותו — ההשערה האלטרנטיבית היא{' '}
-                  <InlineMath math="\mu<50" />.
+                  השערות נכתבות תמיד במונחי <InlineMath math={String.raw`\mu`} />; מכיוון ש״לשפר״ זמן המתנה אומר לקצר אותו — ההשערה האלטרנטיבית היא{' '}
+                  <InlineMath math={String.raw`\mu<50`} />.
                 </>
               }
               trap={
                 <>
-                  <strong>מלכודת קונספטואלית קריטית:</strong> אל תכתבו השערה עם <InlineMath math="\bar{x}" /> או עם ערך המדגם 42.{' '}
-                  <InlineMath math="\bar{x}=42" /> הוא נתון שנצפה; ההשערות עוסקות ב‑<InlineMath math="\mu" />. מבחן חד‑צדדי שמאלי נבחר לפי המילה
+                  <strong>מלכודת קונספטואלית קריטית:</strong> אל תכתבו השערה עם <InlineMath math={String.raw`\bar{x}`} /> או עם ערך המדגם 42.{' '}
+                  <InlineMath math={String.raw`\bar{x}=42`} /> הוא נתון שנצפה; ההשערות עוסקות ב‑<InlineMath math={String.raw`\mu`} />. מבחן חד‑צדדי שמאלי נבחר לפי המילה
                   ״שיפור״ (קצר יותר), לא לפי סימן ההפרש.
                 </>
               }
@@ -324,8 +324,8 @@ function Exam2023Page(): ReactElement {
               ]}
               rationale={
                 <>
-                  מפתרון דחינו את <InlineMath math="H_0" /> ברמת <InlineMath math="\alpha=0.01" /> (<InlineMath math="p=0.0007" />); דחיית{' '}
-                  <InlineMath math="H_0" /> אומרת שהשגיאה האפשרית היחידה היא מסוג ראשון. ״עוצמת המבחן״ אינה סוג שגיאה.
+                  מפתרון דחינו את <InlineMath math={String.raw`H_0`} /> ברמת <InlineMath math={String.raw`\alpha=0.01`} /> (<InlineMath math={String.raw`p=0.0007`} />); דחיית{' '}
+                  <InlineMath math={String.raw`H_0`} /> אומרת שהשגיאה האפשרית היחידה היא מסוג ראשון. ״עוצמת המבחן״ אינה סוג שגיאה.
                 </>
               }
             />
@@ -334,11 +334,11 @@ function Exam2023Page(): ReactElement {
           <SolutionChild title="פתרון">
             <SolutionBody
               preFlight={{
-                whatsGoingOn: <>ברמת מובהקות 1% מחליטים האם לדחות את <InlineMath math="H_0" /> ומציינים איזה סוג שגיאה אפשרי.</>,
+                whatsGoingOn: <>ברמת מובהקות 1% מחליטים האם לדחות את <InlineMath math={String.raw`H_0`} /> ומציינים איזה סוג שגיאה אפשרי.</>,
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu_0=50,\sigma^2=10^2)" />, <InlineMath math="n=16" />, <InlineMath math="\bar{x}=42" />; <InlineMath math="\sigma" /> ידוע ⇒ מבחן{' '}
-                    <InlineMath math="Z" />.
+                    <InlineMath math={String.raw`X\sim N(\mu_0=50,\sigma^2=10^2)`} />, <InlineMath math={String.raw`n=16`} />, <InlineMath math={String.raw`\bar{x}=42`} />; <InlineMath math={String.raw`\sigma`} /> ידוע ⇒ מבחן{' '}
+                    <InlineMath math={String.raw`Z`} />.
                   </>
                 ),
                 formulas: [
@@ -348,7 +348,7 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    חשבו את <InlineMath math="Z" />, מצאו את זנב שמאל של ה‑<InlineMath math="p" />-value, השוו ל‑<InlineMath math="\alpha=0.01" />. ואז קשרו להחלטה
+                    חשבו את <InlineMath math={String.raw`Z`} />, מצאו את זנב שמאל של ה‑<InlineMath math={String.raw`p`} />-value, השוו ל‑<InlineMath math={String.raw`\alpha=0.01`} />. ואז קשרו להחלטה
                     לסוג השגיאה.
                   </>
                 ),
@@ -374,14 +374,14 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`\text{דוחים }H_0:\mu=50\ \text{ברמת }\alpha=0.01;\ \text{השגיאה האפשרית = מסוג ראשון (Type I)}`}
               narration={
                 <>
-                  בכך שה‑<InlineMath math="p" />-value (0.0007) קטן מאחוז אחד דחינו את השערת האפס, ולכן הטעות האפשרית במסקנה הזו היא מסוג ראשון בלבד.
+                  בכך שה‑<InlineMath math={String.raw`p`} />-value (0.0007) קטן מאחוז אחד דחינו את השערת האפס, ולכן הטעות האפשרית במסקנה הזו היא מסוג ראשון בלבד.
                 </>
               }
               trap={
                 <>
-                  <strong>מלכודת קונספטואלית קריטית:</strong> כשדוחים את <InlineMath math="H_0" /> השגיאה האפשרית היא תמיד מסוג ראשון; כשלא
-                  דוחים — תמיד מסוג שני. עדיף את מסלול ה‑<InlineMath math="p" />-value: הוא עונה ״דוחים ב‑1%? ב‑5%?״ במספר אחד. הופכים סימן{' '}
-                  <strong>וגם</strong> זנב עבור <InlineMath math="z" /> שלילי: <InlineMath math={String.raw`P(Z<-a)=1-\Phi(a)`} />.
+                  <strong>מלכודת קונספטואלית קריטית:</strong> כשדוחים את <InlineMath math={String.raw`H_0`} /> השגיאה האפשרית היא תמיד מסוג ראשון; כשלא
+                  דוחים — תמיד מסוג שני. עדיף את מסלול ה‑<InlineMath math={String.raw`p`} />-value: הוא עונה ״דוחים ב‑1%? ב‑5%?״ במספר אחד. הופכים סימן{' '}
+                  <strong>וגם</strong> זנב עבור <InlineMath math={String.raw`z`} /> שלילי: <InlineMath math={String.raw`P(Z<-a)=1-\Phi(a)`} />.
                 </>
               }
             />
@@ -539,7 +539,7 @@ function Exam2023Page(): ReactElement {
               ]}
               rationale={
                 <>
-                  רבעון עליון = אחוזון 75; פותרים <InlineMath math="(x-25)/(33-25)=0.75" /> ⇒ <InlineMath math="x=31" />. ב/ג נותנים את ההסתברות, לא הערך; ד הוא מטעה.
+                  רבעון עליון = אחוזון 75; פותרים <InlineMath math={String.raw`(x-25)/(33-25)=0.75`} /> ⇒ <InlineMath math={String.raw`x=31`} />. ב/ג נותנים את ההסתברות, לא הערך; ד הוא מטעה.
                 </>
               }
             />
@@ -550,7 +550,7 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    מוצאים את הערך <InlineMath math="x_{0.75}" /> המקיים <InlineMath math="P(X\le x_{0.75})=0.75" /> עבור <InlineMath math="X\sim U(25,33)" />.
+                    מוצאים את הערך <InlineMath math={String.raw`x_{0.75}`} /> המקיים <InlineMath math={String.raw`P(X\le x_{0.75})=0.75`} /> עבור <InlineMath math={String.raw`X\sim U(25,33)`} />.
                   </>
                 ),
                 distribution: (
@@ -564,7 +564,7 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    משווים את פונקציית ההתפלגות המצטברת ל‑0.75 ופותרים את <InlineMath math="x" />; לחלופין משתמשים בנוסחת האחוזון.
+                    משווים את פונקציית ההתפלגות המצטברת ל‑0.75 ופותרים את <InlineMath math={String.raw`x`} />; לחלופין משתמשים בנוסחת האחוזון.
                   </>
                 ),
               }}
@@ -591,7 +591,7 @@ function Exam2023Page(): ReactElement {
               trap={
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> האחוזון הוא <strong>הערך</strong> (31), לא ההסתברות (0.75). אפשרות שנותנת "ההסתברות שמשך הבישול{' '}
-                  <InlineMath math="<31" />" מתארת את אותה נקודה, לא תשובה אחרת. פונקציית ה‑CDF האחידה ליניארית; בהתפלגות שאינה אחידה לא ניתן להשתמש ביחס רוחב פשוט.
+                  <InlineMath math={String.raw`<31`} />" מתארת את אותה נקודה, לא תשובה אחרת. פונקציית ה‑CDF האחידה ליניארית; בהתפלגות שאינה אחידה לא ניתן להשתמש ביחס רוחב פשוט.
                 </>
               }
             />
@@ -637,7 +637,7 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    לכל טענה בודקים אם ה‑<InlineMath math="MSE" /> אכן נקבע. אומד מוטה יכול לנצח אומד חסר‑הטיה אם שונותו קטנה בהרבה; אומד חסר‑הטיה עם שונות ענקית
+                    לכל טענה בודקים אם ה‑<InlineMath math={String.raw`MSE`} /> אכן נקבע. אומד מוטה יכול לנצח אומד חסר‑הטיה אם שונותו קטנה בהרבה; אומד חסר‑הטיה עם שונות ענקית
                     יכול להיות גרוע מאומד מוטה מעט.
                   </>
                 ),
@@ -664,7 +664,7 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`\text{אין טענה שנכונה בהכרח; הבחירה לפי }\operatorname{MSE}(T)=V(T)+\operatorname{Bias}(T)^2`}
               narration={
                 <>
-                  כדי להחליט איזה עומד עדיף מסתכלים תמיד על ה‑<InlineMath math="MSE" /> שמשקלל גם שונות וגם הטיה בריבוע — ולכן אף אחת מהטענות הללו אינה נכונה בהכרח.
+                  כדי להחליט איזה עומד עדיף מסתכלים תמיד על ה‑<InlineMath math={String.raw`MSE`} /> שמשקלל גם שונות וגם הטיה בריבוע — ולכן אף אחת מהטענות הללו אינה נכונה בהכרח.
                 </>
               }
               trap={
@@ -684,8 +684,8 @@ function Exam2023Page(): ReactElement {
         <ParentAccordion id="albumin-diabetes" title="אלבומין בחולי סוכרת (שאלה פתוחה)">
           <ExamStatement>
             במחקר על תפקודי כבד של חולי סוכרת נמדד ריכוז האלבומין בדם (גרם/דציליטר) של 6 נבדקים:{' '}
-            <InlineMath math="5.4,\ 3.4,\ 5.0,\ 5.5,\ 3.5,\ 7.1" />. ידוע שהריכוז מתפלג נורמלית, ושבקרב אנשים <strong>בריאים</strong> ריכוז האלבומין הוא{' '}
-            <InlineMath math="\mu=4.4" />.
+            <InlineMath math={String.raw`5.4,\ 3.4,\ 5.0,\ 5.5,\ 3.5,\ 7.1`} />. ידוע שהריכוז מתפלג נורמלית, ושבקרב אנשים <strong>בריאים</strong> ריכוז האלבומין הוא{' '}
+            <InlineMath math={String.raw`\mu=4.4`} />.
           </ExamStatement>
 
           {/* ── Section A: population & variable ── */}
@@ -702,7 +702,7 @@ function Exam2023Page(): ReactElement {
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="X" /> = ריכוז אלבומין, <InlineMath math="X\sim N(\mu,\sigma^2)" /> (נורמליות נתונה).
+                    <InlineMath math={String.raw`X`} /> = ריכוז אלבומין, <InlineMath math={String.raw`X\sim N(\mu,\sigma^2)`} /> (נורמליות נתונה).
                   </>
                 ),
                 formulas: [
@@ -734,7 +734,7 @@ function Exam2023Page(): ReactElement {
               trap={
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> המספר 4.4 הוא ממוצע אוכלוסיית ה<strong>בריאים</strong>, לא פרמטר האוכלוסייה החולת‑סוכרת. אל תבלבלו
-                  בין "בריאים <InlineMath math="\mu=4.4" />" לבין "חולי סוכרת <InlineMath math="\mu" />".
+                  בין "בריאים <InlineMath math={String.raw`\mu=4.4`} />" לבין "חולי סוכרת <InlineMath math={String.raw`\mu`} />".
                 </>
               }
             />
@@ -746,12 +746,12 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    בעזרת אומדים חסרי הטיה מחשבים את ממוצע המדגם (ל‑<InlineMath math="\mu" />) ואת שונות המדגם (ל‑<InlineMath math="\sigma^2" />) מ‑6 התצפיות.
+                    בעזרת אומדים חסרי הטיה מחשבים את ממוצע המדגם (ל‑<InlineMath math={String.raw`\mu`} />) ואת שונות המדגם (ל‑<InlineMath math={String.raw`\sigma^2`} />) מ‑6 התצפיות.
                   </>
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu,\sigma^2)" />, <InlineMath math="n=6" />; <InlineMath math="\mu" /> ו‑<InlineMath math="\sigma^2" /> לא ידועים.
+                    <InlineMath math={String.raw`X\sim N(\mu,\sigma^2)`} />, <InlineMath math={String.raw`n=6`} />; <InlineMath math={String.raw`\mu`} /> ו‑<InlineMath math={String.raw`\sigma^2`} /> לא ידועים.
                   </>
                 ),
                 formulas: [
@@ -761,8 +761,8 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    מחשבים את <InlineMath math="\bar x" /> ישירות; ל‑<InlineMath math="s^2" /> משתמשים בצורה החישובית (מהירה, פחות עיגולים). כי <InlineMath math="\mu" /> של חולי
-                    הסוכרת לא ידוע — מחלקים ב‑<InlineMath math="n-1=5" />, לא ב‑<InlineMath math="n" />.
+                    מחשבים את <InlineMath math={String.raw`\bar x`} /> ישירות; ל‑<InlineMath math={String.raw`s^2`} /> משתמשים בצורה החישובית (מהירה, פחות עיגולים). כי <InlineMath math={String.raw`\mu`} /> של חולי
+                    הסוכרת לא ידוע — מחלקים ב‑<InlineMath math={String.raw`n-1=5`} />, לא ב‑<InlineMath math={String.raw`n`} />.
                   </>
                 ),
               }}
@@ -787,14 +787,14 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`\bar x=4.983;\quad s^2=1.9257\ \text{(אומדים חסרי הטיה של }\mu,\ \sigma^2)`}
               narration={
                 <>
-                  הערכנו את תוחלת ריכוז האלבומין ב‑<InlineMath math="4.983" /> ואת שונותו ב‑<InlineMath math="1.9257" /> באמצעות עומדים חסרי הטיה, כאשר מחלקים ב‑
-                  <InlineMath math="n-1=5" /> כי תוחלת חולי הסוכרת אינה ידועה.
+                  הערכנו את תוחלת ריכוז האלבומין ב‑<InlineMath math={String.raw`4.983`} /> ואת שונותו ב‑<InlineMath math={String.raw`1.9257`} /> באמצעות עומדים חסרי הטיה, כאשר מחלקים ב‑
+                  <InlineMath math={String.raw`n-1=5`} /> כי תוחלת חולי הסוכרת אינה ידועה.
                 </>
               }
               trap={
                 <>
-                  <strong>מלכודת קונספטואלית קריטית:</strong> כותבים <InlineMath math="\bar x=4.983" /> (הערכה), <strong>לעולם לא</strong> "μ=4.983". כך גם לשונות:{' '}
-                  <InlineMath math="s^2" /> הוא האומד, <InlineMath math="\sigma^2" /> נשאר בלתי ידוע. תוחלת אוכלוסייה לא ידועה ⇒ מחלקים ב‑n−1; ידועה ⇒ ב‑n. ערבוב ביניהם מפסיד
+                  <strong>מלכודת קונספטואלית קריטית:</strong> כותבים <InlineMath math={String.raw`\bar x=4.983`} /> (הערכה), <strong>לעולם לא</strong> "μ=4.983". כך גם לשונות:{' '}
+                  <InlineMath math={String.raw`s^2`} /> הוא האומד, <InlineMath math={String.raw`\sigma^2`} /> נשאר בלתי ידוע. תוחלת אוכלוסייה לא ידועה ⇒ מחלקים ב‑n−1; ידועה ⇒ ב‑n. ערבוב ביניהם מפסיד
                   נקודות. אל תוציאו שורש אלא אם מבקשים אומד סטיית תקן.
                 </>
               }
@@ -805,11 +805,11 @@ function Exam2023Page(): ReactElement {
           <QuestionChild number="ג" title="רווח סמך ברמת 95% ל‑μ (t)">
             <SolutionBody
               preFlight={{
-                whatsGoingOn: <>בונים רווח סמך ברמת ביטחון 95% לתוחלת אוכלוסיית חולי הסוכרת <InlineMath math="\mu" />.</>,
+                whatsGoingOn: <>בונים רווח סמך ברמת ביטחון 95% לתוחלת אוכלוסיית חולי הסוכרת <InlineMath math={String.raw`\mu`} />.</>,
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu,\sigma^2)" />, <InlineMath math="\sigma^2" /> <strong>לא ידועה</strong> ⇒ משתמשים בהתפלגות <InlineMath math="t" /> עם{' '}
-                    <InlineMath math="n-1" /> דרגות חופש.
+                    <InlineMath math={String.raw`X\sim N(\mu,\sigma^2)`} />, <InlineMath math={String.raw`\sigma^2`} /> <strong>לא ידועה</strong> ⇒ משתמשים בהתפלגות <InlineMath math={String.raw`t`} /> עם{' '}
+                    <InlineMath math={String.raw`n-1`} /> דרגות חופש.
                   </>
                 ),
                 formulas: [
@@ -818,8 +818,8 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    יש לנו רק גדלים מדגמיים (<InlineMath math="\bar x" />, <InlineMath math="s^2" />), לכן הרווח מבוסס‑<InlineMath math="t" />, לא <InlineMath math="Z" />. מוצאים{' '}
-                    <InlineMath math="t_{5,0.975}=2.571" />.
+                    יש לנו רק גדלים מדגמיים (<InlineMath math={String.raw`\bar x`} />, <InlineMath math={String.raw`s^2`} />), לכן הרווח מבוסס‑<InlineMath math={String.raw`t`} />, לא <InlineMath math={String.raw`Z`} />. מוצאים{' '}
+                    <InlineMath math={String.raw`t_{5,0.975}=2.571`} />.
                   </>
                 ),
               }}
@@ -844,14 +844,14 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`95\%\ \text{CI for }\mu:\ (3.526,\ 6.440)`}
               narration={
                 <>
-                  רווח הסמך ברמת ביטחון של 95% לתוחלת ריכוז האלבומין בחולי סוכרת הוא שבין 3.526 ל‑6.440 גרם/דציליטר, ונבנה על התפלגות <InlineMath math="t" /> כי שונות
+                  רווח הסמך ברמת ביטחון של 95% לתוחלת ריכוז האלבומין בחולי סוכרת הוא שבין 3.526 ל‑6.440 גרם/דציליטר, ונבנה על התפלגות <InlineMath math={String.raw`t`} /> כי שונות
                   האוכלוסייה אינה ידועה.
                 </>
               }
               trap={
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> שונות אוכלוסייה לא ידועה ⇒ רווח <strong>t</strong>, לא Z. שימוש ב‑Z כאן שגוי. "שונות מדגמית" s² תמיד ניתנת
-                  לחישוב; מה שקובע לבחירת המבחן/הרווח הוא אם <InlineMath math="\sigma^2" /> (האוכלוסייה) ידועה. ככל ש‑n גדל, t מתקרבת ל‑Z.
+                  לחישוב; מה שקובע לבחירת המבחן/הרווח הוא אם <InlineMath math={String.raw`\sigma^2`} /> (האוכלוסייה) ידועה. ככל ש‑n גדל, t מתקרבת ל‑Z.
                 </>
               }
             />
@@ -868,7 +868,7 @@ function Exam2023Page(): ReactElement {
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu,\sigma^2)" />, <InlineMath math="\sigma^2" /> לא ידועה ⇒ מבחן <InlineMath math="t" /> חד‑צדדי ימני.
+                    <InlineMath math={String.raw`X\sim N(\mu,\sigma^2)`} />, <InlineMath math={String.raw`\sigma^2`} /> לא ידועה ⇒ מבחן <InlineMath math={String.raw`t`} /> חד‑צדדי ימני.
                   </>
                 ),
                 formulas: [
@@ -912,8 +912,8 @@ function Exam2023Page(): ReactElement {
               }
               trap={
                 <>
-                  <strong>מלכודת קונספטואלית קריטית:</strong> תמיד כותבים את ההשערות — הן מדורגות במפורש. ימני "גבוה מ‑4.4" ⇒ <InlineMath math="H_1:\mu>4.4" />, דוחים רק
-                  על <InlineMath math="t" /> חיובי גדול. למבחני t עדיף כלל אזור הדחייה על פני ה‑p-value כשהטבלה גסה; שניהם נותנים את אותה החלטה. המסקנה חייבת להיות בהקשר
+                  <strong>מלכודת קונספטואלית קריטית:</strong> תמיד כותבים את ההשערות — הן מדורגות במפורש. ימני "גבוה מ‑4.4" ⇒ <InlineMath math={String.raw`H_1:\mu>4.4`} />, דוחים רק
+                  על <InlineMath math={String.raw`t`} /> חיובי גדול. למבחני t עדיף כלל אזור הדחייה על פני ה‑p-value כשהטבלה גסה; שניהם נותנים את אותה החלטה. המסקנה חייבת להיות בהקשר
                   ("לא גבוה מהבריאים"), לא רק "לא דוחים H₀".
                 </>
               }
@@ -924,7 +924,7 @@ function Exam2023Page(): ReactElement {
           <QuestionChild number="ה" title="סוג השגיאה האפשרית ב‑ד">
             <SolutionBody
               preFlight={{
-                whatsGoingOn: <>מכיוון שלא דחינו את <InlineMath math="H_0" />, קובעים איזה סוג שגיאה יכול היה להיגרם.</>,
+                whatsGoingOn: <>מכיוון שלא דחינו את <InlineMath math={String.raw`H_0`} />, קובעים איזה סוג שגיאה יכול היה להיגרם.</>,
                 distribution: <>טקסונומיית שגיאות בבדיקת השערות.</>,
                 formulas: [
                   String.raw`\text{Type I: דחיית }H_0\text{ אמתית}`,
@@ -945,7 +945,7 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`\text{השגיאה האפשרית = מסוג שני (Type II)}`}
               narration={
                 <>
-                  מכיוון שלא דחינו את <InlineMath math="H_0" /> על אף שייתכן שהיינו צריכים לדחות אותה, הטעות האפשרית כאן היא מסוג שני.
+                  מכיוון שלא דחינו את <InlineMath math={String.raw`H_0`} /> על אף שייתכן שהיינו צריכים לדחות אותה, הטעות האפשרית כאן היא מסוג שני.
                 </>
               }
               trap={
@@ -968,7 +968,7 @@ function Exam2023Page(): ReactElement {
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="t" /> עם <InlineMath math="df=5" />, ימני; <InlineMath math={String.raw`t_{\text{stat}}=1.029`} />.
+                    <InlineMath math={String.raw`t`} /> עם <InlineMath math={String.raw`df=5`} />, ימני; <InlineMath math={String.raw`t_{\text{stat}}=1.029`} />.
                   </>
                 ),
                 formulas: [
@@ -977,7 +977,7 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    מוצאים את שני ערכי ה‑t המרחיקים את 1.029, קוראים את שטחי הזנב הימני שלהם, וקובעים שה‑p-value נמצא ביניהם. משווים ל‑<InlineMath math="\alpha=0.05" />.
+                    מוצאים את שני ערכי ה‑t המרחיקים את 1.029, קוראים את שטחי הזנב הימני שלהם, וקובעים שה‑p-value נמצא ביניהם. משווים ל‑<InlineMath math={String.raw`\alpha=0.05`} />.
                   </>
                 ),
               }}
@@ -998,14 +998,14 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`0.10<p\text{-value}<0.25\ \text{(ימני, }df=5)`}
               narration={
                 <>
-                  מהטבלה אפשר רק לחסום את ה‑<InlineMath math="p" />-value שלנו בין 0.10 ל‑0.25, ומכיוון שכל התחום הזה גדול מ‑0.05 — ההחלטה שלא לדחות את{' '}
-                  <InlineMath math="H_0" /> נשארת בעינה.
+                  מהטבלה אפשר רק לחסום את ה‑<InlineMath math={String.raw`p`} />-value שלנו בין 0.10 ל‑0.25, ומכיוון שכל התחום הזה גדול מ‑0.05 — ההחלטה שלא לדחות את{' '}
+                  <InlineMath math={String.raw`H_0`} /> נשארת בעינה.
                 </>
               }
               trap={
                 <>
                   <strong>מלכודת קונספטואלית קריטית:</strong> אי‑אפשר לקרוא p-value מדויק מטבלת t — רק לחסום אותו. הצגת התחום הפתוח היא התשובה המלאה הנכונה.
-                  החסימה לבדה כבר מכריעה את המבחן כשכל התחום מצד אחד של <InlineMath math="\alpha" />.
+                  החסימה לבדה כבר מכריעה את המבחן כשכל התחום מצד אחד של <InlineMath math={String.raw`\alpha`} />.
                 </>
               }
             />
@@ -1018,7 +1018,7 @@ function Exam2023Page(): ReactElement {
 
         <ParentAccordion id="two-populations" title="שתי אוכלוסיות A ו‑B">
           <ExamStatement>
-            באוכלוסייה א׳ <InlineMath math="X\sim U(20,40)" />. באוכלוסייה ב׳ <InlineMath math="X\sim N(35,2^2)" />.
+            באוכלוסייה א׳ <InlineMath math={String.raw`X\sim U(20,40)`} />. באוכלוסייה ב׳ <InlineMath math={String.raw`X\sim N(35,2^2)`} />.
           </ExamStatement>
 
           {/* ── Section A: expectation & variance in A ── */}
@@ -1027,7 +1027,7 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    מחשבים <InlineMath math="E(X)" /> ו‑<InlineMath math="V(X)" /> להתפלגות אחידה רציפה על <InlineMath math="[20,40]" />.
+                    מחשבים <InlineMath math={String.raw`E(X)`} /> ו‑<InlineMath math={String.raw`V(X)`} /> להתפלגות אחידה רציפה על <InlineMath math={String.raw`[20,40]`} />.
                   </>
                 ),
                 distribution: <>X ∼ U(a=20, b=40).</>,
@@ -1067,12 +1067,12 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    מחשבים <InlineMath math="P(X>31\mid X>28.5)" /> כאשר <InlineMath math="X\sim N(35,2^2)" />.
+                    מחשבים <InlineMath math={String.raw`P(X>31\mid X>28.5)`} /> כאשר <InlineMath math={String.raw`X\sim N(35,2^2)`} />.
                   </>
                 ),
                 distribution: (
                   <>
-                    <InlineMath math="X\sim N(\mu=35,\sigma=2)" />; תצפית בודדת (ללא ממוצע מדגם ⇒ ללא <InlineMath math="\sqrt{n}" />).
+                    <InlineMath math={String.raw`X\sim N(\mu=35,\sigma=2)`} />; תצפית בודדת (ללא ממוצע מדגם ⇒ ללא <InlineMath math={String.raw`\sqrt{n}`} />).
                   </>
                 ),
                 formulas: [
@@ -1112,7 +1112,7 @@ function Exam2023Page(): ReactElement {
               narration={
                 <>
                   בהינתן שהערך כבר גדול מ‑28.5, ההסתברות שהוא יהיה גם גדול מ‑31 היא כ‑0.9778 — ושימו לב שאין כאן מדגם ולכן לא מחלקים בשורש{' '}
-                  <InlineMath math="n" />.
+                  <InlineMath math={String.raw`n`} />.
                 </>
               }
               trap={
@@ -1130,12 +1130,12 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    עם <InlineMath math="n=50" /> תצפיות i.i.d. מ‑<InlineMath math="U(20,40)" />, מוצאים <InlineMath math="P(\sum_{i=1}^{50}X_i<1600)" />.
+                    עם <InlineMath math={String.raw`n=50`} /> תצפיות i.i.d. מ‑<InlineMath math={String.raw`U(20,40)`} />, מוצאים <InlineMath math={String.raw`P(\sum_{i=1}^{50}X_i<1600)`} />.
                   </>
                 ),
                 distribution: (
                   <>
-                    ה‑X המקורי <InlineMath math="\sim U(20,40)" /> (לא נורמלי); סכום/ממוצע מדגם ⇒ מפעילים את <strong>משפט הגבול המרכזי</strong>.
+                    ה‑X המקורי <InlineMath math={String.raw`\sim U(20,40)`} /> (לא נורמלי); סכום/ממוצע מדגם ⇒ מפעילים את <strong>משפט הגבול המרכזי</strong>.
                   </>
                 ),
                 formulas: [
@@ -1189,15 +1189,15 @@ function Exam2023Page(): ReactElement {
               preFlight={{
                 whatsGoingOn: (
                   <>
-                    כל 20 התצפיות מגיעות מאותה אוכלוסייה (לא ידוע איזו). <InlineMath math="H_0" />: אוכלוסייה A (<InlineMath math="U(20,40)" />);{' '}
-                    <InlineMath math="H_1" />: אוכלוסייה B (<InlineMath math="N(35,2^2)" />). כלל דחייה: דוחים את <InlineMath math="H_0" /> אם{' '}
-                    <InlineMath math="\bar X>34" />. מחשבים <InlineMath math="\alpha" /> (Type I) ו‑<InlineMath math="\beta" /> (Type II).
+                    כל 20 התצפיות מגיעות מאותה אוכלוסייה (לא ידוע איזו). <InlineMath math={String.raw`H_0`} />: אוכלוסייה A (<InlineMath math={String.raw`U(20,40)`} />);{' '}
+                    <InlineMath math={String.raw`H_1`} />: אוכלוסייה B (<InlineMath math={String.raw`N(35,2^2)`} />). כלל דחייה: דוחים את <InlineMath math={String.raw`H_0`} /> אם{' '}
+                    <InlineMath math={String.raw`\bar X>34`} />. מחשבים <InlineMath math={String.raw`\alpha`} /> (Type I) ו‑<InlineMath math={String.raw`\beta`} /> (Type II).
                   </>
                 ),
                 distribution: (
                   <>
-                    תחת <InlineMath math="H_0" />: <InlineMath math="X\sim U(20,40)" />, <InlineMath math="n=20" /> ⇒ משפט הגבול המרכזי ל‑X̄. תחת <InlineMath math="H_1" />:{' '}
-                    <InlineMath math="X\sim N(35,2^2)" />, <InlineMath math="n=20" /> ⇒ X̄ נורמלית מדויקת.
+                    תחת <InlineMath math={String.raw`H_0`} />: <InlineMath math={String.raw`X\sim U(20,40)`} />, <InlineMath math={String.raw`n=20`} /> ⇒ משפט הגבול המרכזי ל‑X̄. תחת <InlineMath math={String.raw`H_1`} />:{' '}
+                    <InlineMath math={String.raw`X\sim N(35,2^2)`} />, <InlineMath math={String.raw`n=20`} /> ⇒ X̄ נורמלית מדויקת.
                   </>
                 ),
                 formulas: [
@@ -1208,8 +1208,8 @@ function Exam2023Page(): ReactElement {
                 ],
                 approach: (
                   <>
-                    עבור <InlineMath math="\alpha" /> מקרבים את X̄ תחת <InlineMath math="H_0" /> ב‑משפט הגבול המרכזי ומוצאים זנב ימין מעל 34. עבור <InlineMath math="\beta" /> משתמשים בנורמלית
-                    המדויקת תחת <InlineMath math="H_1" /> ומוצאים זנב שמאל עד 34.
+                    עבור <InlineMath math={String.raw`\alpha`} /> מקרבים את X̄ תחת <InlineMath math={String.raw`H_0`} /> ב‑משפט הגבול המרכזי ומוצאים זנב ימין מעל 34. עבור <InlineMath math={String.raw`\beta`} /> משתמשים בנורמלית
+                    המדויקת תחת <InlineMath math={String.raw`H_1`} /> ומוצאים זנב שמאל עד 34.
                   </>
                 ),
               }}
@@ -1234,16 +1234,16 @@ function Exam2023Page(): ReactElement {
               finalAnswer={String.raw`\alpha=0.001;\quad \beta=0.0125`}
               narration={
                 <>
-                  רמת המובהקות (טעות מסוג ראשון) היא 0.001 וסיכוי הטעות מסוג שני הוא 0.0125 — ושימו לב שתחת <InlineMath math="H_0" /> נזקקנו למשפט הגבול המרכזי בעוד שתחת{' '}
-                  <InlineMath math="H_1" /> ההתפלגות נורמלית ממילא.
+                  רמת המובהקות (טעות מסוג ראשון) היא 0.001 וסיכוי הטעות מסוג שני הוא 0.0125 — ושימו לב שתחת <InlineMath math={String.raw`H_0`} /> נזקקנו למשפט הגבול המרכזי בעוד שתחת{' '}
+                  <InlineMath math={String.raw`H_1`} /> ההתפלגות נורמלית ממילא.
                 </>
               }
               trap={
                 <>
-                  <strong>מלכודת קונספטואלית קריטית:</strong> תחת <InlineMath math="H_0" /> (אחיד) זקוקים ל‑משפט הגבול המרכזי כדי לקרב את X̄; תחת <InlineMath math="H_1" /> (נורמלי){' '}
+                  <strong>מלכודת קונספטואלית קריטית:</strong> תחת <InlineMath math={String.raw`H_0`} /> (אחיד) זקוקים ל‑משפט הגבול המרכזי כדי לקרב את X̄; תחת <InlineMath math={String.raw`H_1`} /> (נורמלי){' '}
                   <strong>אין</strong> צורך בו — סכום/ממוצע של נורמליים הוא בדיוק נורמלי. שכחת משפט הגבול המרכזי היכן שנדרש, או הוספתו היכן שאינו נדרש, שתיהן עולות בנקודות.{' '}
-                  <InlineMath math="\alpha" /> ו‑<InlineMath math="\beta" /> מחושבים תחת התפלגויות <em>שונות</em> (אפס מול חלופית). שמרו על ה‑SE במקומו הנכון: √
-                  (33.33/20) תחת <InlineMath math="H_0" /> מול √(4/20) תחת <InlineMath math="H_1" />.
+                  <InlineMath math={String.raw`\alpha`} /> ו‑<InlineMath math={String.raw`\beta`} /> מחושבים תחת התפלגויות <em>שונות</em> (אפס מול חלופית). שמרו על ה‑SE במקומו הנכון: √
+                  (33.33/20) תחת <InlineMath math={String.raw`H_0`} /> מול √(4/20) תחת <InlineMath math={String.raw`H_1`} />.
                 </>
               }
             />
