@@ -289,7 +289,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
           {/* Abstract Generated Background Image */}
           <div 
             className="absolute inset-0 -z-20 h-full w-full bg-cover bg-center bg-no-repeat opacity-30 [mask-image:radial-gradient(ellipse_80%_80%_at_50%_30%,black_40%,transparent_100%)]" 
-            style={{ backgroundImage: 'url(/images/hero-bg.png)' }}
+            style={{ backgroundImage: 'url(/images/background.png)' }}
           ></div>
           <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[var(--color-background)] via-transparent to-[var(--color-background)]/80 pointer-events-none"></div>
 

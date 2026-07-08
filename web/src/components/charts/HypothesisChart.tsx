@@ -277,7 +277,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   };
 
   return (
-    <div className="h-full min-h-[305px] w-full flex-1" dir="ltr">
+    <div className="h-full min-h-[305px] w-full flex-1" dir="ltr" style={{ minHeight: 0 }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={enrichedChartData} margin={{ top: 20, right: 10, left: 0, bottom: 44 }}>
           <defs>
@@ -393,7 +393,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
             strokeWidth={2}
             fill="url(#h0Color)"
             dot={false}
-            isAnimationActive={true}
+            isAnimationActive={false}
           />
 
           {/* H1 Curve Base Area */}
@@ -405,7 +405,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
               strokeWidth={2}
               fill="url(#h1Color)"
               dot={false}
-              isAnimationActive={true}
+              isAnimationActive={false}
             />
           )}
 

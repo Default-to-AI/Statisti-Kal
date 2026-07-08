@@ -48,7 +48,7 @@ export default function SiteHeader({ activePage, onNavigate, onStartLocalTour }:
             aria-label="דף הבית"
             title="דף הבית"
           >
-            <Home className="h-6 w-6 text-[#e2e2f0]" />
+            <Home className="h-6 w-6 text-[var(--color-text-primary)]" />
           </button>
           <div>
             <h1 className="select-none text-xl font-semibold tracking-tight text-[var(--color-text-primary)] sm:text-2xl">

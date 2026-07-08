@@ -8,7 +8,7 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { AnimatedDetails } from './ui/CustomComponents';
-import { ReadingCalcBlock as SharedReadingCalcBlock, ReadingFormulaBlock as SharedReadingFormulaBlock, ResultBlock, Disclosure } from './ui';
+import { ReadingCalcBlock as SharedReadingCalcBlock, ReadingFormulaBlock as SharedReadingFormulaBlock, ResultBlock, Disclosure, Heading } from './ui';
 import {
     ChartLegend,
     ChartTooltipShell,
@@ -2259,9 +2259,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                 <div className="flex items-center gap-3">
                                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Calculator size={24} /></div>
                                     <div className="flex flex-col items-start gap-1">
-                                        <h2 data-toc data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
+                                        <Heading level="section" withAccentBar data-toc data-toc-target="hypothesis-panel" data-toc-open="hypothesis-panel" className="text-xl sm:text-2xl">
                                             בדיקת השערות
-                                        </h2>
+                                        </Heading>
                                         <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
                                             <InlineMath math={String.raw`\text{Hypothesis Testing}`} />
                                         </span>
@@ -3478,9 +3478,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                         <div className="flex items-center gap-3 text-right">
                                             <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Target size={24} /></div>
                                             <div className="flex flex-col items-start gap-1">
-                                                <h2 data-toc data-toc-target="confidence-panel" data-toc-open="confidence-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
+                                                <Heading level="section" withAccentBar data-toc data-toc-target="confidence-panel" data-toc-open="confidence-panel" className="text-xl sm:text-2xl">
                                                     רווח סמך לתוחלת <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(CI)" /></span>
-                                                </h2>
+                                                </Heading>
                                             <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
                                                     <InlineMath math="\text{Confidence Interval}\;(CI)" />
                                             </span>
@@ -4017,9 +4017,9 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                                     <div className="flex items-center gap-3">
                                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Activity size={24} /></div>
                                         <div className="flex flex-col items-start gap-1">
-                                            <h2 data-toc data-toc-target="power-panel" data-toc-open="power-panel" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">
+                                            <Heading level="section" withAccentBar data-toc data-toc-target="power-panel" data-toc-open="power-panel" className="text-xl sm:text-2xl">
                                                 עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
-                                            </h2>
+                                            </Heading>
                                             <span aria-hidden="true" className="text-base sm:text-lg font-serif text-[var(--color-text-secondary)] opacity-80" dir="ltr">
                                                 <InlineMath math="\text{Statistical Power}\;(1-\beta)" />
                                             </span>
