@@ -1,9 +1,7 @@
 import React from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
-import { Disclosure } from './ui/CustomComponents';
-import { FormulaBlock } from './ui/FormulaBlock';
-import { BookText, Sparkles, Award } from 'lucide-react';
-function GoldenRuleCard({ title, children, example, watermark }: { title: string, children: React.ReactNode, example?: React.ReactNode, watermark?: string }) {
+import { BookText, Sparkles, Award, Lightbulb } from 'lucide-react';
+function GoldenRuleCard({ title, children, example, watermark, icon: Icon = Sparkles }: { title: string, children: React.ReactNode, example?: React.ReactNode, watermark?: string, icon?: React.ElementType }) {
   return (
     <div className="bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface)] border border-[var(--color-border)] rounded-2xl p-5 flex flex-col gap-4 shadow-lg relative overflow-hidden group hover:border-[var(--color-primary)]/40 transition-all duration-300">
       <div className="absolute top-0 right-0 w-1.5 h-full bg-[var(--color-primary)] opacity-70 group-hover:opacity-100 transition-opacity z-10" />
@@ -18,7 +16,7 @@ function GoldenRuleCard({ title, children, example, watermark }: { title: string
 
       <div className="flex gap-4 relative z-10">
         <div className="mt-0.5 text-[var(--color-primary)]">
-          <Sparkles className="w-6 h-6 opacity-90 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300" />
+          <Icon className="w-6 h-6 opacity-90 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-300" />
         </div>
         <div className="flex-1">
           <h3 className="text-lg font-extrabold text-[var(--color-text-primary)] mb-1.5">{title}</h3>
@@ -154,307 +152,246 @@ export default function SummaryPage(): React.ReactElement {
         </div>
       </div>
 
-      <div className="w-full max-w-[90rem] mx-auto space-y-4 px-4 sm:px-0">
-        <Disclosure
-          title="1. רמת מובהקות (α) וטעות מסוג ראשון"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>
-              רמת המובהקות <InlineMath math="\alpha" /> היא ההסתברות לדחות את השערת האפס (<InlineMath math="H_0" />) כאשר היא נכונה. זוהי הטעות מסוג ראשון (Type I Error).
-            </p>
-            <FormulaBlock>
-              <BlockMath math="\alpha = P(\text{Reject } H_0 \mid H_0 \text{ is true})" />
-            </FormulaBlock>
-          </div>
-        </Disclosure>
+      <div className="w-full max-w-[90rem] mx-auto space-y-6 px-4 sm:px-0 mt-12 mb-12">
+        <div className="flex items-center gap-2.5 mb-6 border-b border-[var(--color-border)] pb-3">
+          <BookText className="w-7 h-7 text-[var(--color-primary)]" />
+          <h2 className="text-2xl font-extrabold text-[var(--color-text-primary)]">מושגי יסוד והבהרות</h2>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          <GoldenRuleCard
+            title="רמת מובהקות (α) וטעות מסוג ראשון"
+            watermark={String.raw`\alpha`}
+            example={<BlockMath math={String.raw`\alpha = P(\text{Reject } H_0 \mid H_0 \text{ is true})`} />}
+            icon={Lightbulb}
+          >
+            רמת המובהקות <InlineMath math={String.raw`\alpha`} /> היא ההסתברות לדחות את השערת האפס (<InlineMath math={String.raw`H_0`} />) כאשר היא נכונה. זוהי הטעות מסוג ראשון (Type I Error).
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="2. הקשר וההבדל בין אלפא (α) לעוצמת המבחן (1 - β)"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>קיימות שתי טעויות אפשריות בבדיקת השערות:</p>
+          <GoldenRuleCard
+            title="אלפא (α) ועוצמת המבחן (1 - β)"
+            watermark={String.raw`1-\beta`}
+            example={<BlockMath math={String.raw`\text{Power} = 1 - \beta = P(\text{Reject } H_0 \mid H_1 \text{ is true})`} />}
+            icon={Lightbulb}
+          >
+            קיימות שתי טעויות אפשריות בבדיקת השערות:
+            <ul className="list-disc pr-6 space-y-1 mt-2">
+              <li>טעות מסוג ראשון (<InlineMath math={String.raw`\alpha`} />): דחיית <InlineMath math={String.raw`H_0`} /> למרות שהיא נכונה.</li>
+              <li>טעות מסוג שני (<InlineMath math={String.raw`\beta`} />): קבלת <InlineMath math={String.raw`H_0`} /> למרות שהיא שגויה (<InlineMath math={String.raw`H_1`} /> נכונה).</li>
+            </ul>
+            <p className="mt-2">עוצמת המבחן היא ההסתברות לדחות את <InlineMath math={String.raw`H_0`} /> כאשר <InlineMath math={String.raw`H_1`} /> נכונה (החלטה נכונה).</p>
+          </GoldenRuleCard>
+
+          <GoldenRuleCard
+            title="אזורי דחייה וקבלה"
+            watermark={String.raw`H_0, H_1`}
+            icon={Lightbulb}
+          >
+            אזור הדחייה ואזור הקבלה נקבעים אך ורק על ידי השערת האפס (<InlineMath math={String.raw`H_0`} />) ורמת המובהקות <InlineMath math={String.raw`\alpha`} />. הם לא משתנים אם השערת האלטרנטיבה (<InlineMath math={String.raw`H_1`} />) משתנה. מה שכן משתנה הוא עוצמת המבחן ו-<InlineMath math={String.raw`\beta`} />.
+          </GoldenRuleCard>
+
+          <GoldenRuleCard
+            title="השערות על סוג התפלגות"
+            watermark={String.raw`X \sim`}
+            example={
+              <div className="flex flex-col gap-1">
+                <BlockMath math={String.raw`H_0: X \sim U(0,3)`} />
+                <BlockMath math={String.raw`H_1: X \sim Bin(4, 0.2)`} />
+              </div>
+            }
+            icon={Lightbulb}
+          >
+            יש לחשב את ההסתברויות לכל ערך אפשרי תחת כל אחת מההשערות, ולבחור את אזור הדחייה כך שההסתברות לקבל את הערכים הללו תחת <InlineMath math={String.raw`H_0`} /> תהיה בדיוק <InlineMath math={String.raw`\alpha`} />.
+          </GoldenRuleCard>
+
+          <GoldenRuleCard
+            title="טבלת החלטות וטעויות"
+            watermark={String.raw`\alpha, \beta`}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-1">
-              <li>טעות מסוג ראשון (<InlineMath math="\alpha" />): דחיית <InlineMath math="H_0" /> למרות שהיא נכונה.</li>
-              <li>טעות מסוג שני (<InlineMath math="\beta" />): קבלת <InlineMath math="H_0" /> למרות שהיא שגויה (כלומר <InlineMath math="H_1" /> נכונה).</li>
+              <li><strong>החלטה נכונה</strong> (<InlineMath math={String.raw`1 - \alpha`} />): מקבלים את <InlineMath math={String.raw`H_0`} /> והיא נכונה.</li>
+              <li><strong>טעות מסוג ראשון</strong> (<InlineMath math={String.raw`\alpha`} />): דוחים את <InlineMath math={String.raw`H_0`} /> למרות שהיא נכונה.</li>
+              <li><strong>טעות מסוג שני</strong> (<InlineMath math={String.raw`\beta`} />): מקבלים את <InlineMath math={String.raw`H_0`} /> למרות שהיא שגויה.</li>
+              <li><strong>עוצמה / החלטה נכונה</strong> (<InlineMath math={String.raw`1 - \beta`} />): דוחים את <InlineMath math={String.raw`H_0`} /> והיא אכן שגויה.</li>
             </ul>
-            <p>עוצמת המבחן היא ההסתברות לדחות את <InlineMath math="H_0" /> כאשר <InlineMath math="H_1" /> נכונה (החלטה נכונה).</p>
-            <FormulaBlock>
-              <BlockMath math="\text{Power} = 1 - \beta = P(\text{Reject } H_0 \mid H_1 \text{ is true})" />
-            </FormulaBlock>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="3. אזורי דחייה וקבלה - האם הם משתנים או זזים?"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>
-              אזור הדחייה ואזור הקבלה נקבעים אך ורק על ידי השערת האפס (<InlineMath math="H_0" />) ורמת המובהקות <InlineMath math="\alpha" />. הם לא משתנים אם השערת האלטרנטיבה (<InlineMath math="H_1" />) משתנה. מה שכן משתנה כתוצאה משינוי ב-<InlineMath math="H_1" /> הוא עוצמת המבחן ו-<InlineMath math="\beta" />, כיוון שההתפלגות תחת <InlineMath math="H_1" /> זזה.
-            </p>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="חילוץ פרמטרים (משפט הגבול המרכזי)"
+            watermark={String.raw`\mu, \sigma^2`}
+            icon={Lightbulb}
+          >
+            כאשר ההשערות הן על סוג התפלגות, נשתמש בתוחלת ובשונות של ההתפלגות הנתונה. למשל עבור התפלגות אחידה <InlineMath math={String.raw`X \sim U(0, 10)`} />:
+            <ul className="list-disc pr-6 space-y-1 mt-2">
+              <li>תוחלת: <InlineMath math={String.raw`E(X) = \frac{0+10}{2} = 5`} /></li>
+              <li>שונות: <InlineMath math={String.raw`V(X) = \frac{(10-0)^2}{12} = \frac{100}{12}`} /></li>
+            </ul>
+            <p className="mt-2">ואז נציב בנוסחת משפט הגבול המרכזי.</p>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="4. ניסוח השערות על סוג התפלגות"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>במקרים בהם ההשערה נוגעת לסוג ההתפלגות כולו (למשל, בין אחידה לבינומית):</p>
-            <FormulaBlock>
-              <BlockMath math="H_0: X \sim U(0,3)" />
-              <BlockMath math="H_1: X \sim Bin(4, 0.2)" />
-            </FormulaBlock>
-            <p>
-              יש לחשב את ההסתברויות לכל ערך אפשרי תחת כל אחת מההשערות, ולבחור את אזור הדחייה כך שההסתברות לקבל את הערכים הללו תחת <InlineMath math="H_0" /> תהיה בדיוק <InlineMath math="\alpha" />.
-            </p>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="למה מחלקים ב-n כשמתקננים ממוצע?"
+            watermark={String.raw`\sqrt{n}`}
+            example={<BlockMath math={String.raw`SD(\bar{X}) = \frac{\sigma}{\sqrt{n}}`} />}
+            icon={Lightbulb}
+          >
+            השונות של ממוצע המדגם קטנה פי <InlineMath math={String.raw`n`} /> מהשונות המקורית של האוכלוסייה:
+            <BlockMath math={String.raw`\text{Var}(\bar{X}) = \frac{\sigma^2}{n}`} />
+            לכן שגיאת התקן של ממוצע המדגם (סטיית התקן שלו) מחושבת על ידי חלוקה ב-<InlineMath math={String.raw`\sqrt{n}`} />.
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="5. טבלת החלטות וטעויות (מטריצת הבלבולים)"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
+          <GoldenRuleCard
+            title="מתי מחלקים ב-n ומתי לא?"
+            watermark={String.raw`n`}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-2">
-              <li>החלטה: מקבלים את <InlineMath math="H_0" />, מציאות: <InlineMath math="H_0" /> נכונה <InlineMath math="\leftarrow" /> החלטה נכונה (הסתברות <InlineMath math="1 - \alpha" />)</li>
-              <li>החלטה: דוחים את <InlineMath math="H_0" />, מציאות: <InlineMath math="H_0" /> נכונה <InlineMath math="\leftarrow" /> טעות מסוג ראשון (<InlineMath math="\alpha" />)</li>
-              <li>החלטה: מקבלים את <InlineMath math="H_0" />, מציאות: <InlineMath math="H_1" /> נכונה <InlineMath math="\leftarrow" /> טעות מסוג שני (<InlineMath math="\beta" />)</li>
-              <li>החלטה: דוחים את <InlineMath math="H_0" />, מציאות: <InlineMath math="H_1" /> נכונה <InlineMath math="\leftarrow" /> החלטה נכונה / עוצמה (<InlineMath math="1 - \beta" />)</li>
+              <li><strong>ממוצע המדגם</strong> (<InlineMath math={String.raw`\bar{X}`} />): מחלקים את השונות ב-<InlineMath math={String.raw`n`} /> (ואת סטיית התקן ב-<InlineMath math={String.raw`\sqrt{n}`} />).</li>
+              <li><strong>תצפית בודדת</strong> (<InlineMath math={String.raw`X`} />): משתמשים בשונות וסטיית התקן של האוכלוסייה כפי שהן (לא מחלקים ב-<InlineMath math={String.raw`n`} />).</li>
             </ul>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="6. חילוץ פרמטרים ממשפט הגבול המרכזי (משפט הגבול המרכזי) כשההשערה היא התפלגות מלאה"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>
-              כאשר ההשערות הן על סוג התפלגות, נשתמש בתוחלת ובשונות של ההתפלגות הנתונה. למשל עבור התפלגות אחידה <InlineMath math="X \sim U(0, 10)" />:
-            </p>
+          <GoldenRuleCard
+            title="סיגמא (σ), S, ושגיאת תקן"
+            watermark={String.raw`\sigma, S`}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-2">
-              <li>תוחלת: <InlineMath math="E(X) = \frac{0+10}{2} = 5" /></li>
-              <li>שונות: <InlineMath math="V(X) = \frac{(10-0)^2}{12} = \frac{100}{12}" /></li>
+              <li><InlineMath math={String.raw`\sigma`} />: סטיית התקן של האוכלוסייה (פרמטר אמיתי, לרוב לא ידוע).</li>
+              <li><InlineMath math={String.raw`S`} />: סטיית התקן של המדגם (אומדן ל-<InlineMath math={String.raw`\sigma`} />).</li>
+              <li><InlineMath math={String.raw`\frac{\sigma}{\sqrt{n}}`} /> או <InlineMath math={String.raw`\frac{S}{\sqrt{n}}`} />: שגיאת התקן - סטיית התקן של התפלגות ממוצע המדגם. זוהי מידת הפיזור של הממוצעים סביב התוחלת.</li>
             </ul>
-            <p>
-              ואז נציב בנוסחת משפט הגבול המרכזי כדי למצוא את התפלגות ממוצע המדגם.
-            </p>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="7. למה מחלקים ב-n כשמתקננים ממוצע (שורש שונות חלקי מדגם)?"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>
-              כאשר דוגמים <InlineMath math="n" /> תצפיות ומחשבים את ממוצע המדגם <InlineMath math="\bar{X}" />, השונות של ממוצע המדגם קטנה פי <InlineMath math="n" /> מהשונות המקורית של האוכלוסייה. לכן:
-            </p>
-            <FormulaBlock>
-              <BlockMath math="\text{Var}(\bar{X}) = \frac{\sigma^2}{n}" />
-            </FormulaBlock>
-            <p>ומכאן שסטיית התקן (שגיאת התקן) של ממוצע המדגם היא:</p>
-            <FormulaBlock>
-              <BlockMath math="SD(\bar{X}) = \frac{\sigma}{\sqrt{n}}" />
-            </FormulaBlock>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="רווח סמך לתוחלת וערך Z"
+            watermark={String.raw`Z_{1-\alpha/2}`}
+            example={<BlockMath math={String.raw`\bar{X} \pm Z_{1 - \frac{\alpha}{2}} \cdot \frac{\sigma}{\sqrt{n}}`} />}
+            icon={Lightbulb}
+          >
+            רווח סמך ברמת סמך <InlineMath math={String.raw`1 - \alpha`} /> הוא טווח שצפוי להכיל את הפרמטר האמיתי בהסתברות <InlineMath math={String.raw`1 - \alpha`} />.
+            ערך ה-<InlineMath math={String.raw`Z`} /> מתקבל מטבלת ההתפלגות הנורמלית הסטנדרטית עבור שטח של <InlineMath math={String.raw`1 - \frac{\alpha}{2}`} />.
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="8. מתי מחלקים ב-n ומתי לא?"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <ul className="list-disc pr-6 space-y-2">
-              <li>כאשר שואלים על <strong>ממוצע המדגם</strong> (<InlineMath math="\bar{X}" />): מחלקים את השונות ב-<InlineMath math="n" /> (ואת סטיית התקן ב-<InlineMath math="\sqrt{n}" />).</li>
-              <li>כאשר שואלים על <strong>תצפית בודדת</strong> (<InlineMath math="X" />): משתמשים בשונות וסטיית התקן של האוכלוסייה כפי שהן (לא מחלקים ב-<InlineMath math="n" />).</li>
-            </ul>
-          </div>
-        </Disclosure>
-
-        <Disclosure
-          title='9. סלט של סימנים ונוסחאות: סיגמא (σ), S, ו"טעות התקן" (שגיאת תקן)'
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <ul className="list-disc pr-6 space-y-2">
-              <li><InlineMath math="\sigma" />: סטיית התקן של האוכלוסייה (פרמטר אמיתי, לרוב לא ידוע).</li>
-              <li><InlineMath math="S" />: סטיית התקן של המדגם (אומדן ל-<InlineMath math="\sigma" />).</li>
-              <li><InlineMath math="\frac{\sigma}{\sqrt{n}}" /> או <InlineMath math="\frac{S}{\sqrt{n}}" />: שגיאת התקן - סטיית התקן של התפלגות ממוצע המדגם. זוהי מידת הפיזור של הממוצעים האפשריים סביב התוחלת האמיתית.</li>
-            </ul>
-          </div>
-        </Disclosure>
-
-        <Disclosure
-          title="10. רווח סמך לתוחלת ואיך מוצאים את ערך ה-Z"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>
-              רווח סמך ברמת סמך <InlineMath math="1 - \alpha" /> הוא טווח ערכים שצפוי להכיל את הפרמטר האמיתי בהסתברות <InlineMath math="1 - \alpha" />. עבור תוחלת <InlineMath math="\mu" /> כאשר <InlineMath math="\sigma" /> ידוע:
-            </p>
-            <FormulaBlock>
-              <BlockMath math="\bar{X} \pm Z_{1 - \frac{\alpha}{2}} \cdot \frac{\sigma}{\sqrt{n}}" />
-            </FormulaBlock>
-            <p>
-              ערך ה-<InlineMath math="Z" /> מתקבל מטבלת ההתפלגות הנורמלית הסטנדרטית עבור שטח של <InlineMath math="1 - \frac{\alpha}{2}" />.
-            </p>
-          </div>
-        </Disclosure>
-
-        <Disclosure
-          title="11. אלגוריתם עבודה: השלבים לפתרון שאלת בדיקת השערות"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
+          <GoldenRuleCard
+            title="שלבים לפתרון שאלת השערות"
+            watermark={String.raw`H_0 \to H_1`}
+            icon={Lightbulb}
+          >
             <ol className="list-decimal pr-6 space-y-1">
-              <li>ניסוח השערות: <InlineMath math="H_0" /> מול <InlineMath math="H_1" />.</li>
-              <li>קביעת רמת המובהקות (<InlineMath math="\alpha" />).</li>
-              <li>בחירת סטטיסטי המבחן (למשל <InlineMath math="Z" /> או <InlineMath math="t" />).</li>
+              <li>ניסוח השערות: <InlineMath math={String.raw`H_0`} /> מול <InlineMath math={String.raw`H_1`} />.</li>
+              <li>קביעת רמת המובהקות (<InlineMath math={String.raw`\alpha`} />).</li>
+              <li>בחירת סטטיסטי המבחן (למשל <InlineMath math={String.raw`Z`} /> או <InlineMath math={String.raw`t`} />).</li>
               <li>מציאת אזור הדחייה / ערך קריטי (או חישוב P-Value).</li>
               <li>חישוב סטטיסטי המבחן מהמדגם.</li>
-              <li>קבלת החלטה: דחייה או קבלה של <InlineMath math="H_0" />.</li>
+              <li>קבלת החלטה: דחייה או קבלה של <InlineMath math={String.raw`H_0`} />.</li>
             </ol>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="12. הבלבול הנפוץ: רווח סמך מול ערך קריטי"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
+          <GoldenRuleCard
+            title="רווח סמך מול ערך קריטי"
+            watermark={String.raw`Z`}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-2">
-              <li><strong>ברווח סמך</strong>, המטרה היא לאמוד פרמטר לא ידוע בתוך טווח, ולכן אנו תמיד משתמשים ב-<InlineMath math="Z_{1 - \frac{\alpha}{2}}" /> (מבחן דו-צדדי).</li>
-              <li><strong>בבדיקת השערות</strong>, הערך הקריטי תלוי בכוון ההשערה:
+              <li><strong>ברווח סמך</strong> המטרה היא לאמוד פרמטר, ולכן תמיד נשתמש ב-<InlineMath math={String.raw`Z_{1 - \frac{\alpha}{2}}`} /> (דו-צדדי).</li>
+              <li><strong>בבדיקת השערות</strong>, הערך הקריטי תלוי בכיוון ההשערה:
                 <ul className="list-disc pr-6 mt-1 space-y-1">
-                  <li>במבחן חד-צדדי נשתמש ב-<InlineMath math="Z_{1 - \alpha}" />.</li>
-                  <li>במבחן דו-צדדי נשתמש ב-<InlineMath math="Z_{1 - \frac{\alpha}{2}}" />.</li>
+                  <li>במבחן חד-צדדי נשתמש ב-<InlineMath math={String.raw`Z_{1 - \alpha}`} />.</li>
+                  <li>במבחן דו-צדדי נשתמש ב-<InlineMath math={String.raw`Z_{1 - \frac{\alpha}{2}}`} />.</li>
                 </ul>
               </li>
             </ul>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="13. ניסוח רשמי ואקדמי של עוצמת המבחן (1 - β) וטעות מסוג שני (β)"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <FormulaBlock>
-              <BlockMath math="\beta = P(\text{Fail to reject } H_0 \mid H_1 \text{ is true}) = P(\text{Test Statistic } \notin \text{ Rejection Region} \mid \mu = \mu_1)" />
-            </FormulaBlock>
-            <FormulaBlock>
-              <BlockMath math="\text{Power} = 1 - \beta = P(\text{Reject } H_0 \mid H_1 \text{ is true}) = P(\text{Test Statistic } \in \text{ Rejection Region} \mid \mu = \mu_1)" />
-            </FormulaBlock>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="ניסוח רשמי של עוצמה וטעות"
+            watermark={String.raw`1-\beta`}
+            icon={Lightbulb}
+          >
+            <div className="flex flex-col gap-2 mt-2">
+              <div className="text-center">
+                <span className="text-sm text-[var(--color-text-secondary)] font-bold mb-1 block">טעות מסוג שני (<InlineMath math={String.raw`\beta`} />):</span>
+                <BlockMath math={String.raw`P(\text{Fail to reject } H_0 \mid H_1 \text{ is true})`} />
+              </div>
+              <div className="text-center border-t border-[var(--color-border)]/50 pt-2">
+                <span className="text-sm text-[var(--color-text-secondary)] font-bold mb-1 block">עוצמת המבחן (<InlineMath math={String.raw`1-\beta`} />):</span>
+                <BlockMath math={String.raw`P(\text{Reject } H_0 \mid H_1 \text{ is true})`} />
+              </div>
+            </div>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="14. כיצד נתון או מחושב S²"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>שונות המדגם <InlineMath math="S^2" /> משמשת לאמידת שונות האוכלוסייה <InlineMath math="\sigma^2" /> כאשר היא אינה ידועה.</p>
-            <p>הנוסחה לחישוב מאומד חסר הטיה היא:</p>
-            <FormulaBlock>
-              <BlockMath math="S^2 = \frac{\sum_{i=1}^{n} (X_i - \bar{X})^2}{n-1}" />
-            </FormulaBlock>
-            <p>החלוקה ב-<InlineMath math="n-1" /> (דרגות החופש) מתקנת את ההטיה שיש באומדן כאשר משתמשים בממוצע המדגם במקום בתוחלת האמיתית.</p>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="חישוב שונות המדגם S²"
+            watermark={String.raw`S^2`}
+            example={<BlockMath math={String.raw`S^2 = \frac{\sum_{i=1}^{n} (X_i - \bar{X})^2}{n-1}`} />}
+            icon={Lightbulb}
+          >
+            שונות המדגם <InlineMath math={String.raw`S^2`} /> משמשת לאמידת שונות האוכלוסייה <InlineMath math={String.raw`\sigma^2`} /> כאשר היא אינה ידועה.
+            <br/><br/>
+            החלוקה ב-<InlineMath math={String.raw`n-1`} /> (דרגות החופש) מתקנת את ההטיה שיש באומדן כאשר משתמשים בממוצע המדגם במקום בתוחלת האמיתית.
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="15. הסתברות המובהקות (P-Value)"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>P-Value הוא ההסתברות לקבל תוצאה קיצונית לפחות כמו זו שהתקבלה במדגם, בהנחה ש-<InlineMath math="H_0" /> נכונה.</p>
-            <ul className="list-disc pr-6 space-y-1">
-              <li>אם <InlineMath math="\text{P-Value} \le \alpha" />, דוחים את <InlineMath math="H_0" />.</li>
-              <li>אם <InlineMath math="\text{P-Value} > \alpha" />, לא דוחים את <InlineMath math="H_0" />.</li>
+          <GoldenRuleCard
+            title="הסתברות המובהקות (P-Value)"
+            watermark={String.raw`\text{P-Val}`}
+            icon={Lightbulb}
+          >
+            P-Value הוא ההסתברות לקבל תוצאה קיצונית לפחות כמו זו שהתקבלה, בהנחה ש-<InlineMath math={String.raw`H_0`} /> נכונה. הוא רמת המובהקות המינימלית לדחיית <InlineMath math={String.raw`H_0`} />.
+            <ul className="list-disc pr-6 space-y-1 mt-2">
+              <li>אם <InlineMath math={String.raw`\text{P-Value} \le \alpha`} /> <InlineMath math={String.raw`\to`} /> דוחים את <InlineMath math={String.raw`H_0`} />.</li>
+              <li>אם <InlineMath math={String.raw`\text{P-Value} > \alpha`} /> <InlineMath math={String.raw`\to`} /> לא דוחים.</li>
             </ul>
-            <p>ה-P-Value הוא רמת המובהקות המינימלית שעבורה היינו דוחים את <InlineMath math="H_0" />.</p>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="16. אותיות גדולות לעומת קטנות"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>בסטטיסטיקה, יש משמעות עמוקה להבדל בין אותיות גדולות לקטנות:</p>
+          <GoldenRuleCard
+            title="אותיות גדולות לעומת קטנות"
+            watermark={String.raw`X, x`}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-2 mt-2">
-              <li><strong>אותיות גדולות (למשל <InlineMath math="X" />, <InlineMath math="\bar{X}" />):</strong> מייצגות משתנים מקריים (לפני לקיחת המדגם, לערכים שלהם יש הסתברויות).</li>
-              <li><strong>אותיות קטנות (למשל <InlineMath math="x" />, <InlineMath math="\bar{x}" />):</strong> מייצגות ערכים תצפיתיים מסוימים (אחרי לקיחת המדגם, מדובר במספרים קבועים).</li>
+              <li><strong>אותיות גדולות (<InlineMath math={String.raw`X, \bar{X}`} />):</strong> מייצגות משתנים מקריים (לפני לקיחת המדגם, לערכים שלהם יש הסתברויות).</li>
+              <li><strong>אותיות קטנות (<InlineMath math={String.raw`x, \bar{x}`} />):</strong> מייצגות ערכים תצפיתיים מסוימים (אחרי לקיחת המדגם, מדובר במספרים קבועים).</li>
             </ul>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="17. יסודות תורת האומדנים"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>אומד הוא נתון מהמדגם המשמש להערכת פרמטר באוכלוסייה. אומדן הוא הערך המספרי שהתקבל במדגם מסוים.</p>
-            <p>למשל, ממוצע המדגם <InlineMath math="\bar{X}" /> הוא אומד לתוחלת האוכלוסייה <InlineMath math="\mu" />. כאשר נחשב אותו למדגם ספציפי ונקבל <InlineMath math="\bar{x} = 5" />, זהו האומדן.</p>
-          </div>
-        </Disclosure>
+          <GoldenRuleCard
+            title="יסודות תורת האומדנים"
+            watermark={String.raw`\hat{\theta}`}
+            icon={Lightbulb}
+          >
+            אומד הוא נתון מהמדגם המשמש להערכת פרמטר באוכלוסייה. אומדן הוא הערך המספרי שהתקבל במדגם מסוים.
+            <p className="mt-2">למשל, ממוצע המדגם <InlineMath math={String.raw`\bar{X}`} /> הוא <strong>אומד</strong> ל-<InlineMath math={String.raw`\mu`} />. כשנחשב ונקבל <InlineMath math={String.raw`\bar{x} = 5`} />, זהו <strong>אומדן</strong>.</p>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="18. תכונות אומדים והשוואה ביניהם"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="space-y-3 text-body-base text-[var(--color-text-primary)] leading-relaxed">
-            <p>אומד טוב צריך לעמוד במספר קריטריונים:</p>
-            <ol className="list-decimal pr-6 space-y-2">
-              <li><strong>חוסר הטיה (Unbiasedness):</strong> התוחלת של האומד שווה לפרמטר האמיתי, <InlineMath math="E(\hat{\theta}) = \theta" />. הטיה מוגדרת כ- <InlineMath math="\text{Bias}(\hat{\theta}) = E(\hat{\theta}) - \theta" />.</li>
-              <li><strong>יעילות (Efficiency):</strong> לאומד יש שונות קטנה ככל האפשר בהשוואה לאומדים חסרי הטיה אחרים.</li>
+          <GoldenRuleCard
+            title="תכונות אומדים"
+            watermark={String.raw`MSE`}
+            example={<BlockMath math={String.raw`MSE(\hat{\theta}) = \text{Var}(\hat{\theta}) + [\text{Bias}(\hat{\theta})]^2`} />}
+            icon={Lightbulb}
+          >
+            אומד טוב צריך לעמוד במספר קריטריונים:
+            <ol className="list-decimal pr-6 space-y-1 mt-2">
+              <li><strong>חוסר הטיה:</strong> <InlineMath math={String.raw`E(\hat{\theta}) = \theta`} />.</li>
+              <li><strong>יעילות:</strong> שונות קטנה ככל האפשר בהשוואה לאומדים אחרים.</li>
             </ol>
-            <p>מדד להערכת אומדים הוא פונקציית הפסד MSE (Mean Squared Error):</p>
-            <FormulaBlock>
-              <BlockMath math="MSE(\hat{\theta}) = \text{Var}(\hat{\theta}) + [\text{Bias}(\hat{\theta})]^2" />
-            </FormulaBlock>
-          </div>
-        </Disclosure>
+            <p className="mt-2">מדד להערכת אומדים הוא פונקציית הפסד MSE.</p>
+          </GoldenRuleCard>
 
-        <Disclosure
-          title="19. טעויות נפוצות בחישוב שונות וסטיית תקן"
-          defaultOpen={false}
-          accentOnOpen="brass"
-        >
-          <div className="text-body-base text-[var(--color-text-primary)] leading-relaxed">
+          <GoldenRuleCard
+            title="טעויות בחישוב שונות וסטיית תקן"
+            watermark={String.raw`SD`}
+            example={<BlockMath math={String.raw`SD(X+Y) = \sqrt{\text{Var}(X) + \text{Var}(Y)}`} />}
+            icon={Lightbulb}
+          >
             <ul className="list-disc pr-6 space-y-2">
-              <li><strong>שכחת הוצאת שורש:</strong> השונות היא תמיד ביחידות ריבועיות. כדי לקבל את הפיזור ביחידות המקוריות יש להוציא שורש ריבועי לקבלת סטיית התקן.</li>
+              <li><strong>הוצאת שורש:</strong> השונות היא ביחידות ריבועיות. תמיד צריך להוציא שורש כדי לקבל סטיית תקן.</li>
               <li>
-                <strong>חיבור סטיות תקן:</strong> אי אפשר לחבר סטיות תקן. תמיד יש לחבר שונויות (של משתנים בלתי תלויים) ורק אז להוציא שורש:
-                <FormulaBlock>
-                  <BlockMath math="SD(X+Y) = \sqrt{\text{Var}(X) + \text{Var}(Y)} \neq SD(X) + SD(Y)" />
-                </FormulaBlock>
+                <strong>חיבור סטיות תקן:</strong> אי אפשר לחבר סטיות תקן! חברו שונויות (של משתנים בלתי תלויים) ורק אז הוציאו שורש.
               </li>
             </ul>
-          </div>
-        </Disclosure>
+          </GoldenRuleCard>
+        </div>
       </div>
     </div>
   );

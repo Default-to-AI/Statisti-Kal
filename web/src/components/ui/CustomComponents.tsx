@@ -119,9 +119,9 @@ export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(function
           dir={dir}
           aria-invalid={error ? 'true' : undefined}
           aria-describedby={error ? `${inputId}-error` : undefined}
-          className={`w-full bg-transparent px-2 py-1 font-mono font-bold text-center ${INPUT_SIZE_CLASSES[size]} text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)]/60 outline-none transition-all rounded focus:bg-[var(--color-surface)] ${
-            error ? 'text-[var(--color-error)] font-bold' : ''
-          } ${disabled ? 'opacity-40 cursor-not-allowed' : ''} ${inputClassName}`}
+          className={`w-full bg-[var(--color-surface)] border border-[var(--color-border)] px-2 py-1.5 font-mono font-bold text-center ${INPUT_SIZE_CLASSES[size]} text-[var(--color-text-primary)] placeholder-[var(--color-text-secondary)]/60 outline-none transition-all rounded focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)] ${
+            error ? 'border-[var(--color-error)] text-[var(--color-error)] font-bold' : ''
+          } ${disabled ? 'opacity-40 cursor-not-allowed bg-[var(--color-surface-raised)] border-dashed' : ''} ${inputClassName}`}
         />
         {error && (
           <div

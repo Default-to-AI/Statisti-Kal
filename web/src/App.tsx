@@ -14,7 +14,7 @@ import { PageTransition } from './components/PageTransition';
 import type { CalcMode } from './components/calc-ui';
 import { type TourMode, type GuidedTourStep, getTourStepsByMode } from './config/tours';
 
-type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'normal' | 'summary' | 'regression';
+type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'normal' | 'summary' | 'regression' | 'test-yourself';
 const JoyrideComponent = Joyride as any;
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
@@ -22,6 +22,7 @@ const NormalDistributionCalculator = lazy(() => import('./components/NormalDistr
 const SummaryPage = lazy(() => import('./components/SummaryPage'));
 const Exam2023Page = lazy(() => import('./components/Exam2023Page'));
 const LinearRegressionCalculator = lazy(() => import('./components/LinearRegressionCalculator'));
+const TestYourselfPage = lazy(() => import('./components/TestYourselfPage'));
 
 function getTourViewportOffset(): number {
   return Math.max(Math.round(window.innerHeight * 0.1), 88);
@@ -126,7 +127,7 @@ export default function App() {
     // Smooth scroll to top on every navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'exam-2023' || page === 'summary' || page === 'regression') {
+    if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'exam-2023' || page === 'summary' || page === 'regression' || page === 'test-yourself') {
       setActivePage(page);
       return;
     }
@@ -374,6 +375,17 @@ export default function App() {
         >
           <Suspense fallback={<PageLoadingState />}>
             <Exam2023Page />
+          </Suspense>
+        </PageLayout>
+      ) : null}
+
+      {activePage === 'test-yourself' ? (
+        <PageLayout
+          header={<SiteHeader activePage="test-yourself" onNavigate={handleNavigate} />}
+          footer={<SiteFooter onNavigate={handleNavigate} />}
+        >
+          <Suspense fallback={<PageLoadingState />}>
+            <TestYourselfPage />
           </Suspense>
         </PageLayout>
       ) : null}

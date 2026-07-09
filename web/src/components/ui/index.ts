@@ -38,6 +38,10 @@ export { Card, CardHeader, CardBody } from './Card';
 export type { CardProps, CardHeaderProps, CardBodyProps } from './Card';
 export { Heading, SectionHeader } from './Heading';
 export type { HeadingProps, HeadingLevel, SectionHeaderProps } from './Heading';
+export { Button } from './Button';
+export type { ButtonProps } from './Button';
+export { Badge } from './Badge';
+export type { BadgeProps, BadgeVariant } from './Badge';
 
 export type {
   // InputGroup
@@ -75,5 +79,5 @@ export type { HandwrittenNoteProps } from './HandwrittenNote';
 export { MCQuestionCard } from './MCQuestionCard';
 export type { MCQuestionCardProps, MCOption } from './MCQuestionCard';
 
-export { CyberneticBackground } from './CyberneticBackground';
-
+export * from './CyberneticBackground';
+export * from './InteractiveNormalGraph';
