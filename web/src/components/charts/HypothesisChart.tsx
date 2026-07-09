@@ -78,11 +78,23 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
   const minZ = Math.floor((xMin - stats.effectH0Mean) / stats.se);
   const maxZ = Math.ceil((xMax - stats.effectH0Mean) / stats.se);
   const zScoreAxisTicks: { value: number; label: string; isMu1?: boolean }[] = [];
-  for (let z = minZ; z <= maxZ; z++) {
+  
+  const zRange = Math.max(0, maxZ - minZ);
+  const zStep = Math.max(1, Math.ceil(zRange / 30));
+
+  for (let z = minZ; z <= maxZ; z += zStep) {
     zScoreAxisTicks.push({
       value: stats.effectH0Mean + z * stats.se,
       label: z === 0 ? '0' : `${z > 0 ? '+' : ''}${z}σ`,
     });
+  }
+
+  // Ensure 0 is included if we stepped over it
+  if (zStep > 1 && !zScoreAxisTicks.some(t => t.label === '0')) {
+     zScoreAxisTicks.push({
+       value: stats.effectH0Mean,
+       label: '0'
+     });
   }
 
   // Add μ₁ tick on the z-score axis when visible
