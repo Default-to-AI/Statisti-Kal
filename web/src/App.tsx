@@ -6,7 +6,6 @@
 import { Suspense, lazy, useState, useCallback, useMemo, useEffect } from 'react';
 import { Joyride, type Step } from 'react-joyride';
 import LandingPage from './components/LandingPage';
-import PointEstimationPage from './components/PointEstimationPage';
 import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
 import { PageLayout } from './components/ui/PageLayout';
@@ -19,13 +18,15 @@ const JoyrideComponent = Joyride as any;
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
 const NormalDistributionCalculator = lazy(() => import('./components/NormalDistributionCalculator'));
+const PointEstimationPage = lazy(() => import('./components/PointEstimationPage'));
 const SummaryPage = lazy(() => import('./components/SummaryPage'));
 const Exam2023Page = lazy(() => import('./components/Exam2023Page'));
 const LinearRegressionCalculator = lazy(() => import('./components/LinearRegressionCalculator'));
 const TestYourselfPage = lazy(() => import('./components/TestYourselfPage'));
 
 function getTourViewportOffset(): number {
-  return Math.max(Math.round(window.innerHeight * 0.1), 88);
+  // Clears the sticky header and leaves a small visual buffer above the spotlight.
+  return Math.max(Math.round(window.innerHeight * 0.1), 108);
 }
 
 function scrollToTourTarget(target: HTMLElement): void {
@@ -144,8 +145,6 @@ export default function App() {
   const currentTourSteps = useMemo(() => getTourStepsByMode(activeTourMode), [activeTourMode]);
 
   const activateTourContext = useCallback((step: GuidedTourStep) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
     if (step.context?.page === 'landing') {
       setActivePage('landing');
       return;
@@ -233,6 +232,9 @@ export default function App() {
     setIsTourTransitioning(true);
     setActiveTourMode(null);
     setGuidedTourIndex(0);
+    // Only a newly-started tour resets to its first page. Advancing steps
+    // stays on the current scroll position until the next target is ready.
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     activateTourContext(firstStep);
     window.setTimeout(async () => {
       // Wait for layout to settle
@@ -339,11 +341,11 @@ export default function App() {
 
       {activePage === 'hypothesis' ? (
         <PageLayout
-          header={<SiteHeader activePage="hypothesis" onNavigate={handleNavigate} onStartLocalTour={() => handleStartTour('hypothesis')} />}
+          header={<SiteHeader activePage="hypothesis" onNavigate={handleNavigate} />}
           footer={<SiteFooter onNavigate={handleNavigate} />}
         >
           <Suspense fallback={<PageLoadingState />}>
-            <HypothesisTestingCalculator onStartGuidedTour={handleStartHypothesisTour} />
+            <HypothesisTestingCalculator onStartLocalTour={() => handleStartTour('hypothesis')} />
           </Suspense>
         </PageLayout>
       ) : null}
@@ -353,7 +355,9 @@ export default function App() {
           header={<SiteHeader activePage="point-estimation" onNavigate={handleNavigate} />}
           footer={<SiteFooter onNavigate={handleNavigate} />}
         >
-          <PointEstimationPage />
+          <Suspense fallback={<PageLoadingState />}>
+            <PointEstimationPage />
+          </Suspense>
         </PageLayout>
       ) : null}
 
@@ -403,7 +407,7 @@ export default function App() {
 
       {activePage === 'normal' ? (
         <PageLayout
-          header={<SiteHeader activePage={normalMode as SitePage} onNavigate={handleNavigate} onStartLocalTour={() => handleStartTour(normalMode as TourMode)} />}
+          header={<SiteHeader activePage={normalMode as SitePage} onNavigate={handleNavigate} />}
           footer={<SiteFooter onNavigate={handleNavigate} />}
         >
           <Suspense fallback={<PageLoadingState />}>

@@ -52,7 +52,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
               : 'border-b border-[var(--color-border)] bg-transparent'
           }`}
         >
-          <div className="w-full max-w-[1800px] mx-auto flex flex-col md:flex-row items-center justify-between gap-4 px-4 md:px-6 h-16" dir={dir}>
+          <div className="w-full max-w-[1800px] mx-auto flex items-center justify-between px-4 py-2 md:px-6" dir={dir}>
             {header}
           </div>
         </header>

@@ -25,7 +25,7 @@ export default function TestYourselfPage(): React.ReactElement {
             {/* Easy Card */}
             <button 
               onClick={() => setSelectedDifficulty('easy')}
-              className="group text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-success)]/10 hover:border-[var(--color-success)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-success)]"
+              className="group cursor-pointer text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-success)]/10 hover:border-[var(--color-success)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-success)]"
             >
               <div className="p-3 bg-[var(--color-success)]/20 rounded-xl mb-4 group-hover:scale-110 transition-transform">
                 <Brain className="w-8 h-8 text-[var(--color-success)]" />
@@ -42,7 +42,7 @@ export default function TestYourselfPage(): React.ReactElement {
             {/* Medium Card */}
             <button 
               onClick={() => setSelectedDifficulty('medium')}
-              className="group text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-warning)]/10 hover:border-[var(--color-warning)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-warning)]"
+              className="group cursor-pointer text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-warning)]/10 hover:border-[var(--color-warning)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-warning)]"
             >
               <div className="p-3 bg-[var(--color-warning)]/20 rounded-xl mb-4 group-hover:scale-110 transition-transform">
                 <Target className="w-8 h-8 text-[var(--color-warning)]" />
@@ -59,7 +59,7 @@ export default function TestYourselfPage(): React.ReactElement {
             {/* Hard Card */}
             <button 
               onClick={() => setSelectedDifficulty('hard')}
-              className="group text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-error)]/10 hover:border-[var(--color-error)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-error)]"
+              className="group cursor-pointer text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-error)]/10 hover:border-[var(--color-error)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-error)]"
             >
               <div className="p-3 bg-[var(--color-error)]/20 rounded-xl mb-4 group-hover:scale-110 transition-transform">
                 <Zap className="w-8 h-8 text-[var(--color-error)]" />
@@ -76,7 +76,7 @@ export default function TestYourselfPage(): React.ReactElement {
             {/* Full Exam Card */}
             <button 
               onClick={() => setSelectedDifficulty('exam')}
-              className="group text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-accent-cobalt)]/10 hover:border-[var(--color-accent-cobalt)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-cobalt)]"
+              className="group cursor-pointer text-right text-[var(--color-text-primary)] flex flex-col items-start p-6 sm:p-8 rounded-2xl border-2 border-transparent bg-[var(--color-accent-cobalt)]/10 hover:border-[var(--color-accent-cobalt)]/50 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-cobalt)]"
             >
               <div className="p-3 bg-[var(--color-accent-cobalt)]/20 rounded-xl mb-4 group-hover:scale-110 transition-transform">
                 <Brain className="w-8 h-8 text-[var(--color-accent-cobalt)]" />
