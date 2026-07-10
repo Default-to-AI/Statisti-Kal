@@ -152,7 +152,8 @@ function TheaterStage({
                   src={item.images[0]}
                   alt={item.title}
                   className="h-full w-full object-contain"
-                  loading={isActive ? 'eager' : 'lazy'}
+                  loading="lazy"
+                  decoding="async"
                 />
               </div>
             );
@@ -181,7 +182,7 @@ export function FeatureShowcase(): ReactElement {
 
   return (
     <section className="w-full space-y-8">
-      <ScrollReveal>
+      <ScrollReveal distance={24} duration={0.45}>
         <div className="mb-8 text-center">
           <h2
             data-toc
@@ -207,45 +208,47 @@ export function FeatureShowcase(): ReactElement {
         </div>
       </ScrollReveal>
 
-      <div className="grid gap-6 xl:min-h-[470px] xl:grid-cols-[1000px_minmax(24rem,1fr)] xl:items-start">
-        <TheaterStage features={features} activeFeature={activeFeature} />
+      <ScrollReveal distance={0} duration={0.35}>
+        <div className="grid gap-6 xl:min-h-[470px] xl:grid-cols-[1000px_minmax(24rem,1fr)] xl:items-start">
+          <TheaterStage features={features} activeFeature={activeFeature} />
 
-        <div className="space-y-4 xl:-mr-2">
-          {features.map((item, index) => {
-            const Icon = item.icon;
-            const isActive = activeFeature === index;
-            const tone = getToneClasses(item.tone);
+          <div className="space-y-4 xl:-mr-2">
+            {features.map((item, index) => {
+              const Icon = item.icon;
+              const isActive = activeFeature === index;
+              const tone = getToneClasses(item.tone);
 
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => {
-                  setActiveFeature(index);
-                  setIsAutoPlaying(false);
-                }}
-                className={`w-full rounded-[24px] border p-5 text-right transition-all duration-300 ${
-                  isActive
-                    ? `${tone.border} ${tone.background} scale-[1.01] shadow-[0_18px_40px_rgba(0,0,0,0.18)]`
-                    : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-text-secondary)]/45 hover:bg-[var(--color-surface-raised)]'
-                }`}
-              >
-                <div className="flex items-start gap-4">
-                  <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] ${isActive ? tone.icon : 'bg-[var(--color-background)] text-[var(--color-text-secondary)]'}`}>
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className={`text-lg font-bold ${isActive ? tone.text : 'text-[var(--color-text-primary)]'}`}>{item.title}</div>
-                    <div className={`mt-2 text-sm leading-relaxed ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`}>
-                      {item.description}
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveFeature(index);
+                    setIsAutoPlaying(false);
+                  }}
+                  className={`w-full rounded-[24px] border p-5 text-right transition-all duration-300 ${
+                    isActive
+                      ? `${tone.border} ${tone.background} scale-[1.01] shadow-[0_18px_40px_rgba(0,0,0,0.18)]`
+                      : 'border-[var(--color-border)] bg-[var(--color-surface)] hover:border-[var(--color-text-secondary)]/45 hover:bg-[var(--color-surface-raised)]'
+                  }`}
+                >
+                  <div className="flex items-start gap-4">
+                    <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-[18px] ${isActive ? tone.icon : 'bg-[var(--color-background)] text-[var(--color-text-secondary)]'}`}>
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className={`text-lg font-bold ${isActive ? tone.text : 'text-[var(--color-text-primary)]'}`}>{item.title}</div>
+                      <div className={`mt-2 text-sm leading-relaxed ${isActive ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-text-secondary)]'}`}>
+                        {item.description}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </button>
-            );
-          })}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
+      </ScrollReveal>
     </section>
   );
 }

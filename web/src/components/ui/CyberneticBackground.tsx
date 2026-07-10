@@ -102,6 +102,7 @@ export function CyberneticBackground() {
     if (!canvas) return;
     const gl = canvas.getContext('webgl', { antialias: true, alpha: true });
     if (!gl) return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const vertSrc = `
       attribute vec2 position;
@@ -219,8 +220,10 @@ export function CyberneticBackground() {
 
     const start = performance.now();
     let animFrame: number;
+    let lastFrameTime = 0;
+    const targetFrameInterval = prefersReducedMotion ? Infinity : 1000 / 30;
 
-    const render = () => {
+    const drawFrame = () => {
       mouse.x += (targetMouse.x - mouse.x) * 0.04;
       mouse.y += (targetMouse.y - mouse.y) * 0.04;
 
@@ -229,14 +232,27 @@ export function CyberneticBackground() {
       gl.uniform1f(uTime, t);
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.drawArrays(gl.TRIANGLES, 0, 6);
+    };
+
+    const render = (now: number) => {
+      if (document.visibilityState === 'visible' && now - lastFrameTime >= targetFrameInterval) {
+        lastFrameTime = now;
+        drawFrame();
+      }
       animFrame = requestAnimationFrame(render);
     };
-    render();
+
+    drawFrame();
+    if (!prefersReducedMotion) {
+      animFrame = requestAnimationFrame(render);
+    }
 
     return () => {
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
-      cancelAnimationFrame(animFrame);
+      if (animFrame) {
+        cancelAnimationFrame(animFrame);
+      }
       gl.deleteProgram(program);
     };
   }, []);

@@ -977,10 +977,10 @@ const CellWatermark: React.FC<CellWatermarkProps> = ({ math, colorClass }) => {
 };
 
 interface HypothesisTestingCalculatorProps {
-    onStartGuidedTour?: () => void;
+    onStartLocalTour?: () => void;
 }
 
-export default function HypothesisTestingCalculator({ onStartGuidedTour }: HypothesisTestingCalculatorProps) {
+export default function HypothesisTestingCalculator({ onStartLocalTour }: HypothesisTestingCalculatorProps) {
 
     // Input states
     const [varianceKnown, setVarianceKnown] = useLocalStorageState<boolean>('HT_varianceKnown', DEFAULT_BODY_TEMPERATURE_STUDY.varianceKnown);
@@ -1833,11 +1833,11 @@ export default function HypothesisTestingCalculator({ onStartGuidedTour }: Hypot
                             type="button"
                             onClick={(event) => {
                                 event.preventDefault();
-                                onStartGuidedTour?.();
+                                onStartLocalTour?.();
                             }}
-                            className="px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
+                            className="tour-hypothesis-local-trigger cursor-pointer px-4 py-1.5 bg-[var(--color-accent-cobalt-bg)] text-[var(--color-accent-cobalt)] border border-[var(--color-accent-cobalt-line)]/50 rounded-md text-sm font-bold shadow-sm hover:bg-[var(--color-accent-cobalt-bg-hover)] hover:text-white transition-colors flex items-center gap-2"
                         >
-                            <span>הפעל סיור מודרך</span>
+                            <span>סיור בדיקת השערות</span>
                         </button>
                         <ChevronDown size={22} className="text-[var(--color-text-secondary)] transition-transform duration-300 group-[.is-open]:rotate-180" />
                     </div>

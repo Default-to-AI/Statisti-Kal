@@ -37,6 +37,11 @@ export function ScrollReveal({
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setIsVisible(true);
+      return;
+    }
+
     const node = ref.current;
     if (!node) return;
 
@@ -65,6 +70,7 @@ export function ScrollReveal({
       initial={{ opacity: 0, y: distance }}
       animate={isVisible ? { opacity: 1, y: 0 } : { opacity: 0, y: distance }}
       transition={{ duration, delay, ease: [0.22, 1, 0.36, 1] }}
+      style={{ willChange: isVisible ? 'auto' : 'opacity, transform' }}
     >
       {children}
     </motion.div>
