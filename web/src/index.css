@@ -385,6 +385,100 @@ body {
   }
 }
 
+/* ============================================================================
+ * Mega-menu viewport enter/exit + content-switch keyframes
+ * Uses design-system motion tokens: --motion-easing-entrance / --motion-easing-exit
+ * ============================================================================ */
+@keyframes mega-menu-viewport-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes mega-menu-viewport-exit {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.97);
+  }
+}
+
+@keyframes mega-menu-content-enter-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes mega-menu-content-enter-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Viewport wrapper: pointer events bridge */
+.mega-menu-wrapper {
+  pointer-events: none;
+}
+.mega-menu-wrapper:has(.mega-menu-viewport[data-state="open"]) {
+  pointer-events: auto;
+}
+
+/* Viewport: open/close driven by Radix data-state */
+.mega-menu-viewport[data-state="open"] {
+  animation-name: mega-menu-viewport-enter;
+  animation-duration: var(--motion-duration-normal);
+  animation-timing-function: var(--motion-easing-entrance);
+  animation-fill-mode: forwards;
+}
+
+.mega-menu-viewport[data-state="closed"] {
+  animation-name: mega-menu-viewport-exit;
+  animation-duration: var(--motion-duration-normal);
+  animation-timing-function: var(--motion-easing-exit);
+  animation-fill-mode: forwards;
+}
+
+/* Content: slide-switch driven by Radix data-motion */
+.mega-menu-content[data-motion="from-start"] {
+  animation-name: mega-menu-content-enter-from-right;
+  animation-duration: var(--motion-duration-fast);
+  animation-timing-function: var(--motion-easing-entrance);
+  animation-fill-mode: forwards;
+}
+
+.mega-menu-content[data-motion="from-end"] {
+  animation-name: mega-menu-content-enter-from-left;
+  animation-duration: var(--motion-duration-fast);
+  animation-timing-function: var(--motion-easing-entrance);
+  animation-fill-mode: forwards;
+}
+
+.mega-menu-content[data-motion="to-start"],
+.mega-menu-content[data-motion="to-end"] {
+  /* Exiting content: just fade out quickly */
+  animation: none;
+  opacity: 0;
+  position: absolute;
+}
+
 /* Respect prefers-reduced-motion — disable all signature animations */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -402,6 +496,12 @@ body {
     transition: none !important;
   }
   .toc-target-flash {
+    animation: none !important;
+    transition: none !important;
+  }
+  /* Mega-menu: no animation, just appear/disappear */
+  .mega-menu-viewport,
+  .mega-menu-content {
     animation: none !important;
     transition: none !important;
   }

@@ -8,6 +8,7 @@ import { Button } from './ui/Button';
 import { Card } from './ui/Card';
 import { PageLayout } from './ui/PageLayout';
 import { FeatureShowcase } from './FeatureShowcase';
+import { TestYourselfFeature } from './TestYourselfFeature';
 
 interface LandingPageProps {
   onNavigate: (page: SitePage) => void;
@@ -442,7 +443,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
           <div className="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[calc(100%-30rem)] pointer-events-none" aria-hidden="true">
             <div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[var(--chart-2)] to-[var(--color-accent-cobalt)] opacity-15 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]" />
           </div>
-
+        <TestYourselfFeature onStart={() => onNavigate('test-yourself')} />
 
         <FeatureShowcase />
 
