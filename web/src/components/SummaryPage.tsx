@@ -27,9 +27,9 @@ function GoldenRuleCard({ title, children, example, watermark, icon: Icon = Spar
       </div>
 
       {example && (
-        <div className="mt-auto pt-3 border-t border-[var(--color-border)]/40 relative z-10">
-          <div className="bg-black/20 rounded-xl py-1.5 px-3 border border-[var(--color-border)]/30">
-            <div className="text-center text-[var(--color-primary)]">
+        <div className="mt-auto pt-4 border-t border-[var(--color-border)]/40 relative z-10">
+          <div className="bg-[var(--color-surface-elevated)] rounded-xl py-2 px-4 border border-[var(--color-border-strong)] shadow-[var(--shadow-soft)]">
+            <div className="text-center text-[var(--color-primary)] font-bold">
               {example}
             </div>
           </div>
@@ -39,20 +39,13 @@ function GoldenRuleCard({ title, children, example, watermark, icon: Icon = Spar
   );
 }
 
+import { PageHeader } from './ui/PageHeader';
+
 export default function SummaryPage(): React.ReactElement {
   return (
     <div className="w-full max-w-[90rem] mx-auto space-y-4 px-4 sm:px-0 py-8">
-      <div className="flex items-center gap-3 py-2 mb-6">
-        <BookText className="w-8 h-8 text-[var(--color-primary)]" />
-        <h1 className="text-2xl sm:text-3xl font-extrabold text-[var(--color-text-primary)]">
-          סיכום שיעור סטטיסטיקה
-        </h1>
-      </div>
+      <PageHeader title="משפטי ברזל" />
       <div className="w-full max-w-[90rem] mx-auto space-y-6 px-4 sm:px-0 mb-12">
-        <div className="flex items-center gap-2.5 mb-6 border-b border-[var(--color-border)] pb-3">
-          <Award className="w-7 h-7 text-[var(--color-primary)]" />
-          <h2 className="text-2xl font-extrabold text-[var(--color-text-primary)]">משפטי מחץ וכללי ברזל</h2>
-        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           <GoldenRuleCard 
             title="תוחלות פשוטות"

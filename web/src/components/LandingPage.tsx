@@ -343,16 +343,16 @@ function ToolCarousel({
               }}
             >
               <Card 
-                className={`p-6 sm:p-8 flex flex-col items-start text-right bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface)] border border-[var(--color-border)]/50 h-[400px] w-full cursor-pointer relative overflow-hidden group transition-all duration-500
-                ${isActive ? 'shadow-2xl shadow-black/60 ring-1 ring-white/10 scale-[1.02]' : 'shadow-lg hover:opacity-100 opacity-70 scale-[0.98]'} ${tool.hoverBorderClass}`}
+                className={`p-6 sm:p-8 flex flex-col items-start text-right bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface)] border border-[var(--color-border)] h-[400px] w-full cursor-pointer relative overflow-hidden group transition-all duration-500
+                ${isActive ? 'shadow-2xl shadow-[var(--color-border)] ring-1 ring-[var(--color-accent-primary)]/20 scale-[1.02]' : 'shadow-md hover:shadow-lg hover:opacity-100 opacity-80 scale-[0.98]'} ${tool.hoverBorderClass}`}
                 onClick={() => {
                   if (!isActive) setActiveIndex(i);
                 }}
               >
                 {/* Decorative background flare */}
-                <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[80px] -z-10 transition-opacity duration-700 ${isActive ? 'opacity-40' : 'opacity-10'} ${tool.bgClass}`}></div>
+                <div className={`absolute -top-24 -right-24 w-64 h-64 rounded-full blur-[60px] -z-10 transition-opacity duration-700 ${isActive ? 'opacity-20' : 'opacity-5'} ${tool.bgClass}`}></div>
                 
-                <div className={`mb-6 p-4 rounded-2xl border border-white/5 shadow-inner transition-transform duration-500 group-hover:-translate-y-1 ${tool.iconBgClass} ${tool.iconColorClass}`}>
+                <div className={`mb-6 p-4 rounded-2xl border border-[var(--color-border)] shadow-sm transition-transform duration-500 group-hover:-translate-y-1 ${tool.iconBgClass} ${tool.iconColorClass}`}>
                   <Icon className="w-8 h-8 drop-shadow-md" strokeWidth={1.5} />
                 </div>
                 <span className={`mb-3 text-xs font-bold ${tool.iconColorClass}`}>{categories.find((category) => category.id === tool.category)?.label}</span>
@@ -429,7 +429,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
                 >
                   <span className="relative z-10">פה מתחילים</span>
                   {/* Shimmer effect */}
-                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full animate-shimmer pointer-events-none"></div>
+                  <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent via-white/80 to-transparent -translate-x-full animate-shimmer pointer-events-none"></div>
                 </Button>
               </div>
             </div>

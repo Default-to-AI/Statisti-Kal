@@ -96,190 +96,12 @@ export function CyberneticBackground() {
     setChips(placed);
   }, []);
 
-  // WebGL Shader setup
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const gl = canvas.getContext('webgl', { antialias: true, alpha: true });
-    if (!gl) return;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    const vertSrc = `
-      attribute vec2 position;
-      void main() { gl_Position = vec4(position, 0.0, 1.0); }
-    `;
-
-    const fragSrc = `
-      precision highp float;
-      uniform vec2 iResolution;
-      uniform float iTime;
-      uniform vec2 iMouse;
-
-      float random(vec2 st) {
-        return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-      }
-
-      void main() {
-        vec2 uv    = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
-        vec2 mouse = (iMouse - 0.5 * iResolution.xy) / iResolution.y;
-
-        float t         = iTime * 0.08;
-        float mouseDist = length(uv - mouse);
-
-        // Gentle warp around mouse
-        float warp = sin(mouseDist * 14.0 - t * 2.0) * 0.04;
-        warp *= smoothstep(0.45, 0.0, mouseDist);
-        uv += warp;
-
-        // Grid lines (finer, softer)
-        vec2 gridUv = abs(fract(uv * 8.0) - 0.5);
-        float line  = pow(1.0 - min(gridUv.x, gridUv.y), 60.0);
-
-        // Increased opacity/brightness of the grid lines
-        vec3 gridColor = vec3(0.18, 0.18, 0.22);
-        vec3 color     = gridColor * line * (0.35 + sin(t * 1.5) * 0.08);
-
-        // Energetic pulses - Brass accents (#D4A843 -> 0.83, 0.66, 0.26)
-        float energy = sin(uv.x * 14.0 + t * 3.0) * sin(uv.y * 14.0 + t * 2.0);
-        energy = smoothstep(0.86, 1.0, energy);
-        color += vec3(0.83, 0.66, 0.26) * energy * line * 0.6;
-
-        // Faint glow around mouse - Teal accents (#2EC4B6 -> 0.18, 0.77, 0.71)
-        float glow = smoothstep(0.18, 0.0, mouseDist);
-        color += vec3(0.18, 0.77, 0.71) * glow * 0.22;
-
-        // Very subtle noise grain
-        color += (random(uv + t * 0.05) - 0.5) * 0.03;
-
-        // Background is purely transparent to allow var(--color-background) to show
-        color *= 0.95;
-
-        gl_FragColor = vec4(color, 1.0);
-      }
-    `;
-
-    function compile(type: number, src: string) {
-      const s = gl!.createShader(type);
-      if (!s) return null;
-      gl!.shaderSource(s, src);
-      gl!.compileShader(s);
-      if (!gl!.getShaderParameter(s, gl!.COMPILE_STATUS)) {
-        console.error(gl!.getShaderInfoLog(s));
-      }
-      return s;
-    }
-
-    const program = gl.createProgram();
-    if (!program) return;
-    const vShader = compile(gl.VERTEX_SHADER, vertSrc);
-    const fShader = compile(gl.FRAGMENT_SHADER, fragSrc);
-    if (!vShader || !fShader) return;
-
-    gl.attachShader(program, vShader);
-    gl.attachShader(program, fShader);
-    gl.linkProgram(program);
-    gl.useProgram(program);
-
-    const buf = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([
-      -1,-1,  1,-1, -1, 1,
-      -1, 1,  1,-1,  1, 1
-    ]), gl.STATIC_DRAW);
-
-    const posLoc = gl.getAttribLocation(program, 'position');
-    gl.enableVertexAttribArray(posLoc);
-    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-
-    const uRes   = gl.getUniformLocation(program, 'iResolution');
-    const uTime  = gl.getUniformLocation(program, 'iTime');
-    const uMouse = gl.getUniformLocation(program, 'iMouse');
-
-    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-    const targetMouse = { ...mouse };
-
-    const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
-      const w = window.innerWidth;
-      const h = window.innerHeight;
-      canvas.width  = Math.floor(w * dpr);
-      canvas.height = Math.floor(h * dpr);
-      canvas.style.width  = w + 'px';
-      canvas.style.height = h + 'px';
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-
-    const onMouseMove = (e: MouseEvent) => {
-      targetMouse.x = e.clientX * (canvas.width / window.innerWidth);
-      targetMouse.y = (window.innerHeight - e.clientY) * (canvas.height / window.innerHeight);
-    };
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    resize();
-
-    const start = performance.now();
-    let animFrame: number;
-    let lastFrameTime = 0;
-    const targetFrameInterval = prefersReducedMotion ? Infinity : 1000 / 30;
-
-    const drawFrame = () => {
-      mouse.x += (targetMouse.x - mouse.x) * 0.04;
-      mouse.y += (targetMouse.y - mouse.y) * 0.04;
-
-      const t = (performance.now() - start) / 1000;
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, t);
-      gl.uniform2f(uMouse, mouse.x, mouse.y);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-    };
-
-    const render = (now: number) => {
-      if (document.visibilityState === 'visible' && now - lastFrameTime >= targetFrameInterval) {
-        lastFrameTime = now;
-        drawFrame();
-      }
-      animFrame = requestAnimationFrame(render);
-    };
-
-    drawFrame();
-    if (!prefersReducedMotion) {
-      animFrame = requestAnimationFrame(render);
-    }
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      if (animFrame) {
-        cancelAnimationFrame(animFrame);
-      }
-      gl.deleteProgram(program);
-    };
-  }, []);
+  // Removed WebGL Shader setup entirely for the Editorial Academic theme.
 
   return (
     <div className="fixed inset-0 w-screen h-screen z-[-1] pointer-events-none overflow-hidden bg-[var(--color-background)]">
-      {/* WebGL Canvas */}
-      <canvas 
-        ref={canvasRef} 
-        aria-label="Cybernetic grid animated background"
-        className="block w-full h-full opacity-100"
-      />
-
-      {/* Radial Vignette */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0)_0%,rgba(0,0,0,0.55)_55%,rgba(0,0,0,0.95)_100%)]" />
-
-      {/* Corner Frame Ticks */}
-      <div className="absolute top-[22px] left-[22px] w-[22px] h-[22px] border-t border-l border-[var(--color-border)] opacity-60" />
-      <div className="absolute top-[22px] right-[22px] w-[22px] h-[22px] border-t border-r border-[var(--color-border)] opacity-60" />
-      <div className="absolute bottom-[22px] left-[22px] w-[22px] h-[22px] border-b border-l border-[var(--color-border)] opacity-60" />
-      <div className="absolute bottom-[22px] right-[22px] w-[22px] h-[22px] border-b border-r border-[var(--color-border)] opacity-60" />
-
-      {/* HUD Info */}
-      <div className="absolute top-[26px] left-[56px] text-[0.62rem] tracking-[0.3em] uppercase text-[var(--color-text-secondary)] opacity-50 hidden sm:block">SYS / GRID-04</div>
-      <div className="absolute top-[26px] right-[56px] text-[0.62rem] tracking-[0.3em] uppercase text-[var(--color-text-secondary)] opacity-50 hidden sm:block">FIELD · STOCHASTIC</div>
-      <div className="absolute bottom-[26px] left-[56px] text-[0.62rem] tracking-[0.3em] uppercase text-[var(--color-text-secondary)] opacity-50 hidden sm:block">μ = 0 · σ = 1</div>
-      <div className="absolute bottom-[26px] right-[56px] text-[0.62rem] tracking-[0.3em] uppercase text-[var(--color-text-secondary)] opacity-50 hidden sm:block">RENDER · LIVE</div>
+      {/* Subtle Math Background Pattern for Editorial Academic */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.4)_0%,rgba(249,249,246,0.9)_100%)]" />
 
       {/* Drifting Math Chips */}
       <div className="absolute inset-0">
@@ -309,19 +131,18 @@ function MathChip({ initialChip }: { initialChip: PlacedChip }) {
   // Map the sketch classes to our theme tokens
   let colorClass = "text-[var(--color-text-tertiary)]"; // default
   let dropShadow = "";
-  let maxOpacity = "0.3";
+  let maxOpacity = "0.15";
   
   if (chip.cls.includes('alt')) {
-    colorClass = "text-[var(--color-accent-brass)]";
-    dropShadow = "drop-shadow-[0_0_18px_rgba(212,168,67,0.3)]";
-    maxOpacity = "0.45";
+    colorClass = "text-[var(--color-accent-primary)]";
+    dropShadow = "drop-shadow-[0_0_12px_rgba(67,97,238,0.15)]";
+    maxOpacity = "0.2";
   } else if (chip.cls.includes('faint')) {
     colorClass = "text-[var(--color-text-tertiary)]";
-    maxOpacity = "0.15";
+    maxOpacity = "0.08";
   } else {
     colorClass = "text-[var(--color-text-secondary)]";
-    dropShadow = "drop-shadow-[0_0_18px_rgba(138,147,166,0.3)]";
-    maxOpacity = "0.45";
+    maxOpacity = "0.12";
   }
 
   const sizeClass = chip.cls.includes('lg') ? 'text-xl' : chip.cls.includes('sm') ? 'text-xs' : 'text-base';

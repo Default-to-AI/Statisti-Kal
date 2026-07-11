@@ -74,6 +74,7 @@ import {
   FloatingFieldError,
   CellWatermark,
 } from './calc-ui/HypothesisCalcUI';
+import { PageHeader, ResultBlock } from './ui';
 
 // --- Types ---
 type TailType = 'right' | 'left' | 'two-tailed';
@@ -2130,7 +2131,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                             </CalcBlock>
                                                                         </div>
                                                                         <HandwrittenNote className="mt-6 mb-2">
-                                                                            בכלל סטטיסטי המבחן נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם סטטיסטי המבחן המחושב נופל באזור הדחייה, מעבר לערך הסף הקריטי.
+                                                                            בכלל סטטיסטי המבחן נדחה את <strong>השערת האפס</strong> (<InlineMath math="H_0" />) אם סטטיסטי המבחן המחושב נופל באזור הדחייה, מעבר לערך הסף הקריטי.
                                                                         </HandwrittenNote>
                                                                     </div>
                                                                 </AnimatedDetails>
@@ -2177,7 +2178,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                     </CalcBlock>
                                                                                 </div>
                                                                                 <HandwrittenNote className="mt-6 mb-2">
-                                                                                    בכלל אזור הדחייה (הערך המקורי) נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם הערך המקורי של המדגם שייך לקבוצת הדחייה (<InlineMath math="C" />).
+                                                                                    בכלל אזור הדחייה (הערך המקורי) נדחה את <strong>השערת האפס</strong> (<InlineMath math="H_0" />) אם הערך המקורי של המדגם שייך לקבוצת הדחייה (<InlineMath math="C" />).
                                                                                 </HandwrittenNote>
                                                                             </div>
                                                                         </AnimatedDetails>
@@ -2227,7 +2228,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                             </CalcBlock>
                                                                         </div>
                                                                         <HandwrittenNote className="mt-6 mb-2">
-                                                                            בכלל מובהקות התוצאה נדחה את <strong className="text-white">השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
+                                                                            בכלל מובהקות התוצאה נדחה את <strong>השערת האפס</strong> (<InlineMath math="H_0" />) אם ההסתברות לקבל תוצאת מדגם כזו או קיצונית ממנה קטנה או שווה לרמת המובהקות (<InlineMath math="\alpha" />).
                                                                         </HandwrittenNote>
                                                                     </div>
                                                                 </AnimatedDetails>
@@ -2382,9 +2383,12 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 <div className="mb-4 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
                                                                                     <p className="mb-2">גישה זו מנרמלת את המדגם לציון תקן, המציין כמה סטיות תקן הוא מרוחק מתוחלת האפס.</p>
                                                                                     <strong className="text-[var(--color-text-primary)]">דרך החישוב:</strong>
-                                                                                    <div className="bg-[var(--color-surface-raised)] p-3 rounded-lg border border-[var(--color-border)]/50 mt-2 mb-3 overflow-x-auto">
-                                                                                        <BlockMath math={`${statSymbol}_{stat} = \\frac{\\bar{X} - \\mu_0}{SE} = \\frac{${X_bar.toFixed(3)} - ${mu0}}{${stats.se.toFixed(3)}} = ${Z_stat.toFixed(3)}`} />
-                                                                                    </div>
+                                                                                    <FormulaBlock>
+                                                                                        <BlockMath math={`${statSymbol}_{stat} = \\frac{\\bar{X} - \\mu_0}{SE}`} />
+                                                                                    </FormulaBlock>
+                                                                                    <CalcBlock>
+                                                                                        <BlockMath math={`${statSymbol}_{stat} = \\frac{${X_bar.toFixed(3)} - ${mu0}}{${stats.se.toFixed(3)}} = ${Z_stat.toFixed(3)}`} />
+                                                                                    </CalcBlock>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
                                                                                         <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">בודקים האם התוצאה המנורמלת נמצאת מעבר לסף המובהקות (<InlineMath math={`${critSymbol}_{${alphaSymbol}}`} />) שקבענו מהטבלה.</p>
@@ -2409,14 +2413,14 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         } />
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="bg-[var(--color-surface)] p-4 rounded-lg text-center font-mono">
+                                                                                <ResultBlock>
                                                                                     <BlockMath math={`${statSymbol}_{stat} = ${Z_stat.toFixed(3)}`} />
-                                                                                </div>
+                                                                                </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">
                                                                                     <span className={isReject ? 'text-[var(--color-success)] font-bold' : 'text-[var(--color-error)] font-bold'}>
                                                                                         {isReject ? `דחיית השערת האפס (Reject H0)` : `אי-דחיית השערת האפס (Fail to reject H0)`}
                                                                                     </span>
-                                                                                    <span className="text-white">
+                                                                                    <span>
                                                                                         {' '}מכיוון שציון התקן (<InlineMath math={statSymbol} />) שחושב עבור ממוצע המדגם <strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\bar{X} = ${X_bar.toFixed(3)}`} /></strong> הינו <strong dir="ltr" className="inline-block px-1"><InlineMath math={`${Z_stat.toFixed(3)}`} /></strong>, אשר נופל ב{isReject ? 'אזור הדחייה' : 'אזור אי-הדחייה'}.
                                                                                     </span>
                                                                                 </HandwrittenNote>
@@ -2440,10 +2444,12 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 <div className="mb-4 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
                                                                                     <p className="mb-2">גישה זו מציגה את הסף ביחידות המקוריות של הבעיה, המאפשרת השוואה ישירה לממוצע המדגם.</p>
                                                                                     <strong className="text-[var(--color-text-primary)]">דרך החישוב:</strong>
-                                                                                    <div className="bg-[var(--color-surface-raised)] p-3 rounded-lg border border-[var(--color-border)]/50 mt-2 mb-3 overflow-x-auto">
+                                                                                    <FormulaBlock>
                                                                                         <BlockMath math={`C = \\mu_0 ${tailType === 'left' ? '-' : tailType === 'right' ? '+' : '\\pm'} ${critSymbol}_{${alphaSymbol}} \\cdot SE`} />
+                                                                                    </FormulaBlock>
+                                                                                    <CalcBlock>
                                                                                         <BlockMath math={`C = ${mu0} ${tailType === 'left' ? '-' : tailType === 'right' ? '+' : '\\pm'} ${Z_crit.toFixed(3)} \\cdot ${stats.se.toFixed(3)} ${tailType === 'two-tailed' ? `\\Rightarrow [${C_crit_1.toFixed(3)}, ${C_crit_2.toFixed(3)}]` : `= ${C_crit.toFixed(3)}`}`} />
-                                                                                    </div>
+                                                                                    </CalcBlock>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
                                                                                         <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">כל תוצאה השייכת לקבוצת הדחייה <span dir="ltr" className="inline-block px-1"><InlineMath math={`C = \\{ \\bar{X} \\mid ${tailType === 'left' ? '\\bar{X} \\le C' : tailType === 'right' ? '\\bar{X} \\ge C' : `\\bar{X} \\le C_1 \\text{ or } \\bar{X} \\ge C_2`} \\}`} /></span> מעידה על כך שהמדגם אינו עולה בקנה אחד עם השערת האפס.</p>
@@ -2468,14 +2474,14 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         } />
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="bg-[var(--color-surface)] p-4 rounded-lg text-center font-mono">
+                                                                                <ResultBlock>
                                                                                     <BlockMath math={`\\bar{X} = ${X_bar.toFixed(3)}`} />
-                                                                                </div>
+                                                                                </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">
                                                                                     <span className={isReject ? 'text-[var(--color-success)] font-bold' : 'text-[var(--color-error)] font-bold'}>
                                                                                         {isReject ? `דחיית השערת האפס (Reject H0)` : `אי-דחיית השערת האפס (Fail to reject H0)`}
                                                                                     </span>
-                                                                                    <span className="text-white">
+                                                                                    <span>
                                                                                         {' '}מכיוון שממוצע המדגם שהתקבל, <strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\bar{X} = ${X_bar.toFixed(3)}`} /></strong>, ממוקם ב{isReject ? 'אזור הדחייה' : 'אזור אי-הדחייה'} (<strong dir="ltr" className="inline-block px-1"><InlineMath math={isReject ? 'C' : '\\bar{C}'} /></strong>).
                                                                                     </span>
                                                                                 </HandwrittenNote>
@@ -2499,10 +2505,12 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 <div className="mb-4 text-[var(--color-text-primary)] leading-relaxed text-sm sm:text-base">
                                                                                     <p className="mb-2">גישה זו מודדת את הסבירות לקבלת התוצאה שנצפתה מהמדגם המקרי תחת התפלגות <InlineMath math="H_0" />, אל מול רמת המובהקות שנקבעה (<InlineMath math="\alpha" />).</p>
                                                                                     <strong className="text-[var(--color-text-primary)]">דרך החישוב:</strong>
-                                                                                    <div className="bg-[var(--color-surface-raised)] p-3 rounded-lg border border-[var(--color-border)]/50 mt-2 mb-3 overflow-x-auto">
+                                                                                    <FormulaBlock>
                                                                                         <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${statSymbol}_{stat})` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${statSymbol}_{stat})` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > |${statSymbol}_{stat}|)`} />
+                                                                                    </FormulaBlock>
+                                                                                    <CalcBlock>
                                                                                         <BlockMath math={tailType === 'right' ? `P\\text{-value} = P(${statSymbol} > ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : tailType === 'left' ? `P\\text{-value} = P(${statSymbol} < ${Z_stat.toFixed(3)}) = ${pVal.toFixed(4)}` : `P\\text{-value} = 2 \\cdot P(${statSymbol} > ${Math.abs(Z_stat).toFixed(3)}) = ${pVal.toFixed(4)}`} />
-                                                                                    </div>
+                                                                                    </CalcBlock>
                                                                                     <div className="flex gap-3 items-start bg-[var(--color-surface)] border border-[var(--color-accent-cobalt-line)]/30 p-4 rounded-lg mt-4 ml-4">
                                                                                         <Info size={20} className="text-[var(--color-primary)] mt-0.5 shrink-0" />
                                                                                         <p className="text-[var(--color-text-primary)] text-sm leading-relaxed">ה-P-value מוגדר כהסתברות המצטברת {tailType === 'right' ? 'מימין' : tailType === 'left' ? 'משמאל' : 'בשני הקצוות מעבר'} לערך סטטיסטי המבחן. אם הסתברות זו קטנה או שווה ל-<InlineMath math={String.raw`\alpha`} />, התוצאה נחשבת לנדירה מכדי להיות מקרית, מה שמצדיק את דחיית השערת האפס.</p>
@@ -2519,14 +2527,14 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         <BlockMath math={`\\text{P-Value} > ${alpha}`} />
                                                                                     </div>
                                                                                 </div>
-                                                                                <div className="bg-[var(--color-surface)] p-4 rounded-lg text-center font-mono">
+                                                                                <ResultBlock>
                                                                                     <BlockMath math={`\\text{P-Value} = ${pVal.toFixed(4)}`} />
-                                                                                </div>
+                                                                                </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">
                                                                                     <span className={isReject ? 'text-[var(--color-success)] font-bold' : 'text-[var(--color-error)] font-bold'}>
                                                                                         {isReject ? `דחיית השערת האפס (Reject H0)` : `אי-דחיית השערת האפס (Fail to reject H0)`}
                                                                                     </span>
-                                                                                    <span className="text-white">
+                                                                                    <span>
                                                                                         {' '}מכיוון שהסתברות המובהקות (P-Value) שחושבה הינה <strong dir="ltr" className="inline-block px-1"><InlineMath math={`${pVal.toFixed(4)}`} /></strong>, ערך אשר {isReject ? 'קטן או שווה ל' : 'גדול מ'}-<strong dir="ltr" className="inline-block px-1"><InlineMath math={`\\alpha = ${alpha}`} /></strong>.
                                                                                     </span>
                                                                                 </HandwrittenNote>

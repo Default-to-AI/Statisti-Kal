@@ -40,14 +40,9 @@ export const TTable: React.FC = () => {
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead className="sticky top-0 z-30 shadow-sm">
           <tr className="bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]">
-            <th rowSpan={2} className="sticky right-0 p-3 border-b-[3px] border-l-[3px] border-b-[var(--color-border-strong)] border-l-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-xs sm:text-sm w-16 bg-[var(--color-surface-elevated)] z-40 shadow-sm">
+            <th rowSpan={1} className="sticky right-0 p-3 border-b-[3px] border-l-[3px] border-b-[var(--color-border-strong)] border-l-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-xs sm:text-sm w-16 bg-[var(--color-surface-elevated)] z-40 shadow-sm">
               דרגות חופש <br /> (df)
             </th>
-            <th colSpan={6} className="p-1.5 border-b-2 border-b-[var(--color-border-strong)] font-extrabold text-center text-xs bg-[var(--color-surface-elevated)] text-[var(--color-primary)]">
-              רמת מובהקות עבור התפלגות T
-            </th>
-          </tr>
-          <tr className="bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]">
             {tCols.map((c, idx) => {
               const isActiveCol = (tSide === 'two' && Math.abs(tAlpha - c.twoTail) < 0.0001) || (tSide === 'one' && Math.abs(tAlpha - c.oneTail) < 0.0001);
               return (
@@ -106,22 +101,16 @@ export const TTable: React.FC = () => {
   );
 
   return (
-    <Disclosure
-      id="normal-t-table"
-      tocId="normal-t-table"
-      title={
-        <span className="flex items-center gap-x-2 flex-wrap">
-          <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-1.5 text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
-            <InlineMath math="t" />
-          </span>
-          <span>ערכים קריטיים להתפלגות Student's t</span>
-          <span dir="ltr" className="text-sm font-medium text-[var(--color-text-secondary)] mt-1 sm:mt-0">
-            <InlineMath math={String.raw`\text{Critical\ Values\ for\ Student's\ t-Distribution}`} />
-          </span>
+    <section id="normal-t-table" className="scroll-mt-24 space-y-6 mt-12">
+      <div className="flex items-center gap-x-3 flex-wrap mb-2 border-b border-[var(--color-border)] pb-3">
+        <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 text-[var(--color-primary)] shadow-[var(--shadow-soft)]">
+          <InlineMath math="t" />
         </span>
-      }
-      accentOnOpen="cobalt"
-    >
+        <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">ערכים קריטיים להתפלגות Student's t</h2>
+        <span dir="ltr" className="text-sm font-medium text-[var(--color-text-secondary)] mt-1 sm:mt-0">
+          <InlineMath math={String.raw`\text{Critical\ Values\ for\ Student's\ t-Distribution}`} />
+        </span>
+      </div>
       <div className="space-y-6 pt-4 text-right">
         <div className="flex items-center justify-between mb-3">
           <div></div>
@@ -216,6 +205,6 @@ export const TTable: React.FC = () => {
 
         {renderTTableSection()}
       </div>
-    </Disclosure>
+    </section>
   );
 };

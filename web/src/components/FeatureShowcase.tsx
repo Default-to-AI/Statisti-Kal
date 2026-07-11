@@ -121,9 +121,9 @@ function TheaterStage({
 
   return (
     <div
-      className={`relative overflow-hidden rounded-[28px] border bg-[linear-gradient(180deg,rgba(15,18,25,0.98),rgba(10,12,18,0.98))] p-4 xl:h-[466px] xl:w-[1000px] xl:max-w-[1000px] ${tone.border} ${tone.shadow}`}
+      className={`relative overflow-hidden rounded-[28px] border bg-[var(--color-surface)] p-4 xl:h-[466px] xl:w-[1000px] xl:max-w-[1000px] ${tone.border} shadow-xl`}
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(255,255,255,0.08),transparent_30%),linear-gradient(135deg,rgba(255,255,255,0.02),transparent_55%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,var(--color-primary)_0%,transparent_30%),linear-gradient(135deg,var(--color-primary)_0%,transparent_55%)] opacity-5" />
 
       <div className="relative flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -136,8 +136,8 @@ function TheaterStage({
         </div>
       </div>
 
-      <div className="relative mt-2 h-[21rem] rounded-[24px] border border-white/8 bg-[rgba(255,255,255,0.03)] p-3 md:h-[24rem] xl:h-[410px]">
-        <div className="relative h-full w-full overflow-hidden rounded-[20px]">
+      <div className="relative mt-2 h-[21rem] rounded-[24px] border border-[var(--color-border)] bg-[var(--color-surface-raised)] p-3 md:h-[24rem] xl:h-[410px]">
+        <div className="relative h-full w-full overflow-hidden rounded-[20px] bg-[var(--color-surface)]">
           {features.map((item, index) => {
             const isActive = index === activeFeature;
 
