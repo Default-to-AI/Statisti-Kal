@@ -630,7 +630,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-cobalt)]/10 text-sm font-semibold text-[var(--color-accent-cobalt)]">
                               {step.number}
                             </div>
-                            <h3 className="text-body-base font-bold text-[var(--color-text-primary)]">{step.title}</h3>
+                            <Heading level="subsection" className="text-body-base font-bold">{step.title}</Heading>
                           </div>
                           <p className="text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
                             {step.description}
@@ -654,9 +654,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       <Sliders size={20} />
                     </div>
                     <div className="flex-1 text-right">
-                      <h2 data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)]">
+                      <Heading level="section" data-toc id="normal-distribution-controls" className="text-lg sm:text-xl font-semibold">
                         הגדרות ופרמטרי ההתפלגות
-                      </h2>
+                      </Heading>
                     </div>
                     <div className="flex w-full flex-col gap-3 sm:max-w-[28rem] sm:flex-row sm:items-center">
                       <button
@@ -780,12 +780,12 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         <div className="rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]">
                           <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                             <div className="text-right">
-                              <h3 className="text-body-base font-semibold text-[var(--color-accent-cobalt)]">
+                              <Heading level="subsection" accent="cobalt" className="text-body-base font-semibold text-[var(--color-accent-cobalt)]">
                                 <span className="inline-flex items-center gap-2 whitespace-nowrap">
                                   <span>הסתברות מותנית</span>
                                   <InlineMathToken math="P(A \mid B)" />
                                 </span>
-                              </h3>
+                              </Heading>
                               <p className="max-w-2xl text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
                                 פותרים בסדר קבוע: מגדירים קודם את עולם התנאי <InlineMathToken math="B" className="mx-1" />, אחר כך את המאורע המבוקש <InlineMathToken math="A" className="mx-1" />, ואז מחשבים <InlineMathToken math="P(A \cap B)" className="mx-1" /> ומחלקים ב־<InlineMathToken math="P(B)" className="mx-1" />.
                               </p>

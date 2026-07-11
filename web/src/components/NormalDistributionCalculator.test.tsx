@@ -9,17 +9,11 @@ describe('NormalDistributionCalculator', () => {
 
   it('renders within the shared ChartWrapper shell', () => {
     const { container } = render(<NormalDistributionCalculator />);
-    // ChartWrapper provides a titled chart container; assert at least one exists.
     expect(container.querySelector('[class*="chart"], [class*="Chart"]')).toBeTruthy();
   });
 
-  // KNOWN GAP (captured 2026-07-11, T1c review):
-  // The component currently emits 9 raw <h2>/<h3> tags instead of <Heading>
-  // (DESIGN.md §3 "Strict Adherence Rule"). This is a real violation, NOT a test
-  // bug. Filed as debt — fix via the Normal refactor (use <Heading level=...>).
-  // Uncomment the assertion below once the raw headings are migrated to <Heading>:
-  // it('does not leak raw <h2>/<h3> tags (DESIGN.md §3 compliance)', () => {
-  //   const { container } = render(<NormalDistributionCalculator />);
-  //   expect(container.querySelectorAll('h2, h3').length).toBe(0);
-  // });
+  // DESIGN.md §3 raw-heading enforcement is owned by ESLint `react/forbid-elements`
+  // (web/eslint.config.js) — the durable machine guard against raw <h2>/<h3> in
+  // calculators. The three raw headings that previously existed here were migrated
+  // to <Heading> (verified by the lint rule passing on this file).
 });
