@@ -88,7 +88,7 @@ export interface SectionHeaderProps {
   title: React.ReactNode;
   description?: React.ReactNode;
   level?: Exclude<HeadingLevel, 'label'>;
-  accent?: Exclude<HeadingProps['accent'], 'none'>;
+  accent?: HeadingProps['accent'];
   withAccentBar?: boolean;
   className?: string;
 }
