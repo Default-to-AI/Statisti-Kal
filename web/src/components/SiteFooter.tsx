@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { Github, GraduationCap, ArrowUpRight } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
+import { Heading } from './ui/Heading';
 
 interface SiteFooterProps {
   onNavigate: (page: SitePage) => void;
@@ -63,9 +64,9 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
 
           {/* Quick nav column */}
           <nav aria-label="ניווט מהיר" className="space-y-4">
-            <h2 className="text-heading-section font-semibold text-[var(--color-text-primary)]">
+            <Heading level="section" align="start" className="text-[var(--color-text-primary)]">
               ניווט
-            </h2>
+            </Heading>
             <ul className="space-y-2.5">
               {quickLinks.map((link) => (
                 <li key={link.page}>
@@ -84,9 +85,9 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
 
           {/* Source / links column */}
           <section className="space-y-4">
-            <h2 className="text-heading-section font-semibold text-[var(--color-text-primary)]">
+            <Heading level="section" align="start" className="text-[var(--color-text-primary)]">
               קוד מקור
-            </h2>
+            </Heading>
             <a
               href={githubUrl}
               target="_blank"

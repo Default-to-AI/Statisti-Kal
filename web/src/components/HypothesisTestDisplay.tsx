@@ -82,14 +82,14 @@ export default function HypothesisTestDisplay({
   const statName = varianceKnown ? 'Z' : 't';
   const pRule = pValueRuleMath(isReject);
   const decisionToneClass = isReject
-    ? 'border-[var(--color-success)]/45 shadow-[0_0_24px_rgba(78,205,196,0.18)] pulse-success'
-    : 'border-[var(--color-error)]/45 shadow-[0_0_24px_rgba(224,62,62,0.18)] pulse-error';
+    ? 'border-[var(--color-success)]/45 shadow-[0_0_24px_color-mix(in_srgb,var(--color-success)_18%,transparent)] pulse-success'
+    : 'border-[var(--color-error)]/45 shadow-[0_0_24px_color-mix(in_srgb,var(--color-error)_18%,transparent)] pulse-error';
   const headerToneClass = isReject
     ? 'border-[var(--color-success)]/30 bg-[var(--color-success)]/7'
     : 'border-[var(--color-error)]/30 bg-[var(--color-error)]/7';
   const cardToneClass = isReject
-    ? 'border-[var(--color-success)]/35 shadow-[0_0_16px_rgba(78,205,196,0.12)]'
-    : 'border-[var(--color-error)]/35 shadow-[0_0_16px_rgba(224,62,62,0.12)]';
+    ? 'border-[var(--color-success)]/35 shadow-[0_0_16px_color-mix(in_srgb,var(--color-success)_12%,transparent)]'
+    : 'border-[var(--color-error)]/35 shadow-[0_0_16px_color-mix(in_srgb,var(--color-error)_12%,transparent)]';
 
   return (
     <section

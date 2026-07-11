@@ -43,7 +43,7 @@ function ParentAccordion({
         defaultOpen
         className="group overflow-hidden rounded-[var(--rounded-xl)] border border-[var(--color-primary)]/35 bg-[var(--color-surface)] shadow-md"
       >
-        <summary className="flex cursor-pointer items-center justify-between gap-4 bg-[linear-gradient(135deg,rgba(212,168,67,0.10),rgba(52,82,158,0.06))] px-5 py-5 text-right transition-colors hover:bg-[var(--color-surface)]/80 sm:px-6">
+        <summary className="flex cursor-pointer items-center justify-between gap-4 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent-brass)_10%,transparent),color-mix(in_srgb,var(--color-accent-cobalt)_6%,transparent))] px-5 py-5 text-right transition-colors hover:bg-[var(--color-surface)]/80 sm:px-6">
           <div className="flex items-center gap-4">
             <div className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-[var(--color-accent-cobalt)]/40 bg-[var(--color-accent-cobalt)]/10 text-[var(--color-accent-cobalt)]">
               <HelpCircle size={24} />
@@ -66,7 +66,7 @@ function ExamStatement({ children }: { children: ReactNode }): ReactElement {
   return (
     <Card
       variant="raised"
-      className="border-[var(--color-primary)]/45 bg-[linear-gradient(135deg,rgba(212,168,67,0.14),rgba(52,82,158,0.07))] shadow-[0_14px_44px_rgba(0,0,0,0.20)]"
+      className="border-[var(--color-primary)]/45 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent-brass)_14%,transparent),color-mix(in_srgb,var(--color-accent-cobalt)_7%,transparent))] shadow-[0_14px_44px_rgba(0,0,0,0.20)]"
     >
       <CardBody className="space-y-3 text-right">
         <p className="border-r-4 border-[var(--color-primary)] pr-4 text-lg font-medium leading-relaxed text-[var(--color-text-primary)] sm:text-xl">
@@ -222,7 +222,7 @@ function Exam2023Page(): ReactElement {
   return (
     <div className="min-h-screen p-4 text-[var(--color-text-primary)] sm:p-6 md:p-8" dir="rtl">
       <div className={`${CONTENT_WIDTH_CLASS} space-y-6`}>
-        <section className="rounded-[calc(var(--rounded-xl)+6px)] border border-[var(--color-primary)]/25 bg-[linear-gradient(135deg,rgba(212,168,67,0.14),rgba(52,82,158,0.08))] px-5 py-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)] sm:px-7 sm:py-8">
+        <section className="rounded-[calc(var(--rounded-xl)+6px)] border border-[var(--color-primary)]/25 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent-brass)_14%,transparent),color-mix(in_srgb,var(--color-accent-cobalt)_8%,transparent))] px-5 py-6 shadow-[0_18px_50px_rgba(0,0,0,0.18)] sm:px-7 sm:py-8">
           <h1 className="text-4xl font-black tracking-tight text-[var(--color-text-primary)] sm:text-5xl">מבחן 2023</h1>
           <p className="mt-3 max-w-2xl text-lg leading-relaxed text-[var(--color-text-secondary)] sm:text-xl">
             מעבר מבחן מלא עם פתרון צעד-אחר-צעד — ביטוח לאומי ואלבומין. כל שאלה מתפצלת לתשובות רב-ברירה ולפתרון (גישה, הכנות וביצוע).

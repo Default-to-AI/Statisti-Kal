@@ -255,7 +255,7 @@ export function ConfidenceIntervalRail({
                 <div className="relative px-2 py-8">
                     <div className="absolute left-[12%] right-[12%] top-1/2 h-[2px] -translate-y-1/2 rounded-full bg-[var(--color-border)]/80" />
                     <div
-                        className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full border border-[var(--color-primary)]/45 bg-[var(--color-primary)]/18 shadow-[0_0_18px_rgba(212,168,67,0.22)]"
+                        className="absolute top-1/2 h-3 -translate-y-1/2 rounded-full border border-[var(--color-primary)]/45 bg-[var(--color-primary)]/18 shadow-[0_0_18px_color-mix(in_srgb,var(--color-accent-brass)_22%,transparent)]"
                         style={{ left: `${lowerPercent}%`, width: `${intervalPercent}%` }}
                     />
                     <div
@@ -277,7 +277,7 @@ export function ConfidenceIntervalRail({
                         CI
                     </div>
                     <div
-                        className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)] shadow-[0_0_0_4px_rgba(78,205,196,0.12)]"
+                        className="absolute top-1/2 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-[var(--color-accent-cobalt)] bg-[var(--color-accent-cobalt)] shadow-[0_0_0_4px_color-mix(in_srgb,var(--color-accent-teal)_12%,transparent)]"
                         style={{ left: `${meanPercent}%` }}
                     />
                     <div

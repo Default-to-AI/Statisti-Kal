@@ -1287,7 +1287,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                 >
                                     {/* Toggle thumb */}
                                     <span
-                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-lg ring-0 transition-transform duration-300 ease-in-out mt-0.5 ${
+                                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-[var(--color-surface)] shadow-lg ring-0 transition-transform duration-300 ease-in-out mt-0.5 ${
                                             showPowerOverlay ? '-translate-x-[1.375rem]' : 'translate-x-0.5'
                                         }`}
                                     />
@@ -1563,7 +1563,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                     כן
                                                                 </button>
                                                                 <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
-                                                                <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                <div className={`w-full text-center px-2 py-2.5 rounded-sm border-2 font-bold z-10 transition-all ${varianceKnown ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_color-mix(in_srgb,var(--color-success)_30%,transparent)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                     מבחן <InlineMath math="Z" />
                                                                 </div>
 
@@ -1649,7 +1649,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                         <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                         <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-success)]/15 text-[var(--color-success)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>כן</span>
                                                                         <div className="w-[2px] h-[10px] bg-[var(--color-border)]"></div>
-                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_rgba(59,169,141,0.3)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n >= 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-success)] shadow-[0_0_15px_color-mix(in_srgb,var(--color-success)_30%,transparent)] ring-1 ring-[var(--color-success)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                             מבחן <InlineMath math="Z" />
                                                                         </div>
                                                                     </div>
@@ -1659,7 +1659,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                         <div className="w-[2px] h-[15px] bg-[var(--color-border)]"></div>
                                                                         <span className={`text-xs font-bold mb-1 px-1 rounded-lg transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-error)]/15 text-[var(--color-error)]' : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]'}`}>לא</span>
                                                                         <div className="w-[2px] h-[10px] bg-[var(--color-border)]"></div>
-                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-error)] shadow-[0_0_15px_rgba(217,91,91,0.3)] ring-1 ring-[var(--color-error)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
+                                                                        <div className={`w-full text-center px-1 py-1.5 rounded-sm border-2 font-bold z-10 transition-all ${!varianceKnown && n < 30 ? 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-error)] shadow-[0_0_15px_color-mix(in_srgb,var(--color-error)_30%,transparent)] ring-1 ring-[var(--color-error)]' : 'bg-[var(--color-surface)] border-[var(--color-border)] text-[var(--color-text-secondary)]'}`}>
                                                                             מבחן <InlineMath math="t" />
                                                                         </div>
                                                                     </div>
@@ -2396,7 +2396,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-success)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `${statSymbol} \\ge ${Z_crit.toFixed(3)}` :
@@ -2404,7 +2404,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                                     `|${statSymbol}| \\ge ${Z_crit.toFixed(3)}`
                                                                                         } />
                                                                                     </div>
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_rgba(248,113,113,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-error)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-error)] font-bold mb-2">אזור אי-הדחייה (Fail to Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `${statSymbol} < ${Z_crit.toFixed(3)}` :
@@ -2457,7 +2457,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-success)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (<InlineMath math="C" />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `\\bar{X} \\ge ${C_crit.toFixed(3)}` :
@@ -2465,7 +2465,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                                     `\\bar{X} \\le ${C_crit_1.toFixed(3)} \\text{ or } \\bar{X} \\ge ${C_crit_2.toFixed(3)}`
                                                                                         } />
                                                                                     </div>
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_rgba(248,113,113,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-error)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-error)] font-bold mb-2">אזור אי-הדחייה (<InlineMath math={String.raw`\bar{C}`} />)</div>
                                                                                         <BlockMath math={
                                                                                             tailType === 'right' ? `\\bar{X} < ${C_crit.toFixed(3)}` :
@@ -2518,11 +2518,11 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                 </div>
 
                                                                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_rgba(52,211,153,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${isReject ? 'border-[var(--chart-2)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-success)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-success)] font-bold mb-2">אזור הדחייה (Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={`\\text{P-Value} \\le ${alpha}`} />
                                                                                     </div>
-                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_rgba(248,113,113,0.4)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
+                                                                                    <div className={`bg-[var(--color-surface)] border p-4 rounded-lg text-center transition-all duration-700 ${!isReject ? 'border-[var(--color-accent-crimson)]/60 shadow-[0_0_15px_color-mix(in_srgb,var(--color-error)_40%,transparent)] animate-[pulse_3s_ease-in-out_infinite]' : 'border-[var(--color-border)]'}`}>
                                                                                         <div className="text-[var(--color-error)] font-bold mb-2">אזור אי-הדחייה (Fail to Reject <InlineMath math="H_0" />)</div>
                                                                                         <BlockMath math={`\\text{P-Value} > ${alpha}`} />
                                                                                     </div>

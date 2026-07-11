@@ -639,7 +639,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         onClick={resetNormalCalculator}
                         aria-label="איפוס ערכים"
                         title="איפוס ערכים"
-                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-semibold text-[var(--color-text-primary)] transition hover:border-[rgba(36,209,199,0.5)] hover:bg-[var(--color-surface)]"
+                        className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center gap-2 rounded-md border border-[var(--color-border)] bg-[var(--color-surface-raised)] px-4 text-sm font-semibold text-[var(--color-text-primary)] transition hover:border-[var(--color-accent-teal)]/50 hover:bg-[var(--color-surface)]"
                       >
                         <RefreshCw size={15} />
                         <span>איפוס ערכים</span>
@@ -752,7 +752,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         transition={{ duration: 0.3, ease: 'easeInOut' }}
                         className="overflow-hidden"
                       >
-                        <div className="rounded-lg border p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)] border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,rgba(92,92,255,0.14),rgba(92,92,255,0.05))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]">
+                        <div className="rounded-lg border p-4 shadow-[inset_0_1px_0_color-mix(in_srgb,var(--color-surface)_3%,transparent)] border-[var(--color-accent-cobalt)]/45 bg-[linear-gradient(140deg,color-mix(in_srgb,var(--color-accent-cobalt)_14%,transparent),color-mix(in_srgb,var(--color-accent-cobalt)_5%,transparent))] shadow-[0_0_0_1px_var(--color-accent-cobalt)]">
                           <div className="mb-4 flex items-start justify-between gap-3 border-b border-[var(--color-border)] pb-3">
                             <div className="text-right">
                               <Heading level="subsection" accent="cobalt" className="text-body-base font-semibold text-[var(--color-accent-cobalt)]">
@@ -801,10 +801,10 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               value={condType}
                               onChange={setCondType}
                               disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                              accentClass="border-[var(--chart-2)]/60 bg-[linear-gradient(135deg,rgba(63,224,208,0.16),rgba(63,224,208,0.05))] text-[var(--chart-2)]"
+                              accentClass="border-[var(--chart-2)]/60 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent-teal)_16%,transparent),color-mix(in_srgb,var(--color-accent-teal)_5%,transparent))] text-[var(--chart-2)]"
                               accentColor="var(--chart-2)"
                               variablePrefix="b"
-                              expressionToneClass="border-[var(--chart-2)]/30 bg-[rgba(63,224,208,0.08)] text-[var(--chart-2)]"
+                              expressionToneClass="border-[var(--chart-2)]/30 bg-[color-mix(in_srgb,var(--color-accent-teal)_8%,transparent)] text-[var(--chart-2)]"
                               fields={
                                 condType === 'between' ? (
                                   <>
@@ -848,10 +848,10 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                               value={condTypeA}
                               onChange={setCondTypeA}
                               disabled={!(mode === 'forward' && forwardType === 'conditional')}
-                              accentClass="border-[var(--color-accent-amber)]/60 bg-[linear-gradient(135deg,rgba(255,191,0,0.16),rgba(255,191,0,0.05))] text-[var(--color-accent-amber)]"
+                              accentClass="border-[var(--color-accent-amber)]/60 bg-[linear-gradient(135deg,color-mix(in_srgb,var(--color-accent-amber)_16%,transparent),color-mix(in_srgb,var(--color-accent-amber)_5%,transparent))] text-[var(--color-accent-amber)]"
                               accentColor="var(--color-accent-amber)"
                               variablePrefix="a"
-                              expressionToneClass="border-[var(--color-accent-amber)]/30 bg-[rgba(255,191,0,0.08)] text-[var(--color-accent-amber)]"
+                              expressionToneClass="border-[var(--color-accent-amber)]/30 bg-[color-mix(in_srgb,var(--color-accent-amber)_8%,transparent)] text-[var(--color-accent-amber)]"
                               fields={
                                 condTypeA === 'between' ? (
                                   <>

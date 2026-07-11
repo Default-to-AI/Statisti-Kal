@@ -80,22 +80,22 @@ function getToneClasses(tone: FeatureTone): {
   if (tone === 'teal') {
     return {
       border: 'border-[var(--chart-2)]/35',
-      background: 'bg-[rgba(46,196,182,0.12)]',
+      background: 'bg-[color-mix(in_srgb,var(--color-accent-teal)_12%,transparent)]',
       icon: 'bg-[var(--chart-2)] text-[var(--color-background)]',
       text: 'text-[var(--chart-2)]',
       glow: 'bg-[var(--chart-2)]/18',
-      shadow: 'shadow-[0_0_0_1px_rgba(46,196,182,0.18),0_24px_80px_rgba(46,196,182,0.12)]',
+      shadow: 'shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent-teal)_18%,transparent),0_24px_80px_color-mix(in_srgb,var(--color-accent-teal)_12%,transparent)]',
     };
   }
 
   if (tone === 'brass') {
     return {
       border: 'border-[var(--color-primary)]/35',
-      background: 'bg-[rgba(212,168,67,0.12)]',
+      background: 'bg-[color-mix(in_srgb,var(--color-accent-brass)_12%,transparent)]',
       icon: 'bg-[var(--color-primary)] text-[var(--color-background)]',
       text: 'text-[var(--color-primary)]',
       glow: 'bg-[var(--color-primary)]/18',
-      shadow: 'shadow-[0_0_0_1px_rgba(212,168,67,0.18),0_24px_80px_rgba(212,168,67,0.12)]',
+      shadow: 'shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent-brass)_18%,transparent),0_24px_80px_color-mix(in_srgb,var(--color-accent-brass)_12%,transparent)]',
     };
   }
 
@@ -105,7 +105,7 @@ function getToneClasses(tone: FeatureTone): {
     icon: 'bg-[var(--color-accent-cobalt)] text-white',
     text: 'text-[var(--color-accent-cobalt)]',
     glow: 'bg-[var(--color-accent-cobalt)]/18',
-    shadow: 'shadow-[0_0_0_1px_rgba(84,160,255,0.16),0_24px_80px_rgba(84,160,255,0.12)]',
+    shadow: 'shadow-[0_0_0_1px_color-mix(in_srgb,var(--color-accent-cobalt)_16%,transparent),0_24px_80px_color-mix(in_srgb,var(--color-accent-cobalt)_12%,transparent)]',
   };
 }
 
@@ -190,7 +190,7 @@ export function FeatureShowcase(): ReactElement {
             className="flex items-center justify-center gap-4 text-display-h2 text-[var(--color-text-primary)]"
           >
             <span
-              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-accent-brass)_55%,transparent),transparent)] sm:block"
               aria-hidden="true"
             />
             <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
@@ -201,7 +201,7 @@ export function FeatureShowcase(): ReactElement {
               <span>השחורה</span>
             </span>
             <span
-              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(46,196,182,0.45),transparent)] sm:block"
+              className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-accent-teal)_45%,transparent),transparent)] sm:block"
               aria-hidden="true"
             />
           </h2>

@@ -9,16 +9,12 @@ export interface ResultBlockProps extends HTMLAttributes<HTMLDivElement> {
 export const ResultBlock: React.FC<ResultBlockProps> = ({ children, isReject, className = '', ...rest }) => {
     const isErrorState = isReject === false;
     
-    // Explicit rgba values are used for translucent colors because Tailwind opacity modifiers (/15, /40)
-    // often fail to parse when the CSS variable is a hex code (e.g., #3ba98d).
-    // success = #3ba98d (rgba(59, 169, 141))
-    // error = #d95b5b (rgba(217, 91, 91))
-    
-    const borderColor = isErrorState ? 'border-[rgba(217,91,91,0.4)]' : 'border-[rgba(59,169,141,0.4)]';
+    // Colors use design tokens with Tailwind opacity modifiers.
+    const borderColor = isErrorState ? 'border-[var(--color-error)]/40' : 'border-[var(--color-success)]/40';
     const borderLeftColor = isErrorState ? 'border-l-[var(--color-error)]' : 'border-l-[var(--color-success)]';
-    const bgColor = isErrorState ? 'bg-[rgba(217,91,91,0.15)]' : 'bg-[rgba(59,169,141,0.15)]';
+    const bgColor = isErrorState ? 'bg-[var(--color-error)]/15' : 'bg-[var(--color-success)]/15';
     const iconColor = isErrorState ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]';
-    const glowColor = isErrorState ? 'shadow-[0_0_20px_rgba(217,91,91,0.15)]' : 'shadow-[0_0_20px_rgba(59,169,141,0.15)]';
+    const glowColor = isErrorState ? 'shadow-[0_0_20px_color-mix(in_srgb,var(--color-error)_15%,transparent)]' : 'shadow-[0_0_20px_color-mix(in_srgb,var(--color-success)_15%,transparent)]';
 
     return (
         <div className={`flex flex-row items-center w-full max-w-[65rem] mx-auto gap-4 py-3 sm:gap-6 ${className}`} dir="ltr" {...rest}>

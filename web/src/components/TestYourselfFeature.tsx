@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { ScrollReveal } from './landing-template/TemplatePrimitives';
 import { Button } from './ui/Button';
+import { Heading } from './ui/Heading';
 
 interface TestYourselfFeatureProps {
   onStart: () => void;
@@ -115,10 +116,10 @@ export function TestYourselfFeature({ onStart }: TestYourselfFeatureProps): Reac
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/25 bg-[var(--color-primary)]/10 px-3 py-1.5 text-sm font-bold text-[var(--color-primary)]">
               <Sparkles className="h-4 w-4" /> בחן את עצמך
             </div>
-            <h2 className="text-display-h2 leading-tight text-[var(--color-text-primary)]">
+            <Heading level="page" align="start" className="text-display-h2 leading-tight text-[var(--color-text-primary)]">
               לא רק לפתור. לדעת בדיוק
               <span className="block font-handwriting text-[1.12em] text-[var(--color-primary)] -rotate-1">מה עדיין לא יושב.</span>
-            </h2>
+            </Heading>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--color-text-secondary)]">
               בחרו רמה, פתרו בקצב שלכם וקבלו משוב שבאמת עוזר להתקדם — ציון מיידי, מעבר חכם בין טעויות והסבר מלא אחרי ההגשה.
             </p>

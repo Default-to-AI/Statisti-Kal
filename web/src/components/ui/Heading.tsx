@@ -28,8 +28,8 @@ const LEVEL_CLASSES: Record<HeadingLevel, string> = {
 };
 
 const ACCENT_CLASSES: Record<NonNullable<HeadingProps['accent']>, string> = {
-  brass: 'text-[var(--color-primary)]',
-  teal: 'text-[var(--chart-2)]',
+  brass: 'text-[var(--color-accent-brass)]',
+  teal: 'text-[var(--color-accent-teal)]',
   crimson: 'text-[var(--color-accent-crimson)]',
   cobalt: 'text-[var(--color-accent-cobalt)]',
   none: 'text-[var(--color-text-primary)]',
@@ -61,11 +61,11 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
       <Tag
         ref={ref}
         className={`
-          flex items-center gap-3 font-sans
+          font-sans
+          ${withAccentBar ? 'flex items-center gap-3 w-full justify-center' : ''}
           ${LEVEL_CLASSES[level]}
           ${ACCENT_CLASSES[accent]}
           ${ALIGN_CLASSES[align ?? defaultAlign]}
-          ${withAccentBar ? 'w-full justify-center' : ''}
           ${className}
         `}
         {...rest}

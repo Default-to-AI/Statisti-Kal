@@ -101,7 +101,7 @@ export function CyberneticBackground() {
   return (
     <div className="fixed inset-0 w-screen h-screen z-[-1] pointer-events-none overflow-hidden bg-[var(--color-background)]">
       {/* Subtle Math Background Pattern for Editorial Academic */}
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.4)_0%,rgba(249,249,246,0.9)_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.4)_0%,color-mix(in_srgb,var(--color-background)_90%,transparent)_100%)]" />
 
       {/* Drifting Math Chips */}
       <div className="absolute inset-0">
@@ -135,7 +135,7 @@ function MathChip({ initialChip }: { initialChip: PlacedChip }) {
   
   if (chip.cls.includes('alt')) {
     colorClass = "text-[var(--color-accent-primary)]";
-    dropShadow = "drop-shadow-[0_0_12px_rgba(67,97,238,0.15)]";
+    dropShadow = "drop-shadow-[0_0_12px_color-mix(in_srgb,var(--color-accent-cobalt)_15%,transparent)]";
     maxOpacity = "0.2";
   } else if (chip.cls.includes('faint')) {
     colorClass = "text-[var(--color-text-tertiary)]";

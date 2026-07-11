@@ -79,8 +79,8 @@ export function ScrollReveal({
 
 export function AnimatedBackground({
   variant = 'dots',
-  color = 'rgba(250, 204, 21, 0.08)',
-  secondaryColor = 'rgba(99, 102, 241, 0.1)',
+  color = 'color-mix(in_srgb,var(--color-accent-brass)_8%,transparent)',
+  secondaryColor = 'color-mix(in_srgb,var(--color-accent-cobalt)_10%,transparent)',
   className,
 }: {
   variant?: 'dots' | 'grid' | 'gradient';
@@ -94,7 +94,7 @@ export function AnimatedBackground({
         <motion.div
           className="absolute inset-0"
           style={{
-            background: `radial-gradient(circle at 18% 22%, ${color}, transparent 28%), radial-gradient(circle at 78% 24%, ${secondaryColor}, transparent 30%), radial-gradient(circle at 65% 76%, rgba(46,196,182,0.12), transparent 24%)`,
+            background: `radial-gradient(circle at 18% 22%, ${color}, transparent 28%), radial-gradient(circle at 78% 24%, ${secondaryColor}, transparent 30%), radial-gradient(circle at 65% 76%, color-mix(in_srgb,var(--color-accent-teal)_12%,transparent), transparent 24%)`,
           }}
           animate={{ scale: [1, 1.05, 1], opacity: [0.7, 1, 0.7] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
@@ -109,7 +109,7 @@ export function AnimatedBackground({
         className={cx('pointer-events-none absolute inset-0 opacity-60', className)}
         style={{
           backgroundImage:
-            'linear-gradient(to right, rgba(42,47,62,0.6) 1px, transparent 1px), linear-gradient(to bottom, rgba(42,47,62,0.6) 1px, transparent 1px)',
+            'linear-gradient(to right, color-mix(in_srgb,var(--color-border)_60%,transparent) 1px, transparent 1px), linear-gradient(to bottom, color-mix(in_srgb,var(--color-border)_60%,transparent) 1px, transparent 1px)',
           backgroundSize: '40px 40px',
         }}
       />
@@ -120,7 +120,7 @@ export function AnimatedBackground({
     <div
       className={cx('pointer-events-none absolute inset-0 opacity-60', className)}
       style={{
-        backgroundImage: 'radial-gradient(rgba(138,147,166,0.35) 0.8px, transparent 0.8px)',
+        backgroundImage: 'radial-gradient(color-mix(in_srgb,var(--color-text-secondary)_35%,transparent) 0.8px, transparent 0.8px)',
         backgroundSize: '22px 22px',
       }}
     />
@@ -154,7 +154,7 @@ export function SpotlightCard({
         className="pointer-events-none absolute inset-0 transition-opacity duration-300"
         style={{
           opacity: active ? 1 : 0.28,
-          background: `radial-gradient(420px circle at ${position.x}px ${position.y}px, rgba(250,204,21,0.14), transparent 42%)`,
+          background: `radial-gradient(420px circle at ${position.x}px ${position.y}px, color-mix(in_srgb,var(--color-accent-brass)_14%,transparent), transparent 42%)`,
         }}
       />
       {children}
@@ -237,7 +237,7 @@ export function GlowingTiltCard({
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `radial-gradient(circle at ${state.glowX}% ${state.glowY}%, rgba(255,255,255,0.12), transparent 34%)`,
+          background: `radial-gradient(circle at ${state.glowX}% ${state.glowY}%, color-mix(in_srgb,var(--color-surface)_12%,transparent), transparent 34%)`,
           opacity: state.active ? 1 : 0,
           transition: 'opacity 180ms ease',
         }}
@@ -435,8 +435,8 @@ export function HoverImageCard({
           whileHover={{ scale: 1.04 }}
           transition={{ duration: 0.4 }}
         />
-        <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,rgba(13,15,20,0.9))] p-4">
-          <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[rgba(20,23,31,0.9)] px-3 py-1 text-caption font-semibold text-[var(--color-accent-brass)]">
+        <div className="absolute inset-x-0 bottom-0 bg-[linear-gradient(180deg,transparent,color-mix(in_srgb,var(--color-background)_90%,transparent))] p-4">
+          <span className="inline-flex rounded-full border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface)_90%,transparent)] px-3 py-1 text-caption font-semibold text-[var(--color-accent-brass)]">
             {badge}
           </span>
         </div>

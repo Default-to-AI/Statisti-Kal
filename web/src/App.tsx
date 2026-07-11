@@ -285,7 +285,7 @@ export default function App() {
           backgroundColor: 'var(--color-surface-raised)',
           textColor: 'var(--color-text-primary)',
           arrowColor: 'var(--color-surface-raised)',
-          overlayColor: 'rgba(3, 6, 13, 0.42)',
+          overlayColor: 'rgba(0, 0, 0, 0.28)',
           spotlightPadding: 10,
           spotlightRadius: 18,
           skipScroll: true,
@@ -304,7 +304,7 @@ export default function App() {
           spotlight: {
             stroke: 'var(--color-accent-brass)',
             strokeWidth: 3,
-            filter: 'drop-shadow(0 0 12px rgba(212, 168, 67, 0.8)) drop-shadow(0 0 24px rgba(52, 82, 158, 0.45))',
+            filter: 'drop-shadow(0 0 12px color-mix(in srgb, var(--color-accent-brass) 80%, transparent)) drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-cobalt) 45%, transparent))',
             ...(isTourTransitioning && { opacity: 0 }),
           },
           buttonNext: { backgroundColor: 'var(--color-accent-cobalt)', color: 'var(--color-text-primary)', borderRadius: '4px', fontWeight: 'bold' },

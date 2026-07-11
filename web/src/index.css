@@ -125,6 +125,7 @@
   --color-accent-brass: #D4A843;      /* Brass (H0, warning) */
   --color-accent-teal: #10B981;       /* Teal/Green (Success) */
   --color-accent-crimson: #EF4444;    /* Crimson (Error/Rejections) */
+  --color-accent-amber: #FFBF00;     /* Amber (warning-adjacent accent) */
   --color-accent-cobalt: #4361EE;     /* Indigo (Active/Selected) */
 
   /* === Accent variants === */
@@ -533,18 +534,17 @@ body {
 }
 
 /* ============================================================================
- * Premium font scaling for enhanced Hebrew legibility
- * (Task 7 will review these utility overrides for removal; keep for now to
- * preserve visual parity during token migration.)
+ * Hebrew legibility — custom font sizes for enhanced readability
+ * These override Tailwind defaults for better Hebrew text rendering.
+ * No !important — Heading typography tokens take precedence via specificity.
  * ============================================================================ */
-p, li, span, h1, h2, h3, h4, h5, h6, select, input, button, select option {
-  line-height: 1.625 !important;
+body {
+  line-height: 1.625;
 }
 
-.text-xs { font-size: 0.85rem !important; }
-.text-sm { font-size: 0.95rem !important; }
-.text-base { font-size: 1.05rem !important; }
-.text-lg { font-size: 1.2rem !important; }
-.text-xl { font-size: 1.35rem !important; }
-
+.text-xs { font-size: 0.85rem; }
+.text-sm { font-size: 0.95rem; }
+.text-base { font-size: 1.05rem; }
+.text-lg { font-size: 1.2rem; }
+.text-xl { font-size: 1.35rem; }
 

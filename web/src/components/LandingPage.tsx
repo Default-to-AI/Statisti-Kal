@@ -53,7 +53,7 @@ function TypewriterEffect({ words }: { words: string[] }): ReactElement {
         className="absolute bottom-0 right-0 left-0 border-b-2 border-[var(--color-primary)]/50"
         aria-hidden="true"
       />
-      <span className="font-['Times_New_Roman'] font-bold text-[var(--color-primary)] drop-shadow-sm">
+      <span className="font-serif font-bold text-[var(--color-primary)] drop-shadow-sm">
         {text}
       </span>
       <span className="animate-pulse text-[var(--color-primary)]/70">|</span>
@@ -456,7 +456,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
                 className="flex items-center justify-center gap-4 text-display-h2 text-[var(--color-text-primary)] mb-8"
               >
                 <span
-                  className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+                  className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-accent-brass)_55%,transparent),transparent)] sm:block"
                   aria-hidden="true"
                 />
                 <span className="inline-flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
@@ -467,7 +467,7 @@ export default function LandingPage({ onNavigate, onTryHypothesis, onTryPointEst
                   <span>פה?</span>
                 </span>
                 <span
-                  className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,rgba(212,168,67,0.55),transparent)] sm:block"
+                  className="hidden h-px flex-1 bg-[linear-gradient(90deg,transparent,color-mix(in_srgb,var(--color-accent-brass)_55%,transparent),transparent)] sm:block"
                   aria-hidden="true"
                 />
               </h2>
