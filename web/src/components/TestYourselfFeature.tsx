@@ -108,7 +108,7 @@ function ExamPreview(): ReactElement {
 export function TestYourselfFeature({ onStart }: TestYourselfFeatureProps): ReactElement {
   return (
     <section className="relative isolate overflow-hidden py-20 sm:py-28">
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_16%_48%,var(--color-accent-cobalt-bg),transparent_31%),radial-gradient(circle_at_82%_52%,rgba(212,168,67,0.07),transparent_28%)] opacity-70" />
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_16%_48%,var(--color-accent-cobalt-bg),transparent_31%),radial-gradient(circle_at_82%_52%,color-mix(in_srgb,var(--color-accent-brass)_7%,transparent),transparent_28%)] opacity-70" />
       <div className="mx-auto grid max-w-[90rem] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:gap-20 lg:px-8">
         <ScrollReveal distance={24} duration={0.5}>
           <div className="max-w-2xl">
