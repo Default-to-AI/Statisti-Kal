@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@400;600&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700&family=Gveret+Levin:wght@400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700;800&family=Gveret+Levin:wght@400&display=swap");
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
 
@@ -9,11 +9,11 @@
  * ============================================================================ */
 @theme {
   /* === Font families === */
-  --font-sans: "Inter", "Assistant", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Source Serif 4", serif;
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-handwriting: "Gveret Levin", "Assistant", cursive;
+  --font-sans: "Assistant", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Frank Ruhl Libre", serif;
+  --font-display: "Assistant", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, sfmono-regular, monospace;
+  --font-handwriting: "Gveret Levin", cursive;
 
   /* === Display scale (Space Grotesk) === */
   --text-display-hero: 3.5rem;
@@ -59,11 +59,11 @@
   --text-body-lg--line-height: 1.7;
   --text-body-lg--letter-spacing: 0.01em;
 
-  --text-body-base: 1rem;
+  --text-body-base: 1.125rem; /* ~18px */
   --text-body-base--line-height: 1.625;
   --text-body-base--letter-spacing: 0.015em;
 
-  --text-body-sm: 0.875rem;
+  --text-body-sm: 1rem; /* ~16px */
   --text-body-sm--line-height: 1.6;
   --text-body-sm--letter-spacing: 0.01em;
 
@@ -93,7 +93,7 @@
   --text-mono-xs--font-weight: 500;
 
   /* === Caption === */
-  --text-caption: 0.6875rem;
+  --text-caption: 0.8125rem; /* ~13px */
   --text-caption--line-height: 1.4;
   --text-caption--letter-spacing: 0.08em;
   --text-caption--font-weight: 700;
@@ -105,46 +105,46 @@
  * Consumed via var(--color-*), var(--spacing-*), var(--rounded-*) in className
  * ============================================================================ */
 :root {
-  /* === Base layer (Precision Brass) === */
-  --color-background: #000000;        /* Pure Black */
-  --color-surface: #121212;           /* Material Dark */
-  --color-surface-raised: #1E1E1E;    /* Elevated */
-  --color-surface-elevated: #282828;  /* Highest Elevation */
-  --color-border: #333333;            /* Solid crisp border */
-  --color-border-strong: #555555;     /* Stronger border */
+  /* === Base layer (Editorial Academic) === */
+  --color-background: #F9F9F6;        /* Warm Paper */
+  --color-surface: #FFFFFF;           /* Pure White */
+  --color-surface-raised: #F2F2EC;    /* Contrast box */
+  --color-surface-elevated: #EAEAE2;  /* Highest Elevation */
+  --color-border: #D6D6CF;            /* Solid crisp border */
+  --color-border-strong: #BDBDB4;     /* Stronger border */
 
   /* === Text layer === */
-  --color-text-primary: #FFFFFF;      /* Pure White (Math & Headers) */
-  --color-text-secondary: #A1A1AA;    /* Zinc 400 */
+  --color-text-primary: #1A1A1A;      /* Deep Ink */
+  --color-text-secondary: #4A4A4A;    /* Darkened Gray */
 
   /* === Primary === */
-  --color-primary: #FFFFFF;           /* White for generic primary actions */
+  --color-primary: #4361EE;           /* Indigo for generic primary actions */
 
   /* === Accent layer (Academic Precision) === */
-  --color-accent-brass: #D4A843;      /* Brass (H0, primary reference) */
-  --color-accent-teal: #4ECDC4;       /* Patina/Teal (H1, secondary/power) */
-  --color-accent-crimson: #E03E3E;    /* Crimson (Type I error, rejections) */
-  --color-accent-cobalt: #D4A843;     /* Mapped to Brass for active/selected states */
+  --color-accent-primary: #4361EE;    /* Indigo */
+  --color-accent-brass: #D4A843;      /* Brass (H0, warning) */
+  --color-accent-teal: #10B981;       /* Teal/Green (Success) */
+  --color-accent-crimson: #EF4444;    /* Crimson (Error/Rejections) */
+  --color-accent-cobalt: #4361EE;     /* Indigo (Active/Selected) */
 
   /* === Accent variants === */
-  --color-accent-cobalt-bg: rgba(212, 168, 67, 0.1);  /* Brass light bg */
-  --color-accent-cobalt-bg-hover: rgba(212, 168, 67, 0.2);
-  --color-accent-cobalt-line: rgba(212, 168, 67, 0.4);
-  --color-accent-cobalt-strong: #B88B2D;
-  --color-accent-cobalt-dark: #966F1C;
+  --color-accent-cobalt-bg: rgba(67, 97, 238, 0.08);
+  --color-accent-cobalt-bg-hover: rgba(67, 97, 238, 0.15);
+  --color-accent-cobalt-line: rgba(67, 97, 238, 0.4);
+  --color-accent-cobalt-strong: #364EC7;
+  --color-accent-cobalt-dark: #2B3EA1;
 
   /* === Chart Colors === */
-  --chart-1: #D4A843;   /* Brass */
-  --chart-2: #4ECDC4;   /* Patina */
-  --chart-3: #FFFFFF;   /* White */
-  --chart-4: #4ECDC4;   /* Patina */
-  --chart-5: #E03E3E;   /* Crimson */
+  --chart-1: #4361EE;   /* Indigo */
+  --chart-2: #10B981;   /* Teal/Green */
+  --chart-3: #1A1A1A;   /* Ink */
+  --chart-5: #EF4444;   /* Crimson */
 
   /* === Semantic aliases === */
-  --color-success: #4ECDC4;
-  --color-error: #E03E3E;
+  --color-success: #10B981;
+  --color-error: #EF4444;
   --color-warning: #D4A843;
-  --color-info: #C5C6C7;
+  --color-info: #4361EE;
 
   /* === Spacing scale (4px base unit) — var()-only consumption ===
      These are NOT in @theme because the design intent (per handoff) is direct
@@ -185,10 +185,14 @@
 
   /* === Recharts visual tokens (not in DESIGN.md; preserved for chart parity) === */
   --chart-4: var(--color-accent-teal);                        /* H1 reference curve (teal — distinct from H0 brass, per DESIGN.md "power/acceptance" semantic) */
-  --chart-grid: #333333;                                       /* Grid line, matches border */
-  --chart-axis-label: #A1A1AA;                                 /* Axis ticks, high contrast */
-  --chart-rejection: rgba(224, 62, 62, 0.25);                  /* Type I error shaded region */
-  --chart-acceptance: rgba(78, 205, 196, 0.25);                /* Power (1-β) shaded region */
+  --chart-grid: #E2E2E2;                                       /* Grid line, matches border */
+  --chart-axis-label: #4A4A4A;                                 /* Axis ticks, high contrast */
+  --chart-rejection: rgba(239, 68, 68, 0.2);                  /* Type I error shaded region */
+  --chart-acceptance: rgba(16, 185, 129, 0.2);                /* Power (1-β) shaded region */
+
+  /* === Shadow tokens === */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
 
 }
 
@@ -197,12 +201,19 @@
  * ============================================================================ */
 html {
   scroll-behavior: smooth;
-  color-scheme: dark;
+  color-scheme: light;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 }
 
 body {
-  background-color: var(--color-background);
-  color: var(--color-text-primary);
   font-size: 16.5px;
   letter-spacing: 0.015em;
 }
@@ -269,20 +280,20 @@ body {
  * The unique visual identity: the things users remember.
  * ============================================================================ */
 
-/* .accent-bar — 48×4px brass→teal gradient bar. Marks hero sections, primary actions, page titles. */
+/* .accent-bar — 48×4px indigo→teal gradient bar. Marks hero sections, primary actions, page titles. */
 .accent-bar {
   width: 48px;
   height: 4px;
-  background: linear-gradient(90deg, var(--color-accent-brass), var(--color-accent-teal));
+  background: linear-gradient(90deg, var(--color-accent-primary), var(--color-accent-teal));
   border-radius: var(--rounded-full);
   flex-shrink: 0;
 }
 
-/* .curve-glow — Gold+teal blur glow. Appears on active calculation panels, live results. */
+/* .curve-glow — Soft shadow for light mode. Appears on active calculation panels, live results. */
 .curve-glow {
   box-shadow:
-    0 0 24px rgba(250, 204, 21, 0.35),
-    0 0 48px rgba(46, 196, 182, 0.25);
+    0 4px 24px rgba(67, 97, 238, 0.15),
+    0 8px 48px rgba(67, 97, 238, 0.05);
   transition: box-shadow 300ms ease-out;
 }
 
@@ -309,17 +320,17 @@ body {
   }
 }
 
-/* .pulse-brass — Live calculation indicator. Breathing brass glow on active results. */
+/* .pulse-brass — Live calculation indicator. Breathing indigo glow on active results. */
 .pulse-brass {
   animation: pulse-brass 2s ease-in-out infinite;
 }
 
 @keyframes pulse-brass {
   0%, 100% {
-    box-shadow: 0 0 0 rgba(250, 204, 21, 0);
+    box-shadow: 0 0 0 rgba(67, 97, 238, 0);
   }
   50% {
-    box-shadow: 0 0 16px rgba(250, 204, 21, 0.6), 0 0 32px rgba(250, 204, 21, 0.3);
+    box-shadow: 0 0 16px rgba(67, 97, 238, 0.3), 0 0 32px rgba(67, 97, 238, 0.15);
   }
 }
 
@@ -329,8 +340,8 @@ body {
 }
 
 @keyframes pulse-success {
-  0%, 100% { box-shadow: 0 0 0 rgba(46, 196, 182, 0); border-color: var(--color-border); }
-  50% { box-shadow: 0 0 16px rgba(46, 196, 182, 0.4), 0 0 32px rgba(46, 196, 182, 0.2); border-color: rgba(46, 196, 182, 0.5); }
+  0%, 100% { box-shadow: 0 0 0 rgba(16, 185, 129, 0); border-color: var(--color-border); }
+  50% { box-shadow: 0 0 16px rgba(16, 185, 129, 0.2), 0 0 32px rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.5); }
 }
 
 .pulse-error {
@@ -338,8 +349,8 @@ body {
 }
 
 @keyframes pulse-error {
-  0%, 100% { box-shadow: 0 0 0 rgba(232, 93, 93, 0); border-color: var(--color-border); }
-  50% { box-shadow: 0 0 16px rgba(232, 93, 93, 0.4), 0 0 32px rgba(232, 93, 93, 0.2); border-color: rgba(232, 93, 93, 0.5); }
+  0%, 100% { box-shadow: 0 0 0 rgba(239, 68, 68, 0); border-color: var(--color-border); }
+  50% { box-shadow: 0 0 16px rgba(239, 68, 68, 0.2), 0 0 32px rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.5); }
 }
 
 .chart-legend-dashed-line {
@@ -360,28 +371,28 @@ body {
 .toc-target-flash {
   animation: toc-target-flash 1.2s ease-out;
   box-shadow:
-    0 0 0 1px rgba(250, 204, 21, 0.45),
-    0 0 24px rgba(250, 204, 21, 0.24),
-    0 0 56px rgba(46, 196, 182, 0.16);
+    0 0 0 1px rgba(67, 97, 238, 0.25),
+    0 0 24px rgba(67, 97, 238, 0.15),
+    0 0 56px rgba(16, 185, 129, 0.1);
   border-radius: var(--rounded-lg);
 }
 
 @keyframes toc-target-flash {
   0% {
     box-shadow:
-      0 0 0 0 rgba(250, 204, 21, 0.68),
-      0 0 0 rgba(46, 196, 182, 0);
+      0 0 0 0 rgba(67, 97, 238, 0.4),
+      0 0 0 rgba(16, 185, 129, 0);
   }
   45% {
     box-shadow:
-      0 0 0 1px rgba(250, 204, 21, 0.5),
-      0 0 18px rgba(250, 204, 21, 0.28),
-      0 0 42px rgba(46, 196, 182, 0.2);
+      0 0 0 1px rgba(67, 97, 238, 0.3),
+      0 0 18px rgba(67, 97, 238, 0.2),
+      0 0 42px rgba(16, 185, 129, 0.15);
   }
   100% {
     box-shadow:
-      0 0 0 0 rgba(250, 204, 21, 0),
-      0 0 0 rgba(46, 196, 182, 0);
+      0 0 0 0 rgba(67, 97, 238, 0),
+      0 0 0 rgba(16, 185, 129, 0);
   }
 }
 

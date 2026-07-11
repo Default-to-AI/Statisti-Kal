@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { PageLayout, Heading } from './ui';
+import { PageLayout } from './ui';
+import { PageHeader } from './ui/PageHeader';
 import { ArrowRight, Brain, Zap, Target } from 'lucide-react';
 import { Difficulty, testQuestions } from '../data/testQuestions';
 import { TestRunner } from './TestRunner';
@@ -10,14 +11,12 @@ export default function TestYourselfPage(): React.ReactElement {
   // Render Selection Screen
   if (!selectedDifficulty) {
     return (
-      <PageLayout activePage="test-yourself">
-        <Heading level="page" withAccentBar accent="brass" className="mb-8 mt-4 text-center">
-          בחן את עצמך
-        </Heading>
-        
-        <p className="text-center text-lg text-[var(--color-text-secondary)] mb-12 px-4 max-w-2xl mx-auto leading-relaxed">
-          בחרו את רמת הקושי הרצויה ובדקו את הידע שלכם. הרמה הקלה בוחנת הבנה בסיסית, בעוד הרמות הגבוהות מצריכות יותר חישובים והבנה מעמיקה.
-        </p>
+      <PageLayout>
+        <PageHeader 
+          title="בחן את עצמך"
+          description="בחרו את רמת הקושי הרצויה ובדקו את הידע שלכם. הרמה הקלה בוחנת הבנה בסיסית, בעוד הרמות הגבוהות מצריכות יותר חישובים והבנה מעמיקה."
+          className="mt-6 mb-12"
+        />
 
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
@@ -98,7 +97,7 @@ export default function TestYourselfPage(): React.ReactElement {
 
   // Render Test Runner
   return (
-    <PageLayout activePage="test-yourself">
+    <PageLayout>
       <TestRunner 
         difficulty={selectedDifficulty}
         questions={testQuestions[selectedDifficulty]}

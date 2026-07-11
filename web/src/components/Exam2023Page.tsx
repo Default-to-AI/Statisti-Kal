@@ -1255,7 +1255,7 @@ function Exam2023Page(): ReactElement {
             ════════════════════════════════════════════════════════════════ */}
 
         <ParentAccordion id="appendix-formulas" title="נספח 1 — דף נוסחאות">
-          <Card variant="bordered" className={CONTENT_WIDTH_CLASS}>
+          <Card variant="default" className={CONTENT_WIDTH_CLASS}>
             <CardBody className="space-y-2 text-right" dir="rtl">
               {[
                 ['אחיד — תוחלת', 'E(X)=\\dfrac{a+b}{2}', 'אחיד רציף על [a,b]'],
@@ -1291,7 +1291,7 @@ function Exam2023Page(): ReactElement {
             ════════════════════════════════════════════════════════════════ */}
 
         <ParentAccordion id="appendix-traps" title="נספח 2 — המלכודות של סופי">
-          <Card variant="bordered" className={CONTENT_WIDTH_CLASS}>
+          <Card variant="default" className={CONTENT_WIDTH_CLASS}>
             <CardBody className="space-y-3 text-right" dir="rtl">
               {[
                 [<>השערות עוסקות ב‑<InlineMath math={String.raw`\mu`} />, לא ב‑<InlineMath math={String.raw`\bar{x}`} /></>, <>לעולם לא כותבים השערה עם 42 או <InlineMath math={String.raw`\bar{x}`} />; 42 הוא נתון מדגמי שנצפה.</>],

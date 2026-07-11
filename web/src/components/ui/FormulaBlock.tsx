@@ -35,9 +35,9 @@ export interface FormulaBlockProps extends HTMLAttributes<HTMLDivElement> {
 
 const VARIANT_CLASSES: Record<FormulaBlockVariant, string> = {
   formula:
-    'border-[var(--color-border)] bg-[var(--color-surface)] rounded-[var(--rounded-lg)]',
+    'border-[var(--color-border)] bg-[var(--color-primary)]/5 rounded-[var(--rounded-lg)] text-lg',
   calculation:
-    'border-[var(--color-accent-cobalt-line)] bg-[var(--color-surface-raised)] rounded-[var(--rounded-md)]',
+    'border-[var(--color-accent-cobalt-line)] bg-[var(--color-accent-cobalt-bg)] rounded-[var(--rounded-md)] text-lg',
 };
 
 export const FormulaBlock = forwardRef<HTMLDivElement, FormulaBlockProps>(

@@ -30,7 +30,7 @@ export type InputSize = 'sm' | 'md' | 'lg';
 export interface InputGroupProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'size' | 'onChange' | 'value'> {
   /** Visible label (string or ReactNode for inline KaTeX/Math). */
-  label: React.ReactNode;
+  label?: React.ReactNode;
   /** Controlled string value. The composite keeps it as a string so partial
    *  decimal input ("1.") and empty fields can be expressed. */
   value: string;
@@ -96,15 +96,17 @@ export const InputGroup = forwardRef<HTMLInputElement, InputGroupProps>(function
 
   return (
     <div className={`${wrapperClass} ${className}`}>
-      <label
-        htmlFor={inputId}
-        className={`${labelClass} ${disabled ? 'opacity-30' : ''}`}
-      >
-        <span className="inline-flex items-center gap-1.5">
-          {label}
-          {required && <span className="text-[var(--color-error)]" aria-hidden="true">*</span>}
-        </span>
-      </label>
+      {label && (
+        <label
+          htmlFor={inputId}
+          className={`${labelClass} ${disabled ? 'opacity-30' : ''}`}
+        >
+          <span className="inline-flex items-center gap-1.5">
+            {label}
+            {required && <span className="text-[var(--color-error)]" aria-hidden="true">*</span>}
+          </span>
+        </label>
+      )}
       <div className={`relative ${inline ? 'w-16 sm:w-20 shrink-0' : 'w-full'}`}>
         <input
           {...rest}
@@ -658,9 +660,11 @@ export interface DisclosureProps {
   children: React.ReactNode;
   defaultOpen?: boolean;
   /** Accent color for the open-state border. */
-  accentOnOpen?: 'cobalt' | 'brass' | 'teal' | 'crimson';
+  accentOnOpen?: 'cobalt' | 'brass' | 'teal' | 'crimson' | 'none';
   className?: string;
   watermark?: React.ReactNode;
+  id?: string;
+  tocId?: string;
 }
 
 const DISCLOSURE_ACCENT: Record<NonNullable<DisclosureProps['accentOnOpen']>, string> = {
@@ -668,6 +672,7 @@ const DISCLOSURE_ACCENT: Record<NonNullable<DisclosureProps['accentOnOpen']>, st
   brass: 'group-[.is-open]:border-[var(--color-primary)]',
   teal: 'group-[.is-open]:border-[var(--chart-2)]',
   crimson: 'group-[.is-open]:border-[var(--color-accent-crimson)]',
+  none: '',
 };
 
 export const Disclosure: React.FC<DisclosureProps> = ({
@@ -678,9 +683,13 @@ export const Disclosure: React.FC<DisclosureProps> = ({
   accentOnOpen = 'cobalt',
   className = '',
   watermark,
+  id,
+  tocId,
 }) => {
   return (
     <AnimatedDetails
+      id={id}
+      tocId={tocId}
       defaultOpen={defaultOpen}
       className={`relative overflow-hidden border border-[var(--color-border)] rounded-lg bg-[var(--color-surface)]/50 ${DISCLOSURE_ACCENT[accentOnOpen]} ${className}`}
     >

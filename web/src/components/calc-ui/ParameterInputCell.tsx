@@ -30,15 +30,15 @@ export function ParameterInputCell({
   statusText,
 }: ParameterInputCellProps) {
   return (
-    <td className={`relative overflow-hidden p-3 align-middle bg-[var(--color-surface)] border-b border-[var(--color-border)] ${disabled ? 'opacity-55' : ''}`}>
+    <td className={`relative overflow-hidden p-3 sm:p-4 align-middle bg-[var(--color-surface)] border-b border-l border-[var(--color-border)] last:border-l-0 ${disabled ? 'opacity-55' : ''}`}>
       <CellWatermark math={watermark} colorClass={colorClass} />
-      <div className="relative z-10 flex w-full flex-col items-center justify-center gap-2 xl:flex-row xl:gap-3">
+      <div className="relative z-10 flex w-full flex-row items-center justify-between gap-2 sm:gap-3">
         <InputTooltip content={tooltip}>
-          <span className={`text-center text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-center gap-1 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]'} xl:min-w-0 xl:flex-1 xl:justify-end xl:text-right`}>
+          <span className={`text-right text-sm sm:text-base font-bold cursor-help border-b border-dotted border-[var(--color-border)] flex-1 min-w-0 ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]'}`}>
             {label}
           </span>
         </InputTooltip>
-        <div className="relative w-full max-w-[10rem] shrink-0 xl:w-24 xl:max-w-none">
+        <div className="relative w-24 shrink-0 sm:w-28 xl:w-32">
           <input
             type="text"
             value={value}

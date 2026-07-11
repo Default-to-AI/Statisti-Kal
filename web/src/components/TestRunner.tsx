@@ -89,7 +89,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ difficulty, questions, o
       const { isCorrect, points, subScores } = evaluateQuestion(q, answers[q.id]);
       earned += points;
       itemized[q.id] = isCorrect;
-      if (subScores) {
+      if (subScores && 'parts' in q) {
         multiSubScores[q.id] = subScores;
         tParts += q.parts.length;
         cParts += Object.values(subScores).filter(Boolean).length;

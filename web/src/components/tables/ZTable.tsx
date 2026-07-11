@@ -177,23 +177,17 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
 
       <div className="tour-z-table-scroll-anchor h-px w-full" aria-hidden="true" />
 
-      {/* Z-Table Accordion */}
-      <Disclosure
-        id="normal-z-table"
-        tocId="normal-z-table"
-        title={
-          <span className="flex items-center gap-x-2 flex-wrap">
-            <span className="inline-flex h-6 min-w-6 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-1.5 text-[var(--color-accent-cobalt)] shadow-[var(--shadow-soft)]">
-              <InlineMath math="Z" />
-            </span>
-            <span>התפלגות נורמלית סטנדרטית - טבלת ערכי Z</span>
-            <span dir="ltr" className="text-sm font-medium text-[var(--color-text-secondary)] mt-1 sm:mt-0">
-              <InlineMath math={String.raw`\text{Standard\ Normal\ Distribution\ -\ Z-Score\ Table}`} />
-            </span>
+      {/* Z-Table Section */}
+      <section id="normal-z-table" className="scroll-mt-24 space-y-6">
+        <div className="flex items-center gap-x-3 flex-wrap mb-2 border-b border-[var(--color-border)] pb-3">
+          <span className="inline-flex h-8 min-w-8 items-center justify-center rounded-full border border-[var(--color-border-strong)] bg-[var(--color-surface-elevated)] px-2 text-[var(--color-primary)] shadow-[var(--shadow-soft)]">
+            <InlineMath math="Z" />
           </span>
-        }
-        accentOnOpen="cobalt"
-      >
+          <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">התפלגות נורמלית סטנדרטית - טבלת ערכי Z</h2>
+          <span dir="ltr" className="text-sm font-medium text-[var(--color-text-secondary)] mt-1 sm:mt-0">
+            <InlineMath math={String.raw`\text{Standard\ Normal\ Distribution\ -\ Z-Score\ Table}`} />
+          </span>
+        </div>
         <div className="space-y-6 pt-4 text-right">
           <div className="flex items-center justify-between mb-3">
             <div></div>
@@ -255,9 +249,9 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                   value={searchType === 'z' ? searchVal : phiSearchVal}
                   onChange={e => searchType === 'z' ? setSearchVal(e.target.value) : setPhiSearchVal(e.target.value)}
                   placeholder=""
-                  className={`w-full h-full bg-transparent border rounded px-4 py-3 text-base sm:text-lg text-[var(--color-text-primary)] font-mono focus:outline-none transition-all text-center shadow-sm relative z-10 ${(searchType === 'z' && !searchVal) || (searchType === 'phi' && !phiSearchVal)
+                  className={`w-full h-full bg-[var(--color-surface-elevated)] border-2 rounded-lg px-4 py-3 text-xl sm:text-2xl text-[var(--color-primary)] font-bold font-mono focus:outline-none transition-all text-center shadow-sm relative z-10 ${(searchType === 'z' && !searchVal) || (searchType === 'phi' && !phiSearchVal)
                     ? 'border-[var(--color-error)]/60 focus:border-[var(--color-error)]/80 focus:ring-1 focus:ring-[var(--color-error)]/80'
-                    : 'border-[var(--color-border)] focus:border-[var(--color-accent-cobalt-line)] focus:ring-1 focus:ring-[var(--color-accent-cobalt-line)]'
+                    : 'border-[var(--color-border-strong)] focus:border-[var(--color-primary)] focus:ring-1 focus:ring-[var(--color-primary)]'
                     }`}
                   dir="ltr"
                 />
@@ -326,16 +320,14 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
 
           {renderTableSection(rows)}
         </div>
-      </Disclosure>
+      </section>
 
       {/* Popular Z-Scores Static */}
-      <Disclosure
-        id="normal-popular-z"
-        tocId="normal-popular-z"
-        title="ערכים וציוני תקן פופולריים למבחני השערות"
-        icon={<Star size={18} className="text-[var(--color-accent-cobalt)]" />}
-        accentOnOpen="cobalt"
-      >
+      <section id="normal-popular-z" className="scroll-mt-24 space-y-6 mt-12">
+        <div className="flex items-center gap-x-3 mb-2 border-b border-[var(--color-border)] pb-3">
+          <Star size={24} className="text-[var(--color-primary)]" />
+          <h2 className="text-xl sm:text-2xl font-bold text-[var(--color-text-primary)]">ערכים וציוני תקן פופולריים למבחני השערות</h2>
+        </div>
         <div className="pt-4 text-right">
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
@@ -365,7 +357,7 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
             })}
           </div>
         </div>
-      </Disclosure>
+      </section>
 
     </div>
   );

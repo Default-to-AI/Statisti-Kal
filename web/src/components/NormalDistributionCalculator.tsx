@@ -34,9 +34,10 @@ import {
   CalculatorSidebar,
   ChartWrapper,
   EmptyState,
-  Heading,
   SectionHeader,
   Tooltip as UITooltip,
+  PageHeader,
+  Heading,
 } from './ui';
 import {
   CalculationVariantPicker,
@@ -580,7 +581,10 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -15 }}
             transition={{ duration: 0.25 }}
+            className="space-y-8"
           >
+            <PageHeader title="טבלאות התפלגות סטטיסטיות" />
+            
             {/* Statistical Tables */}
             <div className="mt-8 space-y-6">
               <ZTable activeZ={calculation ? calculation.z1 : null} showSearch={true} />
@@ -596,34 +600,9 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
             transition={{ duration: 0.25 }}
             className="space-y-8"
           >
-            <section className="relative overflow-hidden rounded-lg border border-[var(--color-border)] bg-[var(--color-surface-raised)] shadow-md">
-              <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <span className="absolute left-6 top-6 -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr">
-                  <InlineMath math={mode === 'forward' ? '\\Phi(z)' : '\\Phi^{-1}(p)'} />
-                </span>
-                <span className="absolute left-1/3 top-14 rotate-6 text-3xl sm:text-4xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr">
-                  <InlineMath math={`\\mu = ${mean}`} />
-                </span>
-                <span className="absolute bottom-8 right-[12%] -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--chart-2)]/10" dir="ltr">
-                  <InlineMath math={`\\sigma = ${stdDev}`} />
-                </span>
-              </div>
+            <PageHeader title={heroCopy.title} />
 
-              <div className="relative z-10 space-y-6 p-5 sm:p-6 md:p-8">
-                <div className="flex flex-col gap-6">
-                  <div className="w-full space-y-6 text-right">
-                    <div className="space-y-3 max-w-3xl">
-                      <div className="accent-bar" />
-                      <Heading
-                        level="page"
-                        align="start"
-                        className="justify-start text-[var(--text-display-h2)] leading-[var(--text-display-h2--line-height)] tracking-[var(--text-display-h2--letter-spacing)]"
-                      >
-                        {heroCopy.title}
-                      </Heading>
-                    </div>
-
-                    <div className="grid gap-4 sm:grid-cols-3 pt-2">
+            <div className="grid gap-4 sm:grid-cols-3 pt-2 mb-6">
                       {heroCopy.steps.map((step) => (
                         <div key={step.number} className="relative rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)]/85 p-4 text-right flex flex-col gap-2 transition-colors hover:border-[var(--color-accent-cobalt)]/50">
                           <div className="flex items-center gap-2.5 mb-1">
@@ -638,11 +617,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                         </div>
                       ))}
                     </div>
-                  </div>
-                </div>
 
-              </div>
-            </section>
 
             <div className="space-y-6">
               <CalculatorSidebar className="relative overflow-hidden space-y-5 text-right">
