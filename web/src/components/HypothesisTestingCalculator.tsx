@@ -945,9 +945,9 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                         <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)] shrink-0">
                             <Globe2 size={20} />
                         </div>
-                        <h2 data-toc data-toc-target="hypothesis-study-example" data-toc-open="hypothesis-study-example" className="font-semibold text-[var(--color-text-primary)] text-base sm:text-lg">
+                        <Heading level="section" data-toc data-toc-target="hypothesis-study-example" data-toc-open="hypothesis-study-example" className="font-semibold text-base sm:text-lg">
                             דוגמה מהמציאות: בדיקת השערות על טמפרטורת גוף (צלזיוס)
-                        </h2>
+                        </Heading>
                     </div>
                     <div className="relative z-10 flex flex-wrap items-center gap-3 xl:justify-end">
                         <button
@@ -985,10 +985,10 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
 
                     <div className="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 text-sm leading-relaxed">
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <Target size={18} className="text-[var(--color-accent-cobalt)]" />
                                 <span>רקע והשערות מבחן</span>
-                            </h3>
+                            </Heading>
                             <p className="text-[var(--color-text-secondary)]">
                                 <span className="text-[var(--color-text-primary)] font-bold">Wunderlich</span> קבע ב-1868 ש-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> היא נקודת הייחוס לחום גוף תקין. Mackowiak בדק מחדש אם ממוצע חום הגוף באוכלוסייה נמוך מהקונצנזוס הזה.
                             </p>
@@ -1008,10 +1008,10 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                         </section>
 
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <Calculator size={18} className="text-[var(--color-primary)]" />
                                 <span>נתונים יבשים</span>
-                            </h3>
+                            </Heading>
                             <div className="grid grid-cols-2 gap-3">
                                 {[
                                     ['תוחלת של השערת האפס', '\\mu_0 = 37.0^\\circ C'],
@@ -1033,20 +1033,20 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
 
                     <div className="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5 text-sm leading-relaxed">
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <Percent size={18} className="text-[var(--color-primary)]" />
                                 <span>מובהקות</span>
-                            </h3>
+                            </Heading>
                             <p className="text-[var(--color-text-secondary)]">
                                 ברירת המחדל היא <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>, אבל התוצאה רחוקה מספיק מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> כך שגם רמות מובהקות מחמירות יותר עדיין מובילות לדחיית <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="H_0" /></span>.
                             </p>
                         </section>
 
                         <section className="bg-[var(--color-surface)]/80 border border-[var(--color-success)]/30 rounded-lg p-4 sm:p-5">
-                            <h3 className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
                                 <CheckCircle size={18} className="text-[var(--color-success)]" />
                                 <span>מסקנה</span>
-                            </h3>
+                            </Heading>
                             <p className="text-[var(--color-text-secondary)]">
                                 <span className="text-[var(--color-text-primary)] font-bold">התוצאה מובהקת מאוד</span>: המדגם תומך ב-<span className="text-[var(--color-text-primary)] font-bold">דחיית השערת האפס</span> ובהערכה שחום הגוף הממוצע קרוב ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="36.8^\circ C" /></span>. גם רמות מובהקות מחמירות מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="5\%" /></span> עדיין יובילו לדחייה במקרה הזה.
                             </p>
@@ -1075,9 +1075,9 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
             <div className="tour-step-inputs rounded-lg p-5 md:p-6 border shadow-md transition-colors bg-[var(--color-surface)] border-[var(--color-border)]">
                 <div className="flex items-center gap-2 border-b border-[var(--color-border)] pb-4 mb-5">
                     <div className="bg-[var(--color-accent-cobalt-bg)]/20 p-2 rounded-lg text-[var(--color-accent-cobalt)]"><Sliders size={20} /></div>
-                    <h2 data-toc id="hypothesis-parameters" className="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)]">
+                    <Heading level="section" data-toc id="hypothesis-parameters" className="text-lg sm:text-xl font-semibold text-[var(--color-text-primary)]">
                         פרמטרים והשערות מחקר
-                    </h2>
+                    </Heading>
                 </div>
 
                 <div className="flex flex-col gap-6">
@@ -1445,7 +1445,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                     <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">1</span>
-                                                    <h3 data-toc data-toc-target="hypothesis-step-1" data-toc-open="hypothesis-panel,hypothesis-step-1" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">ניסוח השערות המחקר</h3>
+                                                    <Heading level="subsection" data-toc data-toc-target="hypothesis-step-1" data-toc-open="hypothesis-panel,hypothesis-step-1" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">ניסוח השערות המחקר</Heading>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -1533,7 +1533,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                     <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">2</span>
-                                                    <h3 data-toc data-toc-target="step-2" data-toc-open="hypothesis-panel,step-2" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">בחירת מבחן סטטיסטי מתאים</h3>
+                                                    <Heading level="subsection" data-toc data-toc-target="step-2" data-toc-open="hypothesis-panel,step-2" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">בחירת מבחן סטטיסטי מתאים</Heading>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -1745,7 +1745,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                             <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                 <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                     <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">3</span>
-                                                    <h3 data-toc data-toc-target="hypothesis-step-3" data-toc-open="hypothesis-panel,hypothesis-step-3" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת רמת המובהקות (<InlineMath math="\alpha" />)</h3>
+                                                    <Heading level="subsection" data-toc data-toc-target="hypothesis-step-3" data-toc-open="hypothesis-panel,hypothesis-step-3" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת רמת המובהקות (<InlineMath math="\alpha" />)</Heading>
                                                 </div>
                                                 <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                     <ChevronDown size={24} />
@@ -1836,7 +1836,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                             <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0">4</span>
-                                                            <h3 data-toc data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת הערכים הקריטיים והגדרת כלל ההחלטה</h3>
+                                                            <Heading level="subsection" data-toc data-toc-target="hypothesis-step-4" data-toc-open="hypothesis-panel,hypothesis-step-4" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קביעת הערכים הקריטיים והגדרת כלל ההחלטה</Heading>
                                                         </div>
                                                         <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
@@ -2242,7 +2242,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                             <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0 shrink-0">5</span>
-                                                            <h3 data-toc data-toc-target="hypothesis-step-5" data-toc-open="hypothesis-panel,hypothesis-step-5" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">חישוב סטטיסטי המבחן</h3>
+                                                            <Heading level="subsection" data-toc data-toc-target="hypothesis-step-5" data-toc-open="hypothesis-panel,hypothesis-step-5" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">חישוב סטטיסטי המבחן</Heading>
                                                         </div>
                                                         <div className="text-[var(--color-text-secondary)] group-[.is-open]:rotate-180 transition-transform duration-300">
                                                             <ChevronDown size={24} />
@@ -2303,7 +2303,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                     <summary className="p-4 sm:p-5 flex items-center justify-between cursor-pointer list-none hover:bg-[var(--color-surface)]/50 transition-colors rounded-lg border-b border-transparent group-[.is-open]:border-[var(--color-border)]">
                                                         <div className="flex items-center gap-3 font-extrabold text-[var(--color-primary)]">
                                                             <span className="w-9 h-9 rounded-full bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-accent-cobalt-bg)] bg-[var(--color-primary)]/20 text-[var(--color-primary)] text-base font-semibold flex items-center justify-center border border-[var(--color-primary)]/50 shrink-0 shrink-0">6</span>
-                                                            <h3 data-toc data-toc-target="step-6" data-toc-open="hypothesis-panel,step-6" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קבלת החלטה / הסקת מסקנות</h3>
+                                                            <Heading level="subsection" data-toc data-toc-target="step-6" data-toc-open="hypothesis-panel,step-6" className="text-xl sm:text-2xl font-semibold text-[var(--color-text-primary)]">קבלת החלטה / הסקת מסקנות</Heading>
                                                             <span className="text-xs font-bold text-[var(--color-text-primary)]0 mr-auto font-mono">
                                                                 <InlineMath math="\alpha" /> = {alpha} | <InlineMath math="n" /> = {n}
                                                             </span>
@@ -2691,7 +2691,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                 </p>
 
                                                 <div className="transition-all mt-4 mb-8">
-                                                    <h3 className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">הגדרת רווח סמך</h3>
+                                                    <Heading level="subsection" className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">הגדרת רווח סמך</Heading>
                                                     <div className="text-base sm:text-lg mb-4 text-[var(--color-text-primary)]">
                                                         <p>
                                                             עבור פרמטר לא ידוע <InlineMath math="\theta" />, נבנה מרווח <InlineMath math="(A, B)" /> כך שבהסתברות מסוימת שתיקבע מראש, הפרמטר האמיתי ייפול בתוך המרווח הזה.
@@ -2716,7 +2716,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                             {/* Known Variance */}
                                             {varianceKnown && (
                                                 <div className="transition-all mt-4">
-                                                    <h3 className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">נוסחת רווח סמך לתוחלת - שונות ידועה</h3>
+                                                    <Heading level="subsection" className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">נוסחת רווח סמך לתוחלת - שונות ידועה</Heading>
                                                     <div className="text-base sm:text-lg mb-4 text-[var(--color-text-primary)]">
                                                         כאשר האוכלוסייה מתפלגת נורמלית, או כאשר המדגם גדול מספיק (לפי משפט הגבול המרכזי), נשתמש בהתפלגות הנורמלית הסטנדרטית (Z).
                                                     </div>
@@ -2856,7 +2856,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                             {/* Unknown Variance */}
                                             {!varianceKnown && (
                                                 <div className="transition-all mt-4">
-                                                    <h3 className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">נוסחת רווח סמך לתוחלת - שונות לא ידועה</h3>
+                                                    <Heading level="subsection" className="font-bold text-xl mb-4 underline text-[var(--color-text-primary)]">נוסחת רווח סמך לתוחלת - שונות לא ידועה</Heading>
                                                     <div className="space-y-6">
                                                         <TheoryCard
                                                             title={<span>התפלגות לחישוב <span className="text-[var(--color-text-secondary)]"><InlineMath math={n >= 30 ? '(Z)' : '(t_{n-1})'} /></span></span>}
