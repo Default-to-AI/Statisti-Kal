@@ -2413,7 +2413,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         } />
                                                                                     </div>
                                                                                 </div>
-                                                                                <ResultBlock>
+                                                                                <ResultBlock isReject={isReject}>
                                                                                     <BlockMath math={`${statSymbol}_{stat} = ${Z_stat.toFixed(3)}`} />
                                                                                 </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">
@@ -2474,7 +2474,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         } />
                                                                                     </div>
                                                                                 </div>
-                                                                                <ResultBlock>
+                                                                                <ResultBlock isReject={isReject}>
                                                                                     <BlockMath math={`\\bar{X} = ${X_bar.toFixed(3)}`} />
                                                                                 </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">
@@ -2527,7 +2527,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                                                                                         <BlockMath math={`\\text{P-Value} > ${alpha}`} />
                                                                                     </div>
                                                                                 </div>
-                                                                                <ResultBlock>
+                                                                                <ResultBlock isReject={isReject}>
                                                                                     <BlockMath math={`\\text{P-Value} = ${pVal.toFixed(4)}`} />
                                                                                 </ResultBlock>
                                                                                 <HandwrittenNote className="mt-4 text-xl">

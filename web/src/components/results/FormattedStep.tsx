@@ -35,7 +35,7 @@ export const FormattedStep: React.FC<{ text: string }> = ({ text }) => {
           const hasEquals = part.includes('=');
           const shouldBeBlockPoint = (hasFraction || (isOnlyMath && hasEquals)) && !hasPercentage;
 
-          if (shouldBeBlockPoint) {
+          if (blockTone === 'result' || shouldBeBlockPoint) {
             return (
               <div key={i} className="my-2" dir="ltr">
                 {blockTone === 'result' ? (

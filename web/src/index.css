@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700;800&family=Gveret+Levin:wght@400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700;800&family=Gveret+Levin:wght@400&display=swap");
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
 
@@ -12,7 +12,7 @@
   --font-sans: "Assistant", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
   --font-serif: "Frank Ruhl Libre", serif;
   --font-display: "Assistant", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-mono: "Geist Mono", ui-monospace, sfmono-regular, monospace;
   --font-handwriting: "Gveret Levin", cursive;
 
   /* === Display scale (Space Grotesk) === */
@@ -138,7 +138,6 @@
   --chart-1: #4361EE;   /* Indigo */
   --chart-2: #10B981;   /* Teal/Green */
   --chart-3: #1A1A1A;   /* Ink */
-  --chart-4: #10B981;   /* Teal/Green */
   --chart-5: #EF4444;   /* Crimson */
 
   /* === Semantic aliases === */
@@ -190,6 +189,10 @@
   --chart-axis-label: #4A4A4A;                                 /* Axis ticks, high contrast */
   --chart-rejection: rgba(239, 68, 68, 0.2);                  /* Type I error shaded region */
   --chart-acceptance: rgba(16, 185, 129, 0.2);                /* Power (1-β) shaded region */
+
+  /* === Shadow tokens === */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04), 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-elevated: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
 
 }
 
