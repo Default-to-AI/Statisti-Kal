@@ -20,7 +20,7 @@ describe('LinearRegressionCalculator', () => {
     expect(matches.length).toBeGreaterThan(0);
   });
 
-  it('shows the no-correlation interpretation for default inputs', () => {
+  it('shows the positive strong interpretation for default inputs', () => {
     render(<LinearRegressionCalculator />);
     // r=0.75 -> positive, strength "חזק" (strong). The phrase "קשר ליניארי" must appear.
     expect(screen.getAllByText(/קשר ליניארי/).length).toBeGreaterThan(0);

@@ -15,6 +15,11 @@ export default tseslint.config(
       react,
     },
     rules: {
+    },
+  },
+  {
+    files: ['**/*Calculator.tsx', '**/calc-ui/**/*.tsx'],
+    rules: {
       // DESIGN.md §3 "Strict Adherence Rule": calculators must use <Heading>,
       // never raw <h1>/<h2>/<h3>. The legitimate <Heading> component (in
       // web/src/components/ui/Heading.tsx) renders the semantic tag itself, so

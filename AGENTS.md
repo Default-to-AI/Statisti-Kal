@@ -114,7 +114,7 @@ This project follows the **Compound Engineering (CE) workflow**:
 | **Build** | `npm run build` succeeds | Vite |
 | **Design Token Compliance** | All components consume semantic tokens from DESIGN.md | manual review + lint-colors |
 | **RTL Visual** | Hebrew RTL renders correctly in dark + light | manual + future visual regression |
-| **Bundle Size** | HypothesisTestingCalculator < 50KB (post-refactor) | webpack-bundle-analyzer |
+| **Bundle Size** | HypothesisTestingCalculator < 50KB (post-refactor) | rollup-plugin-visualizer |
 
 ## Workspace Cleanliness & Scratchpad Rules
 

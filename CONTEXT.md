@@ -1,7 +1,3 @@
-So tell me what is now configured in your memory. What's written there? # CONTEXT.md
-
-This file documents the current state of the application's component architecture.
-
 ## Global Templating Architecture
 The application has recently undergone a major architectural UI revamp to enforce the **Modern Minimal** design system.
 

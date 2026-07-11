@@ -27,6 +27,7 @@ import {
   ResultBlock,
   Disclosure,
   HandwrittenNote,
+  Heading,
 } from '../ui';
 import { AnimatedDetails } from '../ui/CustomComponents';
 import { inverseNormalCDF, studentTPPF } from '../../lib/statistics/math';

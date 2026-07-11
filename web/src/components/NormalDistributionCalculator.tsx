@@ -630,7 +630,7 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                             <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[var(--color-accent-cobalt)]/10 text-sm font-semibold text-[var(--color-accent-cobalt)]">
                               {step.number}
                             </div>
-                            <Heading level="subsection" className="text-body-base font-bold">{step.title}</Heading>
+                            <Heading level="subsection" align="start" className="text-body-base font-bold">{step.title}</Heading>
                           </div>
                           <p className="text-body-sm leading-relaxed text-[var(--color-text-secondary)]">
                             {step.description}
