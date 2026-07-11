@@ -58,7 +58,7 @@ Agents do not automatically possess knowledge of local workspace skills. Therefo
 ## Key Files Map
 
 ```
-C:/Users/Tiger/Agents/Projects/statistics/
+C:/Users/Tiger/Agents/Projects/statisti-kal/
 ├── STRATEGY.md                    ← READ FIRST (product anchor)
 ├── CONTEXT.md                     ← READ SECOND (architecture + issues)
 ├── DESIGN.md                      ← Design system spec (authoritative)
