@@ -103,14 +103,14 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead className="sticky top-0 z-30 shadow-sm">
           <tr className="bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]">
-            <th className="sticky left-0 p-2.5 border-b-[3px] border-r-[3px] border-b-[var(--color-border-strong)] border-r-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-sm w-14 bg-[var(--color-surface-elevated)] z-40 shadow-sm">Z</th>
+            <th className="sticky left-0 p-2.5 border-b-[3px] border-r-[3px] border-b-[var(--color-border-strong)] border-r-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-base sm:text-lg w-14 bg-[var(--color-surface-elevated)] z-40 shadow-sm">Z</th>
             {cols.map(c => {
               const isColActive = lookupZ !== null && Math.abs(c - colVal!) < 0.001;
               return (
                 <th
                   key={c}
-                  className={`p-2.5 border-b-[3px] border-r border-l border-b-[var(--color-border-strong)] border-x-[var(--color-border)] transition-colors duration-300 font-extrabold text-center min-w-[58px] ${isColActive
-                    ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
+                  className={`p-2.5 border-b-[3px] border-r border-l border-b-[var(--color-border-strong)] border-x-[var(--color-border)] transition-colors duration-300 font-extrabold text-center text-sm sm:text-base min-w-[58px] ${isColActive
+                    ? 'bg-[var(--color-accent-brass)] text-white'
                     : 'text-[var(--color-primary)] bg-[var(--color-surface-elevated)] shadow-sm'
                     }`}
                 >
@@ -128,8 +128,8 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                 ? 'bg-[var(--color-surface-raised)]'
                 : 'hover:bg-[var(--color-surface)]'
                 }`}>
-                <td className={`sticky left-0 p-2.5 border-r-[3px] border-y border-r-[var(--color-border-strong)] border-y-[var(--color-border)] font-bold text-center text-sm transition-colors duration-300 z-20 ${isRowActive
-                  ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
+                <td className={`sticky left-0 p-2.5 border-r-[3px] border-y border-r-[var(--color-border-strong)] border-y-[var(--color-border)] font-bold text-center text-base sm:text-lg transition-colors duration-300 z-20 ${isRowActive
+                  ? 'bg-[var(--color-accent-brass)] text-white'
                   : 'text-[var(--color-primary)] bg-[var(--color-surface-elevated)] shadow-sm'
                   }`}>
                   {r.toFixed(1)}
@@ -144,12 +144,12 @@ export const ZTable: React.FC<{ activeZ?: number | null; showSearch?: boolean }>
                     <td
                       key={c}
                       ref={isActive ? activeCellRef : undefined}
-                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-mono-sm sm:text-mono-base ${isActive
-                        ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
+                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-sm sm:text-base ${isActive
+                        ? 'bg-[var(--color-accent-brass)] text-white font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
                         : isRowActive
-                          ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-primary)] font-semibold'
+                          ? 'bg-[var(--color-accent-brass)]/15 text-[var(--color-text-primary)] font-semibold'
                           : isColActive
-                            ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-accent-cobalt)] font-semibold'
+                            ? 'bg-[var(--color-accent-brass)]/15 text-[var(--color-text-primary)] font-semibold'
                             : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] font-medium'
                         }`}
                     >

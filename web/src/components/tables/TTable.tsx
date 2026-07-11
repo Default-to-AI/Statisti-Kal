@@ -40,7 +40,7 @@ export const TTable: React.FC = () => {
       <table className="w-full text-xs sm:text-sm border-collapse">
         <thead className="sticky top-0 z-30 shadow-sm">
           <tr className="bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)]">
-            <th rowSpan={1} className="sticky right-0 p-3 border-b-[3px] border-l-[3px] border-b-[var(--color-border-strong)] border-l-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-xs sm:text-sm w-16 bg-[var(--color-surface-elevated)] z-40 shadow-sm">
+            <th rowSpan={1} className="sticky right-0 p-3 border-b-[3px] border-l-[3px] border-b-[var(--color-border-strong)] border-l-[var(--color-border-strong)] text-[var(--color-primary)] font-extrabold text-center text-sm sm:text-base w-16 bg-[var(--color-surface-elevated)] z-40 shadow-sm">
               דרגות חופש <br /> (df)
             </th>
             {tCols.map((c, idx) => {
@@ -48,13 +48,13 @@ export const TTable: React.FC = () => {
               return (
                 <th
                   key={idx}
-                  className={`p-2.5 border-b-[3px] border-x border-b-[var(--color-border-strong)] border-x-[var(--color-border)] font-bold text-center transition-colors min-w-[70px] ${isActiveCol
-                    ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
+                  className={`p-2.5 border-b-[3px] border-x border-b-[var(--color-border-strong)] border-x-[var(--color-border)] font-bold text-center text-sm sm:text-base transition-colors min-w-[80px] ${isActiveCol
+                    ? 'bg-[var(--color-accent-brass)] text-white'
                     : 'text-[var(--color-primary)] bg-[var(--color-surface-elevated)] shadow-sm'
                     }`}
                 >
-                  <div className="text-caption opacity-75">חד-צדדי: {c.oneTail}</div>
-                  <div className="text-xs">דו-צדדי: {c.twoTail}</div>
+                  <div className="text-xs sm:text-sm opacity-75">חד-צדדי: {c.oneTail}</div>
+                  <div className="text-xs sm:text-sm">דו-צדדי: {c.twoTail}</div>
                 </th>
               );
             })}
@@ -68,8 +68,8 @@ export const TTable: React.FC = () => {
                 ? 'bg-[var(--color-surface-raised)]'
                 : 'hover:bg-[var(--color-surface)]'
                 }`}>
-                <td className={`sticky right-0 p-2.5 border-l-[3px] border-y border-l-[var(--color-border-strong)] border-y-[var(--color-border)] font-bold text-center text-xs sm:text-sm transition-colors duration-300 z-20 ${isRowActive
-                  ? 'bg-[var(--color-accent-cobalt-strong)] text-white'
+                <td className={`sticky right-0 p-2.5 border-l-[3px] border-y border-l-[var(--color-border-strong)] border-y-[var(--color-border)] font-bold text-center text-base sm:text-lg transition-colors duration-300 z-20 ${isRowActive
+                  ? 'bg-[var(--color-accent-brass)] text-white'
                   : 'text-[var(--color-primary)] bg-[var(--color-surface-elevated)] shadow-sm'
                   }`}>
                   {df === 500 ? '∞ (Z)' : df}
@@ -81,10 +81,10 @@ export const TTable: React.FC = () => {
                   return (
                     <td
                       key={colIdx}
-                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-mono-sm sm:text-mono-base ${isActive
-                        ? 'bg-[var(--color-accent-cobalt-bg-hover)] text-white font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
+                      className={`p-2.5 border border-[var(--color-border)] text-center transition-all duration-300 tabular-nums text-sm sm:text-base ${isActive
+                        ? 'bg-[var(--color-accent-brass)] text-white font-extrabold scale-102 shadow-sm z-10 relative rounded-lg'
                         : isRowActive || isActiveCol
-                          ? 'bg-[var(--color-accent-cobalt-strong)]/20 text-[var(--color-accent-cobalt)] font-bold'
+                          ? 'bg-[var(--color-accent-brass)]/15 text-[var(--color-text-primary)] font-bold'
                           : 'text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] font-medium'
                         }`}
                     >

@@ -553,7 +553,7 @@ export const HypothesisChart: React.FC<HypothesisChartProps> = ({
                   height: 34,
                   xOffset: -24,
                   yOffset: -25,
-                  className: 'text-sm font-semibold bg-[var(--color-surface)]/92 px-1.5 py-0.5 shadow-sm backdrop-blur-md',
+                  className: 'text-sm font-semibold',
                 })
               }
             />

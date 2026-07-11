@@ -60,9 +60,9 @@ export function Menu({ active, setActive, children, label }: MenuProps): ReactEl
       <NavigationMenuPrimitive.List className="flex min-w-0 items-center justify-center gap-1" aria-label={label}>
         {children}
       </NavigationMenuPrimitive.List>
-      <div className="mega-menu-wrapper absolute top-full left-1/2 z-50 flex w-[min(44rem,calc(100vw_-_2rem))] -translate-x-1/2 justify-center pt-2">
-        <NavigationMenuPrimitive.Viewport
-          className="mega-menu-viewport pointer-events-auto h-[var(--radix-navigation-menu-viewport-height)] w-full origin-top overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-raised)]/98 p-2 shadow-[var(--shadow-elevated)] backdrop-blur-lg transition-[width,height] duration-200 motion-reduce:transition-none"
+      <div className="absolute top-full left-0 z-50 flex w-full justify-center pt-2">
+      <NavigationMenuPrimitive.Viewport
+          className="mega-menu-viewport pointer-events-auto h-[var(--radix-navigation-menu-viewport-height)] w-auto min-w-max origin-top overflow-hidden rounded-xl border border-[var(--color-border)] bg-[var(--color-surface-raised)]/98 p-0 shadow-[var(--shadow-elevated)] backdrop-blur-lg transition-[width,height] duration-200 motion-reduce:transition-none"
           data-menu-viewport=""
         />
       </div>

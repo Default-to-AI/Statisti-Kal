@@ -21,7 +21,7 @@ describe('SiteHeader', () => {
     expect(screen.getByLabelText('חזרה לדף הבית')).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'קטגוריות ראשיות' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /הסקה סטטיסטית/ })).toHaveAttribute('aria-current', 'page');
-    expect(screen.getByLabelText('סטטיסטי־קל')).toBeInTheDocument();
+    expect(screen.getByLabelText('Statisti-Kal')).toBeInTheDocument();
   });
 
   it('opens a stable category panel and navigates from a destination', () => {
@@ -66,7 +66,7 @@ describe('SiteHeader', () => {
     const onNavigate = vi.fn();
     render(<SiteHeader activePage="hypothesis" onNavigate={onNavigate} />);
 
-    fireEvent.click(screen.getByLabelText('סטטיסטי־קל'));
+    fireEvent.click(screen.getByLabelText('Statisti-Kal'));
     expect(onNavigate).toHaveBeenCalledWith('landing');
   });
 

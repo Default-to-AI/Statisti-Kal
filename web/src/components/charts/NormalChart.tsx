@@ -285,7 +285,7 @@ export const NormalChart: React.FC<{
               <stop offset="95%" stopColor={curveColor} stopOpacity={0} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={mainGridColor} />
+          <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--color-border)" />
 
           <XAxis
             dataKey="x"
@@ -293,17 +293,21 @@ export const NormalChart: React.FC<{
             domain={xDomain}
             ticks={xAxisTicks}
             tick={renderXAxisTick}
-            axisLine={{ stroke: mainGridColor }}
+            axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={true}
           />
           <YAxis
             tickFormatter={(val) => val.toFixed(2)}
-            tick={{ fill: axisLabelColor, fontSize: 12, fontWeight: 'bold' }}
-            axisLine={{ stroke: mainGridColor }}
+            tick={{ fill: 'var(--color-text-secondary)', fontSize: 12 }}
+            axisLine={{ stroke: 'var(--color-border)' }}
             tickLine={true}
             width={45}
+            className="font-mono font-medium"
           />
-          <RechartsTooltip content={<CustomTooltipInner />} />
+          <RechartsTooltip
+            cursor={{ stroke: 'var(--color-text-secondary)', strokeDasharray: '4 4', strokeOpacity: 0.5 }}
+            content={<CustomTooltipInner />}
+          />
 
           {/* Always render standard curve path */}
           <Area

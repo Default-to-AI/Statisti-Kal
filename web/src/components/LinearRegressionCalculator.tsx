@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { InlineMath, BlockMath } from 'react-katex';
 import { AnimatedDetails } from './ui/CustomComponents';
-import { ParameterInputCell } from './calc-ui';
+import { ParameterGrid, ParameterInputCell } from './calc-ui';
 import { ReadingCalcBlock, ReadingFormulaBlock } from './ui';
 import {
   ResponsiveContainer,
@@ -109,67 +109,57 @@ export default function LinearRegressionCalculator(): React.ReactElement {
               אזור הזנת נתונים
             </h2>
           </div>
-          <div className="overflow-x-auto" dir="rtl">
-            <table className="w-full min-w-[600px] border-collapse">
-              <tbody>
-                <tr>
-                  <ParameterInputCell
-                    watermark="n"
-                    colorClass="text-[var(--color-text-tertiary)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">גודל המדגם: <InlineMath math="n" /></span>}
-                    tooltip="מספר התצפיות במדגם או באוכלוסייה"
-                    value={nStr}
-                    onChange={setNStr}
-                    error={isNaN(n) || n <= 0 ? 'חייב להיות חיובי' : ''}
-                  />
-                  <ParameterInputCell
-                    watermark="\sum XY"
-                    colorClass="text-[var(--color-primary)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום המכפלות: <InlineMath math="\sum x_i y_i" /></span>}
-                    tooltip="סכום מכפלות התצפיות"
-                    value={sumXYStr}
-                    onChange={setSumXYStr}
-                  />
-                </tr>
-                <tr>
-                  <ParameterInputCell
-                    watermark="\bar{X}"
-                    colorClass="text-[var(--color-accent-cobalt)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">ממוצע: <InlineMath math="\bar{x}" /></span>}
-                    tooltip={<span>לפעמים יינתנו סכומי התצפיות <InlineMath math="\sum x_i" />, מהם ניתן לחלץ את הממוצע על ידי חלוקה ב-<InlineMath math="n" />.</span>}
-                    value={xBarStr}
-                    onChange={setXBarStr}
-                  />
-                  <ParameterInputCell
-                    watermark="\sum X^2"
-                    colorClass="text-[var(--color-accent-cobalt)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום הריבועים: <InlineMath math="\sum x_i^2" /></span>}
-                    tooltip="סכום ריבועי התצפיות עבור המשתנה"
-                    value={sumX2Str}
-                    onChange={setSumX2Str}
-                  />
-                </tr>
-                <tr>
-                  <ParameterInputCell
-                    watermark="\bar{Y}"
-                    colorClass="text-[var(--color-warning)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">ממוצע: <InlineMath math="\bar{y}" /></span>}
-                    tooltip={<span>לפעמים יינתנו סכומי התצפיות <InlineMath math="\sum y_i" />, מהם ניתן לחלץ את הממוצע על ידי חלוקה ב-<InlineMath math="n" />.</span>}
-                    value={yBarStr}
-                    onChange={setYBarStr}
-                  />
-                  <ParameterInputCell
-                    watermark="\sum Y^2"
-                    colorClass="text-[var(--color-warning)]/10"
-                    label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום הריבועים: <InlineMath math="\sum y_i^2" /></span>}
-                    tooltip="סכום ריבועי התצפיות עבור המשתנה"
-                    value={sumY2Str}
-                    onChange={setSumY2Str}
-                  />
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          <ParameterGrid columns={2}>
+            <ParameterInputCell
+              watermark="n"
+              colorClass="text-[var(--color-text-tertiary)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">גודל המדגם: <InlineMath math="n" /></span>}
+              tooltip="מספר התצפיות במדגם או באוכלוסייה"
+              value={nStr}
+              onChange={setNStr}
+              error={isNaN(n) || n <= 0 ? 'חייב להיות חיובי' : ''}
+            />
+            <ParameterInputCell
+              watermark="\sum XY"
+              colorClass="text-[var(--color-primary)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום המכפלות: <InlineMath math="\sum x_i y_i" /></span>}
+              tooltip="סכום מכפלות התצפיות"
+              value={sumXYStr}
+              onChange={setSumXYStr}
+            />
+            <ParameterInputCell
+              watermark="\bar{X}"
+              colorClass="text-[var(--color-accent-cobalt)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">ממוצע: <InlineMath math="\bar{x}" /></span>}
+              tooltip={<span>לפעמים יינתנו סכומי התצפיות <InlineMath math="\sum x_i" />, מהם ניתן לחלץ את הממוצע על ידי חלוקה ב-<InlineMath math="n" />.</span>}
+              value={xBarStr}
+              onChange={setXBarStr}
+            />
+            <ParameterInputCell
+              watermark="\sum X^2"
+              colorClass="text-[var(--color-accent-cobalt)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום הריבועים: <InlineMath math="\sum x_i^2" /></span>}
+              tooltip="סכום ריבועי התצפיות עבור המשתנה"
+              value={sumX2Str}
+              onChange={setSumX2Str}
+            />
+            <ParameterInputCell
+              watermark="\bar{Y}"
+              colorClass="text-[var(--color-warning)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">ממוצע: <InlineMath math="\bar{y}" /></span>}
+              tooltip={<span>לפעמים יינתנו סכומי התצפיות <InlineMath math="\sum y_i" />, מהם ניתן לחלץ את הממוצע על ידי חלוקה ב-<InlineMath math="n" />.</span>}
+              value={yBarStr}
+              onChange={setYBarStr}
+            />
+            <ParameterInputCell
+              watermark="\sum Y^2"
+              colorClass="text-[var(--color-warning)]/10"
+              label={<span className="flex items-center gap-1.5 whitespace-nowrap">סכום הריבועים: <InlineMath math="\sum y_i^2" /></span>}
+              tooltip="סכום ריבועי התצפיות עבור המשתנה"
+              value={sumY2Str}
+              onChange={setSumY2Str}
+            />
+          </ParameterGrid>
         </div>
 
         {/* Steps Accordions */}

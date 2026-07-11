@@ -134,7 +134,7 @@ export function renderChartMathReferenceLabel(
     height = 40,
     xOffset = -40,
     yOffset = -20,
-    className = 'text-[1.25rem] font-semibold bg-[var(--color-surface)]/80 px-1.5 py-0.5 rounded shadow-sm backdrop-blur-md border border-[var(--color-border)]/50',
+    className = 'text-[1.25rem] font-semibold',
   }: ChartMathReferenceLabelOptions,
 ): React.ReactElement | null {
   const viewBox = getReferenceViewBox(props);

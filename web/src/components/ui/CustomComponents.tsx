@@ -391,7 +391,7 @@ export function ModeTabs<T extends string = string>({
             aria-selected={isActive}
             aria-controls={`tabpanel-${tab.id}`}
             onClick={() => onChange(tab.id)}
-            className={`${TAB_SIZE_CLASSES[size]} ${fillClass} rounded-sm font-semibold transition-all text-center border cursor-pointer select-none flex items-center ${
+            className={`${TAB_SIZE_CLASSES[size]} ${fillClass} rounded-sm font-semibold transition-all text-center border cursor-pointer select-none flex items-center whitespace-nowrap ${
               orientation === 'vertical' ? 'justify-center' : 'justify-center gap-1.5'
             } ${isActive ? activeClass : inactiveClass}`}
           >

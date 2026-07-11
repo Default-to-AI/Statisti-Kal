@@ -74,6 +74,7 @@ import {
   FloatingFieldError,
   CellWatermark,
 } from './calc-ui/HypothesisCalcUI';
+import { ParameterGrid, ParameterGridHeader, ParameterGridCell, ParameterInputCell } from './calc-ui';
 import { PageHeader, ResultBlock } from './ui';
 
 // --- Types ---
@@ -1084,176 +1085,80 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                 <div className="flex flex-col gap-6">
                     <div className="w-full">
                         {/* Custom Parameters Table Layout */}
-                        <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
-                            <table className="w-full border-collapse border-spacing-0">
-                                <thead>
-                                    <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                                        <th className="relative overflow-hidden p-3.5 font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
-                                            {/* Watermark */}
-                                            <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
-                                                <InlineMath math="H_0" />
-                                            </div>
-                                            <div className="relative z-10 flex flex-col xl:flex-row items-center justify-center gap-2">
-                                                <div className="flex items-center gap-1.5 justify-center">
-                                                    <span>השערת האפס</span>
-                                                </div>
-                                                {/* varianceKnown toggle removed from here */}
-                                            </div>
-                                        </th>
-                                        <th className="p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3 border-l border-[var(--color-border)]">
-                                            מדגם
-                                        </th>
-                                        <th className="relative overflow-hidden p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/3">
-                                            {/* Watermark */}
-                                            <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--chart-2)]">
-                                                <InlineMath math="H_1" />
-                                            </div>
-                                            <InputTooltip content="תחת הנחת סטיית תקן זהה, אם ידועה">
-                                                <div className="relative z-10 flex items-center gap-1.5 justify-center cursor-help">
-                                                    <span>השערת המחקר</span>
-                                                </div>
-                                            </InputTooltip>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {/* Row 1: mu0, sample statistic, and H1 value */}
-                                    <tr className="border-b border-[var(--color-border)]">
-                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math="\mu_0" colorClass="text-[var(--color-accent-cobalt)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={<span>תוחלת אוכלוסיית הבסיס (השערת האפס <InlineMath math="H_0" />)</span>}>
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>תוחלת (</span><InlineMath math="\mu_0" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={mu0Input}
-                                                        onChange={(e) => handleMu0Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!mu0Input || errors.mu0) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
-                                                            }`}
-                                                        placeholder=""
-                                                        dir="ltr"
-                                                    />
-                                                    <FloatingFieldError message={errors.mu0} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math={statSymbol} colorClass="text-[var(--color-primary)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={sampleStatisticTooltip}>
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>{sampleStatisticLabel} (</span><InlineMath math={statSymbol} /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={xBarInput}
-                                                        onChange={(e) => handleXBarChange(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!xBarInput || errors.xBar) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
-                                                            }`}
-                                                        placeholder=""
-                                                        dir="ltr"
-                                                    />
-                                                    <FloatingFieldError message={errors.xBar} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] transition-all">
-                                            <CellWatermark math="\mu_1" colorClass="text-[var(--chart-2)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}>
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1 text-[var(--color-text-primary)]/90">
-                                                        <span>ממוצע (</span><InlineMath math="\mu_1" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={mu1Input}
-                                                        onChange={(e) => handleMu1Change(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${powerInputError ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'}`}
-                                                        placeholder=""
-                                                        dir="ltr" />
-                                                    <FloatingFieldError message={powerInputError} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-
-                                    {/* Row 2: sigma, n, and power toggle */}
-                                    <tr>
-                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)] transition-all">
-                                            <CellWatermark math="\sigma" colorClass="text-[var(--color-accent-cobalt)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)">
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        data-testid="parameter-sigma-input"
-                                                        type="text"
-                                                        value={sigmaInput}
-                                                        onChange={(e) => handleSigmaChange(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!sigmaInput || errors.sigma) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'
-                                                            }`}
-                                                        placeholder=""
-                                                        dir="ltr"
-                                                    />
-                                                    <FloatingFieldError message={errors.sigma} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="relative overflow-hidden p-3 align-middle border-l border-[var(--color-border)] bg-[var(--color-surface-raised)]">
-                                            <CellWatermark math="n" colorClass="text-[var(--color-primary)]" />
-                                            <div className="relative z-10 flex items-center justify-center gap-3 ctrl-cell-wrapper w-full">
-                                                <InputTooltip content={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}>
-                                                    <span className="w-28 sm:w-32 text-left text-sm sm:text-base text-[var(--color-text-primary)]/90 font-bold shrink-0 cursor-help border-b border-dotted border-[var(--color-border)] flex items-center justify-end gap-1">
-                                                        <span>גודל מדגם (</span><InlineMath math="n" /><span>):</span>
-                                                    </span>
-                                                </InputTooltip>
-                                                <div className="w-16 sm:w-20 shrink-0 relative">
-                                                    <input
-                                                        type="text"
-                                                        value={nInput}
-                                                        onChange={(e) => handleNChange(e.target.value)}
-                                                        className={`w-full bg-[var(--color-surface)] border px-2 py-1 font-mono font-bold text-center text-lg sm:text-xl text-[var(--color-text-primary)] placeholder:text-[var(--color-text-secondary)]/50 placeholder:font-medium placeholder:text-base outline-none transition-all rounded shadow-inner focus:border-[var(--color-accent-cobalt)] focus:ring-2 focus:ring-[var(--color-accent-cobalt)]/20 ${(!nInput || errors.n) ? 'border-[var(--color-error)] ring-2 ring-[var(--color-error)]/20 text-[var(--color-error)]' : 'border-[var(--color-border)]'}`}
-                                                        placeholder=""
-                                                        dir="ltr"
-                                                    />
-                                                    <FloatingFieldError message={errors.n} />
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="relative overflow-hidden p-3 align-middle bg-[var(--color-surface-raised)] text-center">
-                                            <CellWatermark math="1-\beta" colorClass="text-[var(--chart-2)]" />
-                                            <button
-                                                type="button"
-                                                onClick={openPowerSectionFromQuickNav}
-                                                disabled={!isValid || !stats}
-                                                className={`tour-power-quick-link relative z-10 inline-flex w-fit mx-auto items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm font-semibold transition-all ${
-                                                    isValid && stats
-                                                        ? 'cursor-pointer border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-accent-cobalt)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--chart-2)]/35'
-                                                        : 'cursor-default border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] opacity-70'
-                                                }`}
-                                                aria-label="קפיצה לעוצמת מבחן ופתיחת האקורדיון"
-                                            >
-                                                <span className="whitespace-nowrap">
-                                                    עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
-                                                </span>
-                                                <ExternalLink size={14} className="shrink-0" />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                        <ParameterGrid columns={3}>
+                          <ParameterGridHeader watermark={<InlineMath math="H_0" />} watermarkColorClass="text-[var(--color-accent-cobalt)]">
+                            השערת האפס
+                          </ParameterGridHeader>
+                          <ParameterGridHeader watermark={<InlineMath math={statSymbol} />} watermarkColorClass="text-[var(--color-primary)]">
+                            מדגם
+                          </ParameterGridHeader>
+                          <ParameterGridHeader watermark={<InlineMath math="H_1" />} watermarkColorClass="text-[var(--chart-2)]">
+                            השערת המחקר
+                          </ParameterGridHeader>
+                          <ParameterInputCell
+                            watermark="mu_0"
+                            colorClass="text-[var(--color-accent-cobalt)]"
+                            label={<><span>תוחלת (</span><InlineMath math="mu_0" /><span>):</span></>}
+                            tooltip={<span>תוחלת אוכלוסיית הבסיס (השערת האפס <InlineMath math="H_0" />)</span>}
+                            value={mu0Input}
+                            onChange={handleMu0Change}
+                            error={errors.mu0}
+                          />
+                          <ParameterInputCell
+                            watermark={statSymbol}
+                            colorClass="text-[var(--color-primary)]"
+                            label={<><span>{sampleStatisticLabel} (</span><InlineMath math={statSymbol} /><span>):</span></>}
+                            tooltip={sampleStatisticTooltip}
+                            value={xBarInput}
+                            onChange={handleXBarChange}
+                            error={errors.xBar}
+                          />
+                          <ParameterInputCell
+                            watermark="mu_1"
+                            colorClass="text-[var(--chart-2)]"
+                            label={<><span>ממוצע (</span><InlineMath math="mu_1" /><span>):</span></>}
+                            tooltip={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}
+                            value={mu1Input}
+                            onChange={handleMu1Change}
+                            error={powerInputError}
+                          />
+                          <ParameterInputCell
+                            watermark="sigma"
+                            colorClass="text-[var(--color-accent-cobalt)]"
+                            label={<><span>סטיית תקן (</span><InlineMath math="sigma" /><span>):</span></>}
+                            tooltip="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)"
+                            value={sigmaInput}
+                            onChange={handleSigmaChange}
+                            error={errors.sigma}
+                          />
+                          <ParameterInputCell
+                            watermark="n"
+                            colorClass="text-[var(--color-primary)]"
+                            label={<><span>גודל מדגם (</span><InlineMath math="n" /><span>):</span></>}
+                            tooltip={<span>מספר התצפיות במדגם (<InlineMath math="n" />)</span>}
+                            value={nInput}
+                            onChange={handleNChange}
+                            error={errors.n}
+                          />
+                          <ParameterGridCell className="flex items-center justify-center">
+                            <button
+                              type="button"
+                              onClick={openPowerSectionFromQuickNav}
+                              disabled={!isValid || !stats}
+                              className={`tour-power-quick-link relative z-10 inline-flex w-fit mx-auto items-center justify-center gap-1.5 rounded-lg border px-2 py-2 text-sm font-semibold transition-all ${
+                                isValid && stats
+                                  ? 'cursor-pointer border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] hover:border-[var(--color-accent-cobalt-line)] hover:text-[var(--color-accent-cobalt)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--chart-2)]/35'
+                                  : 'cursor-default border-[var(--color-border)] bg-[var(--color-surface-raised)] text-[var(--color-text-secondary)] opacity-70'
+                              }`}
+                              aria-label="קפיצה לעוצמת מבחן ופתיחת האקורדיון"
+                            >
+                              <span className="whitespace-nowrap">
+                                עוצמת מבחן <span dir="ltr" className="inline-flex align-middle"><InlineMath math="(1-\beta)" /></span>
+                              </span>
+                              <ExternalLink size={14} className="shrink-0" />
+                            </button>
+                          </ParameterGridCell>
+                        </ParameterGrid>
 
 
                     </div>

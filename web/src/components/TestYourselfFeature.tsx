@@ -23,7 +23,7 @@ const featureSteps = [
   {
     icon: CircleGauge,
     title: 'רמה שמתאימה לכם',
-    description: 'קל, בינוני, קשה או סימולציית מבחן מלאה.',
+    description: '3 רמות קושי של סימולציה + דרגת מבחן',
     tone: 'text-[var(--color-primary)] bg-[var(--color-primary)]/12 border-[var(--color-primary)]/25',
   },
   {
@@ -113,13 +113,41 @@ export function TestYourselfFeature({ onStart }: TestYourselfFeatureProps): Reac
       <div className="mx-auto grid max-w-[90rem] items-center gap-14 px-4 sm:px-6 lg:grid-cols-[0.92fr_1.08fr] lg:gap-20 lg:px-8">
         <ScrollReveal distance={24} duration={0.5}>
           <div className="max-w-2xl">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[var(--color-primary)]/25 bg-[var(--color-primary)]/10 px-3 py-1.5 text-sm font-bold text-[var(--color-primary)]">
-              <Sparkles className="h-4 w-4" /> בחן את עצמך
+            <div className="relative inline-block">
+              <Heading level="section" align="start" className="text-display-h2 leading-tight text-[var(--color-text-primary)]">
+                <span className="font-handwriting text-[1.12em] text-[var(--color-primary)] -rotate-1">לבדוק מה עדיין לא יושב</span>
+              </Heading>
+              {/* Crayon-style arrow pointing left toward the illustration (lg+ only) */}
+              <svg
+                className="absolute -left-28 top-1/2 -translate-y-1/2 pointer-events-none max-lg:hidden"
+                width="120"
+                height="80"
+                viewBox="0 0 120 80"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-hidden="true"
+              >
+                <path
+                  d="M 118 40 Q 92 2, 52 12 T 4 16"
+                  stroke="var(--color-primary)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeDasharray="8 3 5 2"
+                  fill="none"
+                  opacity="0.7"
+                />
+                <path
+                  d="M 7 8 L 2 16 L 15 18"
+                  stroke="var(--color-primary)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                  opacity="0.7"
+                />
+              </svg>
             </div>
-            <Heading level="section" align="start" className="text-display-h2 leading-tight text-[var(--color-text-primary)]">
-              לא רק לפתור. לדעת בדיוק
-              <span className="block font-handwriting text-[1.12em] text-[var(--color-primary)] -rotate-1">מה עדיין לא יושב.</span>
-            </Heading>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-[var(--color-text-secondary)]">
               בחרו רמה, פתרו בקצב שלכם וקבלו משוב שבאמת עוזר להתקדם — ציון מיידי, מעבר חכם בין טעויות והסבר מלא אחרי ההגשה.
             </p>

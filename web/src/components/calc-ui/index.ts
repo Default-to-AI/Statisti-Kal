@@ -13,4 +13,5 @@ export {
 } from './ConditionalEventControls';
 export { InlineMathToken } from './InlineMathToken';
 export { ParameterInputCell } from './ParameterInputCell';
+export { ParameterGrid, ParameterGridHeader, ParameterGridCell } from './ParameterGrid';
 export type { CalculatorMode, CalcMode, CalcType, CondType } from './types';

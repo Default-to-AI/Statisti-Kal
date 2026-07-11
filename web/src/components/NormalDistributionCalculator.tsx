@@ -47,6 +47,8 @@ import {
   FORWARD_VARIANT_OPTIONS,
   INVERSE_VARIANT_OPTIONS,
   InlineMathToken,
+  ParameterGrid,
+  ParameterGridHeader,
   ParameterInputCell,
   getConditionalEventMath,
   type CalculatorMode,
@@ -660,87 +662,65 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
                       />
                     </div>
 
-                    <div className="overflow-visible rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] transition-all" dir="rtl">
-                      <table className="w-full border-collapse border-spacing-0">
-                        <thead>
-                          <tr className="bg-[var(--color-surface)] border-b border-[var(--color-border)]">
-                            <th className="relative overflow-hidden p-3.5 font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2 border-l border-[var(--color-border)]">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-accent-cobalt)]">
-                                <InlineMath math="N" />
-                              </div>
-                              <div className="relative z-10 flex items-center justify-center gap-1.5">
-                                <span>פרמטרי ההתפלגות</span>
-                              </div>
-                            </th>
-                            <th className="relative overflow-hidden p-3.5 text-center font-semibold text-xs sm:text-sm text-[var(--color-text-primary)] w-1/2">
-                              <div className="absolute left-2 top-1/2 -translate-y-1/2 -rotate-12 opacity-10 pointer-events-none select-none text-4xl sm:text-5xl font-mono text-[var(--color-primary)]">
-                                <InlineMath math={mode === 'forward' ? 'X' : 'p'} />
-                              </div>
-                              <div className="relative z-10">
-                                {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
-                              </div>
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr className="border-b border-[var(--color-border)]">
-                            <ParameterInputCell
-                              watermark="\mu"
-                              colorClass="text-[var(--color-accent-cobalt)]"
-                              label={<><span>תוחלת (</span><InlineMath math="\mu" /><span>):</span></>}
-                              tooltip="תוחלת ההתפלגות הנורמלית שממנה מתחילים את כל החישובים"
-                              value={meanInput}
-                              onChange={handleMeanChange}
-                              error={errors.mean}
-                            />
-                            <ParameterInputCell
-                              watermark={mode === 'forward' ? 'X_1' : 'p'}
-                              colorClass="text-[var(--color-primary)]"
-                              label={mode === 'forward'
-                                ? <><span>{forwardType === 'conditional' ? 'ערך מאורע a₁' : forwardType === 'between' || forwardType === 'outside' ? 'גבול תחתון' : 'ערך חיתוך'} (</span><InlineMath math="X_1" /><span>):</span></>
-                                : <><span>הסתברות יעד (</span><InlineMath math="p" /><span>):</span></>}
-                              tooltip={mode === 'forward'
-                                ? 'הערך המרכזי שמגדיר את נקודת החיתוך או את תחילת התחום המבוקש'
-                                : 'השטח המצטבר המבוקש שעל פיו יימצא ערך X או טווח הערכים המתאים'}
-                              value={mode === 'forward' ? x1Input : inverseProbInput}
-                              onChange={mode === 'forward' ? handleX1Change : handleInverseProbChange}
-                              error={mode === 'forward' ? errors.x1 : errors.inverseProb}
-                              placeholder={mode === 'inverse' ? '0.95' : ''}
-                            />
-                          </tr>
-                          <tr>
-                            <ParameterInputCell
-                              watermark="\sigma"
-                              colorClass="text-[var(--color-accent-cobalt)]"
-                              label={<><span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span></>}
-                              tooltip="סטיית התקן של ההתפלגות הנורמלית, שקובעת את רוחב עקומת הפעמון"
-                              value={stdDevInput}
-                              onChange={handleStdDevChange}
-                              error={errors.stdDev}
-                            />
-                            <ParameterInputCell
-                              watermark={hasSecondaryBoundInput ? 'X_2' : mode === 'forward' ? 'Z_1' : 'X'}
-                              colorClass="text-[var(--color-primary)]"
-                              label={hasSecondaryBoundInput
-                                ? <><span>{secondaryInputLabel.replace(':', '')} (</span><InlineMath math="X_2" /><span>):</span></>
-                                : mode === 'forward'
-                                  ? <><span>ציון תקן נגזר (</span><InlineMath math="Z_1" /><span>):</span></>
-                                  : <><span>ערך יעד נוכחי (</span><InlineMath math="X" /><span>):</span></>}
-                              tooltip={hasSecondaryBoundInput
-                                ? 'כאשר יש שני גבולות, כאן מזינים או מציגים את הגבול השני של התחום'
-                                : mode === 'forward'
-                                  ? 'במצבים חד-גבוליים מוצג כאן ציון התקן הנגזר מהקלט הנוכחי'
-                                  : 'במצבי אחוזון חד-גבוליים זהו ערך X המחושב עבור ההסתברות שנבחרה'}
-                              value={hasSecondaryBoundInput ? secondaryInputValue : mode === 'forward' ? (isValid ? ((x1 - mean) / stdDev).toFixed(2) : '') : (calculation?.calculatedX?.toFixed(2) ?? '')}
-                              onChange={hasSecondaryBoundInput && mode === 'forward' ? handleX2Change : undefined}
-                              error={hasSecondaryBoundInput && mode === 'forward' ? errors.x2 : undefined}
-                              readOnly={!(hasSecondaryBoundInput && mode === 'forward')}
-                              statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
-                            />
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <ParameterGrid columns={2}>
+                      <ParameterGridHeader watermark={<InlineMath math="N" />} watermarkColorClass="text-[var(--color-accent-cobalt)]">
+                        פרמטרי ההתפלגות
+                      </ParameterGridHeader>
+                      <ParameterGridHeader watermark={<InlineMath math={mode === 'forward' ? 'X' : 'p'} />} watermarkColorClass="text-[var(--color-primary)]">
+                        {mode === 'forward' ? 'אירוע / תחום' : 'יעד אחוזון'}
+                      </ParameterGridHeader>
+                      <ParameterInputCell
+                        watermark="\mu"
+                        colorClass="text-[var(--color-accent-cobalt)]"
+                        label={<><span>תוחלת (</span><InlineMath math="\mu" /><span>):</span></>}
+                        tooltip="תוחלת ההתפלגות הנורמלית שממנה מתחילים את כל החישובים"
+                        value={meanInput}
+                        onChange={handleMeanChange}
+                        error={errors.mean}
+                      />
+                      <ParameterInputCell
+                        watermark={mode === 'forward' ? 'X_1' : 'p'}
+                        colorClass="text-[var(--color-primary)]"
+                        label={mode === 'forward'
+                          ? <><span>{forwardType === 'conditional' ? 'ערך מאורע a₁' : forwardType === 'between' || forwardType === 'outside' ? 'גבול תחתון' : 'ערך חיתוך'} (</span><InlineMath math="X_1" /><span>):</span></>
+                          : <><span>הסתברות יעד (</span><InlineMath math="p" /><span>):</span></>}
+                        tooltip={mode === 'forward'
+                          ? 'הערך המרכזי שמגדיר את נקודת החיתוך או את תחילת התחום המבוקש'
+                          : 'השטח המצטבר המבוקש שעל פיו יימצא ערך X או טווח הערכים המתאים'}
+                        value={mode === 'forward' ? x1Input : inverseProbInput}
+                        onChange={mode === 'forward' ? handleX1Change : handleInverseProbChange}
+                        error={mode === 'forward' ? errors.x1 : errors.inverseProb}
+                        placeholder={mode === 'inverse' ? '0.95' : ''}
+                      />
+                      <ParameterInputCell
+                        watermark="\sigma"
+                        colorClass="text-[var(--color-accent-cobalt)]"
+                        label={<><span>סטיית תקן (</span><InlineMath math="\sigma" /><span>):</span></>}
+                        tooltip="סטיית התקן של ההתפלגות הנורמלית, שקובעת את רוחב עקומת הפעמון"
+                        value={stdDevInput}
+                        onChange={handleStdDevChange}
+                        error={errors.stdDev}
+                      />
+                      <ParameterInputCell
+                        watermark={hasSecondaryBoundInput ? 'X_2' : mode === 'forward' ? 'Z_1' : 'X'}
+                        colorClass="text-[var(--color-primary)]"
+                        label={hasSecondaryBoundInput
+                          ? <><span>{secondaryInputLabel.replace(':', '')} (</span><InlineMath math="X_2" /><span>):</span></>
+                          : mode === 'forward'
+                            ? <><span>ציון תקן נגזר (</span><InlineMath math="Z_1" /><span>):</span></>
+                            : <><span>ערך יעד נוכחי (</span><InlineMath math="X" /><span>):</span></>}
+                        tooltip={hasSecondaryBoundInput
+                          ? 'כאשר יש שני גבולות, כאן מזינים או מציגים את הגבול השני של התחום'
+                          : mode === 'forward'
+                            ? 'במצבים חד-גבוליים מוצג כאן ציון התקן הנגזר מהקלט הנוכחי'
+                            : 'במצבי אחוזון חד-גבוליים זהו ערך X המחושב עבור ההסתברות שנבחרה'}
+                        value={hasSecondaryBoundInput ? secondaryInputValue : mode === 'forward' ? (isValid ? ((x1 - mean) / stdDev).toFixed(2) : '') : (calculation?.calculatedX?.toFixed(2) ?? '')}
+                        onChange={hasSecondaryBoundInput && mode === 'forward' ? handleX2Change : undefined}
+                        error={hasSecondaryBoundInput && mode === 'forward' ? errors.x2 : undefined}
+                        readOnly={!(hasSecondaryBoundInput && mode === 'forward')}
+                        statusText={hasSecondaryBoundInput && mode === 'inverse' ? 'מחושב אוטומטית' : !hasSecondaryBoundInput ? 'מחושב אוטומטית' : undefined}
+                      />
+                    </ParameterGrid>
                   </div>
 
                   <AnimatePresence>

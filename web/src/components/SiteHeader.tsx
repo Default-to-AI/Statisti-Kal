@@ -110,7 +110,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
           aria-label="חזרה לדף הבית"
           aria-current={activePage === 'landing' ? 'page' : undefined}
         >
-          <Home className="h-4 w-4" aria-hidden="true" />
+          <Home className="h-5 w-5" aria-hidden="true" />
         </button>
 
         <div className="min-w-0 justify-self-center">
@@ -131,7 +131,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
                       {isCurrentGroup ? <span className="absolute inset-x-3 bottom-1 h-0.5 rounded-full bg-[var(--color-accent-brass)]" aria-hidden="true" /> : null}
                     </MenuTrigger>
                     <MenuContent>
-                      <div className="grid grid-cols-2 gap-1" role="group" aria-label={group.label}>
+                      <div className="flex flex-col gap-1 p-3" role="group" aria-label={group.label}>
                         {group.items.map((item) => (
                           <MenuLink
                             key={item.id}
@@ -140,12 +140,12 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
                             current={activePage === item.id}
                             className={`tour-nav-${item.id}`}
                           >
-                            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-accent-brass)] group-hover:border-[var(--color-accent-brass)]/45">
+                            <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[var(--color-border)] bg-[var(--color-surface)] text-[var(--color-accent-brass)] shadow-sm group-hover:border-[var(--color-accent-brass)]/45 group-hover:bg-[var(--color-accent-cobalt-bg)]">
                               {item.icon}
                             </span>
                             <span className="min-w-0">
-                              <span className="block text-sm font-bold text-[var(--color-text-primary)]">{item.label}</span>
-                              <span className="mt-0.5 block text-xs leading-5 text-[var(--color-text-secondary)]">{item.description}</span>
+                              <span className="block text-base font-bold text-[var(--color-text-primary)]">{item.label}</span>
+                              <span className="mt-0.5 block text-sm leading-6 text-[var(--color-text-secondary)]">{item.description}</span>
                             </span>
                           </MenuLink>
                         ))}
@@ -172,13 +172,12 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
         <button
           type="button"
           onClick={() => navigate('landing')}
-          className="group flex cursor-pointer items-center gap-2.5 rounded-lg py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-brass)]"
-          aria-label="סטטיסטי־קל"
+          className="group flex cursor-pointer items-center gap-3 rounded-lg py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-brass)]"
+          aria-label="Statisti-Kal"
         >
           <BrandMark />
-          <span className="hidden leading-none sm:block">
-            <span className="block font-display text-lg font-black tracking-tight text-[var(--color-text-primary)]">סטטיסטי<span className="text-[var(--color-accent-brass)]">־קל</span></span>
-            <span className="mt-1 block text-[0.58rem] font-bold tracking-[0.16em] text-[var(--color-text-secondary)]">STATISTICS WORKBENCH</span>
+          <span className="font-playfair text-2xl font-normal leading-none tracking-tight text-[var(--color-text-primary)]">
+            Statisti<span className="text-[var(--color-accent-brass)]">-Kal</span>
           </span>
         </button>
       </div>
@@ -221,8 +220,8 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
 
 function BrandMark(): ReactElement {
   return (
-    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-[var(--color-accent-brass)]/45 bg-[var(--color-surface)] text-[var(--color-accent-brass)] transition group-hover:border-[var(--color-accent-brass)] group-hover:bg-[var(--color-accent-cobalt-bg)]">
-      <svg viewBox="0 0 32 32" className="h-7 w-7" fill="none" aria-hidden="true">
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[var(--color-accent-brass)]/50 bg-[var(--color-surface)] text-[var(--color-accent-brass)] transition group-hover:border-[var(--color-accent-brass)] group-hover:bg-[var(--color-accent-cobalt-bg)] group-hover:shadow-[0_0_20px_rgba(212,168,67,0.15)]">
+      <svg viewBox="0 0 32 32" className="h-8 w-8" fill="none" aria-hidden="true">
         <path d="M3 24h26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         <path d="M5 24c2.8 0 4.1-12 11-12s8.2 12 11 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         <circle cx="16" cy="12" r="2" fill="currentColor" />

@@ -145,30 +145,23 @@ describe('HypothesisTestingCalculator unified Step 6 integration', () => {
       HT_sigmaInput: '',
       HT_nInput: '',
     });
-    const tableStart = html.indexOf('<table');
-    const tableEnd = html.indexOf('</table>', tableStart);
-    const tableHtml = html.slice(tableStart, tableEnd);
+    // Scope search to parameter grid section (after "פרמטרים והשערות מחקר")
+    const gridStart = html.indexOf('פרמטרים והשערות מחקר');
+    const gridHtml = html.slice(gridStart);
 
-    expect(tableHtml.indexOf('ממוצע מדגם')).toBeLessThan(tableHtml.indexOf('גודל מדגם'));
-    expect(tableHtml.indexOf('ממוצע (')).toBeLessThan(tableHtml.indexOf('עוצמת מבחן'));
-    expect(tableHtml).toContain('data-testid="parameter-sigma-input"');
-    expect(tableHtml).not.toContain('לא נקבע');
-    expect(tableHtml).toContain('data-cell-watermark="\\mu_0"');
-    expect(tableHtml).toContain('data-cell-watermark="\\sigma"');
-    expect(tableHtml).toContain('data-cell-watermark="\\bar{X}"');
-    expect(tableHtml).toContain('data-cell-watermark="n"');
-    expect(tableHtml).toContain('data-cell-watermark="\\mu_1"');
-    expect(tableHtml).toContain('data-cell-watermark="1-\\beta"');
-    expect(tableHtml.indexOf('data-cell-watermark="\\mu_0"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\bar{X}"'));
-    expect(tableHtml.indexOf('data-cell-watermark="\\bar{X}"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\mu_1"'));
-    expect(tableHtml.indexOf('data-cell-watermark="\\mu_1"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="\\sigma"'));
-    expect(tableHtml.indexOf('data-cell-watermark="\\sigma"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="n"'));
-    expect(tableHtml.indexOf('data-cell-watermark="n"')).toBeLessThan(tableHtml.indexOf('data-cell-watermark="1-\\beta"'));
-    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\sigma</annotation>');
-    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\mu_0</annotation>');
-    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\mu_1</annotation>');
-    expect(tableHtml).toContain('annotation encoding="application/x-tex">\\bar{X}</annotation>');
-    expect(tableHtml).toContain('annotation encoding="application/x-tex">n</annotation>');
+    // Verify parameters render in correct order using Hebrew text content
+    expect(gridHtml.indexOf('ממוצע מדגם')).toBeLessThan(gridHtml.indexOf('גודל מדגם'));
+    expect(gridHtml.indexOf('ממוצע (')).toBeLessThan(gridHtml.indexOf('עוצמת מבחן'));
+    expect(gridHtml).not.toContain('לא נקבע');
+
+    // Verify KaTeX rendered content is present
+    expect(gridHtml).toContain('katex');
+    // Verify parameter order via Hebrew labels within the grid
+    expect(gridHtml.indexOf('תוחלת (')).toBeLessThan(gridHtml.indexOf('ממוצע מדגם'));
+    expect(gridHtml.indexOf('ממוצע מדגם')).toBeLessThan(gridHtml.indexOf('ממוצע ('));
+    expect(gridHtml.indexOf('ממוצע (')).toBeLessThan(gridHtml.indexOf('סטיית תקן'));
+    expect(gridHtml.indexOf('סטיית תקן')).toBeLessThan(gridHtml.indexOf('גודל מדגם'));
+    expect(gridHtml.indexOf('גודל מדגם')).toBeLessThan(gridHtml.indexOf('עוצמת מבחן'));
   });
 
   it('renders without legacy muH1 storage keys when power relies on mu1', () => {
