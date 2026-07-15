@@ -1,5 +1,18 @@
 {
-	"dependencies": {
-		"@vercel/speed-insights": "^2.0.0"
-	}
+  "name": "statisti-kal-root",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "npm run --prefix web dev",
+    "build": "npm run --prefix web build",
+    "preview": "npm run --prefix web preview",
+    "clean": "npm run --prefix web clean",
+    "test": "npm run --prefix web test",
+    "lint": "npm run --prefix web lint",
+    "lint:tsc": "npm run --prefix web lint:tsc",
+    "lint:colors": "npm run --prefix web lint:colors"
+  },
+  "dependencies": {
+    "@vercel/speed-insights": "^2.0.0"
+  }
 }

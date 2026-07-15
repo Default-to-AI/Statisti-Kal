@@ -1,8 +1,9 @@
-import type { ReactElement } from 'react';
+import { useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
-import { Github, GraduationCap, ArrowUpRight } from 'lucide-react';
+import { Github, GraduationCap, ArrowUpRight, Heart } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
 import { Heading } from './ui/Heading';
+import SupportModal from './SupportModal';
 
 interface SiteFooterProps {
   onNavigate: (page: SitePage) => void;
@@ -27,6 +28,8 @@ const quickLinks: FooterLink[] = [
 const githubUrl = 'https://github.com/Default-to-AI/statistics';
 
 export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElement {
+  const [supportOpen, setSupportOpen] = useState(false);
+
   return (
     <motion.footer 
       className="border-t border-[var(--color-border)] bg-[var(--color-surface)] shadow-[0_-16px_40px_rgba(0,0,0,0.5)] rounded-t-[2.5rem] mt-16 w-full max-w-[1800px] mx-auto overflow-hidden" 
@@ -91,16 +94,42 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
             <a
               href={githubUrl}
               target="_blank"
-              rel="noreferrer"
+              rel="noreferrer noopener"
               className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-primary)]"
             >
-              <Github className="h-4 w-4 shrink-0" strokeWidth={1.6} />
+              <Github className="h-4 w-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />
               GitHub
               <ArrowUpRight
                 className="h-3 w-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
                 strokeWidth={2}
+                aria-hidden="true"
               />
             </a>
+
+            {/* Support trigger — opens the BMC iframe modal */}
+            <div className="border-t border-[var(--color-border)] pt-4">
+              <button
+                type="button"
+                onClick={() => setSupportOpen(true)}
+                className="
+                  group inline-flex items-center gap-2 text-body-base font-semibold
+                  text-[var(--color-text-secondary)] transition-colors duration-150
+                  hover:text-[var(--color-accent-brass)]
+                  focus-visible:outline-none focus-visible:ring-2
+                  focus-visible:ring-[var(--color-accent-cobalt)] focus-visible:ring-offset-2
+                  focus-visible:ring-offset-[var(--color-surface)]
+                "
+              >
+                <Heart className="h-4 w-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />
+                תמיכה בפרויקט
+                <ArrowUpRight
+                  className="h-3 w-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
+                  strokeWidth={2}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+
             <p className="text-body-sm font-medium leading-6 text-[var(--color-text-tertiary)]">
               קוד פתוח. הרצת חישובים מתבצעת לחלוטין בדפדפן — ללא שרת, ללא
               איסוף נתונים.
@@ -113,6 +142,11 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
           <span>כל הזכויות שמורות לרוברט טייגר | המכללה האקדמית תל אביב 2026</span>
         </div>
       </div>
+
+      {/* Support modal — opens when the Heart "תמיכה בפרויקט" button above is clicked.
+          The Modal component portals to document.body, so placement inside the
+          footer markup is purely logical — the rendered location is the body. */}
+      <SupportModal isOpen={supportOpen} onClose={() => setSupportOpen(false)} />
     </motion.footer>
   );
 }

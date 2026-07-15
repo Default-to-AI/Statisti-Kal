@@ -30,3 +30,11 @@ npm run dev
 * D3.js & Recharts (להמחשות הגרפיות)
 * Framer Motion (לאנימציות ה-UI)
 * KaTeX (לרינדור מתמטי)
+
+## License / רישיון
+This project is licensed under the **Business Source License 1.1 (BUSL-1.1)**,
+which will convert to the **Apache License, Version 2.0** on **2028-07-15**.
+See [`LICENSE.md`](./LICENSE.md) for the full terms, [`TRADEMARK.md`](./TRADEMARK.md)
+for permitted use of the Statisti-Kal name and logo, and
+[`CONTRIBUTING.md`](./CONTRIBUTING.md) for how to take part.
+הפרויקט מופץ תחת רישיון BUSL-1.1, שיומר ל־Apache 2.0 ב־15 ביולי 2028.

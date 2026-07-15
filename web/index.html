@@ -10,6 +10,16 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!--
+      Plausible analytics — cookieless, EU-hosted, privacy-friendly.
+      data-domain scoped to statisti-kal.com: previews, localhost, and
+      any other host name are silently ignored by Plausible, so dev
+      traffic does not pollute production stats. No cookie banner required.
+      To switch domains: edit data-domain below; no build plumbing needed.
+    -->
+    <script defer data-domain="statisti-kal.com" src="https://plausible.io/js/script.js"></script>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -172,7 +172,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
         <button
           type="button"
           onClick={() => navigate('landing')}
-          className="group flex cursor-pointer items-center gap-3 rounded-lg py-1 text-left outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-brass)]"
+          className="group flex cursor-pointer items-center gap-3 rounded-lg py-1 outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-brass)]"
           aria-label="Statisti-Kal"
         >
           <BrandMark />
@@ -220,7 +220,7 @@ export default function SiteHeader({ activePage, onNavigate }: SiteHeaderProps):
 
 function BrandMark(): ReactElement {
   return (
-    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[var(--color-accent-brass)]/50 bg-[var(--color-surface)] text-[var(--color-accent-brass)] transition group-hover:border-[var(--color-accent-brass)] group-hover:bg-[var(--color-accent-cobalt-bg)] group-hover:shadow-[0_0_20px_rgba(212,168,67,0.15)]">
+    <span className="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border-2 border-[var(--color-accent-brass)]/50 bg-[var(--color-surface)] text-[var(--color-accent-brass)] transition group-hover:border-[var(--color-accent-brass)] group-hover:bg-[var(--color-accent-cobalt-bg)] group-hover:shadow-[0_0_20px_color-mix(in_srgb,var(--color-accent-brass)_15%,transparent)]">
       <svg viewBox="0 0 32 32" className="h-8 w-8" fill="none" aria-hidden="true">
         <path d="M3 24h26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         <path d="M5 24c2.8 0 4.1-12 11-12s8.2 12 11 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
