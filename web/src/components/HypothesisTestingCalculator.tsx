@@ -1096,9 +1096,9 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                             השערת המחקר
                           </ParameterGridHeader>
                           <ParameterInputCell
-                            watermark="\\mu_0"
+                            watermark={'\\mu_0'}
                             colorClass="text-[var(--color-accent-cobalt)]"
-                            label={<><span>תוחלת (</span><InlineMath math="\\mu_0" /><span>):</span></>}
+                            label={<><span>תוחלת (</span><InlineMath math={'\\mu_0'} /><span>):</span></>}
                             tooltip={<span>תוחלת אוכלוסיית הבסיס (השערת האפס <InlineMath math="H_0" />)</span>}
                             value={mu0Input}
                             onChange={handleMu0Change}
@@ -1114,18 +1114,18 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                             error={errors.xBar}
                           />
                           <ParameterInputCell
-                            watermark="\\mu_1"
+                            watermark={'\\mu_1'}
                             colorClass="text-[var(--chart-2)]"
-                            label={<><span>ממוצע (</span><InlineMath math="\\mu_1" /><span>):</span></>}
+                            label={<><span>ממוצע (</span><InlineMath math={'\\mu_1'} /><span>):</span></>}
                             tooltip={<span>התוחלת המשוערת תחת השערת המחקר האלטרנטיבית (<InlineMath math="H_1" />)</span>}
                             value={mu1Input}
                             onChange={handleMu1Change}
                             error={powerInputError}
                           />
                           <ParameterInputCell
-                            watermark="\\sigma"
+                            watermark={'\\sigma'}
                             colorClass="text-[var(--color-accent-cobalt)]"
-                            label={<><span>סטיית תקן (</span><InlineMath math="\\sigma" /><span>):</span></>}
+                            label={<><span>סטיית תקן (</span><InlineMath math={'\\sigma'} /><span>):</span></>}
                             tooltip="סטיית התקן של אוכלוסיית הבסיס (אם ידועה)"
                             value={sigmaInput}
                             onChange={handleSigmaChange}
