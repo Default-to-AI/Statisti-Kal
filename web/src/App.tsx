@@ -24,6 +24,30 @@ const Exam2023Page = lazy(() => import('./components/Exam2023Page'));
 const LinearRegressionCalculator = lazy(() => import('./components/LinearRegressionCalculator'));
 const TestYourselfPage = lazy(() => import('./components/TestYourselfPage'));
 
+// Map each site page to a canonical, shareable, and indexable URL path.
+const PAGE_PATHS: Record<SitePage, string> = {
+  landing: '/',
+  hypothesis: '/hypothesis',
+  'point-estimation': '/point-estimation',
+  'exam-2023': '/exam-2023',
+  regression: '/regression',
+  'test-yourself': '/test-yourself',
+  summary: '/summary',
+  forward: '/forward',
+  inverse: '/inverse',
+  table: '/table',
+  'formula-sheet': '/formula-sheet',
+};
+
+// Reverse lookup: URL pathname -> SitePage (null if unknown).
+function pageFromPath(pathname: string): SitePage | null {
+  const clean = pathname.replace(/^\/+|\/+$/g, '');
+  if (clean === '') return 'landing';
+  const entry = (Object.entries(PAGE_PATHS) as [SitePage, string][])
+    .find(([, path]) => path === '/' + clean);
+  return entry ? entry[0] : null;
+}
+
 function getTourViewportOffset(): number {
   // Clears the sticky header and leaves a small visual buffer above the spotlight.
   return Math.max(Math.round(window.innerHeight * 0.1), 108);
@@ -128,6 +152,13 @@ export default function App() {
     // Smooth scroll to top on every navigation
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
+    // Keep the address bar in sync with the active tool so each page has a
+    // canonical, shareable, and indexable URL (fixes dogfood M-1).
+    const targetPath = PAGE_PATHS[page] ?? '/';
+    if (window.location.pathname !== targetPath) {
+      window.history.pushState({ page }, '', targetPath);
+    }
+
     if (page === 'landing' || page === 'hypothesis' || page === 'point-estimation' || page === 'exam-2023' || page === 'summary' || page === 'regression' || page === 'test-yourself') {
       setActivePage(page);
       return;
@@ -141,6 +172,34 @@ export default function App() {
     setNormalMode(page);
     setActivePage('normal');
   }, []);
+
+  // On first load, restore the page from the URL path so deep links
+  // (e.g. /hypothesis shared in a study group) open the right tool.
+  useEffect(() => {
+    const initial = pageFromPath(window.location.pathname);
+    if (initial && initial !== 'landing') {
+      handleNavigate(initial);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Browser back/forward support: reflect popped URL state into the app.
+  useEffect(() => {
+    const onPopState = (event: PopStateEvent) => {
+      const popped = (event.state?.page as SitePage | undefined) ?? pageFromPath(window.location.pathname);
+      if (popped) {
+        if (popped === 'landing' || popped === 'hypothesis' || popped === 'point-estimation' || popped === 'exam-2023' || popped === 'summary' || popped === 'regression' || popped === 'test-yourself') {
+          setActivePage(popped);
+        } else {
+          try { window.localStorage.setItem('ND_mode', JSON.stringify(popped)); } catch { /* ignore */ }
+          setNormalMode(popped);
+          setActivePage('normal');
+        }
+      }
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, [setNormalMode, setActivePage]);
 
   const currentTourSteps = useMemo(() => getTourStepsByMode(activeTourMode), [activeTourMode]);
 

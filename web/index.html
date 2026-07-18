@@ -2,25 +2,151 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+
+    <!-- ── Theme + color-scheme (light/dark respect via media queries)
+         matches --color-background (light) and the dark academic surface. -->
+    <meta name="theme-color" content="#F9F9F6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0E0F12" media="(prefers-color-scheme: dark)" />
+    <meta name="color-scheme" content="light dark" />
+
+    <!-- ── Primary meta ───────────────────────────────────────────────── -->
+    <title>Statisti-Kal | מחשבוני סטטיסטיקה אקדמיים בעברית</title>
+    <meta
+      name="description"
+      content="מערכת חכמה לסטודנטים בסטטיסטיקה: חישובי הסתברויות, התפלגות נורמלית, בדיקת השערות, אמידה נקודתית ורגרסיה ליניארית — בעברית, RTL מלא, רץ בדפדפן."
+    />
+    <meta
+      name="keywords"
+      content="סטטיסטיקה, סטודנטים, בדיקת השערות, התפלגות נורמלית, רגרסיה ליניארית, אמידה נקודתית, פעמון גאוס, Z table, T table, Hebrew statistics, RTL calculator"
+    />
+    <meta name="author" content="Robert Tiger" />
+    <meta name="application-name" content="Statisti-Kal" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Statisti-Kal" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+
+    <!-- ── Canonical + hreflang ──────────────────────────────────────── -->
+    <link rel="canonical" href="https://statisti-kal.com/" />
+    <link rel="alternate" hreflang="he-IL" href="https://statisti-kal.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://statisti-kal.com/" />
+
+    <!-- ── Favicon chain ─────────────────────────────────────────────── -->
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- ── Preconnects (fonts, plausible) ────────────────────────────── -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet" />
-    <title>Statisti-Kal | Statistics Calculator</title>
+    <link rel="preconnect" href="https://plausible.io" />
+
+    <!-- ── Web fonts: serif display + Assistant Hebrew body ──────────── -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ── Open Graph (Facebook, WhatsApp, Telegram, Slack, Discord) ─── -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Statisti-Kal" />
+    <meta property="og:title" content="Statisti-Kal — מחשבוני סטטיסטיקה בעברית" />
+    <meta
+      property="og:description"
+      content="מחשבונים אינטראקטיביים לסטטיסטיקה אקדמית: בדיקת השערות, התפלגות נורמלית, רגרסיה ועוד. חינם, בעברית, RTL מלא."
+    />
+    <meta property="og:url" content="https://statisti-kal.com/" />
+    <meta property="og:image" content="https://statisti-kal.com/og-image.png" />
+    <meta property="og:image:secure_url" content="https://statisti-kal.com/og-image.png" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Statisti-Kal — עקומת פעמון גאוס ומחשבוני סטטיסטיקה בעברית" />
+    <meta property="og:locale" content="he_IL" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- ── Twitter Card ──────────────────────────────────────────────── -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Statisti-Kal — מחשבוני סטטיסטיקה בעברית" />
+    <meta
+      name="twitter:description"
+      content="מחשבונים אינטראקטיביים בעברית לסטטיסטיקה אקדמית. חינם, בגרפים, שלב-אחרי-שלב."
+    />
+    <meta name="twitter:image" content="https://statisti-kal.com/og-image.png" />
+    <meta name="twitter:image:alt" content="Statisti-Kal — עקומת פעמון ומחשבוני סטטיסטיקה בעברית" />
   </head>
   <body>
     <div id="root"></div>
 
     <!--
-      Plausible analytics — cookieless, EU-hosted, privacy-friendly.
-      data-domain scoped to statisti-kal.com: previews, localhost, and
-      any other host name are silently ignored by Plausible, so dev
-      traffic does not pollute production stats. No cookie banner required.
-      To switch domains: edit data-domain below; no build plumbing needed.
+      Plausible analytics — cookieless, EU-hosted, privacy-friendly, no cookie banner.
+      - `data-domain="statisti-kal.com"` scopes stats to the canonical host. Previews,
+        localhost, and any other host name are silently ignored by Plausible.
+      - `script.hash.js` enables hash-mode tracking so SPA routes like
+        /#hypothesis and /#test-yourself register as distinct pageviews.
+      - Custom events (`newsletter_signup`, `share_click`) are dispatched from React
+        and recorded as Plausible goals. See web/src/components/ui/NewsletterForm.tsx
+        and web/src/components/ui/ShareButton.tsx.
+
+      To switch domains: edit data-domain below. To disable hash mode: switch to
+      script.js and remove the dispatch sites. No build plumbing required.
     -->
-    <script defer data-domain="statisti-kal.com" src="https://plausible.io/js/script.js"></script>
+    <script
+      defer
+      data-domain="statisti-kal.com"
+      src="https://plausible.io/js/script.hash.js"
+    ></script>
 
     <script type="module" src="/src/main.tsx"></script>
+
+    <!-- ── JSON-LD: Educational tool (WebApplication) + Organization ─── -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "@id": "https://statisti-kal.com/#app",
+            "name": "Statisti-Kal",
+            "alternateName": "Statisti-Kal — מחשבוני סטטיסטיקה בעברית",
+            "applicationCategory": "EducationalApplication",
+            "operatingSystem": "Any (Web)",
+            "browserRequirements": "Requires JavaScript. Modern browser.",
+            "url": "https://statisti-kal.com/",
+            "inLanguage": ["he-IL", "en-US"],
+            "description": "מערכת חכמה לסטודנטים בסטטיסטיקה: חישובי הסתברויות, התפלגות נורמלית, בדיקת השערות, אמידה נקודתית ורגרסיה. רץ לחלוטין בדפדפן, ללא שרת.",
+            "image": "https://statisti-kal.com/og-image.png",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "ILS",
+              "availability": "https://schema.org/InStock"
+            },
+            "author": { "@id": "https://statisti-kal.com/#org" },
+            "publisher": { "@id": "https://statisti-kal.com/#org" },
+            "educationalUse": "statistics education",
+            "learningResourceType": "interactive simulator",
+            "audience": {
+              "@type": "EducationalAudience",
+              "educationalRole": "student"
+            }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://statisti-kal.com/#org",
+            "name": "Statisti-Kal Project",
+            "url": "https://statisti-kal.com/",
+            "logo": "https://statisti-kal.com/og-image.png",
+            "email": "license@statisti-kal.com",
+            "sameAs": [
+              "https://github.com/AI-Degen-69/Statisti-Kal"
+            ]
+          }
+        ]
+      }
+    </script>
   </body>
 </html>
-

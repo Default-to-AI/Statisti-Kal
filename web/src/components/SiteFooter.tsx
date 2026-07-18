@@ -1,8 +1,9 @@
 import { useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
-import { Github, GraduationCap, ArrowUpRight, Heart } from 'lucide-react';
+import { Github, GraduationCap, ArrowUpRight, Heart, Megaphone } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
 import { Heading } from './ui/Heading';
+import { NewsletterForm } from './ui/NewsletterForm';
 import SupportModal from './SupportModal';
 
 interface SiteFooterProps {
@@ -25,7 +26,7 @@ const quickLinks: FooterLink[] = [
   { label: 'סיכום שיעור', page: 'summary' },
 ];
 
-const githubUrl = 'https://github.com/Default-to-AI/statistics';
+const githubUrl = 'https://github.com/AI-Degen-69/Statisti-Kal';
 
 export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElement {
   const [supportOpen, setSupportOpen] = useState(false);
@@ -41,7 +42,7 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
     >
       <div className="mx-auto px-5 py-10 sm:px-10">
         {/* Main grid */}
-        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr]">
+        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr_1fr]">
 
           {/* About column */}
           <section className="space-y-4">
@@ -85,6 +86,24 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
               ))}
             </ul>
           </nav>
+
+          {/* Newsletter signup column */}
+          <section className="space-y-4">
+            <div className="flex items-center gap-2">
+              <Megaphone
+                className="h-4 w-4 text-[var(--color-accent-primary)]"
+                strokeWidth={1.8}
+                aria-hidden="true"
+              />
+              <Heading level="section" align="start" className="text-[var(--color-text-primary)]">
+                עדכונים
+              </Heading>
+            </div>
+            <NewsletterForm />
+            <p className="text-body-sm font-medium leading-6 text-[var(--color-text-tertiary)]">
+              כשכלי חדש יתווסף, או כשתיקון חשוב נכנס — נשלח עדכון קצר וברור.
+            </p>
+          </section>
 
           {/* Source / links column */}
           <section className="space-y-4">
