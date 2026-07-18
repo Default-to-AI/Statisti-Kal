@@ -114,6 +114,111 @@ interface HypothesisTestingCalculatorProps {
     onStartLocalTour?: () => void;
 }
 
+/**
+ * Static 'Example Study' body (Wunderlich/Mackowiak body-temperature case).
+ * Memoized: it contains ~18 static KaTeX <InlineMath> renders that are
+ * expensive to re-typeset. It never reads parent state, so it renders
+ * once and is skipped on parent re-renders (fixes the ~200ms touch lag).
+ */
+const HypothesisStudyExampleBody = React.memo(function HypothesisStudyExampleBody() {
+  return (
+                <div className="relative z-10 p-4 sm:p-6 space-y-5">
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+                        <span className="absolute top-4 left-8 -rotate-12 text-5xl sm:text-6xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
+                        <span className="absolute top-24 right-10 rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
+                        <span className="absolute bottom-16 left-12 rotate-3 text-4xl sm:text-6xl font-mono font-semibold text-[var(--color-success)]/10" dir="ltr"><InlineMath math="\text{Reject } H_0" /></span>
+                        <span className="absolute bottom-3 right-20 -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
+                    </div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 text-sm leading-relaxed">
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Target size={18} className="text-[var(--color-accent-cobalt)]" />
+                                <span>רקע והשערות מבחן</span>
+                            </Heading>
+                            <p className="text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">Wunderlich</span> קבע ב-1868 ש-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> היא נקודת הייחוס לחום גוף תקין. Mackowiak בדק מחדש אם ממוצע חום הגוף באוכלוסייה נמוך מהקונצנזוס הזה.
+                            </p>
+                            <p className="mt-3 text-[var(--color-text-secondary)]">
+                                המדגם כלל <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="n = 148" /></span> נבדקים בריאים; ממוצע המדגם <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span> הושווה ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\mu_0 = 37.0^\circ C" /></span> באמצעות מבחן Z לתוחלת.
+                            </p>
+                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
+                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת אפס</div>
+                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_0: \mu = 37.0" /></div>
+                                </div>
+                                <div className="rounded-md border border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 p-3">
+                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת מחקר</div>
+                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_1: \mu < 37.0" /></div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Calculator size={18} className="text-[var(--color-primary)]" />
+                                <span>נתונים יבשים</span>
+                            </Heading>
+                            <div className="grid grid-cols-2 gap-3">
+                                {[
+                                    ['תוחלת של השערת האפס', '\\mu_0 = 37.0^\\circ C'],
+                                    ['ממוצע מדגם', '\\bar{X} = 36.82^\\circ C'],
+                                    ['סטיית תקן', '\\sigma = 0.41'],
+                                    ['גודל מדגם', 'n = 148'],
+                                ].map(([label, math]) => (
+                                    <div key={label} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
+                                        <div className="text-[var(--color-text-secondary)] text-xs">{label}</div>
+                                        <div className="text-[var(--color-text-primary)] font-semibold font-mono" dir="ltr"><InlineMath math={math} /></div>
+                                    </div>
+                                ))}
+                            </div>
+                            <p className="mt-3 text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">מבחן שמאלי</span>, רמת מובהקות <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>.
+                            </p>
+                        </section>
+                    </div>
+
+                    <div className="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5 text-sm leading-relaxed">
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <Percent size={18} className="text-[var(--color-primary)]" />
+                                <span>מובהקות</span>
+                            </Heading>
+                            <p className="text-[var(--color-text-secondary)]">
+                                ברירת המחדל היא <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>, אבל התוצאה רחוקה מספיק מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> כך שגם רמות מובהקות מחמירות יותר עדיין מובילות לדחיית <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="H_0" /></span>.
+                            </p>
+                        </section>
+
+                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-success)]/30 rounded-lg p-4 sm:p-5">
+                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
+                                <CheckCircle size={18} className="text-[var(--color-success)]" />
+                                <span>מסקנה</span>
+                            </Heading>
+                            <p className="text-[var(--color-text-secondary)]">
+                                <span className="text-[var(--color-text-primary)] font-bold">התוצאה מובהקת מאוד</span>: המדגם תומך ב-<span className="text-[var(--color-text-primary)] font-bold">דחיית השערת האפס</span> ובהערכה שחום הגוף הממוצע קרוב ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="36.8^\circ C" /></span>. גם רמות מובהקות מחמירות מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="5\%" /></span> עדיין יובילו לדחייה במקרה הזה.
+                            </p>
+                        </section>
+                    </div>
+
+                    <div className="relative bg-[var(--color-surface)]/80 border border-[var(--color-accent-cobalt-line)]/40 rounded-lg p-4 text-sm text-[var(--color-text-secondary)]">
+                        <span className="font-semibold text-[var(--color-text-primary)] inline-flex items-center gap-2">
+                            <BookOpen size={17} className="text-[var(--color-accent-cobalt)]" />
+                            קישור למקור:
+                        </span>{' '}
+                        <a
+                            href="https://jamanetwork.com/journals/jama/fullarticle/400116"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)]/80 underline decoration-dotted underline-offset-4"
+                        >
+                            Philip A. Mackowiak, Steven S. Wasserman, Myron M. Levine; JAMA, 1992; DOI: 10.1001/jama.1992.03490120092034
+                            <ExternalLink size={14} />
+                        </a>
+                    </div>
+                </div>
+  );
+});
+
 export default function HypothesisTestingCalculator({ onStartLocalTour }: HypothesisTestingCalculatorProps) {
 
     // Input states
@@ -977,100 +1082,7 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
                     </div>
                 </summary>
 
-                <div className="relative z-10 p-4 sm:p-6 space-y-5">
-                    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                        <span className="absolute top-4 left-8 -rotate-12 text-5xl sm:text-6xl font-mono font-semibold text-[var(--color-accent-cobalt)]/10" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span>
-                        <span className="absolute top-24 right-10 rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-primary)]/10" dir="ltr"><InlineMath math="n = 148" /></span>
-                        <span className="absolute bottom-16 left-12 rotate-3 text-4xl sm:text-6xl font-mono font-semibold text-[var(--color-success)]/10" dir="ltr"><InlineMath math="\text{Reject } H_0" /></span>
-                        <span className="absolute bottom-3 right-20 -rotate-6 text-4xl sm:text-5xl font-mono font-semibold text-[var(--color-accent-crimson)]/10" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>
-                    </div>
-
-                    <div className="relative grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-5 text-sm leading-relaxed">
-                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <Target size={18} className="text-[var(--color-accent-cobalt)]" />
-                                <span>רקע והשערות מבחן</span>
-                            </Heading>
-                            <p className="text-[var(--color-text-secondary)]">
-                                <span className="text-[var(--color-text-primary)] font-bold">Wunderlich</span> קבע ב-1868 ש-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> היא נקודת הייחוס לחום גוף תקין. Mackowiak בדק מחדש אם ממוצע חום הגוף באוכלוסייה נמוך מהקונצנזוס הזה.
-                            </p>
-                            <p className="mt-3 text-[var(--color-text-secondary)]">
-                                המדגם כלל <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="n = 148" /></span> נבדקים בריאים; ממוצע המדגם <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\bar{X} = 36.82^\circ C" /></span> הושווה ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\mu_0 = 37.0^\circ C" /></span> באמצעות מבחן Z לתוחלת.
-                            </p>
-                            <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                                <div className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
-                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת אפס</div>
-                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_0: \mu = 37.0" /></div>
-                                </div>
-                                <div className="rounded-md border border-[var(--color-accent-cobalt-line)]/40 bg-[var(--color-accent-cobalt-bg)]/10 p-3">
-                                    <div className="text-[var(--color-text-secondary)] mb-1">השערת מחקר</div>
-                                    <div className="text-[var(--color-text-primary)] font-semibold" dir="ltr"><InlineMath math="H_1: \mu < 37.0" /></div>
-                                </div>
-                            </div>
-                        </section>
-
-                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <Calculator size={18} className="text-[var(--color-primary)]" />
-                                <span>נתונים יבשים</span>
-                            </Heading>
-                            <div className="grid grid-cols-2 gap-3">
-                                {[
-                                    ['תוחלת של השערת האפס', '\\mu_0 = 37.0^\\circ C'],
-                                    ['ממוצע מדגם', '\\bar{X} = 36.82^\\circ C'],
-                                    ['סטיית תקן', '\\sigma = 0.41'],
-                                    ['גודל מדגם', 'n = 148'],
-                                ].map(([label, math]) => (
-                                    <div key={label} className="rounded-md border border-[var(--color-border)] bg-[var(--color-background)]/40 p-3">
-                                        <div className="text-[var(--color-text-secondary)] text-xs">{label}</div>
-                                        <div className="text-[var(--color-text-primary)] font-semibold font-mono" dir="ltr"><InlineMath math={math} /></div>
-                                    </div>
-                                ))}
-                            </div>
-                            <p className="mt-3 text-[var(--color-text-secondary)]">
-                                <span className="text-[var(--color-text-primary)] font-bold">מבחן שמאלי</span>, רמת מובהקות <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>.
-                            </p>
-                        </section>
-                    </div>
-
-                    <div className="relative grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-5 text-sm leading-relaxed">
-                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-border)] rounded-lg p-4 sm:p-5">
-                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <Percent size={18} className="text-[var(--color-primary)]" />
-                                <span>מובהקות</span>
-                            </Heading>
-                            <p className="text-[var(--color-text-secondary)]">
-                                ברירת המחדל היא <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="\alpha = 5\%" /></span>, אבל התוצאה רחוקה מספיק מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="37.0^\circ C" /></span> כך שגם רמות מובהקות מחמירות יותר עדיין מובילות לדחיית <span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="H_0" /></span>.
-                            </p>
-                        </section>
-
-                        <section className="bg-[var(--color-surface)]/80 border border-[var(--color-success)]/30 rounded-lg p-4 sm:p-5">
-                            <Heading level="subsection" className="font-semibold text-[var(--color-text-primary)] mb-3 flex items-center gap-2">
-                                <CheckCircle size={18} className="text-[var(--color-success)]" />
-                                <span>מסקנה</span>
-                            </Heading>
-                            <p className="text-[var(--color-text-secondary)]">
-                                <span className="text-[var(--color-text-primary)] font-bold">התוצאה מובהקת מאוד</span>: המדגם תומך ב-<span className="text-[var(--color-text-primary)] font-bold">דחיית השערת האפס</span> ובהערכה שחום הגוף הממוצע קרוב ל-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="36.8^\circ C" /></span>. גם רמות מובהקות מחמירות מ-<span className="text-[var(--color-text-primary)] font-bold" dir="ltr"><InlineMath math="5\%" /></span> עדיין יובילו לדחייה במקרה הזה.
-                            </p>
-                        </section>
-                    </div>
-
-                    <div className="relative bg-[var(--color-surface)]/80 border border-[var(--color-accent-cobalt-line)]/40 rounded-lg p-4 text-sm text-[var(--color-text-secondary)]">
-                        <span className="font-semibold text-[var(--color-text-primary)] inline-flex items-center gap-2">
-                            <BookOpen size={17} className="text-[var(--color-accent-cobalt)]" />
-                            קישור למקור:
-                        </span>{' '}
-                        <a
-                            href="https://jamanetwork.com/journals/jama/fullarticle/400116"
-                            target="_blank"
-                            rel="noreferrer"
-                            className="inline-flex items-center gap-1 text-[var(--color-accent-cobalt)] hover:text-[var(--color-accent-cobalt)]/80 underline decoration-dotted underline-offset-4"
-                        >
-                            Philip A. Mackowiak, Steven S. Wasserman, Myron M. Levine; JAMA, 1992; DOI: 10.1001/jama.1992.03490120092034
-                            <ExternalLink size={14} />
-                        </a>
-                    </div>
-                </div>
+                    <HypothesisStudyExampleBody />
             </AnimatedDetails>
 
             {/* Parameters Input Card */}
