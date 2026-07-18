@@ -30,3 +30,4 @@ scripts/
 !web/scripts/**
 
 .gbrain-source
+.vercel
