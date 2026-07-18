@@ -4,7 +4,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useTransition } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { InlineMath, BlockMath } from 'react-katex';
@@ -234,47 +234,52 @@ export default function NormalDistributionCalculator({ initialMode, onNavigate }
 
   const isValid = useMemo(() => Object.keys(errors).length === 0, [errors]);
 
+  // Keep typing instant: the chart + probability recompute is driven by the
+  // numeric states, so wrap their updates in a transition. The raw string
+  // state stays urgent so the input box tracks keys (INP optimization).
+  const [, startTransition] = useTransition();
+
   // Handlers for inputs
   const handleMeanChange = (val: string) => {
     setMeanInput(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed)) setMean(parsed);
+    if (!isNaN(parsed)) startTransition(() => setMean(parsed));
   };
 
   const handleStdDevChange = (val: string) => {
     setStdDevInput(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed) && parsed > 0) setStdDev(parsed);
+    if (!isNaN(parsed) && parsed > 0) startTransition(() => setStdDev(parsed));
   };
 
   const handleX1Change = (val: string) => {
     setX1Input(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed)) setX1(parsed);
+    if (!isNaN(parsed)) startTransition(() => setX1(parsed));
   };
 
   const handleX2Change = (val: string) => {
     setX2Input(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed)) setX2(parsed);
+    if (!isNaN(parsed)) startTransition(() => setX2(parsed));
   };
 
   const handleInverseProbChange = (val: string) => {
     setInverseProbInput(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed) && parsed > 0 && parsed < 1) setInverseProb(parsed);
+    if (!isNaN(parsed) && parsed > 0 && parsed < 1) startTransition(() => setInverseProb(parsed));
   };
 
   const handleCondX1Change = (val: string) => {
     setCondX1Input(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed)) setCondX1(parsed);
+    if (!isNaN(parsed)) startTransition(() => setCondX1(parsed));
   };
 
   const handleCondX2Change = (val: string) => {
     setCondX2Input(val);
     const parsed = parseFloat(val);
-    if (!isNaN(parsed)) setCondX2(parsed);
+    if (!isNaN(parsed)) startTransition(() => setCondX2(parsed));
   };
 
   // Core Calculations

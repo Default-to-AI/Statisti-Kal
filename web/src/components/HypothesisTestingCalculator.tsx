@@ -4,7 +4,7 @@ import { useLocalStorageState } from '../hooks/useLocalStorageState';
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useTransition } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { AnimatedDetails } from './ui/CustomComponents';
 import { Heading } from './ui';
@@ -252,6 +252,12 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
         setCiAlpha(preset);
     };
 
+    // Keep typing instant: push the expensive numeric recompute (which drives
+    // the Recharts bell-curve + KaTeX step cards) into a low-priority
+    // transition so it never blocks the keypress/input interaction window
+    // (INP). The raw string state stays urgent so the input box tracks keys.
+    const [, startTransition] = useTransition();
+
     const statSymbol = '\\bar{X}';
     const statName = 'ממוצע המדגם';
     const statNamePlural = 'ממוצעי מדגם';
@@ -452,37 +458,37 @@ export default function HypothesisTestingCalculator({ onStartLocalTour }: Hypoth
     const handleMu0Change = (val: string) => {
         setMu0Input(val);
         const parsed = parseFloat(val);
-        if (!isNaN(parsed)) setMu0(parsed);
+        if (!isNaN(parsed)) startTransition(() => setMu0(parsed));
     };
 
     const handleXBarChange = (val: string) => {
         setXBarInput(val);
         const parsed = parseFloat(val);
-        if (!isNaN(parsed)) setXBar(parsed);
+        if (!isNaN(parsed)) startTransition(() => setXBar(parsed));
     };
 
     const handleMu1Change = (val: string) => {
         setMu1Input(val);
         const parsed = parseFloat(val);
-        if (!isNaN(parsed)) setMu1(parsed);
+        if (!isNaN(parsed)) startTransition(() => setMu1(parsed));
     };
 
     const handleSigmaChange = (val: string) => {
         setSigmaInput(val);
         const parsed = parseFloat(val);
-        if (!isNaN(parsed) && parsed > 0) setSigma(parsed);
+        if (!isNaN(parsed) && parsed > 0) startTransition(() => setSigma(parsed));
     };
 
     const handleNChange = (val: string) => {
         setNInput(val);
         const parsed = parseInt(val, 10);
-        if (!isNaN(parsed) && parsed > 0) setN(parsed);
+        if (!isNaN(parsed) && parsed > 0) startTransition(() => setN(parsed));
     };
 
     const handleAlphaChange = (val: string) => {
         setAlphaInput(val);
         const parsed = parseFloat(val);
-        if (!isNaN(parsed) && parsed > 0 && parsed < 1) setAlpha(parsed);
+        if (!isNaN(parsed) && parsed > 0 && parsed < 1) startTransition(() => setAlpha(parsed));
     };
 
     // Safe preset setters
