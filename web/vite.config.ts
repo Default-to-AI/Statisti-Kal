@@ -22,7 +22,8 @@ export default defineConfig(({mode}) => {
             if (!id.includes('node_modules')) return undefined;
             if (/[\\/]recharts[\\/]|[\\/]d3-[^\\/]*[\\/]|[\\/]d3[\\/]/.test(id)) return 'charts-vendor';
             if (/[\\/]katex[\\/]|[\\/]react-katex[\\/]/.test(id)) return 'math-vendor';
-            if (/[\\/]lucide-react[\\/]|[\\/]react-joyride[\\/]/.test(id)) return 'ui-vendor';
+            if (/[\\/]lucide-react[\\/]/.test(id)) return 'ui-vendor';
+            if (/[\\/]react-joyride[\\/]/.test(id)) return undefined; // let it split into its own lazy chunk (only loaded when a tour runs)
             if (/[\\/]react[\\/]|[\\/]react-dom[\\/]|[\\/]scheduler[\\/]/.test(id)) return 'react-vendor';
             return undefined;
           },

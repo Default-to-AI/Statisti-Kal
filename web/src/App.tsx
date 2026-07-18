@@ -4,7 +4,7 @@
  */
 
 import { Suspense, lazy, useState, useCallback, useMemo, useEffect } from 'react';
-import { Joyride, type Step } from 'react-joyride';
+import type { Step } from 'react-joyride';
 import LandingPage from './components/LandingPage';
 import SiteFooter from './components/SiteFooter';
 import SiteHeader, { type SitePage } from './components/SiteHeader';
@@ -14,7 +14,9 @@ import type { CalcMode } from './components/calc-ui';
 import { type TourMode, type GuidedTourStep, getTourStepsByMode } from './config/tours';
 
 type ActivePage = 'landing' | 'hypothesis' | 'point-estimation' | 'exam-2023' | 'normal' | 'summary' | 'regression' | 'test-yourself';
-const JoyrideComponent = Joyride as any;
+const JoyrideComponent = lazy(() =>
+  import('react-joyride').then((m) => ({ default: m.Joyride as unknown as React.ComponentType<any> })),
+);
 
 const HypothesisTestingCalculator = lazy(() => import('./components/HypothesisTestingCalculator'));
 const NormalDistributionCalculator = lazy(() => import('./components/NormalDistributionCalculator'));
@@ -328,75 +330,79 @@ export default function App() {
 
   return (
     <PageTransition pageKey={activePage === 'normal' ? `normal-${normalMode}` : activePage}>
-      <JoyrideComponent
-        key={activeTourMode || 'inactive'}
-        steps={currentTourSteps}
-        run={activeTourMode !== null}
-        stepIndex={guidedTourIndex}
-        continuous
-        showSkipButton
-        scrollOffset={tourScrollOffset}
-        scrollToFirstStep
-        portalElement="body"
-        options={{
-          zIndex: 10000,
-          primaryColor: 'var(--color-accent-brass)',
-          backgroundColor: 'var(--color-surface-raised)',
-          textColor: 'var(--color-text-primary)',
-          arrowColor: 'var(--color-surface-raised)',
-          overlayColor: 'rgba(0, 0, 0, 0.28)',
-          spotlightPadding: 10,
-          spotlightRadius: 18,
-          skipScroll: true,
-        }}
-        styles={({
-          tooltip: {
-            direction: 'rtl',
-            fontFamily: 'Assistant, sans-serif',
-            textAlign: 'right',
-            borderRadius: '8px',
-            border: '1px solid var(--color-border)',
-            boxShadow: '0 24px 64px rgba(0, 0, 0, 0.42)',
-            ...(isTourTransitioning && { opacity: 0, pointerEvents: 'none' }),
-          },
-          ...(isTourTransitioning && { overlay: { opacity: 0, pointerEvents: 'none' } }),
-          spotlight: {
-            stroke: 'var(--color-accent-brass)',
-            strokeWidth: 3,
-            filter: 'drop-shadow(0 0 12px color-mix(in srgb, var(--color-accent-brass) 80%, transparent)) drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-cobalt) 45%, transparent))',
-            ...(isTourTransitioning && { opacity: 0 }),
-          },
-          buttonNext: { backgroundColor: 'var(--color-accent-cobalt)', color: 'var(--color-text-primary)', borderRadius: '4px', fontWeight: 'bold' },
-          buttonBack: { color: 'var(--color-text-secondary)', fontWeight: 'bold' },
-          buttonSkip: { color: 'var(--color-error)', fontWeight: 'bold' },
-        }) as any}
-        onEvent={(data: any) => {
-          if (data.status === 'finished' || data.status === 'skipped' || data.action === 'close') {
-            setActiveTourMode(null);
-            setGuidedTourIndex(0);
-            return;
-          }
+      {activeTourMode !== null ? (
+        <Suspense fallback={null}>
+          <JoyrideComponent
+            key={activeTourMode || 'inactive'}
+            steps={currentTourSteps}
+            run={activeTourMode !== null}
+            stepIndex={guidedTourIndex}
+            continuous
+            showSkipButton
+            scrollOffset={tourScrollOffset}
+            scrollToFirstStep
+            portalElement="body"
+            options={{
+              zIndex: 10000,
+              primaryColor: 'var(--color-accent-brass)',
+              backgroundColor: 'var(--color-surface-raised)',
+              textColor: 'var(--color-text-primary)',
+              arrowColor: 'var(--color-surface-raised)',
+              overlayColor: 'rgba(0, 0, 0, 0.28)',
+              spotlightPadding: 10,
+              spotlightRadius: 18,
+              skipScroll: true,
+            }}
+            styles={({
+              tooltip: {
+                direction: 'rtl',
+                fontFamily: 'Assistant, sans-serif',
+                textAlign: 'right',
+                borderRadius: '8px',
+                border: '1px solid var(--color-border)',
+                boxShadow: '0 24px 64px rgba(0, 0, 0, 0.42)',
+                ...(isTourTransitioning && { opacity: 0, pointerEvents: 'none' }),
+              },
+              ...(isTourTransitioning && { overlay: { opacity: 0, pointerEvents: 'none' } }),
+              spotlight: {
+                stroke: 'var(--color-accent-brass)',
+                strokeWidth: 3,
+                filter: 'drop-shadow(0 0 12px color-mix(in srgb, var(--color-accent-brass) 80%, transparent)) drop-shadow(0 0 24px color-mix(in srgb, var(--color-accent-cobalt) 45%, transparent))',
+                ...(isTourTransitioning && { opacity: 0 }),
+              },
+              buttonNext: { backgroundColor: 'var(--color-accent-cobalt)', color: 'var(--color-text-primary)', borderRadius: '4px', fontWeight: 'bold' },
+              buttonBack: { color: 'var(--color-text-secondary)', fontWeight: 'bold' },
+              buttonSkip: { color: 'var(--color-error)', fontWeight: 'bold' },
+            }) as any}
+            onEvent={(data: any) => {
+              if (data.status === 'finished' || data.status === 'skipped' || data.action === 'close') {
+                setActiveTourMode(null);
+                setGuidedTourIndex(0);
+                return;
+              }
 
-          if (data.type !== 'step:after' && data.type !== 'error:target_not_found') {
-            return;
-          }
+              if (data.type !== 'step:after' && data.type !== 'error:target_not_found') {
+                return;
+              }
 
-          const delta = data.action === 'prev' ? -1 : 1;
-          const nextIndex = data.index + delta;
+              const delta = data.action === 'prev' ? -1 : 1;
+              const nextIndex = data.index + delta;
 
-          if (data.index === 6 && data.action === 'next') {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-          }
+              if (data.index === 6 && data.action === 'next') {
+                window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+              }
 
-          if (nextIndex < 0 || nextIndex >= currentTourSteps.length) {
-            setActiveTourMode(null);
-            return;
-          }
+              if (nextIndex < 0 || nextIndex >= currentTourSteps.length) {
+                setActiveTourMode(null);
+                return;
+              }
 
-          moveGuidedTourToStep(nextIndex);
-        }}
-        locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
-      />
+              moveGuidedTourToStep(nextIndex);
+            }}
+            locale={{ back: 'חזור', close: 'סגור', last: 'סיום', next: 'הבא', skip: 'דלג' }}
+          />
+        </Suspense>
+      ) : null}
 
       {activePage === 'hypothesis' ? (
         <PageLayout
