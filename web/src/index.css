@@ -1,6 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Frank+Ruhl+Libre:wght@400;500;700&family=Geist+Mono:wght@400;500&family=Assistant:wght@400;500;600;700;800&family=Gveret+Levin:wght@400&display=swap");
 @import "katex/dist/katex.min.css";
 @import "tailwindcss";
+
+/* Self-hosted Hebrew subsets (U+0590-05FF) — see src/fonts-hebrew.css,
+   imported via main.tsx so it does not violate Tailwind v4 @import ordering.
+   Latin-only families (Plus Jakarta, Geist Mono, Playfair) stay remote
+   via the <link> in index.html since they have no Hebrew glyphs. */
 
 /* ============================================================================
  * DESIGN.md token bridge — @theme exposes tokens to Tailwind v4 utilities

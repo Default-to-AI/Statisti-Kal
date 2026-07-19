@@ -44,9 +44,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preconnect" href="https://plausible.io" />
 
-    <!-- ── Web fonts: serif display + Assistant Hebrew body ──────────── -->
+    <!-- ── Self-hosted Hebrew fonts (Assistant/Frank Ruhl/Gveret Levin) ──
+         Served same-origin from /fonts/*.woff2 (see src/fonts-hebrew.css).
+         Preload the 3 heaviest-used Assistant weights so first Hebrew paint
+         never waits on a network round-trip. font-display:swap in the CSS
+         prevents invisible-text FOIT for any weight not yet loaded. -->
+    <link rel="preload" href="/fonts/Assistant_400_n.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Assistant_600_n.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/Assistant_700_n.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- ── Remote Latin-only families (no Hebrew glyphs) ──────────────── -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;500;600;700;800&family=Frank+Ruhl+Libre:wght@400;500;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap"
       rel="stylesheet"
     />
 
