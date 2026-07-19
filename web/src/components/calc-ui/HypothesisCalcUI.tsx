@@ -874,23 +874,38 @@ export const FloatingFieldError: React.FC<FloatingFieldErrorProps> = ({
     useEffect(() => {
         if (!message) return;
 
+        // Local rAF handle so this effect doesn't collide with the label
+        // tooltip's rafRef. Coalesce scroll/resize layout reads to one/frame.
+        let rafRef: number | null = null;
+
         const updatePosition = () => {
+            rafRef = null;
             if (!anchorRef.current) return;
 
             const rect = anchorRef.current.getBoundingClientRect();
-            setPosition({
-                top: rect.top + offsetY,
-                left: rect.left,
-            });
+            const nextTop = rect.top + offsetY;
+            const nextLeft = rect.left;
+            setPosition((prev) =>
+                prev.top === nextTop && prev.left === nextLeft
+                    ? prev
+                    : { top: nextTop, left: nextLeft },
+            );
         };
 
+        const scheduleUpdate = () => {
+            if (rafRef !== null) cancelAnimationFrame(rafRef);
+            rafRef = requestAnimationFrame(updatePosition);
+        };
+
+        const scrollOpts = { capture: true, passive: true } as AddEventListenerOptions;
         updatePosition();
-        window.addEventListener('scroll', updatePosition, true);
-        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', scheduleUpdate, scrollOpts);
+        window.addEventListener('resize', scheduleUpdate);
 
         return () => {
-            window.removeEventListener('scroll', updatePosition, true);
-            window.removeEventListener('resize', updatePosition);
+            window.removeEventListener('scroll', scheduleUpdate, scrollOpts);
+            window.removeEventListener('resize', scheduleUpdate);
+            if (rafRef !== null) cancelAnimationFrame(rafRef);
         };
     }, [message, offsetY]);
 

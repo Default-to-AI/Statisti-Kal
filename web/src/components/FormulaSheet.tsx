@@ -110,21 +110,32 @@ export default function FormulaSheet({ theme }: FormulaSheetProps) {
 
   // Tracking which section is currently on screen
   useEffect(() => {
+    // Coalesce scroll into one layout read per frame. Reading offsetTop on
+    // every scroll event forces a synchronous reflow per event.
+    let rafId: number | null = null;
+
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 120;
-      
-      const entries = Object.entries(sectionRefs);
-      for (let i = entries.length - 1; i >= 0; i--) {
-        const [id, ref] = entries[i];
-        if (ref.current && ref.current.offsetTop <= scrollPosition) {
-          setActiveSection(id);
-          break;
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const scrollPosition = window.scrollY + 120;
+
+        const entries = Object.entries(sectionRefs);
+        for (let i = entries.length - 1; i >= 0; i--) {
+          const [id, ref] = entries[i];
+          if (ref.current && ref.current.offsetTop <= scrollPosition) {
+            setActiveSection(id);
+            break;
+          }
         }
-      }
+      });
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   const toggleTopic = (key: string) => {

@@ -492,22 +492,38 @@ export const InputTooltip: React.FC<InputTooltipProps> = ({
   useEffect(() => {
     if (!isVisible) return;
 
+    // Coalesce scroll/resize layout reads to one per frame (the previous
+    // version called getBoundingClientRect synchronously on every event,
+    // forcing a layout flush per scroll — a scroll-jank / TBT source).
+    let rafRef: number | null = null;
+
     const updatePosition = () => {
+      rafRef = null;
       if (!triggerRef.current) return;
       const rect = triggerRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.top - 8,
-        left: rect.left + rect.width / 2,
-      });
+      const nextTop = rect.top - 8;
+      const nextLeft = rect.left + rect.width / 2;
+      setPosition((prev) =>
+        prev.top === nextTop && prev.left === nextLeft
+          ? prev
+          : { top: nextTop, left: nextLeft },
+      );
     };
 
+    const scheduleUpdate = () => {
+      if (rafRef !== null) cancelAnimationFrame(rafRef);
+      rafRef = requestAnimationFrame(updatePosition);
+    };
+
+    const scrollOpts = { capture: true, passive: true } as AddEventListenerOptions;
     updatePosition();
-    window.addEventListener('scroll', updatePosition, true);
-    window.addEventListener('resize', updatePosition);
+    window.addEventListener('scroll', scheduleUpdate, scrollOpts);
+    window.addEventListener('resize', scheduleUpdate);
 
     return () => {
-      window.removeEventListener('scroll', updatePosition, true);
-      window.removeEventListener('resize', updatePosition);
+      window.removeEventListener('scroll', scheduleUpdate, scrollOpts);
+      window.removeEventListener('resize', scheduleUpdate);
+      if (rafRef !== null) cancelAnimationFrame(rafRef);
     };
   }, [isVisible]);
 
