@@ -753,6 +753,7 @@ export const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, c
     const [position, setPosition] = useState({ top: 0, left: 0 });
     const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
     const triggerRef = useRef<HTMLDivElement | null>(null);
+    const rafRef = useRef<number | null>(null);
 
     useEffect(() => {
         setCanPortal(true);
@@ -761,13 +762,23 @@ export const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, c
     useEffect(() => {
         return () => {
             if (timeoutRef.current) clearTimeout(timeoutRef.current);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
     }, []);
 
     useEffect(() => {
         if (!isVisible) return;
 
+        // Coalesce scroll/resize into one layout read per frame. Reading
+        // getBoundingClientRect synchronously on every scroll event forces
+        // a layout flush on each event; rAF caps it at one per frame.
+        const scheduleUpdate = () => {
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
+            rafRef.current = requestAnimationFrame(updatePosition);
+        };
+
         const updatePosition = () => {
+            rafRef.current = null;
             if (!triggerRef.current) return;
 
             const rect = triggerRef.current.getBoundingClientRect();
@@ -778,12 +789,13 @@ export const InputTooltip: React.FC<InputTooltipProps> = ({ content, children, c
         };
 
         updatePosition();
-        window.addEventListener('scroll', updatePosition, true);
-        window.addEventListener('resize', updatePosition);
+        window.addEventListener('scroll', scheduleUpdate, true);
+        window.addEventListener('resize', scheduleUpdate);
 
         return () => {
-            window.removeEventListener('scroll', updatePosition, true);
-            window.removeEventListener('resize', updatePosition);
+            window.removeEventListener('scroll', scheduleUpdate, true);
+            window.removeEventListener('resize', scheduleUpdate);
+            if (rafRef.current) cancelAnimationFrame(rafRef.current);
         };
     }, [isVisible]);
 
