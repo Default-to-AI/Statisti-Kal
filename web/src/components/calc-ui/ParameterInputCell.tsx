@@ -30,15 +30,17 @@ export function ParameterInputCell({
   statusText,
 }: ParameterInputCellProps) {
   return (
-    <div className={`relative overflow-hidden p-3 sm:p-4 align-middle bg-[var(--color-surface)] ${disabled ? 'opacity-55' : ''}`}>
-      <CellWatermark math={watermark} colorClass={colorClass} />
+    <div className={`relative overflow-visible p-3 sm:p-4 align-middle bg-[var(--color-surface)] ${disabled ? 'opacity-55' : ''}`}>
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <CellWatermark math={watermark} colorClass={colorClass} />
+      </div>
       <div className="relative z-10 grid w-full grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-4 sm:gap-6">
         <InputTooltip content={tooltip}>
           <span className={`min-w-0 whitespace-nowrap text-right text-base sm:text-lg font-bold cursor-help border-b border-dotted border-[var(--color-border)] ${disabled ? 'text-[var(--color-text-secondary)]' : 'text-[var(--color-text-primary)]'}`}>
             {label}
           </span>
         </InputTooltip>
-        <div className="relative w-28 shrink-0 sm:w-32 xl:w-36">
+        <div className="relative w-20 shrink-0 sm:w-24 xl:w-28">
           <input
             type="text"
             value={value}
