@@ -1,10 +1,11 @@
 import { useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
-import { Github, GraduationCap, ArrowUpRight, Heart, Megaphone } from 'lucide-react';
+import { GraduationCap, ArrowUpRight, Heart, Megaphone, ShieldAlert } from 'lucide-react';
 import type { SitePage } from './SiteHeader';
 import { Heading } from './ui/Heading';
 import { NewsletterForm } from './ui/NewsletterForm';
 import SupportModal from './SupportModal';
+import LegalModal from './LegalModal';
 
 interface SiteFooterProps {
   onNavigate: (page: SitePage) => void;
@@ -26,10 +27,9 @@ const quickLinks: FooterLink[] = [
   { label: 'סיכום שיעור', page: 'summary' },
 ];
 
-const githubUrl = 'https://github.com/AI-Degen-69/Statisti-Kal';
-
 export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElement {
   const [supportOpen, setSupportOpen] = useState(false);
+  const [legalOpen, setLegalOpen] = useState(false);
 
   return (
     <motion.footer 
@@ -108,22 +108,19 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
           {/* Source / links column */}
           <section className="space-y-4">
             <Heading level="section" align="start" className="text-[var(--color-text-primary)]">
-              קוד מקור
+              מידע נוסף
             </Heading>
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-primary)]"
-            >
-              <Github className="h-4 w-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />
-              GitHub
-              <ArrowUpRight
-                className="h-3 w-3 opacity-0 transition-opacity duration-150 group-hover:opacity-100"
-                strokeWidth={2}
-                aria-hidden="true"
-              />
-            </a>
+            
+            <div>
+              <button
+                type="button"
+                onClick={() => setLegalOpen(true)}
+                className="group inline-flex items-center gap-2 text-body-base font-semibold text-[var(--color-text-secondary)] transition-colors duration-150 hover:text-[var(--color-error)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent-cobalt)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-surface)]"
+              >
+                <ShieldAlert className="h-4 w-4 shrink-0" strokeWidth={1.6} aria-hidden="true" />
+                תנאים משפטיים וזכויות יוצרים
+              </button>
+            </div>
 
             {/* Support trigger — opens the BMC iframe modal */}
             <div className="border-t border-[var(--color-border)] pt-4">
@@ -158,7 +155,7 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
 
         {/* Bottom bar */}
         <div className="mt-10 flex items-center justify-between border-t border-[var(--color-border)] pt-5 text-body-sm font-semibold text-[var(--color-text-tertiary)]">
-          <span>כל הזכויות שמורות לרוברט טייגר | המכללה האקדמית תל אביב 2026</span>
+          <span>כל הזכויות שמורות לרוברט טייגר 2026</span>
         </div>
       </div>
 
@@ -166,6 +163,9 @@ export default function SiteFooter({ onNavigate }: SiteFooterProps): ReactElemen
           The Modal component portals to document.body, so placement inside the
           footer markup is purely logical — the rendered location is the body. */}
       <SupportModal isOpen={supportOpen} onClose={() => setSupportOpen(false)} />
+      
+      {/* Legal terms modal */}
+      <LegalModal isOpen={legalOpen} onClose={() => setLegalOpen(false)} />
     </motion.footer>
   );
 }
